@@ -45,6 +45,7 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 | `app.js` | Oberfläche, Video, Zeichnen, Ablauf der Analyse |
 | `videoanalyse.js` | Video schnell durchgehen (abspielen statt springen, Lücken nachholen) |
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
+| `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 
@@ -59,6 +60,9 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 ## Offene Punkte
 
 - iPhone-Test der schnellen Analyse (Version ≥ 0.7.3): Statuszeile „Analyse fertig (…)“ auswerten.
+- iPhone-Test mehrere Schwünge (Version ≥ 0.8.0): echtes langes Video von der Range mit mehreren
+  Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
+  Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
 - Etappe 8: Schwünge lokal speichern (IndexedDB, gekürztes Video) – siehe `docs/`.
 - Etappe 9: Sicherung exportieren/einspielen · Etappe 10: Fortschritt und Langzeit-Feedback.
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.

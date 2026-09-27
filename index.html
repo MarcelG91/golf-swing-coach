@@ -30,11 +30,12 @@
   </header>
 
   <main>
-    <!-- 1. Video auswählen -->
+    <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar -->
     <label class="upload">
-      <input type="file" id="videoInput" accept="video/*">
+      <input type="file" id="videoInput" accept="video/*" multiple>
       <span>🎥 Video auswählen oder aufnehmen</span>
     </label>
+    <p class="hinweis">Ein Video mit einem Schlag, ein langes mit mehreren Schlägen – oder gleich mehrere Videos.</p>
 
     <!-- Statuszeile: zeigt, was die App gerade macht -->
     <p id="status" class="status">Lade die Pose-Erkennung …</p>
@@ -58,11 +59,28 @@
         </select>
       </label>
       <label class="schalter"><input type="checkbox" id="skelettAn" checked> Skelett</label>
-      <button id="analysieren" class="haupt">🔍 Schwung analysieren</button>
+      <button id="analysieren" class="haupt">🔍 Analysieren</button>
     </div>
 
     <!-- 4. Ergebnis der Analyse (erscheint erst nach dem Analysieren) -->
     <section id="ergebnis" class="ergebnis" hidden>
+      <!-- 4a. Nur bei mehreren Schwüngen: Gesamtauswertung und Liste aller Schwünge -->
+      <div id="uebersicht" hidden>
+        <h2>Gesamtauswertung</h2>
+        <p class="hinweis">
+          Zusammengefasst über alle Schwünge. Eine Baustelle ist ein Fehler, der in mindestens
+          der Hälfte der Schwünge auftaucht – ein einzelner Ausreißer zählt nicht.
+        </p>
+        <div id="gesamtListe"></div>
+
+        <h2>Deine Schwünge</h2>
+        <p class="hinweis">Tippe auf einen Schwung, um ihn im Video mit allen Details zu sehen.</p>
+        <div id="schwungListe" class="phasen"></div>
+      </div>
+
+      <!-- 4b. Ein einzelner Schwung im Detail -->
+      <div id="einzel">
+      <h2 id="schwungTitel" hidden></h2>
       <h2>Deine Schwungphasen</h2>
       <p class="hinweis">
         Tippe auf eine Phase, um zu diesem Moment im Video zu springen.
@@ -99,6 +117,7 @@
       </p>
 
       <button id="exportieren" class="klein">💾 Posedaten speichern (für die Feinabstimmung)</button>
+      </div>
     </section>
   </main>
 

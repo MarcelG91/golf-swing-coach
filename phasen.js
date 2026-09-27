@@ -46,18 +46,17 @@ export function gueltigeBilder(bilder) {
   return bilder.filter((b) => b.punkte && b.punkte.length >= 25);
 }
 
+// Wie bewegen sich die Hände? Wird von erkennePhasen und von schwuenge.js
+// (mehrere Schwünge in einem Video finden) gemeinsam genutzt.
+// Eingabe: nur gültige Bilder (siehe gueltigeBilder).
 // seitenverhaeltnis = Videobreite / Videohöhe. MediaPipe liefert x und y jeweils von 0 bis 1,
 // bei einem Hochkant-Video ist 0,1 in x aber viel weniger Strecke als 0,1 in y.
 // Deshalb rechnen wir x in "Bildhöhen" um, damit Abstände in alle Richtungen vergleichbar sind.
-export function erkennePhasen(bilder, seitenverhaeltnis = 1) {
-  const gueltig = gueltigeBilder(bilder).map((b) => ({
+export function handBewegung(gueltigeListe, seitenverhaeltnis = 1) {
+  const gueltig = gueltigeListe.map((b) => ({
     zeit: b.zeit,
     punkte: b.punkte.map((p) => ({ x: p.x * seitenverhaeltnis, y: p.y })),
   }));
-  if (gueltig.length < 20) {
-    return { fehler: "Zu wenige Bilder mit erkannter Person. Ist dein ganzer Körper im Bild?" };
-  }
-
   const zeit = gueltig.map((b) => b.zeit);
 
   // 1. Position der Hände (Mitte beider Handgelenke) in jedem Bild
@@ -87,6 +86,16 @@ export function erkennePhasen(bilder, seitenverhaeltnis = 1) {
     tempoHaende.push(Math.hypot(x[b] - x[a], y[b] - y[a]) / dt / rumpf);
     tempoRunter.push((y[b] - y[a]) / dt / rumpf);
   }
+  return { zeit, haende, rumpf, y, tempoHaende, tempoRunter };
+}
+
+export function erkennePhasen(bilder, seitenverhaeltnis = 1) {
+  const gueltig = gueltigeBilder(bilder);
+  if (gueltig.length < 20) {
+    return { fehler: "Zu wenige Bilder mit erkannter Person. Ist dein ganzer Körper im Bild?" };
+  }
+  // Schritte 1–4: Handbahn und Handgeschwindigkeit (siehe handBewegung oben)
+  const { zeit, haende, rumpf, y, tempoHaende, tempoRunter } = handBewegung(gueltig, seitenverhaeltnis);
 
   // 5. Schnellster Moment im Abschwung: Hände bewegen sich am schnellsten nach unten
   let iSchnell = 0;

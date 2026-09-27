@@ -1,7 +1,8 @@
 // ===============================================================
-// Golf Swing Coach – Etappe 1 bis 5 + Technik-Tipps
-// Video laden, Skelett zeichnen, Schwungphasen erkennen, Schwung bewerten,
+// Golf Swing Coach – Etappe 1 bis 5 + Technik-Tipps + mehrere Schwünge
+// Video(s) laden, Skelett zeichnen, Schwungphasen erkennen, Schwung bewerten,
 // Tipps zu Armen, Oberkörperhaltung und Drehung mit Messlinien im Video.
+// Mehrere Videos oder lange Videos mit mehreren Schlägen → Gesamtauswertung.
 // ===============================================================
 
 // MediaPipe (von Google) erkennt 33 Körperpunkte in einem Bild.
@@ -12,12 +13,13 @@ import {
   DrawingUtils,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
-// Unsere eigene Logik für die Schwungphasen (reine Rechnerei, siehe phasen.js)
-import { erkennePhasen } from "./phasen.js";
-// Kennzahlen und Tipps (siehe kennzahlen.js)
-import { bewerteSchwung } from "./kennzahlen.js";
-// Arme, Oberkörper, Drehung + wichtigste Baustellen (siehe technik.js)
-import { bewerteTechnik, ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
+// Alle Schwünge in einem Video finden und einzeln auswerten – Phasen, Kennzahlen,
+// Technik (siehe schwuenge.js, nutzt phasen.js, kennzahlen.js und technik.js)
+import { findeSchwuenge } from "./schwuenge.js";
+// Zusammenfassung über mehrere Schwünge (siehe gesamtauswertung.js)
+import { gesamtauswertung } from "./gesamtauswertung.js";
+// Kategorien + wichtigste Baustellen (siehe technik.js)
+import { ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
 // Rote Abweichungen und gelbe Ideallinien im Video (siehe ideallinien.js)
 import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
@@ -63,6 +65,11 @@ const baustellenListe = $("baustellenListe");
 const selbstCheckListe = $("selbstCheckListe");
 const warnungenListe = $("warnungen");
 const exportierenBtn = $("exportieren");
+const uebersichtBox = $("uebersicht");
+const gesamtListe = $("gesamtListe");
+const schwungListe = $("schwungListe");
+const einzelBox = $("einzel");
+const schwungTitel = $("schwungTitel");
 
 const ctx = canvas.getContext("2d");
 const zeichner = new DrawingUtils(ctx);
@@ -83,6 +90,22 @@ let phasenErgebnis = null; // Zeitpunkte von Ansprechen, Top, Treffmoment, Finis
 let alleKennzahlen = []; // alle Kennzahlen mit Kennung, Kategorie und Videomoment
 // Welche Kennzahl gerade per "Im Video zeigen" eingezeichnet wird
 let aktiveMessung = null;
+
+// Mehrere Videos / mehrere Schwünge
+let dateien = []; // ausgewählte Videodateien
+let geladeneDatei = null; // welche davon gerade im Videoplayer steckt
+let alleSchwuenge = []; // alle gefundenen Schwünge aus allen Videos (siehe schwuenge.js)
+
+// Ergebnis der letzten Analyse vergessen (neues Video, neue Analyse)
+function setzeErgebnisZurueck() {
+  analyseBilder = [];
+  bewertung = null;
+  technik = null;
+  phasenErgebnis = null;
+  aktiveMessung = null;
+  alleKennzahlen = [];
+  ergebnisBox.hidden = true;
+}
 
 // Farben im Video
 const GRUEN = "#4ade80"; // Skelett und alles im Zielbereich
@@ -123,7 +146,7 @@ async function ladePoseErkennung() {
       setzePoseStatus("bereit");
       setStatus(
         video.src
-          ? "Pose-Erkennung bereit. Tippe auf „Schwung analysieren“."
+          ? "Pose-Erkennung bereit. Tippe auf „Analysieren“."
           : "Bereit. Wähle ein Schwungvideo aus."
       );
       // Im Hintergrund prüfen, ob alles für den Offline-Betrieb gespeichert ist
@@ -156,7 +179,7 @@ function setzePoseStatus(neu) {
   poseStatus = neu;
   const texte = {
     laedt: "⏳ Pose-Erkennung lädt …",
-    bereit: "🔍 Schwung analysieren",
+    bereit: "🔍 Analysieren",
     fehler: "⚠️ Pose-Erkennung fehlt",
   };
   analysierenBtn.textContent = texte[neu];
@@ -544,30 +567,30 @@ function schleife() {
 }
 
 // ---------------------------------------------------------------
-// 4. Ganzen Schwung analysieren (Ablauf in videoanalyse.js)
+// 4. Alle ausgewählten Videos analysieren (Ablauf pro Video in videoanalyse.js)
 // ---------------------------------------------------------------
 
 // Springt zu einer Zeit im Video und wartet, bis das Bild wirklich da ist
 const springeZu = (zeit) => springe(video, zeit);
 
-async function analysiereSchwung() {
-  if (poseStatus !== "bereit") {
-    setStatus(poseFehlerText || "Die Pose-Erkennung lädt noch – einen Moment.");
-    return;
-  }
-  video.pause();
-  analyseLaeuft = true;
-  setzeKnoepfeAktiv(false);
-  ergebnisBox.hidden = true;
-  analyseBilder = [];
-  bewertung = null;
-  technik = null;
-  aktiveMessung = null;
-  alleKennzahlen = [];
+// Eine Datei in den Videoplayer laden und warten, bis Größe und Länge bekannt sind.
+// Steckt sie schon drin, passiert nichts (spart Zeit beim Wechseln zwischen Schwüngen).
+function ladeDatei(datei) {
+  if (geladeneDatei === datei) return Promise.resolve();
+  geladeneDatei = datei;
+  videoName = datei.name;
+  return new Promise((fertig, fehler) => {
+    video.addEventListener("loadedmetadata", () => fertig(), { once: true });
+    video.addEventListener("error", () => fehler(new Error(`„${datei.name}“ lässt sich nicht abspielen`)), { once: true });
+    video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
+  });
+}
 
+// Das Video, das gerade im Player steckt, Bild für Bild durchgehen.
+// vorsilbe = z. B. "Video 2 von 3 · " für die Statuszeile
+async function analysiereGeladenesVideo(vorsilbe) {
   await springeZu(0);
   const { quelle, ms } = waehleSchnellsteQuelle();
-  const verkleinert = quelle === kleineLeinwand;
 
   let letzteMeldung = 0;
   const lauf = await analysiereVideo(video, () => erkennePose(quelle), {
@@ -582,35 +605,192 @@ async function analysiereSchwung() {
       const prozent = Math.min(100, Math.round((zeit / video.duration) * 100));
       const rest = tempo ? Math.ceil((video.duration - zeit) / tempo) : null;
       setStatus(
-        `Analysiere … ${prozent} %` +
+        `${vorsilbe}Analysiere … ${prozent} %` +
           (rest !== null ? ` · noch ca. ${rest} s` : "") +
           ` · ${Math.round(msBild)} ms pro Bild`
       );
     },
   });
-  analyseBilder = lauf.bilder;
-  // Diese Werte helfen bei der Fehlersuche, falls die Analyse langsam ist
-  const messwerte =
-    `${zahl(lauf.sekunden, 1)} s · ${Math.round(lauf.msProBild)} ms pro Bild · ` +
-    `${genutzterRechner || "?"}${verkleinert ? " · verkleinert" : ""} · ${lauf.verfahren}`;
+  return { ...lauf, verkleinert: quelle === kleineLeinwand };
+}
+
+async function analysiereAlles() {
+  if (poseStatus !== "bereit") {
+    setStatus(poseFehlerText || "Die Pose-Erkennung lädt noch – einen Moment.");
+    return;
+  }
+  video.pause();
+  analyseLaeuft = true;
+  setzeKnoepfeAktiv(false);
+  setzeErgebnisZurueck();
+  alleSchwuenge = [];
+  const nichtLesbar = [];
+  let sekunden = 0;
+  let letzterLauf = null;
+
+  for (const [nr, datei] of dateien.entries()) {
+    const vorsilbe = dateien.length > 1 ? `Video ${nr + 1} von ${dateien.length} · ` : "";
+    try {
+      await ladeDatei(datei);
+    } catch {
+      nichtLesbar.push(datei.name); // z. B. Format, das dieser Browser nicht kann
+      continue;
+    }
+    const lauf = await analysiereGeladenesVideo(vorsilbe);
+    sekunden += lauf.sekunden;
+    letzterLauf = lauf;
+
+    // Alle Schwünge in diesem Video finden. Jeder Schwung merkt sich sein Video –
+    // und alle Bilder des Videos, damit das Skelett später überall passt.
+    const seitenverhaeltnis = video.videoWidth / video.videoHeight;
+    for (const schwung of findeSchwuenge(lauf.bilder, seitenverhaeltnis)) {
+      alleSchwuenge.push({ ...schwung, datei, videoBilder: lauf.bilder });
+    }
+  }
+  // Fortlaufend nummerieren – über alle Videos hinweg
+  alleSchwuenge.forEach((s, i) => (s.nummer = i + 1));
 
   video.playbackRate = Number(tempoSelect.value); // Abspieltempo wieder wie eingestellt
   analyseLaeuft = false;
   setzeKnoepfeAktiv(true);
 
-  const seitenverhaeltnis = video.videoWidth / video.videoHeight;
-  const ergebnis = erkennePhasen(analyseBilder, seitenverhaeltnis);
-  if (ergebnis.fehler) {
-    setStatus(ergebnis.fehler);
+  const hinweisNichtLesbar = nichtLesbar.length ? ` Nicht lesbar: ${nichtLesbar.join(", ")}.` : "";
+  if (!letzterLauf) {
+    setStatus(`Kein Video ließ sich abspielen. Probiere es als MP4 oder in Safari.${hinweisNichtLesbar}`);
     return;
   }
-  phasenErgebnis = ergebnis;
-  bewertung = bewerteSchwung(analyseBilder, ergebnis, seitenverhaeltnis);
-  technik = bewerteTechnik(analyseBilder, ergebnis, seitenverhaeltnis, bewertung.ansicht);
-  zeigeErgebnis(ergebnis);
+
+  zeigeUebersicht();
+  // Zuerst den ersten Schwung zeigen, der sich auswerten ließ
+  await waehleSchwung(alleSchwuenge.find((s) => s.phasen) || alleSchwuenge[0]);
+
+  // Diese Werte helfen bei der Fehlersuche, falls die Analyse langsam ist
+  const messwerte =
+    `${zahl(sekunden, 1)} s · ${Math.round(letzterLauf.msProBild)} ms pro Bild · ` +
+    `${genutzterRechner || "?"}${letzterLauf.verkleinert ? " · verkleinert" : ""} · ${letzterLauf.verfahren}`;
+  const anzahl = alleSchwuenge.filter((s) => s.phasen).length;
+  const gefunden = alleSchwuenge.length > 1 || dateien.length > 1 ? `${anzahl} Schwünge gefunden. ` : "";
+  setStatus(`${gefunden}Analyse fertig (${messwerte}).${hinweisNichtLesbar}`);
+}
+
+// ---------------------------------------------------------------
+// 4b. Mehrere Schwünge: Gesamtauswertung und Liste
+// ---------------------------------------------------------------
+
+// Sekunden als Minuten:Sekunden, z. B. 74 → "1:14"
+const uhrzeit = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
+
+const ANSICHT_NAME = { frontal: "Von vorne (frontal)", hinten: "Von hinten (entlang der Ziellinie)" };
+
+function zeigeUebersicht() {
+  // Nur ein Schwung? Dann sieht alles aus wie früher – ohne Gesamtauswertung.
+  uebersichtBox.hidden = alleSchwuenge.length < 2;
+  schwungTitel.hidden = alleSchwuenge.length < 2;
+  ergebnisBox.hidden = false;
+  if (alleSchwuenge.length < 2) return;
+
+  // 1. Gesamtauswertung, getrennt nach Ansicht
+  gesamtListe.innerHTML = "";
+  const gruppen = gesamtauswertung(alleSchwuenge);
+  const nichtGezaehlt = alleSchwuenge.filter((s) => !s.sicher).length;
+  if (nichtGezaehlt) {
+    const hinweis = document.createElement("p");
+    hinweis.className = "hinweis";
+    hinweis.textContent = `${nichtGezaehlt} ${nichtGezaehlt === 1 ? "Schwung zählt" : "Schwünge zählen"} nicht mit, weil die Erkennung unsicher war (⚠️ in der Liste unten).`;
+    gesamtListe.appendChild(hinweis);
+  }
+  if (gruppen.length === 0) {
+    const hinweis = document.createElement("p");
+    hinweis.className = "karte unsicher";
+    hinweis.textContent = "Kein Schwung ließ sich sicher auswerten – schau dir die Schwünge unten einzeln an.";
+    gesamtListe.appendChild(hinweis);
+  }
+  for (const gruppe of gruppen) {
+    const titel = document.createElement("h3");
+    titel.textContent = `${ANSICHT_NAME[gruppe.ansicht]} · ${gruppe.anzahl} ${gruppe.anzahl === 1 ? "Schwung" : "Schwünge"}`;
+    gesamtListe.appendChild(titel);
+
+    const baustellen = document.createElement("div");
+    baustellen.className = "kennzahlen";
+    if (gruppe.baustellen.length === 0) {
+      const lob = document.createElement("p");
+      lob.className = "karte gut";
+      lob.textContent = "Keine Baustelle, die sich wiederholt – stark!";
+      baustellen.appendChild(lob);
+    }
+    gruppe.baustellen.forEach((k, i) => baustellen.appendChild(baueKarte(k, { nummer: i + 1, offen: true })));
+    gesamtListe.appendChild(baustellen);
+
+    // Alle Kennzahlen zum Aufklappen, nach Bereichen sortiert
+    const details = document.createElement("details");
+    const zusammenfassung = document.createElement("summary");
+    zusammenfassung.textContent = "Alle Kennzahlen dieser Ansicht";
+    details.appendChild(zusammenfassung);
+    const liste = document.createElement("div");
+    liste.className = "kennzahlen";
+    for (const kategorie of KATEGORIEN) {
+      const inKategorie = gruppe.kennzahlen.filter((k) => k.kategorie === kategorie.schluessel);
+      if (inKategorie.length === 0) continue;
+      const ueberschrift = document.createElement("h4");
+      ueberschrift.textContent = kategorie.name;
+      liste.appendChild(ueberschrift);
+      for (const k of inKategorie) liste.appendChild(baueKarte(k));
+    }
+    details.appendChild(liste);
+    gesamtListe.appendChild(details);
+  }
+
+  // 2. Liste aller Schwünge – ein Knopf pro Schwung
+  schwungListe.innerHTML = "";
+  for (const s of alleSchwuenge) {
+    const knopf = document.createElement("button");
+    knopf.dataset.nummer = s.nummer;
+    const wann = s.phasen ? ` · bei ${uhrzeit(s.phasen.treffmoment.zeit)}` : "";
+    const ansicht = s.ansicht ? ` · ${s.ansicht === "frontal" ? "von vorne" : "von hinten"}` : "";
+    knopf.innerHTML = `<strong></strong><small></small>`;
+    knopf.querySelector("strong").textContent = `${s.sicher ? "" : "⚠️ "}Schwung ${s.nummer}`;
+    knopf.querySelector("small").textContent =
+      `${s.datei.name}${wann}${ansicht}` + (s.sicher ? "" : " · zählt nicht mit");
+    knopf.addEventListener("click", async () => {
+      await waehleSchwung(s);
+      buehne.scrollIntoView({ behavior: "smooth", block: "center" }); // hoch zum Video
+    });
+    schwungListe.appendChild(knopf);
+  }
+}
+
+// Einen Schwung im Detail zeigen: sein Video laden, Phasen und Bewertung anzeigen
+async function waehleSchwung(s) {
+  for (const knopf of schwungListe.children) {
+    knopf.classList.toggle("aktiv", Number(knopf.dataset.nummer) === s.nummer);
+  }
+  aktiveMessung = null;
+  await ladeDatei(s.datei);
+  analyseBilder = s.videoBilder;
+  schwungTitel.textContent = `Schwung ${s.nummer} · ${s.datei.name}`;
+
+  if (!s.phasen) {
+    // Hier ließ sich kein Schwung erkennen (z. B. Person nicht ganz im Bild)
+    phasenErgebnis = bewertung = technik = null;
+    alleKennzahlen = [];
+    einzelBox.hidden = true;
+    // Bei nur einem Video mit einem Schwung gibt es sonst nichts zu zeigen
+    if (alleSchwuenge.length < 2) ergebnisBox.hidden = true;
+    setStatus(alleSchwuenge.length < 2 ? s.grund : `Schwung ${s.nummer}: ${s.grund}`);
+    return;
+  }
+  phasenErgebnis = s.phasen;
+  bewertung = s.bewertung;
+  technik = s.technik;
+  einzelBox.hidden = false;
+  zeigeErgebnis(s.phasen);
+  if (!s.sicher && alleSchwuenge.length > 1) {
+    const eintrag = document.createElement("li");
+    eintrag.textContent = `Dieser Schwung zählt nicht zur Gesamtauswertung: ${s.grund}`;
+    warnungenListe.prepend(eintrag);
+  }
   zeigeBewertung();
-  await zeigePhase("top", ergebnis);
-  setStatus(`Analyse fertig (${messwerte}).`);
+  await zeigePhase("top", s.phasen);
 }
 
 function setzeKnoepfeAktiv(aktiv) {
@@ -812,17 +992,14 @@ function exportiereDaten() {
 // 6. Bedienung
 // ---------------------------------------------------------------
 videoInput.addEventListener("change", () => {
-  const datei = videoInput.files[0];
-  if (!datei) return;
-  videoName = datei.name;
-  analyseBilder = [];
-  bewertung = null;
-  technik = null;
-  aktiveMessung = null;
-  alleKennzahlen = [];
-  ergebnisBox.hidden = true;
-  video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
-  setStatus(`Lade „${datei.name}“ …`);
+  if (videoInput.files.length === 0) return;
+  dateien = [...videoInput.files]; // eine Liste aus allen markierten Videos
+  alleSchwuenge = [];
+  setzeErgebnisZurueck();
+  setStatus(`Lade „${dateien[0].name}“ …`);
+  // Das erste Video gleich zeigen. Fehler meldet schon video.addEventListener("error") unten.
+  geladeneDatei = null;
+  ladeDatei(dateien[0]).catch(() => {});
 });
 
 video.addEventListener("loadedmetadata", () => {
@@ -837,7 +1014,10 @@ video.addEventListener("loadedmetadata", () => {
   buehne.hidden = false;
   steuerung.hidden = false;
   video.currentTime = 0; // löst "seeked" aus → erstes Bild wird analysiert
-  if (poseStatus === "bereit") setStatus("Video geladen. Tippe auf „Schwung analysieren“ oder spiel es ab.");
+  // Während der Analyse und beim Wechseln zwischen Schwüngen nicht dazwischenreden
+  if (analyseLaeuft || alleSchwuenge.length) return;
+  const was = dateien.length > 1 ? `${dateien.length} Videos ausgewählt` : "Video geladen";
+  if (poseStatus === "bereit") setStatus(`${was}. Tippe auf „Analysieren“ oder spiel es ab.`);
   else if (poseStatus === "fehler") setStatus(`Video geladen – aber: ${poseFehlerText}`);
   else setStatus("Video geladen. Die Pose-Erkennung lädt noch …");
 });
@@ -879,7 +1059,7 @@ tempoSelect.addEventListener("change", () => {
 });
 
 skelettAn.addEventListener("change", analysiereAktuellesBild);
-analysierenBtn.addEventListener("click", analysiereSchwung);
+analysierenBtn.addEventListener("click", analysiereAlles);
 exportierenBtn.addEventListener("click", exportiereDaten);
 
 // Los geht's

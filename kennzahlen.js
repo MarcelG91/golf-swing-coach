@@ -23,6 +23,7 @@ const GRENZE_FRONTAL = 0.6;
 const mitte = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
 const abstand = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 const zahl = (wert, stellen = 2) => wert.toFixed(stellen).replace(".", ",");
+const rund = (wert) => Math.round(wert * 100) / 100;
 
 // Bewertungsstufen: gut (grün), achtung (gelb), verbessern (rot), unsicher (grau)
 function stufe(wert, { gutBis, achtungBis }) {
@@ -103,6 +104,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       name: "Tempo",
       wert: `${zahl(verhaeltnis, 1)} : 1`,
       detail: `Rückschwung ${zahl(rueckschwung)} s · Abschwung ${zahl(abschwung)} s`,
+      messwert: rund(verhaeltnis), // Zahl für Gesamtauswertung und Fortschritt
       bewertung, text, tipp,
     });
   }
@@ -130,6 +132,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       name: "Kopfhöhe",
       wert: `${kopfHoch >= 0 ? "+" : "−"}${zahl(Math.abs(kopfHoch) * 100, 0)} %`,
       detail: "Veränderung bis zum Treffmoment, in % deiner Rumpflänge (+ = höher)",
+      messwert: rund(kopfHoch),
       bewertung, text, tipp,
     });
   }
@@ -156,6 +159,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       name: "Kopf seitlich",
       wert: `${kopfTreff >= 0 ? "+" : "−"}${zahl(Math.abs(kopfTreff) * 100, 0)} %`,
       detail: "Verschiebung bis zum Treffmoment, in % der Rumpflänge (+ = Richtung Ziel)",
+      messwert: rund(kopfTreff),
       bewertung, text, tipp,
     });
 
@@ -182,6 +186,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
         name: "Gewichtsverlagerung",
         wert: `${zahl(Math.max(0, Math.min(1.2, anteil)) * 100, 0)} %`,
         detail: "Hüftposition im Finish: 0 % = hinterer Fuß, 100 % = vorderer Fuß",
+        messwert: rund(anteil),
         bewertung: bw, text: txt, tipp: tp,
       });
     }
@@ -195,6 +200,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       name: "Vorneigung halten",
       wert: `${verlust > 0 ? "−" : "+"}${zahl(Math.abs(verlust), 0)}°`,
       detail: `Ansprechen ${zahl(vorneigung(A), 0)}° → Treffmoment ${zahl(vorneigung(I), 0)}°`,
+      messwert: rund(verlust), // positiv = aufgerichtet
       bewertung,
       text: bewertung === "gut"
         ? "Du hältst deine Vorneigung bis zum Treffmoment gut. Ein paar Grad Aufrichten sind normal."
@@ -214,6 +220,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       name: "Hüfte Richtung Ball",
       wert: `${zahl(Math.max(0, hueftVor) * 100, 0)} %`,
       detail: "Wie weit die Hüfte bis zum Treffmoment zum Ball schiebt, in % der Rumpflänge",
+      messwert: rund(hueftVor),
       bewertung: bw,
       text: bw === "gut"
         ? "Deine Hüfte bleibt im Abschwung auf Abstand zum Ball. Sehr gut!"
