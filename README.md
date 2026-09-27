@@ -26,11 +26,15 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 
 ```bash
 cd ~/Projekte/golf-swing-coach
-python3 -m http.server 8000
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Dann im Browser öffnen: http://localhost:8000
+Dann im Browser öffnen: http://127.0.0.1:8000
 Beenden mit `Ctrl + C` im Terminal.
+
+> **Wichtig:** `--bind 127.0.0.1` sorgt dafür, dass nur dein Mac die Seite erreicht.
+> Ohne den Zusatz kann jeder im selben WLAN (Golfclub, Café) alle Dateien im Ordner
+> abrufen – auch Videos.
 
 > Warum ein lokaler Server? Browser laden JavaScript-Module aus Sicherheitsgründen
 > nicht per Doppelklick auf die Datei, sondern nur über eine Web-Adresse.
@@ -45,6 +49,20 @@ Beenden mit `Ctrl + C` im Terminal.
 - Ein Schwung pro Video (bei mehreren wird der schnellste ausgewertet)
 - Die App erkennt selbst, ob von vorne oder von hinten gefilmt wurde. Beide Ansichten
   liefern unterschiedliche Kennzahlen – am besten abwechselnd beide filmen.
+
+### Damit das Video auf dem Handy schnell geladen ist
+
+Bevor die App ein Video bekommt, bereitet das iPhone es vor. Je größer das Video, desto länger dauert das.
+
+- **1080p statt 4K filmen:** Einstellungen → Kamera → Video aufnehmen → „1080p mit 30 fps“.
+  Das reicht völlig, die Pose-Erkennung rechnet intern ohnehin mit 256 × 256 Pixeln.
+- **Nur den Schwung auswählen:** Das Video vorher in Fotos auf 5–8 Sekunden kürzen
+  (Bearbeiten → Anfang und Ende verschieben). Das spart Zeit beim Laden und bei der Analyse.
+- **Liegt das Video nur in iCloud?** Mit „iPhone-Speicher optimieren“ lädt das iPhone ältere
+  Videos erst herunter. Frisch gefilmte Videos gehen am schnellsten.
+- **Zeigt das iPhone lange „Wird vorbereitet“ oder „Komprimieren“,** wandelt Safari das Video um.
+  Zum Ausprobieren: Einstellungen → Kamera → Formate → „Maximale Kompatibilität“,
+  oder das Video über „Dateien“ statt über „Fotos“ auswählen.
 
 ## Ausprobieren ohne eigenes Video
 
@@ -73,6 +91,8 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
+| `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
+| `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
 
 ## Arbeitsweise mit Branches
 
@@ -97,6 +117,31 @@ node --test
 ```
 
 (Braucht Node.js – falls nicht installiert: `brew install node`)
+
+### Automatische Prüfung auf GitHub
+
+Bei jedem Pull Request prüft GitHub automatisch (`.github/workflows/pruefen.yml`):
+
+1. ob alle JavaScript-Dateien fehlerfrei lesbar sind,
+2. alle Tests,
+3. den Video-Wächter: keine Videos, keine Posedaten-Exporte, keine Datei über 5 MB im Repo.
+
+Das Ergebnis steht im Pull Request unter „Checks“. **Nur mergen, wenn der Haken grün ist.**
+
+## Rückweg, wenn ein Update Probleme macht
+
+```bash
+git checkout main && git pull
+git log --oneline -5                     # Merge-Commit des Updates suchen, z. B. 2922af6
+git checkout -b rueckgaengig-update
+git revert -m 1 <merge-commit>           # macht das Update rückgängig
+git push -u origin rueckgaengig-update
+gh pr create --fill                      # Checks abwarten, dann mergen
+gh pr merge --merge --delete-branch
+```
+
+Nach 1–2 Minuten ist der alte Stand online. Die App holt ihn sich beim nächsten Start mit Internet
+(der Browser kann Dateien bis zu 10 Minuten zwischenspeichern).
 
 ## So erkennt die App die Phasen
 

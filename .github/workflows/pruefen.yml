@@ -1,0 +1,52 @@
+# ===============================================================
+# Automatische Prüfung (GitHub Actions)
+# Läuft bei jedem Pull Request und bei jedem neuen Stand von main
+# auf einem Server von GitHub – für öffentliche Repos kostenlos.
+# Im Pull Request unter „Checks“ siehst du das Ergebnis:
+# grüner Haken = alles in Ordnung, rotes Kreuz = nicht mergen.
+# ===============================================================
+name: Prüfen
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch: # Knopf „Run workflow“ zum Starten von Hand
+
+# Die Prüfung darf den Code nur lesen, nichts ändern oder veröffentlichen.
+permissions:
+  contents: read
+
+# Kommt ein neuer Stand, bevor die alte Prüfung fertig ist: alte abbrechen.
+concurrency:
+  group: pruefen-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Fremde Bausteine sind auf einen festen Stand (Commit) festgenagelt,
+      # damit sich nichts unbemerkt ändert. Der Kommentar nennt die Version.
+      - name: Code holen
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false # kein Zugangsschlüssel im Arbeitsordner
+
+      - name: Node.js einrichten
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 22
+          package-manager-cache: false # wir haben keine Abhängigkeiten zu cachen
+
+      - name: Schreibweise aller JavaScript-Dateien prüfen
+        # Findet Tippfehler wie fehlende Klammern auch in app.js, pwa.js und sw.js,
+        # die sonst erst auf dem Handy auffallen würden.
+        run: |
+          git ls-files -z '*.js' '*.mjs' | xargs -0 -n1 node --check
+          echo "Alle JavaScript-Dateien sind lesbar."
+
+      - name: Tests und Video-Wächter
+        run: node --test
