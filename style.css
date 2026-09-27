@@ -1,0 +1,80 @@
+/* Farben an einer Stelle, damit man sie leicht ändern kann */
+:root {
+  --hintergrund: #0f1f17;
+  --flaeche: #173326;
+  --text: #eef5f0;
+  --text-leise: #a9c2b3;
+  --akzent: #4ade80;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--hintergrund);
+  color: var(--text);
+}
+
+header, main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 { margin: 8px 0 4px; font-size: 1.6rem; }
+.untertitel { margin: 0; color: var(--text-leise); }
+
+/* Upload-Button: das echte Datei-Feld wird versteckt, der Text ist klickbar */
+.upload input { display: none; }
+.upload span {
+  display: inline-block;
+  padding: 12px 20px;
+  background: var(--akzent);
+  color: #06140c;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.status { color: var(--text-leise); min-height: 1.4em; }
+
+/* Video und Canvas liegen exakt übereinander.
+   --ratio (Breite/Höhe des Videos) setzt app.js, damit auch Hochkant-Videos passen. */
+.buehne {
+  position: relative;
+  width: min(100%, calc(70vh * var(--ratio, 1.78)));
+  margin: 0 auto;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+}
+.buehne video { display: block; width: 100%; height: auto; }
+.buehne canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.steuerung {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 12px;
+}
+.steuerung button, .steuerung select {
+  padding: 10px 14px;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.steuerung label { display: flex; gap: 6px; align-items: center; }
+
+[hidden] { display: none !important; }

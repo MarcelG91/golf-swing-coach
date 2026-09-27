@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Golf Swing Coach</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>⛳ Golf Swing Coach</h1>
+    <p class="untertitel">Video hochladen – die App erkennt deine Körperhaltung.</p>
+  </header>
+
+  <main>
+    <!-- 1. Video auswählen -->
+    <label class="upload">
+      <input type="file" id="videoInput" accept="video/*">
+      <span>Schwungvideo auswählen</span>
+    </label>
+
+    <!-- Statuszeile: zeigt, was die App gerade macht -->
+    <p id="status" class="status">Lade die Pose-Erkennung …</p>
+
+    <!-- 2. Video mit Zeichenfläche darüber (Canvas = Leinwand für das Skelett) -->
+    <div id="buehne" class="buehne" hidden>
+      <video id="video" playsinline muted></video>
+      <canvas id="overlay"></canvas>
+    </div>
+
+    <!-- 3. Steuerung -->
+    <div id="steuerung" class="steuerung" hidden>
+      <button id="playPause">▶︎ Abspielen</button>
+      <button id="zurueck">◀︎ Bild</button>
+      <button id="vor">Bild ▶︎</button>
+      <label>Tempo
+        <select id="tempo">
+          <option value="0.25">0,25×</option>
+          <option value="0.5" selected>0,5×</option>
+          <option value="1">1×</option>
+        </select>
+      </label>
+      <label class="schalter"><input type="checkbox" id="skelettAn" checked> Skelett</label>
+    </div>
+  </main>
+
+  <!-- Die eigentliche Logik steht in app.js -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>
