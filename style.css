@@ -218,3 +218,61 @@ body {
   font-size: 0.8rem;
   text-align: center;
 }
+
+/* --- Etappe 8: Speichern und Meine Schwünge --- */
+.umschalter { display: flex; gap: 8px; margin-top: 12px; }
+.umschalter button {
+  flex: 1;
+  padding: 10px 12px;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.umschalter button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
+
+.speichern { margin-top: 24px; padding-top: 12px; border-top: 1px solid #2c5a43; }
+.formular { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.formular label { display: grid; gap: 4px; font-size: 0.9rem; color: var(--text-leise); }
+.formular .breit { grid-column: 1 / -1; }
+.formular input, .formular select {
+  padding: 10px;
+  background: var(--hintergrund);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 8px;
+  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
+}
+.auswahl { display: grid; gap: 6px; margin-bottom: 12px; }
+.auswahl label { display: flex; gap: 10px; align-items: center; }
+.auswahl input { width: 20px; height: 20px; }
+.auswahl small { color: var(--text-leise); }
+button.haupt {
+  padding: 12px 18px;
+  background: var(--akzent);
+  color: #06140c;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.sitzungen { display: grid; gap: 10px; }
+.sitzungen button {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  text-align: left;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.sitzungen img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
+.sitzungen small { display: block; color: var(--text-leise); margin-top: 2px; }

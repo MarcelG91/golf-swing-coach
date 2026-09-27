@@ -1,8 +1,9 @@
 // ===============================================================
-// Golf Swing Coach – Etappe 1 bis 5 + Technik-Tipps + mehrere Schwünge
+// Golf Swing Coach – Etappe 1 bis 5 + Technik-Tipps + mehrere Schwünge + Speichern
 // Video(s) laden, Skelett zeichnen, Schwungphasen erkennen, Schwung bewerten,
 // Tipps zu Armen, Oberkörperhaltung und Drehung mit Messlinien im Video.
 // Mehrere Videos oder lange Videos mit mehreren Schlägen → Gesamtauswertung.
+// Schwünge auf dem Gerät speichern und wieder öffnen (Etappe 8).
 // ===============================================================
 
 // MediaPipe (von Google) erkennt 33 Körperpunkte in einem Bild.
@@ -25,7 +26,20 @@ import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
 import { analysiereVideo, springe } from "./videoanalyse.js";
 // Offline-Prüfung (siehe pwa.js)
-import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname } from "./pwa.js";
+import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
+// Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
+import {
+  clipGrenzen,
+  schwungZumSpeichern,
+  speichereSitzung,
+  ladeSitzungen,
+  ladeSchwuengeDerSitzung,
+  ladeMedium,
+  loescheSchwung,
+  loescheSitzung,
+  speicherBelegung,
+} from "./speicher.js";
+import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -70,6 +84,23 @@ const gesamtListe = $("gesamtListe");
 const schwungListe = $("schwungListe");
 const einzelBox = $("einzel");
 const schwungTitel = $("schwungTitel");
+// Etappe 8: Speichern und Meine Schwünge
+const zuAnalyseBtn = $("zuAnalyse");
+const zuGespeichertBtn = $("zuGespeichert");
+const analyseBereich = $("analyseBereich");
+const gespeichertBereich = $("gespeichertBereich");
+const speichernBox = $("speichernBox");
+const speichernDatum = $("speichernDatum");
+const speichernSchlaeger = $("speichernSchlaeger");
+const speichernNotiz = $("speichernNotiz");
+const speichernAuswahl = $("speichernAuswahl");
+const speichernKnopf = $("speichernKnopf");
+const gespeichertBox = $("gespeichertBox");
+const gespeichertInfo = $("gespeichertInfo");
+const schwungLoeschenBtn = $("schwungLoeschen");
+const sitzungLoeschenBtn = $("sitzungLoeschen");
+const belegungText = $("belegung");
+const sitzungsListe = $("sitzungsListe");
 
 const ctx = canvas.getContext("2d");
 const zeichner = new DrawingUtils(ctx);
@@ -95,6 +126,11 @@ let aktiveMessung = null;
 let dateien = []; // ausgewählte Videodateien
 let geladeneDatei = null; // welche davon gerade im Videoplayer steckt
 let alleSchwuenge = []; // alle gefundenen Schwünge aus allen Videos (siehe schwuenge.js)
+let aktuellerSchwung = null; // welcher davon gerade im Detail zu sehen ist
+
+// Speichern (Etappe 8)
+let gespeicherteSitzung = null; // aus "Meine Schwünge" geöffnet? (null = frisch analysiert)
+let schonGespeichert = false; // verhindert, dass dieselbe Analyse zweimal gespeichert wird
 
 // Ergebnis der letzten Analyse vergessen (neues Video, neue Analyse)
 function setzeErgebnisZurueck() {
@@ -619,6 +655,10 @@ async function analysiereAlles() {
     setStatus(poseFehlerText || "Die Pose-Erkennung lädt noch – einen Moment.");
     return;
   }
+  if (dateien.length === 0) {
+    setStatus("Wähle zuerst oben ein Video aus.");
+    return;
+  }
   video.pause();
   analyseLaeuft = true;
   setzeKnoepfeAktiv(false);
@@ -661,6 +701,9 @@ async function analysiereAlles() {
   }
 
   zeigeUebersicht();
+  gespeicherteSitzung = null;
+  schonGespeichert = false;
+  zeigeSpeicherKaesten();
   // Zuerst den ersten Schwung zeigen, der sich auswerten ließ
   await waehleSchwung(alleSchwuenge.find((s) => s.phasen) || alleSchwuenge[0]);
 
@@ -750,7 +793,7 @@ function zeigeUebersicht() {
     knopf.innerHTML = `<strong></strong><small></small>`;
     knopf.querySelector("strong").textContent = `${s.sicher ? "" : "⚠️ "}Schwung ${s.nummer}`;
     knopf.querySelector("small").textContent =
-      `${s.datei.name}${wann}${ansicht}` + (s.sicher ? "" : " · zählt nicht mit");
+      `${videoNameVon(s)}${wann}${ansicht}` + (s.sicher ? "" : " · zählt nicht mit");
     knopf.addEventListener("click", async () => {
       await waehleSchwung(s);
       buehne.scrollIntoView({ behavior: "smooth", block: "center" }); // hoch zum Video
@@ -759,15 +802,27 @@ function zeigeUebersicht() {
   }
 }
 
+// Name des Originalvideos. Gespeicherte Schwünge ohne Clip (siehe unten) haben keine
+// Datei, aber den Namen in ihren Daten.
+const videoNameVon = (s) => s.datei?.name ?? s.videoName;
+
 // Einen Schwung im Detail zeigen: sein Video laden, Phasen und Bewertung anzeigen
 async function waehleSchwung(s) {
   for (const knopf of schwungListe.children) {
     knopf.classList.toggle("aktiv", Number(knopf.dataset.nummer) === s.nummer);
   }
   aktiveMessung = null;
-  await ladeDatei(s.datei);
+  aktuellerSchwung = s;
+  if (s.datei) {
+    await ladeDatei(s.datei);
+  } else {
+    // Gespeichert ohne Video (Gerät konnte keinen Clip aufnehmen): nur die Auswertung zeigen
+    video.pause();
+    geladeneDatei = null;
+    buehne.hidden = steuerung.hidden = true;
+  }
   analyseBilder = s.videoBilder;
-  schwungTitel.textContent = `Schwung ${s.nummer} · ${s.datei.name}`;
+  schwungTitel.textContent = `Schwung ${s.nummer} · ${videoNameVon(s)}`;
 
   if (!s.phasen) {
     // Hier ließ sich kein Schwung erkennen (z. B. Person nicht ganz im Bild)
@@ -790,11 +845,13 @@ async function waehleSchwung(s) {
     warnungenListe.prepend(eintrag);
   }
   zeigeBewertung();
-  await zeigePhase("top", s.phasen);
+  if (s.datei) await zeigePhase("top", s.phasen);
+  else setStatus(`Schwung ${s.nummer}: Für diesen Schwung ist kein Video gespeichert – nur die Auswertung.`);
 }
 
 function setzeKnoepfeAktiv(aktiv) {
-  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput]) {
+  // Umschalter auch sperren: Ein Wechsel hält das Video an und würde Analyse/Speichern stören
+  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput, zuAnalyseBtn, zuGespeichertBtn]) {
     knopf.disabled = !aktiv;
   }
   analysierenBtn.disabled = !aktiv || poseStatus !== "bereit";
@@ -936,6 +993,7 @@ function zeigenKnopf(k) {
 
 // Springt zum passenden Moment und zeichnet die Linie (rot/grün) und die Ideallinie (gelb) ein
 async function zeigeMessung(k) {
+  if (!geladeneDatei) return; // gespeicherter Schwung ohne Video
   const zeit = phasenErgebnis[k.phase].zeit;
   aktiveMessung = {
     zeit,
@@ -954,6 +1012,7 @@ async function zeigeMessung(k) {
 }
 
 async function zeigePhase(schluessel, ergebnis) {
+  if (!geladeneDatei) return; // gespeicherter Schwung ohne Video
   aktiveMessung = null;
   video.pause();
   await springeZu(ergebnis[schluessel].zeit);
@@ -989,12 +1048,275 @@ function exportiereDaten() {
 }
 
 // ---------------------------------------------------------------
+// 5b. Speichern (Etappe 8)
+// Jeder Schwung wird ein eigener Eintrag mit eigenem kurzem Video. Die "Sitzung"
+// hält zusammen, was aus einer Analyse stammt. Die Gesamtauswertung wird beim
+// Öffnen einfach neu berechnet – sie muss nicht mitgespeichert werden.
+// ---------------------------------------------------------------
+
+// Heutiges Datum als "2026-09-27" – das Format, das <input type="date"> erwartet
+function heute() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+// "2026-09-27" → "27.09.2026"
+const deutschesDatum = (iso) => iso.split("-").reverse().join(".");
+
+// Unter dem Ergebnis: Speichern-Kasten (frisch analysiert) oder Löschen-Kasten (gespeichert)
+function zeigeSpeicherKaesten() {
+  gespeichertBox.hidden = !gespeicherteSitzung;
+  if (gespeicherteSitzung) {
+    const { datum, schlaeger, notiz } = gespeicherteSitzung;
+    gespeichertInfo.textContent = `${deutschesDatum(datum)} · ${schlaeger}${notiz ? ` · ${notiz}` : ""}`;
+    speichernBox.hidden = true;
+    return;
+  }
+  // Nur Schwünge mit erkannten Phasen lassen sich speichern
+  const speicherbar = alleSchwuenge.filter((s) => s.phasen);
+  speichernBox.hidden = schonGespeichert || speicherbar.length === 0;
+  speichernDatum.value = heute();
+  // Schläger und Notiz bleiben stehen – praktisch, wenn du mit demselben Schläger weitermachst
+  speichernAuswahl.innerHTML = "";
+  for (const s of speicherbar) {
+    const zeile = document.createElement("label");
+    zeile.innerHTML = `<input type="checkbox"><span><strong></strong> <small></small></span>`;
+    const haken = zeile.querySelector("input");
+    haken.checked = s.sicher; // unsichere (Probeschwung? Zeitlupe?) nicht vorausgewählt
+    haken.dataset.nummer = s.nummer;
+    zeile.querySelector("strong").textContent = `${s.sicher ? "" : "⚠️ "}Schwung ${s.nummer}`;
+    zeile.querySelector("small").textContent =
+      `${videoNameVon(s)} · ${s.ansicht === "frontal" ? "von vorne" : "von hinten"}`;
+    speichernAuswahl.appendChild(zeile);
+  }
+}
+
+// Kleines Vorschaubild für die Liste: die Top-Position mit Skelett, als JPEG
+async function macheVorschau(s) {
+  const zeit = s.phasen.top.zeit;
+  await springe(video, zeit, 5000); // bis 5 s warten – iPhone-Videos springen langsam
+  const skala = 320 / Math.max(video.videoWidth, video.videoHeight);
+  const bild = document.createElement("canvas");
+  bild.width = Math.round(video.videoWidth * skala);
+  bild.height = Math.round(video.videoHeight * skala);
+  const bildCtx = bild.getContext("2d");
+  bildCtx.drawImage(video, 0, 0, bild.width, bild.height);
+  const punkte = s.videoBilder[Math.round(zeit / BILD_DAUER)]?.punkte;
+  if (punkte) {
+    new DrawingUtils(bildCtx).drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, { color: GRUEN, lineWidth: 2 });
+  }
+  // toBlob arbeitet mit einer Rückruf-Funktion – als Promise können wir darauf warten
+  return new Promise((fertig) => bild.toBlob(fertig, "image/jpeg", 0.8));
+}
+
+async function speichereAuswahl() {
+  const nummern = [...speichernAuswahl.querySelectorAll("input:checked")].map((h) => Number(h.dataset.nummer));
+  const auswahl = alleSchwuenge.filter((s) => nummern.includes(s.nummer));
+  if (!speichernSchlaeger.value) {
+    setStatus("Bitte wähle zuerst den Schläger aus.");
+    speichernSchlaeger.focus();
+    return;
+  }
+  if (auswahl.length === 0) {
+    setStatus("Bitte hake mindestens einen Schwung an.");
+    return;
+  }
+
+  const zurueck = aktuellerSchwung;
+  video.pause();
+  // Während des Speicherns läuft das Video durch. Nichts darf dazwischenfunken:
+  // kein Zeichnen (wie bei der Analyse), keine Knöpfe. "inert" macht den ganzen
+  // Ergebnisbereich vorübergehend unbedienbar.
+  analyseLaeuft = true;
+  setzeKnoepfeAktiv(false);
+  ergebnisBox.inert = true;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const sitzungId = Date.now(); // Speicherzeitpunkt in Millisekunden – eindeutig und sortierbar
+  const datum = speichernDatum.value || heute();
+  const schlaeger = speichernSchlaeger.value;
+  const mitVideo = kannKuerzen();
+  let ohneVideo = 0;
+  let fehlerText = null;
+  try {
+    const eintraege = [];
+    for (const [i, s] of auswahl.entries()) {
+      setStatus(`Speichere Schwung ${i + 1} von ${auswahl.length} …`);
+      await ladeDatei(s.datei);
+      const vorschau = await macheVorschau(s);
+      const grenzen = clipGrenzen(s);
+      let clip = null;
+      if (mitVideo) {
+        try {
+          clip = await schneideClip(video, grenzen.start, grenzen.ende, springe);
+        } catch (fehler) {
+          console.warn("Clip konnte nicht aufgenommen werden:", fehler);
+        }
+      }
+      if (!clip) ohneVideo++;
+      const { schwung, posedaten } = schwungZumSpeichern(s, { ...grenzen, versatz: clip?.versatz ?? 0 });
+      eintraege.push({
+        // In der Sitzung neu durchnummeriert (1, 2, 3 …), auch wenn du nicht alle ausgewählt hast
+        schwung: { ...schwung, id: `${sitzungId}-${i + 1}`, sitzungId, nummer: i + 1, datum, schlaeger, appVersion: APP_VERSION },
+        posedaten,
+        video: clip?.video ?? null,
+        vorschau,
+      });
+    }
+    const sitzung = {
+      id: sitzungId,
+      datum,
+      schlaeger,
+      notiz: speichernNotiz.value.trim(),
+      schwungIds: eintraege.map((e) => e.schwung.id),
+      appVersion: APP_VERSION,
+    };
+    await speichereSitzung(sitzung, eintraege);
+    schonGespeichert = true;
+    speichernBox.hidden = true;
+  } catch (fehler) {
+    // Z. B. wenn der Speicher des Geräts voll ist
+    console.error(fehler);
+    fehlerText = `Speichern hat nicht geklappt (${fehler.message || fehler.name}). Ist der Speicher voll?`;
+  }
+
+  analyseLaeuft = false;
+  ergebnisBox.inert = false;
+  setzeKnoepfeAktiv(true);
+  video.playbackRate = Number(tempoSelect.value);
+  if (zurueck) await waehleSchwung(zurueck); // wieder den Schwung zeigen, der vorher zu sehen war
+
+  if (fehlerText) setStatus(fehlerText);
+  else {
+    const anzahl = `${auswahl.length} ${auswahl.length === 1 ? "Schwung" : "Schwünge"}`;
+    setStatus(
+      `✓ ${anzahl} gespeichert – zu finden unter „Meine Schwünge“.` +
+        (ohneVideo ? ` ${ohneVideo} davon ohne Video: Dieses Gerät konnte keinen Clip aufnehmen.` : "")
+    );
+  }
+}
+
+// ---------------------------------------------------------------
+// 5c. Meine Schwünge: Liste, Öffnen, Löschen (Etappe 8)
+// ---------------------------------------------------------------
+let vorschauAdressen = []; // Adressen der Vorschaubilder – werden beim Neuzeichnen freigegeben
+
+// Oben umschalten zwischen "Analyse" und "Meine Schwünge"
+function zeigeBereich(welcher) {
+  analyseBereich.hidden = welcher !== "analyse";
+  gespeichertBereich.hidden = welcher !== "gespeichert";
+  zuAnalyseBtn.classList.toggle("aktiv", welcher === "analyse");
+  zuGespeichertBtn.classList.toggle("aktiv", welcher === "gespeichert");
+  if (welcher === "gespeichert") {
+    video.pause();
+    zeigeMeineSchwuenge();
+  }
+}
+
+async function zeigeMeineSchwuenge() {
+  const belegung = await speicherBelegung();
+  belegungText.textContent = belegung
+    ? `Die App belegt auf diesem Gerät ${Math.round(belegung.belegt / 1e6)} MB ` +
+      `(inkl. Pose-Erkennung, möglich wären ca. ${zahl(belegung.verfuegbar / 1e9, 1)} GB).`
+    : "";
+
+  const sitzungen = await ladeSitzungen();
+  vorschauAdressen.forEach((adresse) => URL.revokeObjectURL(adresse));
+  vorschauAdressen = [];
+  sitzungsListe.innerHTML = "";
+  if (sitzungen.length === 0) {
+    const leer = document.createElement("p");
+    leer.className = "hinweis";
+    leer.textContent = "Noch nichts gespeichert. Analysiere ein Video und tippe unten auf „Sitzung speichern“.";
+    sitzungsListe.appendChild(leer);
+  }
+  for (const sitzung of sitzungen) {
+    const knopf = document.createElement("button");
+    knopf.innerHTML = `<img alt=""><span><strong></strong><small></small></span>`;
+    const anzahl = sitzung.schwungIds.length;
+    knopf.querySelector("strong").textContent = `${deutschesDatum(sitzung.datum)} · ${sitzung.schlaeger}`;
+    knopf.querySelector("small").textContent =
+      `${anzahl} ${anzahl === 1 ? "Schwung" : "Schwünge"}${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}`;
+    // Vorschaubild des ersten Schwungs. createObjectURL macht aus der gespeicherten
+    // Datei eine Adresse, die <img> anzeigen kann.
+    const vorschau = await ladeMedium(`${sitzung.schwungIds[0]}/vorschau`);
+    if (vorschau) {
+      const adresse = URL.createObjectURL(vorschau);
+      vorschauAdressen.push(adresse);
+      knopf.querySelector("img").src = adresse;
+    }
+    knopf.addEventListener("click", () => oeffneSitzung(sitzung));
+    sitzungsListe.appendChild(knopf);
+  }
+}
+
+// Eine gespeicherte Sitzung in der normalen Analyse-Ansicht öffnen.
+// Die gespeicherten Schwünge sehen danach genauso aus wie frisch analysierte –
+// deshalb funktionieren Gesamtauswertung, Phasen und "Im Video zeigen" ohne Extra-Code.
+async function oeffneSitzung(sitzung) {
+  setStatus("Lade gespeicherte Sitzung …");
+  const schwuenge = [];
+  for (const eintrag of await ladeSchwuengeDerSitzung(sitzung)) {
+    const posedaten = await ladeMedium(`${eintrag.id}/posedaten`);
+    const clip = await ladeMedium(`${eintrag.id}/video`);
+    schwuenge.push({
+      ...eintrag,
+      bilder: posedaten,
+      videoBilder: posedaten,
+      // Als Datei mit dem Namen des Originalvideos – so steht er überall richtig da
+      datei: clip ? new File([clip], eintrag.videoName || "Schwung", { type: clip.type }) : null,
+    });
+  }
+  video.pause();
+  setzeErgebnisZurueck();
+  dateien = [];
+  alleSchwuenge = schwuenge;
+  gespeicherteSitzung = sitzung;
+  zeigeBereich("analyse");
+  zeigeUebersicht();
+  zeigeSpeicherKaesten();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  await waehleSchwung(alleSchwuenge[0]);
+}
+
+async function loescheAktuellenSchwung() {
+  const s = aktuellerSchwung;
+  if (!confirm(`Schwung ${s.nummer} wirklich löschen? Das lässt sich nicht rückgängig machen.`)) return;
+  await loescheSchwung(gespeicherteSitzung, s.id);
+  const rest = gespeicherteSitzung.schwungIds.filter((id) => id !== s.id);
+  // War es der letzte Schwung, ist auch die Sitzung weg (siehe speicher.js)
+  if (rest.length) await oeffneSitzung({ ...gespeicherteSitzung, schwungIds: rest });
+  else schliesseGeloeschteSitzung();
+}
+
+async function loescheGanzeSitzung() {
+  const anzahl = gespeicherteSitzung.schwungIds.length;
+  const frage = `Sitzung vom ${deutschesDatum(gespeicherteSitzung.datum)} mit ${anzahl} ${anzahl === 1 ? "Schwung" : "Schwüngen"} wirklich löschen? Das lässt sich nicht rückgängig machen.`;
+  if (!confirm(frage)) return;
+  await loescheSitzung(gespeicherteSitzung);
+  schliesseGeloeschteSitzung();
+}
+
+// Nach dem Löschen: alles leeren und zurück zur Liste
+function schliesseGeloeschteSitzung() {
+  video.pause();
+  gespeicherteSitzung = null;
+  alleSchwuenge = [];
+  geladeneDatei = null;
+  setzeErgebnisZurueck();
+  buehne.hidden = steuerung.hidden = true;
+  zeigeBereich("gespeichert");
+  setStatus("Gelöscht.");
+}
+
+// ---------------------------------------------------------------
 // 6. Bedienung
 // ---------------------------------------------------------------
 videoInput.addEventListener("change", () => {
   if (videoInput.files.length === 0) return;
   dateien = [...videoInput.files]; // eine Liste aus allen markierten Videos
   alleSchwuenge = [];
+  gespeicherteSitzung = null;
   setzeErgebnisZurueck();
   setStatus(`Lade „${dateien[0].name}“ …`);
   // Das erste Video gleich zeigen. Fehler meldet schon video.addEventListener("error") unten.
@@ -1061,6 +1383,11 @@ tempoSelect.addEventListener("change", () => {
 skelettAn.addEventListener("change", analysiereAktuellesBild);
 analysierenBtn.addEventListener("click", analysiereAlles);
 exportierenBtn.addEventListener("click", exportiereDaten);
+speichernKnopf.addEventListener("click", speichereAuswahl);
+zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
+zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
+schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
+sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 
 // Los geht's
 ladePoseErkennung().catch((fehler) => {

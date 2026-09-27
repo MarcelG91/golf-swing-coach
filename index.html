@@ -27,9 +27,14 @@
   <header>
     <h1>⛳ Golf Swing Coach</h1>
     <p class="untertitel">Video hochladen – die App erkennt deine Körperhaltung.</p>
+    <!-- Umschalter: blendet jeweils einen der beiden Bereiche unten ein (Etappe 8) -->
+    <nav class="umschalter">
+      <button id="zuAnalyse" class="aktiv">🔍 Analyse</button>
+      <button id="zuGespeichert">📚 Meine Schwünge</button>
+    </nav>
   </header>
 
-  <main>
+  <main id="analyseBereich">
     <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar -->
     <label class="upload">
       <input type="file" id="videoInput" accept="video/*" multiple>
@@ -116,9 +121,59 @@
         wo dein Kopf beim Ansprechen war.
       </p>
 
-      <button id="exportieren" class="klein">💾 Posedaten speichern (für die Feinabstimmung)</button>
+      <button id="exportieren" class="klein">⬇️ Posedaten exportieren (für die Feinabstimmung)</button>
+      </div>
+
+      <!-- 4c. Frisch analysiert: Sitzung auf dem Gerät speichern (Etappe 8) -->
+      <div id="speichernBox" class="speichern" hidden>
+        <h2>💾 Speichern</h2>
+        <p class="hinweis">
+          Die Schwünge bleiben nur auf diesem Gerät – mit kurzem Video, allen Kennzahlen und
+          Posedaten. Für gute Verläufe immer ähnlich filmen: gleiche Ansicht, Kamera auf
+          Hüfthöhe, ca. 3 m Abstand.
+        </p>
+        <div class="formular">
+          <label>Datum <input type="date" id="speichernDatum"></label>
+          <label>Schläger
+            <select id="speichernSchlaeger">
+              <option value="">– bitte wählen –</option>
+              <!-- optgroup = Gruppe in der Auswahlliste. Für den Fortschritt (Etappe 10)
+                   werden Schwünge pro Gruppe verglichen. -->
+              <optgroup label="Hölzer">
+                <option>Driver</option><option>Holz</option><option>Hybrid</option>
+              </optgroup>
+              <optgroup label="Eisen">
+                <option>Eisen 3</option><option>Eisen 4</option><option>Eisen 5</option>
+                <option>Eisen 6</option><option>Eisen 7</option><option>Eisen 8</option>
+                <option>Eisen 9</option>
+              </optgroup>
+              <optgroup label="Wedges">
+                <option>PW</option><option>GW</option><option>SW</option><option>LW</option>
+              </optgroup>
+            </select>
+          </label>
+          <label class="breit">Notiz <input type="text" id="speichernNotiz" placeholder="z. B. Range, Fokus Vorneigung"></label>
+        </div>
+        <p class="hinweis">Welche Schwünge? Unsichere (⚠️) sind nicht vorausgewählt.</p>
+        <div id="speichernAuswahl" class="auswahl"></div>
+        <button id="speichernKnopf" class="haupt">💾 Sitzung speichern</button>
+      </div>
+
+      <!-- 4d. Aus "Meine Schwünge" geöffnet: Angaben zur Sitzung und Löschen -->
+      <div id="gespeichertBox" class="speichern" hidden>
+        <h2>📚 Gespeicherte Sitzung</h2>
+        <p id="gespeichertInfo" class="hinweis"></p>
+        <button id="schwungLoeschen" class="klein">🗑 Diesen Schwung löschen</button>
+        <button id="sitzungLoeschen" class="klein">🗑 Ganze Sitzung löschen</button>
       </div>
     </section>
+  </main>
+
+  <!-- Meine Schwünge: alle gespeicherten Sitzungen (Etappe 8) -->
+  <main id="gespeichertBereich" hidden>
+    <h2>📚 Meine Schwünge</h2>
+    <p id="belegung" class="hinweis"></p>
+    <div id="sitzungsListe" class="sitzungen"></div>
   </main>
 
   <footer class="fuss">
