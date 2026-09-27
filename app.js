@@ -1,6 +1,6 @@
 // ===============================================================
-// Golf Swing Coach – Etappe 1 bis 3
-// Video laden, Skelett zeichnen, Schwungphasen erkennen.
+// Golf Swing Coach – Etappe 1 bis 5
+// Video laden, Skelett zeichnen, Schwungphasen erkennen, Schwung bewerten.
 // ===============================================================
 
 // MediaPipe (von Google) erkennt 33 Körperpunkte in einem Bild.
@@ -13,6 +13,8 @@ import {
 
 // Unsere eigene Logik für die Schwungphasen (reine Rechnerei, siehe phasen.js)
 import { erkennePhasen } from "./phasen.js";
+// Kennzahlen und Tipps (siehe kennzahlen.js)
+import { bewerteSchwung } from "./kennzahlen.js";
 
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 // "full" ist genauer als "lite" und für Videoanalyse schnell genug.
@@ -45,7 +47,8 @@ const skelettAn = $("skelettAn");
 const analysierenBtn = $("analysieren");
 const ergebnisBox = $("ergebnis");
 const phasenKnoepfe = $("phasenKnoepfe");
-const tempoAnzeige = $("tempoAnzeige");
+const ansichtInfo = $("ansichtInfo");
+const kennzahlenListe = $("kennzahlenListe");
 const warnungenListe = $("warnungen");
 const exportierenBtn = $("exportieren");
 
@@ -57,8 +60,9 @@ let letzterZeitstempel = -1;
 let analyseLaeuft = false;
 let videoName = "";
 
-// Ergebnis der letzten Analyse: alle Bilder mit Körperpunkten
+// Ergebnis der letzten Analyse: alle Bilder mit Körperpunkten + Bewertung
 let analyseBilder = [];
+let bewertung = null;
 
 function setStatus(text) {
   statusText.textContent = text;
@@ -120,6 +124,23 @@ function zeichneSkelett(punkte) {
     color: "#facc15",
     radius: staerke,
   });
+  zeichneKopfMarke(staerke);
+}
+
+// Gestrichelter Kreis: Dort war dein Kopf beim Ansprechen
+function zeichneKopfMarke(staerke) {
+  if (!bewertung) return;
+  const { kopfBeimAnsprechen, seitenverhaeltnis } = bewertung;
+  const x = (kopfBeimAnsprechen.x / seitenverhaeltnis) * canvas.width;
+  const y = kopfBeimAnsprechen.y * canvas.height;
+  ctx.save();
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = staerke;
+  ctx.setLineDash([staerke * 3, staerke * 2]);
+  ctx.beginPath();
+  ctx.arc(x, y, canvas.height * 0.045, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 // ---------------------------------------------------------------
@@ -164,6 +185,7 @@ async function analysiereSchwung() {
   setzeKnoepfeAktiv(false);
   ergebnisBox.hidden = true;
   analyseBilder = [];
+  bewertung = null;
 
   const anzahl = Math.floor(video.duration / BILD_DAUER);
   for (let i = 0; i <= anzahl; i++) {
@@ -178,12 +200,15 @@ async function analysiereSchwung() {
   analyseLaeuft = false;
   setzeKnoepfeAktiv(true);
 
-  const ergebnis = erkennePhasen(analyseBilder);
+  const seitenverhaeltnis = video.videoWidth / video.videoHeight;
+  const ergebnis = erkennePhasen(analyseBilder, seitenverhaeltnis);
   if (ergebnis.fehler) {
     setStatus(ergebnis.fehler);
     return;
   }
+  bewertung = bewerteSchwung(analyseBilder, ergebnis, seitenverhaeltnis);
   zeigeErgebnis(ergebnis);
+  zeigeBewertung(bewertung);
   setStatus("Analyse fertig.");
   zeigePhase("top", ergebnis);
 }
@@ -208,23 +233,6 @@ function zeigeErgebnis(ergebnis) {
     phasenKnoepfe.appendChild(knopf);
   }
 
-  // Tempo mit kurzer Einordnung
-  const { rueckschwung, abschwung, verhaeltnis } = ergebnis.tempo;
-  let einordnung = "";
-  if (verhaeltnis !== null) {
-    if (verhaeltnis < 2.3) {
-      einordnung = "Dein Rückschwung ist im Verhältnis eher schnell. Lass dir oben mehr Zeit.";
-    } else if (verhaeltnis > 3.8) {
-      einordnung = "Dein Rückschwung ist im Verhältnis sehr langsam. Ein etwas flüssigerer Rückschwung hilft oft beim Rhythmus.";
-    } else {
-      einordnung = "Das liegt im Bereich guter Spieler (etwa 3 : 1). 👍";
-    }
-  }
-  tempoAnzeige.innerHTML = `
-    <strong>${verhaeltnis ? zahl(verhaeltnis, 1) : "–"} : 1</strong>
-    <div>Rückschwung ${zahl(rueckschwung)} s · Abschwung ${zahl(abschwung)} s</div>
-    <div>${einordnung}</div>`;
-
   // Hinweise, falls die Erkennung unsicher ist
   warnungenListe.innerHTML = "";
   for (const text of ergebnis.warnungen) {
@@ -234,6 +242,46 @@ function zeigeErgebnis(ergebnis) {
   }
 
   ergebnisBox.hidden = false;
+}
+
+const STUFEN = {
+  gut: "Gut",
+  achtung: "Achtung",
+  verbessern: "Verbessern",
+  unsicher: "Nicht bewertbar",
+};
+
+function zeigeBewertung({ ansicht, ansichtSicher, kennzahlen }) {
+  ansichtInfo.textContent =
+    (ansicht === "frontal" ? "Ansicht erkannt: frontal (von vorne)." : "Ansicht erkannt: von hinten (entlang der Ziellinie).") +
+    (ansichtSicher ? "" : " Die Ansicht ist nicht eindeutig – filme möglichst genau von vorne oder genau von hinten.");
+
+  kennzahlenListe.innerHTML = "";
+  for (const k of kennzahlen) {
+    const karte = document.createElement("article");
+    karte.className = `karte ${k.bewertung}`;
+    // textContent statt innerHTML für die Texte: sicher und einfach
+    karte.innerHTML = `
+      <div class="karte-kopf">
+        <strong></strong>
+        <span class="abzeichen"></span>
+      </div>
+      <div class="wert"></div>
+      <p class="detail"></p>
+      <p class="text"></p>`;
+    karte.querySelector("strong").textContent = k.name;
+    karte.querySelector(".abzeichen").textContent = STUFEN[k.bewertung];
+    karte.querySelector(".wert").textContent = k.wert;
+    karte.querySelector(".detail").textContent = k.detail;
+    karte.querySelector(".text").textContent = k.text;
+    if (k.tipp) {
+      const tipp = document.createElement("p");
+      tipp.className = "tipp";
+      tipp.textContent = `💡 Übung: ${k.tipp}`;
+      karte.appendChild(tipp);
+    }
+    kennzahlenListe.appendChild(karte);
+  }
 }
 
 async function zeigePhase(schluessel, ergebnis) {
@@ -278,6 +326,7 @@ videoInput.addEventListener("change", () => {
   if (!datei) return;
   videoName = datei.name;
   analyseBilder = [];
+  bewertung = null;
   ergebnisBox.hidden = true;
   video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
   setStatus(`Lade „${datei.name}“ …`);

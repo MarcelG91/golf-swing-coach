@@ -7,3 +7,6 @@ posedaten-*.json
 
 # macOS-Systemdateien
 .DS_Store
+
+# Testvideos aus fremden Quellen nur lokal nutzen
+testvideos/

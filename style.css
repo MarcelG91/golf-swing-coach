@@ -115,8 +115,29 @@ button:disabled { opacity: 0.5; cursor: wait; }
 .phasen button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
 .phasen small { display: block; color: var(--text-leise); margin-top: 2px; }
 
-.tempo { font-size: 1rem; line-height: 1.5; }
-.tempo strong { font-size: 1.4rem; color: var(--akzent); }
+/* --- Etappe 4+5: Bewertungskarten --- */
+.kennzahlen { display: grid; gap: 10px; }
+.karte {
+  padding: 12px 14px;
+  background: var(--hintergrund);
+  border-radius: 10px;
+  border-left: 5px solid var(--farbe, #64748b);
+}
+.karte.gut { --farbe: #4ade80; }
+.karte.achtung { --farbe: #fbbf24; }
+.karte.verbessern { --farbe: #f87171; }
+.karte.unsicher { --farbe: #64748b; }
+.karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.karte-kopf strong { font-size: 1.05rem; }
+.karte .wert { font-size: 1.3rem; font-weight: 700; color: var(--farbe); }
+.karte .abzeichen {
+  font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 2px 8px; border-radius: 999px; background: var(--farbe); color: #06140c;
+}
+.karte p { margin: 6px 0 0; line-height: 1.45; }
+.karte .detail { color: var(--text-leise); font-size: 0.85rem; }
+.karte .tipp { background: #0b2a1c; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+.klein-text { font-size: 0.8rem; margin-top: 12px; }
 
 .warnungen { color: #fbbf24; padding-left: 20px; }
 .warnungen:empty { display: none; }

@@ -41,8 +41,19 @@ function glaetten(werte, fenster = 5) {
   });
 }
 
-export function erkennePhasen(bilder) {
-  const gueltig = bilder.filter((b) => b.punkte && b.punkte.length >= 25);
+// Nur Bilder, in denen eine Person erkannt wurde
+export function gueltigeBilder(bilder) {
+  return bilder.filter((b) => b.punkte && b.punkte.length >= 25);
+}
+
+// seitenverhaeltnis = Videobreite / Videohöhe. MediaPipe liefert x und y jeweils von 0 bis 1,
+// bei einem Hochkant-Video ist 0,1 in x aber viel weniger Strecke als 0,1 in y.
+// Deshalb rechnen wir x in "Bildhöhen" um, damit Abstände in alle Richtungen vergleichbar sind.
+export function erkennePhasen(bilder, seitenverhaeltnis = 1) {
+  const gueltig = gueltigeBilder(bilder).map((b) => ({
+    zeit: b.zeit,
+    punkte: b.punkte.map((p) => ({ x: p.x * seitenverhaeltnis, y: p.y })),
+  }));
   if (gueltig.length < 20) {
     return { fehler: "Zu wenige Bilder mit erkannter Person. Ist dein ganzer Körper im Bild?" };
   }
@@ -105,16 +116,24 @@ export function erkennePhasen(bilder) {
   }
   let iAnsprechen = iRueckSchnell;
   while (iAnsprechen > 0 && tempoHaende[iAnsprechen] >= RUHE_SCHWELLE) iAnsprechen--;
+  // Der Rückschwung beginnt sehr langsam. Deshalb gehen wir noch weiter zurück,
+  // solange die Hände davor noch ruhiger waren – bis zum ruhigsten Moment.
+  while (iAnsprechen > 0 && tempoHaende[iAnsprechen - 1] < tempoHaende[iAnsprechen]) iAnsprechen--;
 
-  // 9. FINISH: nach dem Treffmoment der Moment, in dem die Hände hoch und wieder ruhig sind
-  let iFinish = gueltig.length - 1;
-  for (let i = iTreff + 1; i < gueltig.length; i++) {
+  // 9. FINISH: in den 2 Sekunden nach dem Treffmoment der Moment, in dem die Hände
+  //    hoch und wieder ruhig sind. Findet sich keiner (z. B. weil du direkt danach
+  //    weitergehst), nehmen wir den höchsten Punkt der Hände in diesem Zeitraum.
+  let iFinish = -1;
+  let iHoechster = iTreff;
+  for (let i = iTreff + 1; i < gueltig.length && zeit[i] - zeit[iTreff] <= 2; i++) {
+    if (y[i] < y[iHoechster]) iHoechster = i;
     const hochGenug = y[i] < y[iTreff] - 0.5 * rumpf;
     if (hochGenug && tempoHaende[i] < RUHE_SCHWELLE) {
       iFinish = i;
       break;
     }
   }
+  if (iFinish === -1) iFinish = iHoechster;
 
   // 10. Tempo: Rückschwung-Dauer : Abschwung-Dauer (Profis liegen bei etwa 3 : 1)
   const rueckschwung = zeit[iTop] - zeit[iAnsprechen];
@@ -125,6 +144,8 @@ export function erkennePhasen(bilder) {
   if (iAnsprechen === 0 && tempoHaende[0] >= RUHE_SCHWELLE) {
     warnungen.push("Am Videoanfang bewegen sich die Hände schon. Starte die Aufnahme etwas früher.");
   }
+  const tempoPlausibel =
+    abschwung >= 0.1 && abschwung <= 0.8 && rueckschwung >= 0.3 && rueckschwung <= 2.5;
   if (abschwung < 0.1 || abschwung > 0.8) {
     warnungen.push("Der Abschwung wirkt ungewöhnlich. Ist es eine Zeitlupe oder ein Probeschwung ohne Schläger?");
   }
@@ -142,6 +163,7 @@ export function erkennePhasen(bilder) {
       rueckschwung,
       abschwung,
       verhaeltnis: abschwung > 0 ? rueckschwung / abschwung : null,
+      plausibel: tempoPlausibel,
     },
     warnungen,
   };
