@@ -20,6 +20,8 @@ import { bewerteSchwung } from "./kennzahlen.js";
 import { bewerteTechnik, ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
 // Rote Abweichungen und gelbe Ideallinien im Video (siehe ideallinien.js)
 import { ideallinien, MIT_LINIE } from "./ideallinien.js";
+// Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
+import { analysiereVideo, springe } from "./videoanalyse.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname } from "./pwa.js";
 
@@ -67,6 +69,7 @@ const zeichner = new DrawingUtils(ctx);
 
 let poseLandmarker = null;
 let poseStatus = "laedt"; // "laedt" | "bereit" | "fehler"
+let genutzterRechner = ""; // "GPU" (Grafikchip) oder "CPU" (Prozessor)
 let poseFehlerText = "";
 let letzterZeitstempel = -1;
 let analyseLaeuft = false;
@@ -116,6 +119,7 @@ async function ladePoseErkennung() {
         runningMode: "VIDEO",
         numPoses: 1, // nur eine Person: du
       });
+      genutzterRechner = delegate;
       setzePoseStatus("bereit");
       setStatus(
         video.src
@@ -162,12 +166,41 @@ function setzePoseStatus(neu) {
 // ---------------------------------------------------------------
 // 2. Ein Videobild analysieren und das Skelett zeichnen
 // ---------------------------------------------------------------
-function erkennePose() {
+// Verkleinerte Kopie des Videobilds. Das Modell rechnet intern ohnehin nur mit
+// 256 × 256 Pixeln – bei großen Handyvideos (1080p, 4K) spart das Rechenzeit.
+const kleineLeinwand = document.createElement("canvas");
+const kleinCtx = kleineLeinwand.getContext("2d");
+const KLEIN_MAX_SEITE = 720;
+
+// quelle = video (Originalbild) oder kleineLeinwand (verkleinerte Kopie)
+function erkennePose(quelle = video) {
+  let bild = video;
+  if (quelle === kleineLeinwand) {
+    kleinCtx.drawImage(video, 0, 0, kleineLeinwand.width, kleineLeinwand.height);
+    bild = kleineLeinwand;
+  }
   // MediaPipe verlangt stetig steigende Zeitstempel, auch wenn wir im Video zurückspulen.
   const zeitstempel = Math.max(performance.now(), letzterZeitstempel + 1);
   letzterZeitstempel = zeitstempel;
-  const ergebnis = poseLandmarker.detectForVideo(video, zeitstempel);
+  const ergebnis = poseLandmarker.detectForVideo(bild, zeitstempel);
   return ergebnis.landmarks[0] || null; // Körperpunkte der ersten (einzigen) Person
+}
+
+// Misst die Erkennung mit Originalbild und mit verkleinerter Kopie – das Schnellere gewinnt
+function waehleSchnellsteQuelle() {
+  const skala = Math.min(1, KLEIN_MAX_SEITE / Math.max(video.videoWidth, video.videoHeight));
+  kleineLeinwand.width = Math.round(video.videoWidth * skala);
+  kleineLeinwand.height = Math.round(video.videoHeight * skala);
+  const kandidaten = skala < 1 ? [kleineLeinwand, video] : [video];
+  let beste = { quelle: video, ms: Infinity };
+  for (const quelle of kandidaten) {
+    erkennePose(quelle); // Aufwärmen
+    const start = performance.now();
+    for (let i = 0; i < 3; i++) erkennePose(quelle);
+    const ms = (performance.now() - start) / 3;
+    if (ms < beste.ms) beste = { quelle, ms };
+  }
+  return beste;
 }
 
 function analysiereAktuellesBild() {
@@ -511,25 +544,11 @@ function schleife() {
 }
 
 // ---------------------------------------------------------------
-// 4. Ganzen Schwung analysieren: Bild für Bild durch das Video gehen
+// 4. Ganzen Schwung analysieren (Ablauf in videoanalyse.js)
 // ---------------------------------------------------------------
 
 // Springt zu einer Zeit im Video und wartet, bis das Bild wirklich da ist
-function springeZu(zeit) {
-  return new Promise((fertig) => {
-    if (Math.abs(video.currentTime - zeit) < 0.001) return fertig();
-    const sicherheit = setTimeout(fertig, 2000); // falls der Browser kein "seeked" meldet
-    video.addEventListener(
-      "seeked",
-      () => {
-        clearTimeout(sicherheit);
-        fertig();
-      },
-      { once: true }
-    );
-    video.currentTime = zeit;
-  });
-}
+const springeZu = (zeit) => springe(video, zeit);
 
 async function analysiereSchwung() {
   if (poseStatus !== "bereit") {
@@ -546,16 +565,36 @@ async function analysiereSchwung() {
   aktiveMessung = null;
   alleKennzahlen = [];
 
-  const anzahl = Math.floor(video.duration / BILD_DAUER);
-  for (let i = 0; i <= anzahl; i++) {
-    const zeit = i * BILD_DAUER;
-    await springeZu(zeit);
-    const punkte = erkennePose();
-    analyseBilder.push({ zeit, punkte });
-    zeichneSkelett(punkte);
-    if (i % 5 === 0) setStatus(`Analysiere … ${Math.round((i / anzahl) * 100)} %`);
-  }
+  await springeZu(0);
+  const { quelle, ms } = waehleSchnellsteQuelle();
+  const verkleinert = quelle === kleineLeinwand;
 
+  let letzteMeldung = 0;
+  const lauf = await analysiereVideo(video, () => erkennePose(quelle), {
+    msProBild: ms,
+    bildDauer: BILD_DAUER,
+    beiFortschritt: (zeit, msBild, tempo, punkte) => {
+      // Skelett und Anzeige nur ca. 5-mal pro Sekunde erneuern – jedes Zeichnen kostet Zeit
+      const jetzt = performance.now();
+      if (jetzt - letzteMeldung < 200) return;
+      letzteMeldung = jetzt;
+      zeichneSkelett(punkte);
+      const prozent = Math.min(100, Math.round((zeit / video.duration) * 100));
+      const rest = tempo ? Math.ceil((video.duration - zeit) / tempo) : null;
+      setStatus(
+        `Analysiere … ${prozent} %` +
+          (rest !== null ? ` · noch ca. ${rest} s` : "") +
+          ` · ${Math.round(msBild)} ms pro Bild`
+      );
+    },
+  });
+  analyseBilder = lauf.bilder;
+  // Diese Werte helfen bei der Fehlersuche, falls die Analyse langsam ist
+  const messwerte =
+    `${zahl(lauf.sekunden, 1)} s · ${Math.round(lauf.msProBild)} ms pro Bild · ` +
+    `${genutzterRechner || "?"}${verkleinert ? " · verkleinert" : ""} · ${lauf.verfahren}`;
+
+  video.playbackRate = Number(tempoSelect.value); // Abspieltempo wieder wie eingestellt
   analyseLaeuft = false;
   setzeKnoepfeAktiv(true);
 
@@ -570,8 +609,8 @@ async function analysiereSchwung() {
   technik = bewerteTechnik(analyseBilder, ergebnis, seitenverhaeltnis, bewertung.ansicht);
   zeigeErgebnis(ergebnis);
   zeigeBewertung();
-  setStatus("Analyse fertig.");
-  zeigePhase("top", ergebnis);
+  await zeigePhase("top", ergebnis);
+  setStatus(`Analyse fertig (${messwerte}).`);
 }
 
 function setzeKnoepfeAktiv(aktiv) {
@@ -787,9 +826,11 @@ videoInput.addEventListener("change", () => {
 });
 
 video.addEventListener("loadedmetadata", () => {
-  // Leinwand genau so groß wie das Video machen
-  canvas.width = video.videoWidth;
-  canvas.height = video.videoHeight;
+  // Leinwand im Seitenverhältnis des Videos, aber höchstens 1280 Pixel breit/hoch:
+  // Bei 4K-Videos müsste das Handy sonst bei jedem Bild 8 Millionen Pixel zeichnen.
+  const leinwandSkala = Math.min(1, 1280 / Math.max(video.videoWidth, video.videoHeight));
+  canvas.width = Math.round(video.videoWidth * leinwandSkala);
+  canvas.height = Math.round(video.videoHeight * leinwandSkala);
   buehne.style.setProperty("--ratio", video.videoWidth / video.videoHeight);
   video.playbackRate = Number(tempoSelect.value);
 
