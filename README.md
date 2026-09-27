@@ -79,7 +79,7 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `phasen.js` | Rechnet aus den Körperpunkten die Schwungphasen und das Tempo aus |
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
 | `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
-| `ideallinien.js` | Rechnet aus, wo die gelbe Ideallinie im Video liegt (rot = deine Linie außerhalb des Zielbereichs) |
+| `ideallinien.js` | Rechnet aus, wo die gelbe Ideallinie im Video liegt, dazu Pfeil und Hinweis für die Sprechblase |
 | `videoanalyse.js` | Geht das Video schnell durch: abspielen statt Bild für Bild anspringen, Lücken gezielt nachholen |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
@@ -230,6 +230,13 @@ zeichnet die App alle Abweichungen dieser Phase ein:
 | Kopfhöhe / Kopf seitlich | Kopf | Linie durch die Kopfposition beim Ansprechen |
 | Hüfte im Rückschwung / Hüfte Richtung Ball | Hüfte | Hüfte an der Position vom Ansprechen |
 | Gewichtsverlagerung | Hüfte im Finish | Hüfte senkrecht über dem vorderen Fuß |
+
+Dazu erscheint an jeder roten Linie eine **Sprechblase** mit einem kurzen Hinweis
+(z. B. „Hüfte zurück nach links – drehen statt schieben“ oder „Linken Arm gerade lassen
+und durchschwingen“) und ein **weißer Pfeil** von der roten zur gelben Linie.
+„Links“ und „rechts“ in den Hinweisen meinen die Richtung im Bild; „linker Arm“
+meint deinen Arm. Die Blasen suchen sich selbst einen Platz, an dem sie möglichst
+keine Linie verdecken.
 
 Jede Karte hat außerdem einen Knopf **„📍 Im Video zeigen“**: Er springt zum passenden
 Moment und zeigt nur diese eine Kennzahl – grün, wenn sie im Zielbereich liegt.
