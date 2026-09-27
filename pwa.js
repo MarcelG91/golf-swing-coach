@@ -11,7 +11,7 @@ const CACHE_APP = "app-v1";
 const CACHE_CDN = "cdn-v1";
 
 // Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
-const APP_DATEIEN = ["./", "./style.css", "./app.js", "./phasen.js", "./kennzahlen.js", "./pwa.js"];
+const APP_DATEIEN = ["./", "./style.css", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./pwa.js"];
 
 const $ = (id) => document.getElementById(id);
 

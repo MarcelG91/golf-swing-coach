@@ -18,6 +18,8 @@ const APP_DATEIEN = [
   "./app.js",
   "./phasen.js",
   "./kennzahlen.js",
+  "./technik.js",
+  "./ideallinien.js",
   "./pwa.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",

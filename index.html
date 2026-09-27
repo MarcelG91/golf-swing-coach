@@ -64,14 +64,34 @@
     <!-- 4. Ergebnis der Analyse (erscheint erst nach dem Analysieren) -->
     <section id="ergebnis" class="ergebnis" hidden>
       <h2>Deine Schwungphasen</h2>
-      <p class="hinweis">Tippe auf eine Phase, um zu diesem Moment im Video zu springen.</p>
+      <p class="hinweis">
+        Tippe auf eine Phase, um zu diesem Moment im Video zu springen.
+        <span class="legende"><b class="rot">Rot</b> = Körperlinie außerhalb des Zielbereichs,
+        <b class="gelb">Gelb</b> = Ideallinie.</span>
+      </p>
       <div id="phasenKnoepfe" class="phasen"></div>
 
       <ul id="warnungen" class="warnungen"></ul>
 
       <h2>Deine Bewertung</h2>
       <p id="ansichtInfo" class="hinweis"></p>
+
+      <!-- Die 3 wichtigsten Punkte zuerst – mit Übung -->
+      <h3>🎯 Deine wichtigsten Baustellen</h3>
+      <p class="hinweis">
+        Fang oben an – oft lösen sich andere Punkte dann von selbst.
+        „Im Video zeigen“ springt zum passenden Moment und zeichnet die Messlinien ein.
+      </p>
+      <div id="baustellenListe" class="kennzahlen"></div>
+
+      <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->
+      <h3>Alle Kennzahlen</h3>
       <div id="kennzahlenListe" class="kennzahlen"></div>
+
+      <!-- Was die App nicht sicher messen kann -->
+      <h3>👀 Selbst prüfen</h3>
+      <div id="selbstCheckListe" class="kennzahlen"></div>
+
       <p class="hinweis klein-text">
         Die Bewertung ist eine Orientierung auf Basis deiner Körperhaltung im Video –
         sie ersetzt keine Trainerstunde. Der gestrichelte Kreis im Video zeigt,
