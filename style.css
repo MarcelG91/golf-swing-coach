@@ -78,3 +78,55 @@ h1 { margin: 8px 0 4px; font-size: 1.6rem; }
 .steuerung label { display: flex; gap: 6px; align-items: center; }
 
 [hidden] { display: none !important; }
+
+/* --- Etappe 3: Analyse und Ergebnis --- */
+.steuerung button.haupt {
+  background: var(--akzent);
+  color: #06140c;
+  font-weight: 600;
+  border-color: var(--akzent);
+}
+button:disabled { opacity: 0.5; cursor: wait; }
+
+.ergebnis {
+  margin-top: 20px;
+  padding: 16px;
+  background: var(--flaeche);
+  border-radius: 12px;
+}
+.ergebnis h2 { font-size: 1.1rem; margin: 8px 0; }
+.hinweis { margin: 0 0 10px; color: var(--text-leise); font-size: 0.9rem; }
+
+.phasen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+.phasen button {
+  padding: 12px;
+  text-align: left;
+  background: var(--hintergrund);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.phasen button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
+.phasen small { display: block; color: var(--text-leise); margin-top: 2px; }
+
+.tempo { font-size: 1rem; line-height: 1.5; }
+.tempo strong { font-size: 1.4rem; color: var(--akzent); }
+
+.warnungen { color: #fbbf24; padding-left: 20px; }
+.warnungen:empty { display: none; }
+
+button.klein {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: transparent;
+  color: var(--text-leise);
+  border: 1px solid #2c5a43;
+  border-radius: 8px;
+  cursor: pointer;
+}

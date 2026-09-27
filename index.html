@@ -41,7 +41,22 @@
         </select>
       </label>
       <label class="schalter"><input type="checkbox" id="skelettAn" checked> Skelett</label>
+      <button id="analysieren" class="haupt">🔍 Schwung analysieren</button>
     </div>
+
+    <!-- 4. Ergebnis der Analyse (erscheint erst nach dem Analysieren) -->
+    <section id="ergebnis" class="ergebnis" hidden>
+      <h2>Deine Schwungphasen</h2>
+      <p class="hinweis">Tippe auf eine Phase, um zu diesem Moment im Video zu springen.</p>
+      <div id="phasenKnoepfe" class="phasen"></div>
+
+      <h2>Tempo</h2>
+      <div id="tempoAnzeige" class="tempo"></div>
+
+      <ul id="warnungen" class="warnungen"></ul>
+
+      <button id="exportieren" class="klein">💾 Posedaten speichern (für die Feinabstimmung)</button>
+    </section>
   </main>
 
   <!-- Die eigentliche Logik steht in app.js -->

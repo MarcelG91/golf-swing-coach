@@ -1,0 +1,9 @@
+# Videos und Posedaten bleiben privat auf deinem Mac und landen nicht auf GitHub
+*.mp4
+*.mov
+*.m4v
+*.webm
+posedaten-*.json
+
+# macOS-Systemdateien
+.DS_Store

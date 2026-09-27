@@ -1,6 +1,6 @@
 // ===============================================================
-// Golf Swing Coach – Etappe 1 + 2
-// Video laden, abspielen und das Körperskelett darüber zeichnen.
+// Golf Swing Coach – Etappe 1 bis 3
+// Video laden, Skelett zeichnen, Schwungphasen erkennen.
 // ===============================================================
 
 // MediaPipe (von Google) erkennt 33 Körperpunkte in einem Bild.
@@ -11,6 +11,9 @@ import {
   DrawingUtils,
 } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
+// Unsere eigene Logik für die Schwungphasen (reine Rechnerei, siehe phasen.js)
+import { erkennePhasen } from "./phasen.js";
+
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 // "full" ist genauer als "lite" und für Videoanalyse schnell genug.
 const MODELL_URL =
@@ -18,31 +21,52 @@ const MODELL_URL =
 
 const BILD_DAUER = 1 / 30; // ein Einzelbild bei 30 Bildern pro Sekunde
 
+// Die vier Phasen mit deutschen Namen und kurzer Erklärung
+const PHASEN = [
+  { schluessel: "ansprechen", name: "Ansprechen", info: "Ausgangsposition am Ball" },
+  { schluessel: "top", name: "Top", info: "Höchster Punkt im Rückschwung" },
+  { schluessel: "treffmoment", name: "Treffmoment", info: "Schläger trifft den Ball" },
+  { schluessel: "finish", name: "Finish", info: "Endposition nach dem Schwung" },
+];
+
 // --- Elemente aus index.html holen ---
-const videoInput = document.getElementById("videoInput");
-const statusText = document.getElementById("status");
-const buehne = document.getElementById("buehne");
-const video = document.getElementById("video");
-const canvas = document.getElementById("overlay");
-const steuerung = document.getElementById("steuerung");
-const playPauseBtn = document.getElementById("playPause");
-const zurueckBtn = document.getElementById("zurueck");
-const vorBtn = document.getElementById("vor");
-const tempoSelect = document.getElementById("tempo");
-const skelettAn = document.getElementById("skelettAn");
+const $ = (id) => document.getElementById(id);
+const videoInput = $("videoInput");
+const statusText = $("status");
+const buehne = $("buehne");
+const video = $("video");
+const canvas = $("overlay");
+const steuerung = $("steuerung");
+const playPauseBtn = $("playPause");
+const zurueckBtn = $("zurueck");
+const vorBtn = $("vor");
+const tempoSelect = $("tempo");
+const skelettAn = $("skelettAn");
+const analysierenBtn = $("analysieren");
+const ergebnisBox = $("ergebnis");
+const phasenKnoepfe = $("phasenKnoepfe");
+const tempoAnzeige = $("tempoAnzeige");
+const warnungenListe = $("warnungen");
+const exportierenBtn = $("exportieren");
 
 const ctx = canvas.getContext("2d");
 const zeichner = new DrawingUtils(ctx);
 
 let poseLandmarker = null;
 let letzterZeitstempel = -1;
+let analyseLaeuft = false;
+let videoName = "";
 
-// Hier merken wir uns für jeden Zeitpunkt im Video die erkannten Körperpunkte.
-// Das brauchen wir ab Etappe 3, um Schwungphasen und Fehler zu finden.
-const posenProZeit = new Map();
+// Ergebnis der letzten Analyse: alle Bilder mit Körperpunkten
+let analyseBilder = [];
 
 function setStatus(text) {
   statusText.textContent = text;
+}
+
+// Zahlen deutsch formatieren: 0.93 → "0,93"
+function zahl(wert, stellen = 2) {
+  return wert.toFixed(stellen).replace(".", ",");
 }
 
 // ---------------------------------------------------------------
@@ -67,22 +91,19 @@ async function ladePoseErkennung() {
 }
 
 // ---------------------------------------------------------------
-// 2. Das aktuelle Videobild analysieren und das Skelett zeichnen
+// 2. Ein Videobild analysieren und das Skelett zeichnen
 // ---------------------------------------------------------------
-function analysiereAktuellesBild() {
-  if (!poseLandmarker || video.readyState < 2) return;
-
+function erkennePose() {
   // MediaPipe verlangt stetig steigende Zeitstempel, auch wenn wir im Video zurückspulen.
   const zeitstempel = Math.max(performance.now(), letzterZeitstempel + 1);
   letzterZeitstempel = zeitstempel;
-
   const ergebnis = poseLandmarker.detectForVideo(video, zeitstempel);
-  const punkte = ergebnis.landmarks[0]; // Körperpunkte der ersten (einzigen) Person
+  return ergebnis.landmarks[0] || null; // Körperpunkte der ersten (einzigen) Person
+}
 
-  if (punkte) {
-    posenProZeit.set(Math.round(video.currentTime * 1000), punkte);
-  }
-  zeichneSkelett(punkte);
+function analysiereAktuellesBild() {
+  if (!poseLandmarker || video.readyState < 2 || analyseLaeuft) return;
+  zeichneSkelett(erkennePose());
 }
 
 function zeichneSkelett(punkte) {
@@ -116,12 +137,148 @@ function schleife() {
 }
 
 // ---------------------------------------------------------------
-// 4. Bedienung
+// 4. Ganzen Schwung analysieren: Bild für Bild durch das Video gehen
+// ---------------------------------------------------------------
+
+// Springt zu einer Zeit im Video und wartet, bis das Bild wirklich da ist
+function springeZu(zeit) {
+  return new Promise((fertig) => {
+    if (Math.abs(video.currentTime - zeit) < 0.001) return fertig();
+    const sicherheit = setTimeout(fertig, 2000); // falls der Browser kein "seeked" meldet
+    video.addEventListener(
+      "seeked",
+      () => {
+        clearTimeout(sicherheit);
+        fertig();
+      },
+      { once: true }
+    );
+    video.currentTime = zeit;
+  });
+}
+
+async function analysiereSchwung() {
+  if (!poseLandmarker) return;
+  video.pause();
+  analyseLaeuft = true;
+  setzeKnoepfeAktiv(false);
+  ergebnisBox.hidden = true;
+  analyseBilder = [];
+
+  const anzahl = Math.floor(video.duration / BILD_DAUER);
+  for (let i = 0; i <= anzahl; i++) {
+    const zeit = i * BILD_DAUER;
+    await springeZu(zeit);
+    const punkte = erkennePose();
+    analyseBilder.push({ zeit, punkte });
+    zeichneSkelett(punkte);
+    if (i % 5 === 0) setStatus(`Analysiere … ${Math.round((i / anzahl) * 100)} %`);
+  }
+
+  analyseLaeuft = false;
+  setzeKnoepfeAktiv(true);
+
+  const ergebnis = erkennePhasen(analyseBilder);
+  if (ergebnis.fehler) {
+    setStatus(ergebnis.fehler);
+    return;
+  }
+  zeigeErgebnis(ergebnis);
+  setStatus("Analyse fertig.");
+  zeigePhase("top", ergebnis);
+}
+
+function setzeKnoepfeAktiv(aktiv) {
+  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, analysierenBtn, videoInput]) {
+    knopf.disabled = !aktiv;
+  }
+}
+
+// ---------------------------------------------------------------
+// 5. Ergebnis anzeigen
+// ---------------------------------------------------------------
+function zeigeErgebnis(ergebnis) {
+  // Ein Knopf pro Phase
+  phasenKnoepfe.innerHTML = "";
+  for (const phase of PHASEN) {
+    const knopf = document.createElement("button");
+    knopf.dataset.phase = phase.schluessel;
+    knopf.innerHTML = `<strong>${phase.name}</strong><small>${zahl(ergebnis[phase.schluessel].zeit)} s · ${phase.info}</small>`;
+    knopf.addEventListener("click", () => zeigePhase(phase.schluessel, ergebnis));
+    phasenKnoepfe.appendChild(knopf);
+  }
+
+  // Tempo mit kurzer Einordnung
+  const { rueckschwung, abschwung, verhaeltnis } = ergebnis.tempo;
+  let einordnung = "";
+  if (verhaeltnis !== null) {
+    if (verhaeltnis < 2.3) {
+      einordnung = "Dein Rückschwung ist im Verhältnis eher schnell. Lass dir oben mehr Zeit.";
+    } else if (verhaeltnis > 3.8) {
+      einordnung = "Dein Rückschwung ist im Verhältnis sehr langsam. Ein etwas flüssigerer Rückschwung hilft oft beim Rhythmus.";
+    } else {
+      einordnung = "Das liegt im Bereich guter Spieler (etwa 3 : 1). 👍";
+    }
+  }
+  tempoAnzeige.innerHTML = `
+    <strong>${verhaeltnis ? zahl(verhaeltnis, 1) : "–"} : 1</strong>
+    <div>Rückschwung ${zahl(rueckschwung)} s · Abschwung ${zahl(abschwung)} s</div>
+    <div>${einordnung}</div>`;
+
+  // Hinweise, falls die Erkennung unsicher ist
+  warnungenListe.innerHTML = "";
+  for (const text of ergebnis.warnungen) {
+    const eintrag = document.createElement("li");
+    eintrag.textContent = text;
+    warnungenListe.appendChild(eintrag);
+  }
+
+  ergebnisBox.hidden = false;
+}
+
+async function zeigePhase(schluessel, ergebnis) {
+  video.pause();
+  await springeZu(ergebnis[schluessel].zeit);
+  analysiereAktuellesBild();
+  for (const knopf of phasenKnoepfe.children) {
+    knopf.classList.toggle("aktiv", knopf.dataset.phase === schluessel);
+  }
+  const phase = PHASEN.find((p) => p.schluessel === schluessel);
+  setStatus(`${phase.name} bei ${zahl(ergebnis[schluessel].zeit)} s`);
+}
+
+// Posedaten als Datei speichern – damit können wir die Erkennung später feinjustieren
+function exportiereDaten() {
+  const daten = {
+    video: videoName,
+    breite: video.videoWidth,
+    hoehe: video.videoHeight,
+    bilder: analyseBilder.map((b) => ({
+      zeit: Number(b.zeit.toFixed(4)),
+      punkte: b.punkte?.map((p) => ({
+        x: Number(p.x.toFixed(4)),
+        y: Number(p.y.toFixed(4)),
+        sichtbar: Number((p.visibility ?? 0).toFixed(2)),
+      })) ?? null,
+    })),
+  };
+  const blob = new Blob([JSON.stringify(daten)], { type: "application/json" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `posedaten-${videoName.replace(/\.[^.]+$/, "") || "schwung"}.json`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+// ---------------------------------------------------------------
+// 6. Bedienung
 // ---------------------------------------------------------------
 videoInput.addEventListener("change", () => {
   const datei = videoInput.files[0];
   if (!datei) return;
-  posenProZeit.clear();
+  videoName = datei.name;
+  analyseBilder = [];
+  ergebnisBox.hidden = true;
   video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
   setStatus(`Lade „${datei.name}“ …`);
 });
@@ -136,7 +293,7 @@ video.addEventListener("loadedmetadata", () => {
   buehne.hidden = false;
   steuerung.hidden = false;
   video.currentTime = 0; // löst "seeked" aus → erstes Bild wird analysiert
-  setStatus("Video geladen. Abspielen oder Bild für Bild durchgehen.");
+  setStatus("Video geladen. Tippe auf „Schwung analysieren“ oder spiel es ab.");
 });
 
 video.addEventListener("error", () => {
@@ -153,7 +310,6 @@ video.addEventListener("play", () => {
 
 video.addEventListener("pause", () => {
   playPauseBtn.textContent = "▶︎ Abspielen";
-  setStatus(`${posenProZeit.size} Bilder analysiert.`);
 });
 
 playPauseBtn.addEventListener("click", () => {
@@ -176,6 +332,8 @@ tempoSelect.addEventListener("change", () => {
 });
 
 skelettAn.addEventListener("change", analysiereAktuellesBild);
+analysierenBtn.addEventListener("click", analysiereSchwung);
+exportierenBtn.addEventListener("click", exportiereDaten);
 
 // Los geht's
 ladePoseErkennung();
