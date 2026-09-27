@@ -184,6 +184,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `.nojekyll` | Leere Datei: GitHub Pages zeigt die Dateien unverändert an, statt sie umzubauen |
 | `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
 | `docs/` | Pläne und Entscheidungen |
+| `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches

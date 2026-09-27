@@ -38,6 +38,25 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
   sie mit `node --test` prüfbar ist. Echte Testschwünge: `tests/daten/`.
 - README-Dateiliste aktuell halten.
 
+## Sicherheit (bei jeder Änderung beachten)
+
+Ausführlicher Stand mit allen Befunden: `docs/sicherheit/bericht.md` (IDs wie V1, C1, S2).
+**Vor Änderungen an Netzwerk, Speicherung (IndexedDB, Export, Sicherung), Service Worker oder
+nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit erledigen.
+
+- **Videos, Einzelbilder, Posedaten und Kennzahlen verlassen das Gerät nie.** Kein Upload,
+  kein `fetch` mit Nutzerdaten. Neue Internetadressen nur nach Rückfrage; erlaubt sind
+  `cdn.jsdelivr.net` und `storage.googleapis.com` (MediaPipe und Modell).
+- **Keine Schlüssel, Tokens oder Passwörter im Code** – das Repo ist öffentlich.
+  Coach-Feedback mit Claude (Etappe 11) nur über einen Vermittler-Server, vorher V2 lesen.
+- Kein `eval` / `new Function`. `innerHTML` nur mit festen Texten; Dateinamen und
+  gespeicherte Daten immer per `textContent`.
+- Jede asynchrone Aktion mit Fehlerbehandlung; gesperrte Knöpfe im `finally` wieder freigeben.
+- Browser-Adressen aus `URL.createObjectURL` wieder freigeben (bei Downloads verzögert).
+- In Commits, Pull Requests und `docs/sicherheit/` keine Details zu noch offenen Lücken.
+- **Nach jeder Bau-Runde `/golf-app-check` ausführen.** Er schreibt `docs/sicherheit/bericht.md`
+  und `docs/sicherheit/pruefprotokoll.md` fort.
+
 ## Wichtige Dateien
 
 | Datei | Aufgabe |
@@ -49,6 +68,7 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
+| `docs/sicherheit/` | Sicherheitsbericht (Befunde, Status) und Prüfprotokoll der Checks |
 
 ## Bekannte Eigenheiten iPhone / Safari
 

@@ -20,3 +20,6 @@ videos/
 
 # Testvideos aus fremden Quellen nur lokal nutzen
 testvideos/
+
+# Persönliche Einstellungen von Claude Code (nur für diesen Mac, nicht öffentlich)
+.claude/settings.local.json
