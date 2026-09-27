@@ -101,7 +101,7 @@ async function netzZuerst(anfrage) {
     return await mitZeitlimit(ausDemNetz, NETZ_WARTEZEIT_MS);
   } catch {
     // Kein Netz oder zu langsam → gespeicherte Version
-    const gespeichert = await cache.match(anfrage, { ignoreSearch: true });
+    const gespeichert = await cache.match(anfrage, { ignoreSearch: true, ignoreVary: true });
     if (gespeichert) return gespeichert;
     if (anfrage.mode === "navigate") {
       const startseite = await cache.match("./index.html");
@@ -114,7 +114,9 @@ async function netzZuerst(anfrage) {
 
 async function speicherZuerst(anfrage) {
   const cache = await caches.open(CACHE_CDN);
-  const gespeichert = await cache.match(anfrage.url);
+  // ignoreVary: Das Modell kommt von Google mit "Vary: Origin". Safari findet solche
+  // Einträge sonst unter Umständen nicht wieder – dann fehlt es offline.
+  const gespeichert = await cache.match(anfrage.url, { ignoreVary: true });
   if (gespeichert) return gespeichert;
   // Mit CORS laden, damit die Antwort lesbar ist und gespeichert werden kann
   let antwort;

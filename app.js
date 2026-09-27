@@ -20,8 +20,11 @@ import { bewerteSchwung } from "./kennzahlen.js";
 import { bewerteTechnik, ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
 // Rote Abweichungen und gelbe Ideallinien im Video (siehe ideallinien.js)
 import { ideallinien, MIT_LINIE } from "./ideallinien.js";
+// Offline-Prüfung (siehe pwa.js)
+import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname } from "./pwa.js";
 
-const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+const WASM_URL = `${MP_MODUL}/wasm`;
 // "full" ist genauer als "lite" und für Videoanalyse schnell genug.
 const MODELL_URL =
   "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task";
@@ -63,6 +66,8 @@ const ctx = canvas.getContext("2d");
 const zeichner = new DrawingUtils(ctx);
 
 let poseLandmarker = null;
+let poseStatus = "laedt"; // "laedt" | "bereit" | "fehler"
+let poseFehlerText = "";
 let letzterZeitstempel = -1;
 let analyseLaeuft = false;
 let videoName = "";
@@ -97,7 +102,13 @@ function zahl(wert, stellen = 2) {
 // 1. Pose-Erkennung laden (erst mit Grafikkarte, sonst mit Prozessor)
 // ---------------------------------------------------------------
 async function ladePoseErkennung() {
+  setzePoseStatus("laedt");
+  // Welche Dateien MediaPipe auf diesem Gerät braucht (mit/ohne SIMD) –
+  // das wird lokal entschieden, dafür ist kein Internet nötig.
   const vision = await FilesetResolver.forVisionTasks(WASM_URL);
+  const benoetigt = [MP_MODUL, vision.wasmLoaderPath, vision.wasmBinaryPath, MODELL_URL];
+
+  let letzterFehler = null;
   for (const delegate of ["GPU", "CPU"]) {
     try {
       poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
@@ -105,13 +116,47 @@ async function ladePoseErkennung() {
         runningMode: "VIDEO",
         numPoses: 1, // nur eine Person: du
       });
-      setStatus("Bereit. Wähle ein Schwungvideo aus.");
+      setzePoseStatus("bereit");
+      setStatus(
+        video.src
+          ? "Pose-Erkennung bereit. Tippe auf „Schwung analysieren“."
+          : "Bereit. Wähle ein Schwungvideo aus."
+      );
+      // Im Hintergrund prüfen, ob alles für den Offline-Betrieb gespeichert ist
+      meldeOfflineBereitschaft(benoetigt);
       return;
     } catch (fehler) {
+      letzterFehler = fehler;
       console.warn(`Pose-Erkennung mit ${delegate} fehlgeschlagen:`, fehler);
     }
   }
-  setStatus("Die Pose-Erkennung konnte nicht geladen werden. Internetverbindung prüfen und Seite neu laden.");
+
+  // Beide Versuche gescheitert: genau sagen, woran es liegt
+  const { fehlend } = await pruefeOfflineDateien(benoetigt);
+  if (fehlend.length) {
+    poseFehlerText =
+      `Die Pose-Erkennung ist auf diesem Gerät nicht vollständig gespeichert ` +
+      `(fehlt: ${fehlend.map(dateiname).join(", ")}). Öffne die App einmal mit Internet ` +
+      `und warte, bis unten „Offline bereit ✓“ steht.`;
+  } else {
+    poseFehlerText =
+      `Die Pose-Erkennung konnte nicht geladen werden (${letzterFehler?.message || "unbekannter Fehler"}). ` +
+      `Internetverbindung prüfen und die App neu öffnen.`;
+  }
+  setzePoseStatus("fehler");
+  setStatus(poseFehlerText);
+}
+
+// Der Analysieren-Knopf ist nur aktiv, wenn die Pose-Erkennung bereit ist
+function setzePoseStatus(neu) {
+  poseStatus = neu;
+  const texte = {
+    laedt: "⏳ Pose-Erkennung lädt …",
+    bereit: "🔍 Schwung analysieren",
+    fehler: "⚠️ Pose-Erkennung fehlt",
+  };
+  analysierenBtn.textContent = texte[neu];
+  analysierenBtn.disabled = neu !== "bereit" || analyseLaeuft;
 }
 
 // ---------------------------------------------------------------
@@ -322,7 +367,10 @@ function springeZu(zeit) {
 }
 
 async function analysiereSchwung() {
-  if (!poseLandmarker) return;
+  if (poseStatus !== "bereit") {
+    setStatus(poseFehlerText || "Die Pose-Erkennung lädt noch – einen Moment.");
+    return;
+  }
   video.pause();
   analyseLaeuft = true;
   setzeKnoepfeAktiv(false);
@@ -362,9 +410,10 @@ async function analysiereSchwung() {
 }
 
 function setzeKnoepfeAktiv(aktiv) {
-  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, analysierenBtn, videoInput]) {
+  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput]) {
     knopf.disabled = !aktiv;
   }
+  analysierenBtn.disabled = !aktiv || poseStatus !== "bereit";
 }
 
 // ---------------------------------------------------------------
@@ -582,7 +631,9 @@ video.addEventListener("loadedmetadata", () => {
   buehne.hidden = false;
   steuerung.hidden = false;
   video.currentTime = 0; // löst "seeked" aus → erstes Bild wird analysiert
-  setStatus("Video geladen. Tippe auf „Schwung analysieren“ oder spiel es ab.");
+  if (poseStatus === "bereit") setStatus("Video geladen. Tippe auf „Schwung analysieren“ oder spiel es ab.");
+  else if (poseStatus === "fehler") setStatus(`Video geladen – aber: ${poseFehlerText}`);
+  else setStatus("Video geladen. Die Pose-Erkennung lädt noch …");
 });
 
 video.addEventListener("error", () => {
@@ -626,4 +677,8 @@ analysierenBtn.addEventListener("click", analysiereSchwung);
 exportierenBtn.addEventListener("click", exportiereDaten);
 
 // Los geht's
-ladePoseErkennung();
+ladePoseErkennung().catch((fehler) => {
+  poseFehlerText = `Die Pose-Erkennung konnte nicht starten (${fehler.message}).`;
+  setzePoseStatus("fehler");
+  setStatus(poseFehlerText);
+});

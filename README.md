@@ -9,7 +9,11 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 
 - Auf dem iPhone in Safari öffnen → Teilen → „Zum Home-Bildschirm“: dann startet die App wie eine normale App.
 - **Offline:** Nach dem ersten Öffnen mit Internet (lädt einmalig ca. 20 MB Pose-Erkennung)
-  funktioniert die App auch ohne Netz – z. B. auf der Range.
+  funktioniert die App auch ohne Netz – z. B. auf der Range. **Erst losgehen, wenn unten
+  „Offline bereit ✓“ steht.**
+- **Wichtig auf dem iPhone:** Die App auf dem Home-Bildschirm hat einen *eigenen* Speicher,
+  getrennt von Safari. Sie muss also einmal **vom Home-Bildschirm aus** mit Internet geöffnet werden.
+- Fehlt offline etwas, nennt die App in der Statuszeile genau, welche Datei fehlt.
 - **Updates:** Mit Internet holt sich die App bei jedem Start automatisch die neueste Version.
   Die Versionsnummer steht ganz unten.
 - **„Daten geschützt ✓“** unten erscheint, wenn der Browser zugesagt hat, die Daten der App

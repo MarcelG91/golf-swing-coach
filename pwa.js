@@ -4,7 +4,14 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.7.0";
+export const APP_VERSION = "0.7.1";
+
+// Muss zu den Namen in sw.js passen
+const CACHE_APP = "app-v1";
+const CACHE_CDN = "cdn-v1";
+
+// Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
+const APP_DATEIEN = ["./", "./style.css", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./pwa.js"];
 
 const $ = (id) => document.getElementById(id);
 
@@ -33,6 +40,49 @@ $("version").textContent = `Version ${APP_VERSION}`;
 
 function zeigeNetz() {
   $("netzStatus").textContent = navigator.onLine ? "online" : "offline";
+}
+
+// ---------------------------------------------------------------
+// Offline-Bereitschaft: Sind alle nötigen Dateien gespeichert?
+// Fehlt etwas und wir sind online, wird es direkt nachgeladen.
+// ---------------------------------------------------------------
+export async function pruefeOfflineDateien(cdnDateien, { reparieren = false } = {}) {
+  if (!("caches" in window)) return { bereit: false, fehlend: [...cdnDateien] };
+  const fehlend = [];
+  const liste = [
+    ...APP_DATEIEN.map((pfad) => ({ cache: CACHE_APP, url: new URL(pfad, location.href).href })),
+    ...cdnDateien.map((url) => ({ cache: CACHE_CDN, url })),
+  ];
+  for (const { cache: name, url } of liste) {
+    const cache = await caches.open(name);
+    let vorhanden = !!(await cache.match(url, { ignoreVary: true, ignoreSearch: name === CACHE_APP }));
+    if (!vorhanden && reparieren && navigator.onLine) {
+      try {
+        await cache.add(new Request(url, { mode: "cors", credentials: "omit" }));
+        vorhanden = true;
+      } catch (fehler) {
+        console.warn("Konnte nicht nachladen:", url, fehler);
+      }
+    }
+    if (!vorhanden) fehlend.push(url);
+  }
+  return { bereit: fehlend.length === 0, fehlend };
+}
+
+// Wird von app.js aufgerufen, sobald die Pose-Erkennung erfolgreich geladen ist
+export async function meldeOfflineBereitschaft(cdnDateien) {
+  const anzeige = $("offlineStatus");
+  anzeige.textContent = "Offline-Prüfung …";
+  const { bereit, fehlend } = await pruefeOfflineDateien(cdnDateien, { reparieren: true });
+  anzeige.textContent = bereit
+    ? "Offline bereit ✓"
+    : `Offline noch nicht bereit (${fehlend.length} Datei${fehlend.length === 1 ? "" : "en"} fehlt)`;
+  anzeige.title = fehlend.join("\n");
+}
+
+// Kurzer, lesbarer Dateiname aus einer Adresse
+export function dateiname(url) {
+  return url.split("/").pop() || url;
 }
 window.addEventListener("online", zeigeNetz);
 window.addEventListener("offline", zeigeNetz);
