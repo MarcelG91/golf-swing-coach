@@ -93,9 +93,19 @@ self.addEventListener("fetch", (event) => {
 
 async function netzZuerst(anfrage) {
   const cache = await caches.open(CACHE_APP);
-  const ausDemNetz = fetch(anfrage).then((antwort) => {
+  // cache: "no-cache" = beim Server immer nachfragen, ob es eine neuere Version gibt.
+  // Ohne das nimmt der Browser eine Datei bis zu 10 Minuten (GitHub Pages) oder
+  // noch länger (lokaler Server) aus seinem eigenen Zwischenspeicher. Nach einem
+  // Update passen dann z. B. die neue app.js und eine alte ideallinien.js nicht
+  // zusammen. Unveränderte Dateien kosten nur eine kurze Rückfrage ("304").
+  // Seitenaufrufe (navigate) lassen sich nicht umbauen – für sie nehmen wir die Adresse.
+  const frisch =
+    anfrage.mode === "navigate"
+      ? fetch(anfrage.url, { cache: "no-cache", credentials: "same-origin" })
+      : fetch(anfrage, { cache: "no-cache" });
+  const ausDemNetz = frisch.then((antwort) => {
     if (antwort.status === 200) cache.put(anfrage, antwort.clone());
-    return antwort;
+    return ohneBrowserZwischenspeicher(antwort);
   });
   try {
     return await mitZeitlimit(ausDemNetz, NETZ_WARTEZEIT_MS);
@@ -110,6 +120,16 @@ async function netzZuerst(anfrage) {
     // Nichts gespeichert: doch weiter auf das Netz warten
     return ausDemNetz.catch(() => Response.error());
   }
+}
+
+// Die Antwort mit "Cache-Control: no-cache" an die Seite geben. Sonst hebt der
+// Browser die Datei zusätzlich im Arbeitsspeicher auf und fragt beim nächsten
+// Laden gar nicht erst nach – dann käme die Rückfrage oben nie beim Server an.
+function ohneBrowserZwischenspeicher(antwort) {
+  if (antwort.status !== 200) return antwort;
+  const kopfzeilen = new Headers(antwort.headers);
+  kopfzeilen.set("Cache-Control", "no-cache");
+  return new Response(antwort.body, { status: antwort.status, statusText: antwort.statusText, headers: kopfzeilen });
 }
 
 async function speicherZuerst(anfrage) {

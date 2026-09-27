@@ -312,7 +312,7 @@ function zeichneAbweichungen(linien, auswahl, punkte) {
   // Pfeile: von deiner roten Linie in Richtung der gelben Ideallinie
   for (const { k, pfeile } of linien) {
     if (!ausserhalb(k)) continue;
-    for (const p of pfeile) zeichnePfeil(px(p.von), px(p.bis), staerke);
+    for (const p of pfeile || []) zeichnePfeil(px(p.von), px(p.bis), staerke);
   }
 
   // Beschriftung oben links
@@ -347,7 +347,7 @@ function zeichneAbweichungen(linien, auswahl, punkte) {
   };
   for (const { k, ist, ideal, pfeile, istKreise } of linien) {
     if (!ausserhalb(k)) continue;
-    [...ist, ...ideal, ...pfeile].forEach(abtasten);
+    [...ist, ...ideal, ...(pfeile || [])].forEach(abtasten);
     for (const c of istKreise) hindernisse.push({ ...px(c.mitte), gewicht: 4 });
   }
   zeichneSprechblasen(
