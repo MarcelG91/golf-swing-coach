@@ -151,3 +151,48 @@ button.klein {
   border-radius: 8px;
   cursor: pointer;
 }
+
+/* --- Etappe 7: Installationshinweis und Fußzeile --- */
+body {
+  /* Platz für Notch / Home-Balken, wenn die App im Vollbild läuft */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+.install-hinweis {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: calc(100% - 32px);
+  max-width: 868px;
+  margin: 12px auto 0;
+  padding: 12px 14px;
+  background: var(--flaeche);
+  border: 1px solid #2c5a43;
+  border-radius: 12px;
+  line-height: 1.4;
+}
+.install-hinweis span { flex: 1; }
+.install-hinweis .haupt {
+  padding: 8px 12px;
+  background: var(--akzent);
+  color: #06140c;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.install-hinweis .schliessen {
+  background: none;
+  border: none;
+  color: var(--text-leise);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.fuss {
+  max-width: 900px;
+  margin: 8px auto 24px;
+  padding: 0 16px;
+  color: var(--text-leise);
+  font-size: 0.8rem;
+  text-align: center;
+}
