@@ -2,11 +2,28 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Golf Swing Coach</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Als App auf dem Home-Bildschirm (Etappe 7) -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <meta name="theme-color" content="#0f1f17">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Swing Coach">
 </head>
 <body>
+  <!-- Hinweis: App zum Home-Bildschirm hinzufügen (steuert pwa.js) -->
+  <div id="installHinweis" class="install-hinweis" hidden>
+    <span id="installText"></span>
+    <button id="installKnopf" class="haupt" hidden>Installieren</button>
+    <button id="installHinweisZu" class="schliessen" aria-label="Hinweis schließen">✕</button>
+  </div>
+
   <header>
     <h1>⛳ Golf Swing Coach</h1>
     <p class="untertitel">Video hochladen – die App erkennt deine Körperhaltung.</p>
@@ -81,6 +98,12 @@
     </section>
   </main>
 
+  <footer class="fuss">
+    <span id="version"></span> · <span id="netzStatus"></span> · <span id="speicherStatus"></span>
+  </footer>
+
+  <!-- Installation + Offline (läuft auch, wenn die Pose-Erkennung nicht lädt) -->
+  <script type="module" src="pwa.js"></script>
   <!-- Die eigentliche Logik steht in app.js -->
   <script type="module" src="app.js"></script>
 </body>

@@ -8,6 +8,12 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 👉 **https://marcelg91.github.io/golf-swing-coach/**
 
 - Auf dem iPhone in Safari öffnen → Teilen → „Zum Home-Bildschirm“: dann startet die App wie eine normale App.
+- **Offline:** Nach dem ersten Öffnen mit Internet (lädt einmalig ca. 20 MB Pose-Erkennung)
+  funktioniert die App auch ohne Netz – z. B. auf der Range.
+- **Updates:** Mit Internet holt sich die App bei jedem Start automatisch die neueste Version.
+  Die Versionsnummer steht ganz unten.
+- **„Daten geschützt ✓“** unten erscheint, wenn der Browser zugesagt hat, die Daten der App
+  nicht automatisch zu löschen (klappt in der Regel nur als Home-Bildschirm-App).
 - „Video auswählen oder aufnehmen“ tippen → direkt filmen oder ein Video aus den Fotos wählen.
 - Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die Pose-Erkennung.
 - Die Online-Version ist immer der Stand von `main`. Nach einem Merge dauert es 1–2 Minuten, bis sie aktualisiert ist.
@@ -51,6 +57,11 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `phasen.js` | Rechnet aus den Körperpunkten die Schwungphasen und das Tempo aus |
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
 | `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
+| `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
+| `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
+| `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
+| `icons/` | App-Symbole |
+| `docs/` | Pläne und Entscheidungen |
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
@@ -155,4 +166,10 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 4. Kopfstabilität (Höhe + seitlich) mit Tipp
 - [x] 5. Weitere Kennzahlen: Vorneigung, Hüfte, Gewichtsverlagerung, Tempo – geprüft an echten Schwüngen
 - [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
-- [ ] 7. Optional: Coach-Feedback mit Claude
+- [x] 7. App auf den Home-Bildschirm, offline nutzbar
+- [ ] 8. Schwünge speichern (mit gekürztem Video)
+- [ ] 9. Sicherung exportieren / einspielen
+- [ ] 10. Fortschritt messen und Langzeit-Feedback
+- [ ] 11. Optional: Coach-Feedback mit Claude
+
+Details: `docs/plan-speichern-und-fortschritt.md`
