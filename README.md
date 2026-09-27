@@ -3,6 +3,26 @@
 Eine Web-App, die Golfschwung-Videos analysiert und Verbesserungstipps gibt.
 Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen das Gerät nicht.
 
+**Was die App kann:**
+
+- Schwung filmen oder aus den Fotos wählen – frontal oder von hinten (erkennt sie selbst)
+- Skelett über das Video zeichnen und die Phasen finden: Ansprechen, Top, Treffmoment, Finish
+- Tempo, Kopf, Hüfte, Arme, Oberkörperhaltung und Drehung bewerten (Ampel: gut / Achtung / verbessern)
+- Die **3 wichtigsten Baustellen** mit Gefühl-Tipp und Übung nennen
+- Fehler direkt im Video zeigen: **rot** = deine Linie, **gelb** = Ideallinie, dazu Pfeil und Sprechblase
+- Als App auf dem iPhone-Home-Bildschirm laufen – auch **offline** auf der Range
+
+**Inhalt:**
+[Online nutzen](#online-nutzen-handy) ·
+[Lokal starten](#starten-lokal-auf-dem-mac) ·
+[Tipps für gute Videos](#tipps-für-gute-videos) ·
+[Wenn etwas nicht klappt](#wenn-etwas-nicht-klappt) ·
+[Dateien](#dateien) ·
+[Arbeitsweise](#arbeitsweise-mit-branches) ·
+[Tests](#tests-ausführen) ·
+[So funktioniert die Analyse](#so-geht-die-app-das-video-durch) ·
+[Fahrplan](#fahrplan)
+
 ## Online nutzen (Handy)
 
 👉 **https://marcelg91.github.io/golf-swing-coach/**
@@ -70,7 +90,32 @@ Bevor die App ein Video bekommt, bereitet das iPhone es vor. Je größer das Vid
 Im Ordner `testvideos/` (nur lokal, nicht auf GitHub) liegen Beispielschwünge
 aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 
+### Posedaten speichern (für die Feinabstimmung)
+
+Unter dem Ergebnis gibt es den Knopf **„💾 Posedaten speichern“**. Er lädt eine Datei
+`posedaten-<videoname>.json` herunter: nur die Koordinaten der Körperpunkte pro Bild,
+kein Video. Damit lassen sich Kennzahlen und Grenzwerte am Rechner mit `node --test`
+nachprüfen, ohne das Video erneut analysieren zu müssen.
+
+> Solche Exporte können Rückschlüsse auf dich zulassen und gehören **nicht** auf GitHub.
+> `.gitignore` und der Video-Wächter-Test verhindern das. Nur bewusst ausgewählte, fremde
+> Beispielschwünge liegen – umbenannt – in `tests/daten/`.
+
+## Wenn etwas nicht klappt
+
+| Problem | Lösung |
+|---|---|
+| Offline fehlt etwas | Die Statuszeile nennt die fehlende Datei. App **vom Home-Bildschirm aus** mit Internet öffnen und warten, bis unten „Offline bereit ✓“ steht. |
+| Update kommt nicht an | Versionsnummer ganz unten prüfen. App mit Internet komplett schließen (nach oben wischen) und neu öffnen. Nach einem Merge 1–2 Minuten warten. |
+| Analyse ist langsam | Die Zeile „Analyse fertig (…)“ notieren (siehe [unten](#so-geht-die-app-das-video-durch)). 1080p statt 4K filmen, Video vorher kürzen. |
+| Video lädt ewig („Wird vorbereitet“) | Siehe [Damit das Video schnell geladen ist](#damit-das-video-auf-dem-handy-schnell-geladen-ist). |
+| „Der Abschwung wirkt ungewöhnlich“ | Meist Zeitlupe oder Probeschwung – mit normaler Geschwindigkeit filmen. |
+| Skelett sitzt falsch | Ganzer Körper im Bild? Genug Licht? Keine anderen Personen im Hintergrund? |
+| Lokal: Seite leer / Fehler in der Konsole | Über `http://127.0.0.1:8000` öffnen, nicht per Doppelklick auf `index.html`. |
+
 ## Dateien
+
+**App**
 
 | Datei | Aufgabe |
 |---|---|
@@ -86,17 +131,30 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
 | `icons/` | App-Symbole |
-| `docs/` | Pläne und Entscheidungen |
-| `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
+
+**Tests**
+
+| Datei | Aufgabe |
+|---|---|
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
 | `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
 | `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
-| `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
-| `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
-| `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
+| `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
+| `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
+
+**Projekt**
+
+| Datei | Aufgabe |
+|---|---|
+| `package.json` | Sagt Node.js, dass die Dateien moderne JavaScript-Module sind; `npm test` = `node --test` |
+| `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
+| `.nojekyll` | Leere Datei: GitHub Pages zeigt die Dateien unverändert an, statt sie umzubauen |
+| `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
+| `docs/` | Pläne und Entscheidungen |
+| `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches
 
@@ -113,6 +171,15 @@ gh pr create --fill                           # Pull Request anlegen
 gh pr merge --merge --delete-branch           # nach Prüfung in main übernehmen
 git checkout main && git pull                 # zurück auf main
 ```
+
+### Checkliste bei Änderungen an der App
+
+- [ ] `APP_VERSION` in `pwa.js` erhöht? (So siehst du auf dem iPhone, ob das Update da ist.)
+- [ ] Neue JS-Datei? → in `sw.js` **und** `pwa.js` bei `APP_DATEIEN` eintragen, sonst fehlt sie offline.
+- [ ] Rechenlogik ohne Browser-Code (kein `document`, kein `window`), damit `node --test` sie prüfen kann.
+- [ ] `node --test` grün und im Browser angesehen?
+- [ ] Keine Videos oder Posedaten-Exporte im Commit?
+- [ ] Dateiliste in dieser README aktuell?
 
 ## Tests ausführen
 
