@@ -57,6 +57,7 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `phasen.js` | Rechnet aus den Körperpunkten die Schwungphasen und das Tempo aus |
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
 | `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
+| `ideallinien.js` | Rechnet aus, wo die gelbe Ideallinie im Video liegt (rot = deine Linie außerhalb des Zielbereichs) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
@@ -65,6 +66,7 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
+| `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
 
@@ -131,8 +133,29 @@ Messungen an Profi- und Amateurschwüngen.
 | Drehung | Schulterdrehung am Top | frontal | Schätzung aus der Schulterbreite (siehe unten) | ab ca. 80° |
 | Drehung | Hüfte im Rückschwung | frontal | Schiebt die Hüfte zur Seite, statt zu drehen? („Sway“) | bis 15 % |
 
-Jede Karte hat einen Knopf **„📍 Im Video zeigen“**: Er springt zum passenden Moment
-und zeichnet die Messlinien ein – **blau** = dieser Moment, **weiß gestrichelt** = beim Ansprechen.
+### Rot und Gelb im Video
+
+Steht das Video nach der Analyse auf einer Schwungphase (Phasen-Knopf oder Bild für Bild),
+zeichnet die App alle Abweichungen dieser Phase ein:
+
+- **Rot** = deine Körperlinie liegt außerhalb des Zielbereichs („Achtung“ oder „Verbessern“)
+- **Gelb** = Ideallinie: Dort sollte die Linie liegen
+
+| Kennzahl | Rot (deine Linie) | Gelb (Ideallinie) |
+|---|---|---|
+| Vorneigung / Seitneigung / Oberkörper am Top / im Treffmoment | Hüftmitte → Schultermitte | gleiche Länge im Idealwinkel (35° vor · 7° / 5° / 13° vom Ziel weg) |
+| Vorneigung halten | Oberkörper im Treffmoment | Vorneigung vom Ansprechen |
+| Führungsarm im Treffmoment | Ober- und Unterarm | gerader Arm gleicher Länge |
+| Arme beim Ansprechen | Arme | Hände senkrecht unter der Schultermitte |
+| Armschwung am Top | hinterer Arm, Hände | Höhe der Hände: eine halbe Rumpflänge über den Schultern |
+| Schulterdrehung am Top | Schulterlinie | Schulterlinie so schmal wie bei ca. 90° Drehung |
+| Kopfhöhe / Kopf seitlich | Kopf | Linie durch die Kopfposition beim Ansprechen |
+| Hüfte im Rückschwung / Hüfte Richtung Ball | Hüfte | Hüfte an der Position vom Ansprechen |
+| Gewichtsverlagerung | Hüfte im Finish | Hüfte senkrecht über dem vorderen Fuß |
+
+Jede Karte hat außerdem einen Knopf **„📍 Im Video zeigen“**: Er springt zum passenden
+Moment und zeigt nur diese eine Kennzahl – grün, wenn sie im Zielbereich liegt.
+Die Idealwerte stehen oben in `ideallinien.js` (`IDEAL`) und liegen alle im grünen Bereich.
 
 **Die 3 wichtigsten Baustellen** stehen ganz oben, mit „So geht's“ (Gefühl) und Übung.
 Reihenfolge: erst „Verbessern“, dann „Achtung“; innerhalb davon zählen Grundlagen

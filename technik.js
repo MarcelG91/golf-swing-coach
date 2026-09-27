@@ -4,7 +4,7 @@
 // Ergänzt kennzahlen.js um weitere Kennzahlen und macht aus allen
 // Kennzahlen direkte Tipps:
 //   1. bewerteTechnik()        misst Arme, Oberkörper und Drehung
-//   2. ordneEin()              gibt jeder Kennzahl Kategorie, Videomoment und Messlinien
+//   2. ordneEin()              gibt jeder Kennzahl Kennung, Kategorie und Videomoment
 //   3. wichtigsteBaustellen()  wählt die 3 Punkte aus, an denen du zuerst arbeiten solltest
 //
 // Wie in kennzahlen.js: x wird in "Bildhöhen" umgerechnet und Strecken werden
@@ -154,7 +154,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Arme beim Ansprechen",
       kategorie: "arme",
       phase: "ansprechen",
-      zeichnung: ["arme"],
       gewicht: 3,
       wert: `${armAbstand > 0 ? "+" : ""}${prozent(armAbstand)}`,
       detail: "Hände vor (+) oder hinter (−) der Schultermitte, in % der Rumpflänge. Gut: −25 bis +15 %",
@@ -184,7 +183,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Vorneigung beim Ansprechen",
       kategorie: "oberkoerper",
       phase: "ansprechen",
-      zeichnung: ["wirbelsaeule"],
       gewicht: 3,
       wert: grad(vorneigung),
       detail: "Neigung des Oberkörpers nach vorne (Hüfte bis Schultern). Gut: 25–45°",
@@ -223,7 +221,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: `${s.Fer} Arm im Treffmoment`,
       kategorie: "arme",
       phase: "treffmoment",
-      zeichnung: ["fuehrungsarm"],
       gewicht: 2,
       wert: grad(armWinkel),
       detail: `Winkel am ${s.fen} Ellbogen (180° = ganz gestreckt). Gut: ab 155°`,
@@ -252,7 +249,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Schulterdrehung am Top",
       kategorie: "drehung",
       phase: "top",
-      zeichnung: ["schultern"],
       gewicht: 2.5,
       wert: drehung === null ? "unter 50°" : `ca. ${drehung}°`,
       detail: `Schätzung aus der Schulterbreite: am Top noch ${prozent(Math.max(0, verhaeltnis))} der Breite beim Ansprechen. Gut: ab ca. 80°`,
@@ -281,7 +277,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Armschwung am Top",
       kategorie: "arme",
       phase: "top",
-      zeichnung: ["haende", "schultern"],
       gewicht: 2,
       wert: prozent(handHoehe),
       detail: "Höhe der Hände über der Schultermitte, in % der Rumpflänge – bewertet zusammen mit der Schulterdrehung",
@@ -310,7 +305,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Seitneigung beim Ansprechen",
       kategorie: "oberkoerper",
       phase: "ansprechen",
-      zeichnung: ["wirbelsaeule"],
       gewicht: 2.5,
       wert: `${seitAnsprechen < 0 ? "−" : ""}${grad(Math.abs(seitAnsprechen))}`,
       detail: "Neigung des Oberkörpers vom Ziel weg (+) oder zum Ziel (−). Gut: 0 bis 20°",
@@ -336,7 +330,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Oberkörper am Top",
       kategorie: "oberkoerper",
       phase: "top",
-      zeichnung: ["wirbelsaeule"],
       gewicht: 2.5,
       wert: `${seitTop < 0 ? "−" : ""}${grad(Math.abs(seitTop))}`,
       detail: "Neigung vom Ziel weg (+) oder zum Ziel (−). Gut: nicht mehr als 3° zum Ziel",
@@ -359,7 +352,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Oberkörper im Treffmoment",
       kategorie: "oberkoerper",
       phase: "treffmoment",
-      zeichnung: ["wirbelsaeule"],
       gewicht: 2,
       wert: `${seitTreff < 0 ? "−" : ""}${grad(Math.abs(seitTreff))}`,
       detail: "Neigung vom Ziel weg (+) oder zum Ziel (−). Gut: ab 8° vom Ziel weg",
@@ -386,7 +378,6 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       name: "Hüfte im Rückschwung",
       kategorie: "drehung",
       phase: "top",
-      zeichnung: ["huefte"],
       gewicht: 2,
       wert: prozent(Math.max(0, sway)),
       detail: "Seitliche Verschiebung der Hüfte vom Ziel weg bis zum Top, in % der Rumpflänge. Gut: bis 15 %",
@@ -411,6 +402,12 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
   return {
     rechtshaender,
     fuehrung,
+    // Für die Ideallinien im Video (ideallinien.js)
+    hintereSchulter: hinten,
+    ziel,
+    richtungBall,
+    ansicht,
+    seitenverhaeltnis,
     kennzahlen,
     selbstChecks,
     nurAndereAnsicht:
@@ -422,15 +419,15 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
 
 // ===============================================================
 // 2. Kennzahlen aus kennzahlen.js einordnen
-// Die neuen Kennzahlen bringen Kategorie, Videomoment und Messlinien selbst mit.
+// Die neuen Kennzahlen bringen Kennung, Kategorie und Videomoment selbst mit.
 // ===============================================================
 const ZUORDNUNG = {
-  Tempo: { kategorie: "rhythmus", phase: "top", zeichnung: [], gewicht: 1 },
-  Kopfhöhe: { kategorie: "oberkoerper", phase: "treffmoment", zeichnung: ["kopf"], gewicht: 2 },
-  "Kopf seitlich": { kategorie: "oberkoerper", phase: "treffmoment", zeichnung: ["kopf"], gewicht: 2 },
-  Gewichtsverlagerung: { kategorie: "drehung", phase: "finish", zeichnung: ["huefte"], gewicht: 1.5 },
-  "Vorneigung halten": { kategorie: "oberkoerper", phase: "treffmoment", zeichnung: ["wirbelsaeule"], gewicht: 2.5 },
-  "Hüfte Richtung Ball": { kategorie: "oberkoerper", phase: "treffmoment", zeichnung: ["huefte"], gewicht: 2 },
+  Tempo: { id: "tempo", kategorie: "rhythmus", phase: "top", gewicht: 1 },
+  Kopfhöhe: { id: "kopfhoehe", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
+  "Kopf seitlich": { id: "kopfSeitlich", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
+  Gewichtsverlagerung: { id: "gewicht", kategorie: "drehung", phase: "finish", gewicht: 1.5 },
+  "Vorneigung halten": { id: "vorneigungHalten", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2.5 },
+  "Hüfte Richtung Ball": { id: "hueftBall", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
 };
 
 export const KATEGORIEN = [
@@ -441,7 +438,7 @@ export const KATEGORIEN = [
 ];
 
 export function ordneEin(kennzahl) {
-  const extra = ZUORDNUNG[kennzahl.name] || { kategorie: "rhythmus", phase: "top", zeichnung: [], gewicht: 1 };
+  const extra = ZUORDNUNG[kennzahl.name] || { kategorie: "rhythmus", phase: "top", gewicht: 1 };
   return { gefuehl: null, ...extra, ...kennzahl };
 }
 

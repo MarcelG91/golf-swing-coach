@@ -157,6 +157,9 @@ button:disabled { opacity: 0.5; cursor: wait; }
 }
 .karte button.zeigen:hover { border-color: var(--akzent); }
 #baustellenListe .karte { border-left-width: 7px; }
+.legende { display: block; margin-top: 2px; }
+.legende .rot { color: #ef4444; }
+.legende .gelb { color: #facc15; }
 
 .warnungen { color: #fbbf24; padding-left: 20px; }
 .warnungen:empty { display: none; }

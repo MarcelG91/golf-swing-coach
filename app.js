@@ -18,6 +18,8 @@ import { erkennePhasen } from "./phasen.js";
 import { bewerteSchwung } from "./kennzahlen.js";
 // Arme, Oberkörper, Drehung + wichtigste Baustellen (siehe technik.js)
 import { bewerteTechnik, ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
+// Rote Abweichungen und gelbe Ideallinien im Video (siehe ideallinien.js)
+import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 
 const WASM_URL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
 // "full" ist genauer als "lite" und für Videoanalyse schnell genug.
@@ -70,13 +72,17 @@ let analyseBilder = [];
 let bewertung = null;
 let technik = null; // Arme, Oberkörper, Drehung (technik.js)
 let phasenErgebnis = null; // Zeitpunkte von Ansprechen, Top, Treffmoment, Finish
-// Welche Messlinien gerade im Video eingezeichnet werden ("Im Video zeigen")
+let alleKennzahlen = []; // alle Kennzahlen mit Kennung, Kategorie und Videomoment
+// Welche Kennzahl gerade per "Im Video zeigen" eingezeichnet wird
 let aktiveMessung = null;
 
-// Farben der Messlinien
-const MESS_FARBE = "#38bdf8"; // blau: dieser Moment
-const GEIST_FARBE = "rgba(255, 255, 255, 0.9)"; // weiß gestrichelt: beim Ansprechen
-const LOT_FARBE = "rgba(255, 255, 255, 0.55)"; // senkrechte Hilfslinie
+// Farben im Video
+const GRUEN = "#4ade80"; // Skelett und alles im Zielbereich
+const ROT = "#ef4444"; // Körperlinie außerhalb des Zielbereichs
+const GELB = "#facc15"; // Ideallinie: hier sollte die Linie liegen
+
+// Liegt eine Kennzahl außerhalb des Zielbereichs?
+const ausserhalb = (k) => k.bewertung === "verbessern" || k.bewertung === "achtung";
 
 function setStatus(text) {
   statusText.textContent = text;
@@ -136,28 +142,66 @@ function gespeichertesBild(zeit) {
 function zeichneSkelett(punkte) {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (!punkte) return;
-  // Messlinien nur in dem Bild zeigen, zu dem "Im Video zeigen" gesprungen ist
-  const messungSichtbar = aktiveMessung && Math.abs(video.currentTime - aktiveMessung.zeit) < BILD_DAUER / 2;
+
+  // Was gehört in dieses Bild? (Abweichungen einer Phase oder "Im Video zeigen")
+  const auswahl = technikImBild();
+  const ansprechen = auswahl && gespeichertesBild(phasenErgebnis.ansprechen.zeit)?.punkte;
+  const linien = [];
+  if (ansprechen) {
+    for (const k of auswahl.kennzahlen) {
+      const l = ideallinien(k, punkte, ansprechen, technik);
+      if (l) linien.push({ k, ...l });
+    }
+  }
   // Bei "Selbst prüfen" bleibt das Bild frei, damit du deinen Körper gut siehst
-  const skelettZeigen = skelettAn.checked && !(messungSichtbar && aktiveMessung.ohneSkelett);
+  const skelettZeigen = skelettAn.checked && !auswahl?.ohneSkelett;
 
   if (skelettZeigen) {
-    // Mit Messlinien tritt das Skelett etwas zurück, damit die Linien auffallen
-    ctx.globalAlpha = messungSichtbar ? 0.4 : 1;
     // Linienstärke an die Videogröße anpassen, damit es in HD nicht zu dünn wirkt
     const staerke = Math.max(2, canvas.width / 250);
     zeichner.drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, {
-      color: "#4ade80",
+      color: GRUEN,
       lineWidth: staerke,
     });
+    // Punkte weiß, damit Gelb nur für die Ideallinie steht
     zeichner.drawLandmarks(punkte, {
-      color: "#facc15",
-      radius: staerke,
+      color: "#ffffff",
+      radius: staerke * 0.8,
     });
-    zeichneKopfMarke(staerke);
-    ctx.globalAlpha = 1;
+    // Der Kopfkreis vom Ansprechen entfällt, wenn eine gelbe Kopf-Ideallinie kommt
+    const kopfIdeal = linien.some((l) => ["kopfhoehe", "kopfSeitlich"].includes(l.k.id) && ausserhalb(l.k));
+    if (!kopfIdeal) zeichneKopfMarke(staerke);
   }
-  if (messungSichtbar) zeichneMessung(punkte);
+  if (auswahl) zeichneAbweichungen(linien, auswahl);
+}
+
+// Welche Kennzahlen sollen im gerade gezeigten Videobild eingezeichnet werden?
+function technikImBild() {
+  if (!technik || !phasenErgebnis) return null;
+  const imBild = (zeit) => Math.abs(video.currentTime - zeit) < BILD_DAUER / 2;
+
+  // 1. "Im Video zeigen" / "Selbst prüfen": genau diese eine Kennzahl
+  if (aktiveMessung && imBild(aktiveMessung.zeit)) {
+    return {
+      titel: aktiveMessung.titel,
+      kennzahlen: aktiveMessung.kennzahl ? [aktiveMessung.kennzahl] : [],
+      ohneSkelett: aktiveMessung.ohneSkelett,
+    };
+  }
+  // 2. Video steht auf einer Schwungphase: alle Abweichungen dieser Phase
+  if (!video.paused) return null;
+  const phase = PHASEN.find((p) => imBild(phasenErgebnis[p.schluessel].zeit));
+  if (!phase) return null;
+  const gemessen = alleKennzahlen.filter((k) => k.phase === phase.schluessel && MIT_LINIE.has(k.id));
+  if (gemessen.length === 0) return null;
+  const abweichungen = gemessen.filter(ausserhalb);
+  return {
+    titel: abweichungen.length
+      ? `${phase.name}: ${abweichungen.map((k) => k.name).join(", ")}`
+      : `${phase.name}: alles im Zielbereich ✓`,
+    kennzahlen: abweichungen,
+    alleGut: abweichungen.length === 0,
+  };
 }
 
 // Gestrichelter Kreis: Dort war dein Kopf beim Ansprechen
@@ -177,36 +221,30 @@ function zeichneKopfMarke(staerke) {
 }
 
 // ---------------------------------------------------------------
-// Messlinien für "Im Video zeigen"
-// Blau = dieser Moment, weiß gestrichelt = beim Ansprechen.
+// Abweichungen einzeichnen
+// Rot = deine Körperlinie außerhalb des Zielbereichs, Gelb = Ideallinie.
+// (Bei "Im Video zeigen" einer guten Kennzahl ist die Linie grün.)
 // ---------------------------------------------------------------
-function zeichneMessung(punkte) {
-  const ansprechen = gespeichertesBild(phasenErgebnis.ansprechen.zeit)?.punkte;
+function zeichneAbweichungen(linien, auswahl) {
   const px = (p) => ({ x: p.x * canvas.width, y: p.y * canvas.height });
-  const mittePx = (p, a, b) => px({ x: (p[a].x + p[b].x) / 2, y: (p[a].y + p[b].y) / 2 });
   const staerke = Math.max(3, canvas.width / 160);
 
-  const linie = (a, b, farbe = MESS_FARBE, gestrichelt = false, breite = staerke) => {
+  const linie = ({ von, bis }, farbe, breite) => {
+    const a = px(von), b = px(bis);
     ctx.strokeStyle = farbe;
     ctx.lineWidth = breite;
-    ctx.setLineDash(gestrichelt ? [breite * 3, breite * 2] : []);
     ctx.beginPath();
     ctx.moveTo(a.x, a.y);
     ctx.lineTo(b.x, b.y);
     ctx.stroke();
   };
-  const kreis = (m, radius, farbe = MESS_FARBE, gefuellt = true) => {
-    ctx.setLineDash([]);
+  const kreis = ({ mitte, radius }, farbe, breite) => {
+    const m = px(mitte);
+    ctx.strokeStyle = farbe;
+    ctx.lineWidth = breite;
     ctx.beginPath();
-    ctx.arc(m.x, m.y, radius, 0, Math.PI * 2);
-    if (gefuellt) {
-      ctx.fillStyle = farbe;
-      ctx.fill();
-    } else {
-      ctx.strokeStyle = farbe;
-      ctx.lineWidth = staerke;
-      ctx.stroke();
-    }
+    ctx.arc(m.x, m.y, Math.max(radius * canvas.height, breite * 1.5), 0, Math.PI * 2);
+    ctx.stroke();
   };
 
   ctx.save();
@@ -214,77 +252,37 @@ function zeichneMessung(punkte) {
   // Dunkler Schatten, damit die Linien auch auf hellem Hintergrund gut sichtbar sind
   ctx.shadowColor = "rgba(0, 0, 0, 0.7)";
   ctx.shadowBlur = staerke;
-  for (const art of aktiveMessung.zeichnung) {
-    if (art === "wirbelsaeule") {
-      // Oberkörper-Linie (Hüftmitte → Schultermitte) mit senkrechter Hilfslinie
-      const huefte = mittePx(punkte, 23, 24);
-      const schulter = mittePx(punkte, 11, 12);
-      const laenge = Math.hypot(schulter.x - huefte.x, schulter.y - huefte.y);
-      if (ansprechen) linie(mittePx(ansprechen, 23, 24), mittePx(ansprechen, 11, 12), GEIST_FARBE, true);
-      linie(huefte, { x: huefte.x, y: huefte.y - laenge }, LOT_FARBE, true, staerke / 2);
-      linie(huefte, schulter);
-      kreis(huefte, staerke * 1.5);
-    }
-    if (art === "schultern") {
-      if (ansprechen) linie(px(ansprechen[11]), px(ansprechen[12]), GEIST_FARBE, true);
-      linie(px(punkte[11]), px(punkte[12]));
-    }
-    if (art === "huefte") {
-      // Hüftmitte jetzt und beim Ansprechen, mit senkrechter Linie als Bezug
-      if (ansprechen) {
-        const alt = mittePx(ansprechen, 23, 24);
-        linie({ x: alt.x, y: alt.y - canvas.height * 0.2 }, { x: alt.x, y: alt.y + canvas.height * 0.2 }, GEIST_FARBE, true, staerke / 2);
-        kreis(alt, staerke * 1.5, GEIST_FARBE);
-      }
-      linie(px(punkte[23]), px(punkte[24]));
-      kreis(mittePx(punkte, 23, 24), staerke * 1.8);
-    }
-    if (art === "fuehrungsarm" && technik) {
-      const { schulter, ellbogen, handgelenk } = technik.fuehrung;
-      linie(px(punkte[schulter]), px(punkte[ellbogen]));
-      linie(px(punkte[ellbogen]), px(punkte[handgelenk]));
-      kreis(px(punkte[ellbogen]), staerke * 1.8);
-    }
-    if (art === "arme") {
-      // Senkrechte unter der Schultermitte: Dort sollten die Hände ungefähr hängen
-      const schulter = mittePx(punkte, 11, 12);
-      const haende = mittePx(punkte, 15, 16);
-      linie(schulter, { x: schulter.x, y: haende.y + canvas.height * 0.05 }, GEIST_FARBE, true, staerke / 2);
-      linie(schulter, haende);
-      kreis(haende, staerke * 1.8);
-    }
-    if (art === "haende") {
-      // Waagerechte in Schulterhöhe: Wie hoch sind die Hände darüber?
-      const schulter = mittePx(punkte, 11, 12);
-      const haende = mittePx(punkte, 15, 16);
-      linie({ x: canvas.width * 0.05, y: schulter.y }, { x: canvas.width * 0.95, y: schulter.y }, LOT_FARBE, true, staerke / 2);
-      linie({ x: haende.x, y: schulter.y }, haende, MESS_FARBE, false, staerke / 2);
-      kreis(haende, staerke * 1.8);
-    }
-    if (art === "kopf") {
-      const teile = [0, 2, 5, 7, 8].map((k) => punkte[k]);
-      const kopf = px({ x: teile.reduce((s, p) => s + p.x, 0) / 5, y: teile.reduce((s, p) => s + p.y, 0) / 5 });
-      kreis(kopf, canvas.height * 0.045, MESS_FARBE, false);
-    }
+  // Erst deine Linien (rot/grün), darüber die Ideallinien (gelb) –
+  // so bleibt Gelb auch dort sichtbar, wo beide übereinanderliegen.
+  for (const { k, ist, istKreise } of linien) {
+    const farbe = ausserhalb(k) ? ROT : GRUEN;
+    for (const l of ist) linie(l, farbe, staerke * 1.6);
+    for (const c of istKreise) kreis(c, farbe, staerke);
+  }
+  for (const { k, ideal, idealKreise } of linien) {
+    if (!ausserhalb(k)) continue;
+    for (const l of ideal) linie(l, GELB, staerke * 1.2);
+    for (const c of idealKreise) kreis(c, GELB, staerke);
   }
 
   // Beschriftung oben links
   const schrift = Math.max(14, canvas.height * 0.028);
-  const zeilen = [
-    aktiveMessung.titel,
-    aktiveMessung.zeichnung.length ? "blau = dieser Moment · weiß gestrichelt = Ansprechen" : "Schau selbst hin – das Skelett ist ausgeblendet",
-  ];
+  let legende = "rot = außerhalb des Zielbereichs · gelb = Ideallinie";
+  if (auswahl.ohneSkelett) legende = "Schau selbst hin – das Skelett ist ausgeblendet";
+  else if (auswahl.alleGut) legende = "Alle hier gemessenen Linien liegen im Zielbereich";
+  else if (auswahl.kennzahlen.length === 0) legende = "Dafür gibt es keine Linie im Bild";
+  else if (!auswahl.kennzahlen.some(ausserhalb)) legende = "grün = im Zielbereich";
+  const zeilen = [auswahl.titel, legende];
   ctx.shadowBlur = 0;
-  ctx.setLineDash([]);
   ctx.font = `600 ${schrift}px -apple-system, BlinkMacSystemFont, sans-serif`;
-  const breite = Math.max(...zeilen.map((z) => ctx.measureText(z).width)) + schrift;
+  const breite = Math.min(canvas.width - schrift, Math.max(...zeilen.map((z) => ctx.measureText(z).width)) + schrift);
   ctx.fillStyle = "rgba(0, 0, 0, 0.65)";
   ctx.fillRect(schrift * 0.5, schrift * 0.5, breite, schrift * 2.9);
   ctx.fillStyle = "#ffffff";
-  ctx.fillText(zeilen[0], schrift, schrift * 1.6);
+  ctx.fillText(zeilen[0], schrift, schrift * 1.6, breite - schrift);
   ctx.font = `${schrift * 0.75}px -apple-system, BlinkMacSystemFont, sans-serif`;
   ctx.fillStyle = "#cbd5e1";
-  ctx.fillText(zeilen[1], schrift, schrift * 2.8);
+  ctx.fillText(zeilen[1], schrift, schrift * 2.8, breite - schrift);
   ctx.restore();
 }
 
@@ -333,6 +331,7 @@ async function analysiereSchwung() {
   bewertung = null;
   technik = null;
   aktiveMessung = null;
+  alleKennzahlen = [];
 
   const anzahl = Math.floor(video.duration / BILD_DAUER);
   for (let i = 0; i <= anzahl; i++) {
@@ -411,6 +410,7 @@ function zeigeBewertung() {
 
   // Alle Kennzahlen (aus kennzahlen.js und technik.js) mit Kategorie und Videomoment
   const alle = [...bewertung.kennzahlen, ...technik.kennzahlen].map(ordneEin);
+  alleKennzahlen = alle;
 
   // 1. Die wichtigsten Baustellen – ausführlich, mit Übung
   baustellenListe.innerHTML = "";
@@ -446,7 +446,7 @@ function zeigeBewertung() {
     karte.innerHTML = `<div class="karte-kopf"><strong></strong></div><p class="text"></p>`;
     karte.querySelector("strong").textContent = check.name;
     karte.querySelector(".text").textContent = check.text;
-    karte.appendChild(zeigenKnopf({ ...check, wert: "selbst prüfen", zeichnung: [], ohneSkelett: true }));
+    karte.appendChild(zeigenKnopf({ ...check, wert: "selbst prüfen", ohneSkelett: true }));
     selbstCheckListe.appendChild(karte);
   }
 }
@@ -501,10 +501,15 @@ function zeigenKnopf(k) {
   return knopf;
 }
 
-// Springt zum passenden Moment und zeichnet die Messlinien ein
+// Springt zum passenden Moment und zeichnet die Linie (rot/grün) und die Ideallinie (gelb) ein
 async function zeigeMessung(k) {
   const zeit = phasenErgebnis[k.phase].zeit;
-  aktiveMessung = { zeit, zeichnung: k.zeichnung || [], titel: `${k.name}: ${k.wert}`, ohneSkelett: k.ohneSkelett };
+  aktiveMessung = {
+    zeit,
+    kennzahl: MIT_LINIE.has(k.id) ? k : null,
+    titel: `${k.name}: ${k.wert}`,
+    ohneSkelett: k.ohneSkelett,
+  };
   video.pause();
   buehne.scrollIntoView({ behavior: "smooth", block: "center" });
   await springeZu(zeit);
@@ -561,6 +566,7 @@ videoInput.addEventListener("change", () => {
   bewertung = null;
   technik = null;
   aktiveMessung = null;
+  alleKennzahlen = [];
   ergebnisBox.hidden = true;
   video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
   setStatus(`Lade „${datei.name}“ …`);
