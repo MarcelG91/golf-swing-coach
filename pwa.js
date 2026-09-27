@@ -1,0 +1,116 @@
+// ===============================================================
+// App-Funktionen rund um Installation und Offline-Betrieb
+// Läuft getrennt von app.js: Selbst wenn die Pose-Erkennung nicht lädt,
+// funktionieren Hinweise und Statusanzeige trotzdem.
+// ===============================================================
+
+export const APP_VERSION = "0.7.0";
+
+const $ = (id) => document.getElementById(id);
+
+// Läuft die App vom Home-Bildschirm (also "installiert")?
+const installiert =
+  window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+
+// iPhone oder iPad? (iPads melden sich teils als Mac mit Touchscreen)
+const istIOS =
+  /iPhone|iPad|iPod/.test(navigator.userAgent) ||
+  (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+// ---------------------------------------------------------------
+// 1. Service Worker anmelden (macht die App offline-fähig)
+// ---------------------------------------------------------------
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch((fehler) => {
+    console.warn("Service Worker konnte nicht starten:", fehler);
+  });
+}
+
+// ---------------------------------------------------------------
+// 2. Statuszeile unten: Version, Netz, Speicherschutz
+// ---------------------------------------------------------------
+$("version").textContent = `Version ${APP_VERSION}`;
+
+function zeigeNetz() {
+  $("netzStatus").textContent = navigator.onLine ? "online" : "offline";
+}
+window.addEventListener("online", zeigeNetz);
+window.addEventListener("offline", zeigeNetz);
+zeigeNetz();
+
+async function pruefeSpeicherschutz() {
+  const anzeige = $("speicherStatus");
+  if (!navigator.storage?.persisted) {
+    anzeige.textContent = "Speicherschutz nicht verfügbar";
+    return;
+  }
+  let geschuetzt = await navigator.storage.persisted();
+  // Nur als installierte App fragen – dann wird es in der Regel gewährt,
+  // und manche Browser zeigen sonst eine Rückfrage an.
+  if (!geschuetzt && installiert) geschuetzt = await navigator.storage.persist();
+  anzeige.textContent = geschuetzt ? "Daten geschützt ✓" : "Daten nicht dauerhaft geschützt";
+}
+pruefeSpeicherschutz();
+
+// ---------------------------------------------------------------
+// 3. Hinweis: App zum Home-Bildschirm hinzufügen
+// ---------------------------------------------------------------
+const HINWEIS_WEG = "installHinweisGeschlossen";
+
+function hinweisWurdeGeschlossen() {
+  try {
+    return localStorage.getItem(HINWEIS_WEG) === "ja";
+  } catch {
+    return false;
+  }
+}
+
+$("installHinweisZu").addEventListener("click", () => {
+  $("installHinweis").hidden = true;
+  try {
+    localStorage.setItem(HINWEIS_WEG, "ja");
+  } catch {
+    // Privater Modus o. ä. – dann erscheint der Hinweis eben beim nächsten Mal wieder
+  }
+});
+
+// iPhone: Safari hat keinen Installieren-Knopf, also erklären wir den Weg
+if (istIOS && !installiert && !hinweisWurdeGeschlossen()) {
+  $("installText").innerHTML =
+    "📲 <strong>Tipp:</strong> Tippe in Safari auf <strong>Teilen</strong> und dann auf " +
+    "<strong>„Zum Home-Bildschirm“</strong>. Dann startet der Swing Coach wie eine App – auch ohne Netz.";
+  $("installHinweis").hidden = false;
+}
+
+// Android / Chrome: Der Browser bietet einen eigenen Installieren-Dialog an
+let installAngebot = null;
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  installAngebot = event;
+  if (hinweisWurdeGeschlossen()) return;
+  $("installText").textContent = "📲 Den Swing Coach als App installieren – dann funktioniert er auch ohne Netz.";
+  $("installKnopf").hidden = false;
+  $("installHinweis").hidden = false;
+});
+
+$("installKnopf").addEventListener("click", async () => {
+  if (!installAngebot) return;
+  installAngebot.prompt();
+  await installAngebot.userChoice;
+  installAngebot = null;
+  $("installHinweis").hidden = true;
+});
+
+// ---------------------------------------------------------------
+// 4. Offline und Pose-Erkennung noch nie geladen? Verständlich erklären.
+// ---------------------------------------------------------------
+if (!navigator.onLine) {
+  setTimeout(() => {
+    const status = $("status");
+    if (status.textContent.startsWith("Lade die Pose-Erkennung")) {
+      status.textContent =
+        "Offline: Die Pose-Erkennung wurde auf diesem Gerät noch nicht gespeichert. " +
+        "Öffne die App einmal mit Internet, danach klappt es auch offline.";
+    }
+  }, 8000);
+}
