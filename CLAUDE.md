@@ -48,7 +48,9 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   kein `fetch` mit Nutzerdaten. Neue Internetadressen nur nach Rückfrage; erlaubt sind
   `cdn.jsdelivr.net` und `storage.googleapis.com` (MediaPipe und Modell).
 - **Keine Schlüssel, Tokens oder Passwörter im Code** – das Repo ist öffentlich.
-  Coach-Feedback mit Claude (Etappe 11) nur über einen Vermittler-Server, vorher V2 lesen.
+  Coach-Feedback mit Claude (Etappe 11b): entschieden am 27.09. – eigener API-Schlüssel des
+  Nutzers, nur auf dem Gerät, nur nach Einwilligung, nur Kennzahlen, einzige neue Adresse
+  `api.anthropic.com`. Details und Schutzmaßnahmen: `docs/plan-etappe-11-level-und-coach.md`, V2.
 - Kein `eval` / `new Function`. `innerHTML` nur mit festen Texten; Dateinamen und
   gespeicherte Daten immer per `textContent`.
 - Jede asynchrone Aktion mit Fehlerbehandlung; gesperrte Knöpfe im `finally` wieder freigeben.
@@ -68,6 +70,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
+| `docs/plan-etappe-11-level-und-coach.md` | Plan für Etappe 11: Level-gerechte Tipps (11a) und Coach mit Claude (11b) |
 | `docs/sicherheit/` | Sicherheitsbericht (Befunde, Status) und Prüfprotokoll der Checks |
 
 ## Bekannte Eigenheiten iPhone / Safari
@@ -85,6 +88,8 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
   Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
 - iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
-- Etappe 9: Sicherung exportieren/einspielen · Etappe 10: Fortschritt und Langzeit-Feedback (Plan in `docs/`).
+- **Reihenfolge ab jetzt: 11a → 11b → 10 → 9** (Sicherung bewusst ans Ende, Entscheidung 27.09.).
+  Etappe 11a: Level + angepasste Tipps · 11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
+  Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
 - Speicher sparen: „Nur Videos löschen, Kennzahlen behalten“ (für alte Sitzungen).
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.

@@ -30,7 +30,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | Nr | Prio | Status | Befund | Maßnahme |
 |---|---|---|---|---|
 | V1 | P1 | Erledigt 27.09. (PR #6) | Lokaler Testserver war im ganzen WLAN erreichbar. | README: `python3 -m http.server 8000 --bind 127.0.0.1` |
-| V2 | P1 vor Etappe 11 | Offen | Coach-Feedback mit Claude wäre der erste Weg, auf dem Daten das Handy verlassen. | Kein API-Schlüssel im Browser-Code. Vermittler-Server mit Zugangsschutz und Ausgabenlimit. Nur Kennzahlen senden, vorher sichtbar fragen, README-Versprechen anpassen. |
+| V2 | P1 vor Etappe 11b | Offen (Weg entschieden 27.09.) | Coach-Feedback mit Claude wäre der erste Weg, auf dem Daten das Handy verlassen. | Kein API-Schlüssel im Code. Marcel hat sich gegen einen Vermittler-Server und für den **eigenen Schlüssel des Nutzers** entschieden (nur auf dem Gerät, eigener Workspace mit Ausgabenlimit, nie in Sicherung/Repo). Nur Kennzahlen senden, vorher sichtbar fragen, README-Versprechen anpassen. Plan: `docs/plan-etappe-11-level-und-coach.md`. |
 | V3 | P2 | Erledigt 27.09. (PR #6) | `.gitignore` schützte `IMG_1234.MOV` nur auf dem Mac, einige Formate fehlten. | Groß-/Kleinschreibung, weitere Formate, Video-Wächter-Test. |
 | V4 | P3 | Offen | jsDelivr, Google und GitHub sehen IP-Adresse und Zeitpunkt beim Laden. | Für private Nutzung unkritisch. Nutzen Freunde die App, einen kurzen Datenschutzhinweis ergänzen. C1 würde jsDelivr und Google entfernen. |
 | V5 | P3 | Offen | Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. | `git config --global user.email "292231529+MarcelG91@users.noreply.github.com"`, danach in GitHub „Keep my email addresses private“ und „Block command line pushes that expose my email“. |
@@ -95,7 +95,7 @@ Warmstart bis „Bereit“: unter 2,5 s. Der Kaltstart (rund 12 MB) fällt seit 
 | S3 Echtheit und Browser-Test | C1, T3, C4 | Offen, nur nach Absprache |
 | S4 Hausordnung | C3 | Offen, nach S3 |
 | Vor Etappe 9 | V6 | Offen |
-| Vor Etappe 11 | V2 | Offen |
+| Vor Etappe 11b | V2 | Offen (Weg entschieden 27.09.) |
 
 ## Quellen
 

@@ -126,10 +126,12 @@ ca. 3 m Abstand). Die App zeigt das als Hinweis beim Speichern.
 | 8 | `etappe-8-schwuenge-speichern` | `speicher.js`, Video kürzen, Schlüsselbilder, „Speichern“ mit Schläger + Notiz, Liste „Meine Schwünge“, Detailansicht, Löschen, Speicheranzeige | Automatische Tests im Browser + iPhone-Test |
 | 9 | `etappe-9-sicherung` | Sicherung als ZIP exportieren, wieder einspielen (Handywechsel, Mac) | Export → alles löschen → Import → alles wieder da |
 | 10 | `etappe-10-fortschritt` | `fortschritt.js` mit Tests, Verlaufsdiagramme, Trend, Fokus, Meilensteine, Wochenrückblick, Vorher/Nachher | `node --test` + echte Schwünge über mehrere Tage |
-| 11 *(optional)* | `etappe-11-coach-claude` | Coach-Texte von Claude – braucht einen API-Schlüssel, der nicht im öffentlichen Code stehen darf → eigene Entscheidung, wenn es so weit ist | – |
+| 11 | `etappe-11a-level`, `etappe-11b-coach-claude` | Tipps passend zum Level + Coach-Feedback mit Claude – eigener Plan: `docs/plan-etappe-11-level-und-coach.md` | siehe dort |
 
-Sicherung (9) kommt bewusst **vor** dem Fortschritt (10): Sobald Schwünge gespeichert
-werden, ist ein Datenverlust das größte Risiko.
+**Reihenfolge geändert (27.09.2026): 11 → 10 → 9.** Ursprünglich sollte die Sicherung (9) vor dem
+Fortschritt (10) kommen, weil ein Datenverlust das größte Risiko ist. Marcel hat entschieden,
+zuerst die Tipps ans Können anzupassen (11) und die Sicherung ans Ende zu stellen. Bis dahin
+schützen nur Home-Bildschirm-App und Speicherschutz („Daten geschützt ✓“) vor Datenverlust.
 
 ## Risiken
 
