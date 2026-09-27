@@ -6,6 +6,7 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 **Was die App kann:**
 
 - Schwung filmen oder aus den Fotos wählen – frontal oder von hinten (erkennt sie selbst)
+- Auch **lange Videos mit mehreren Schlägen** oder **mehrere Videos auf einmal** – mit Gesamtauswertung
 - Skelett über das Video zeichnen und die Phasen finden: Ansprechen, Top, Treffmoment, Finish
 - Tempo, Kopf, Hüfte, Arme, Oberkörperhaltung und Drehung bewerten (Ampel: gut / Achtung / verbessern)
 - Die **3 wichtigsten Baustellen** mit Gefühl-Tipp und Übung nennen
@@ -39,7 +40,8 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
   alle Dateien immer zur selben Version zusammen. Die Versionsnummer steht ganz unten.
 - **„Daten geschützt ✓“** unten erscheint, wenn der Browser zugesagt hat, die Daten der App
   nicht automatisch zu löschen (klappt in der Regel nur als Home-Bildschirm-App).
-- „Video auswählen oder aufnehmen“ tippen → direkt filmen oder ein Video aus den Fotos wählen.
+- „Video auswählen oder aufnehmen“ tippen → direkt filmen oder Videos aus den Fotos wählen
+  (mehrere markieren geht auch), dann „🔍 Analysieren“.
 - Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die Pose-Erkennung.
 - Die Online-Version ist immer der Stand von `main`. Nach einem Merge dauert es 1–2 Minuten, bis sie aktualisiert ist.
 
@@ -67,7 +69,8 @@ Beenden mit `Ctrl + C` im Terminal.
 - Ganzer Körper plus Schläger im Bild, gutes Licht
 - Normale Geschwindigkeit, **keine Zeitlupe** (sonst stimmt das Tempo nicht)
 - Aufnahme kurz vor dem Ansprechen starten und erst nach dem Finish beenden
-- Ein Schwung pro Video (bei mehreren wird der schnellste ausgewertet)
+- Ein Schlag pro Video oder mehrere in einem langen Video – zwischen zwei Schlägen
+  mindestens 3 Sekunden Pause (Aufteen, Ansprechen reicht völlig)
 - Die App erkennt selbst, ob von vorne oder von hinten gefilmt wurde. Beide Ansichten
   liefern unterschiedliche Kennzahlen – am besten abwechselnd beide filmen.
 
@@ -127,6 +130,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
 | `ideallinien.js` | Rechnet aus, wo die gelbe Ideallinie im Video liegt, dazu Pfeil und Hinweis für die Sprechblase |
 | `videoanalyse.js` | Geht das Video schnell durch: abspielen statt Bild für Bild anspringen, Lücken gezielt nachholen |
+| `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
+| `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
@@ -141,6 +146,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
 | `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
 | `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
+| `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
@@ -249,6 +255,21 @@ Nach der Analyse steht in der Statuszeile z. B.
 5. **Ansprechen** = vor dem Rückschwung der letzte Moment, in dem die Hände ruhig waren.
 6. **Finish** = nach dem Treffmoment: Hände oben und wieder ruhig.
 7. **Tempo** = Dauer Rückschwung : Dauer Abschwung (gute Spieler: etwa 3 : 1).
+
+### Mehrere Schläge und Gesamtauswertung (`schwuenge.js`, `gesamtauswertung.js`)
+
+1. **Schläge finden:** Jeder Moment, in dem die Hände schneller als 3,5 Rumpflängen pro
+   Sekunde nach unten gehen, ist ein Schlag – wenn er mindestens 3 s vom nächsten entfernt ist.
+   (Echte Schläge erreichen 4,4 bis 13,4, Ausschwingen und Zittern bleiben unter 2,7.)
+2. **Ausschneiden:** 5 s davor bis 2,5 s danach gehört zum Schwung. Darauf laufen die
+   Phasenerkennung oben und alle Kennzahlen wie bei einem Einzelvideo.
+3. **Unsichere Schwünge** (Tempo passt nicht, z. B. Probeschwung oder Zeitlupe) stehen mit ⚠️
+   in der Liste, zählen aber nicht zur Gesamtauswertung.
+4. **Gesamtauswertung**, getrennt nach frontal und von hinten:
+   - Bewertung = die Stufe, die mindestens die Hälfte der Schwünge erreicht.
+     Ein einzelner Ausreißer ist also keine Baustelle.
+   - „typisch“ = mittlerer Wert (Median) der Schwünge mit genau dieser Bewertung, dazu die Spanne.
+   - Baustellen-Reihenfolge: Anteil der Schwünge mit Fehler × Schwere × Gewicht der Kennzahl.
 
 ## So bewertet die App den Schwung
 
