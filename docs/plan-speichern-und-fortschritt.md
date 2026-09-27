@@ -1,6 +1,6 @@
 # Plan: Schwünge speichern und Fortschritt messen
 
-Stand: 27.09.2026 · Status: **Planung abgeschlossen** (noch kein Code)
+Stand: 27.09.2026 · Status: **Etappe 7 und 8 umgesetzt** (Version 0.9.0), Etappe 9 und 10 offen
 
 ## Ziel
 
@@ -23,6 +23,17 @@ Stand: 27.09.2026 · Status: **Planung abgeschlossen** (noch kein Code)
 
 **Verworfen:** Online-Dienst mit Konten (Supabase). Wäre nötig für Geräte-übergreifende
 Daten oder gemeinsame Ranglisten. Kann später ergänzt werden – der Plan unten hält das offen.
+
+### Entscheidungen zu Etappe 8 (27.09.2026, nach „mehrere Schwünge“ in 0.8.0)
+
+| Frage | Entscheidung | Warum |
+|---|---|---|
+| Einzeln oder ganze Sitzung speichern? | **Jeder Schwung einzeln + „Sitzung“ als Klammer** | Fortschritt braucht jeden Schwung einzeln; einzelne Schwünge löschbar. Die Gesamtauswertung wird beim Öffnen neu berechnet, nicht gespeichert. |
+| Schläger | **Einer pro Sitzung** | Einfach zu bedienen. Schlägerwechsel = getrennt analysieren und speichern. |
+| Welche Schwünge? | **Häkchen-Liste**, sichere vorausgewählt | Probeschwünge und unsichere Erkennungen landen nicht aus Versehen im Fortschritt. |
+| Schlüsselbilder | **1 Vorschaubild (Top) statt 4** | Die anderen Phasen stecken im Clip und lassen sich für Vorher/Nachher (Etappe 10) schnell daraus holen. |
+| Clip lässt sich nicht aufnehmen | **Ohne Video speichern** (statt Originalvideo) | Ein langes Originalvideo mit mehreren Schwüngen wäre schnell mehrere hundert MB groß. |
+| `formelVersion` | **`appVersion`** übernimmt die Rolle | Wird ohnehin bei jeder Änderung erhöht. Neuberechnung aus Posedaten + Phasen ist getestet (`tests/speicher.test.mjs`). |
 
 ## Architektur
 
@@ -75,15 +86,19 @@ Fortschritt wird pro Schlägergruppe (Hölzer / Eisen / Wedges) verglichen.
 
 ## Datenmodell (IndexedDB-Datenbank `golf-swing-coach`)
 
-**Speicher `schwuenge`** (ein Eintrag pro Schwung)
-- `id`, `aufgenommenAm`, `ansicht`, `schlaeger`, `notiz`
-- `kennzahlen`: { tempo, kopfhoehe, kopfSeitlich, gewicht, vorneigung, huefte } (Zahlen, leer wenn nicht messbar)
-- `bewertungen`: { tempo: "gut", … }
-- `phasen`, `posedaten`, `seitenverhaeltnis`
-- `formelVersion` – damit alte Schwünge nach Formel-Verbesserungen neu ausgewertet werden können
+*So umgesetzt in Etappe 8 (`speicher.js`):*
+
+**Speicher `sitzungen`** (ein Eintrag pro gespeicherter Analyse)
+- `id` (Speicherzeitpunkt in ms), `datum` („2026-09-27“), `schlaeger`, `notiz`, `schwungIds`, `appVersion`
+
+**Speicher `schwuenge`** (ein Eintrag pro Schwung, ca. 10–20 KB)
+- `id` (`<sitzungId>-<nummer>`), `sitzungId`, `nummer`, `datum`, `schlaeger`, `ansicht`, `sicher`, `grund`
+- `kennzahlen`: vollständige Kennzahlen wie in der App (`id`, `messwert`, `bewertung`, Texte …)
+- `phasen` (Zeiten ab Clip-Beginn), `bewertung`, `technik`, `seitenverhaeltnis`, `videoName`
+- `appVersion` – damit alte Schwünge nach Formel-Verbesserungen neu ausgewertet werden können
 
 **Speicher `medien`** (große Dateien getrennt, damit die Liste schnell lädt)
-- Schlüssel `<id>/video`, `<id>/ansprechen.jpg`, `<id>/top.jpg`, …
+- Schlüssel `<id>/video` (MP4-Clip), `<id>/posedaten` (Körperpunkte im 1/30-s-Raster ab Clip-Beginn), `<id>/vorschau` (JPEG)
 
 ## Fortschritt und Langzeit-Feedback
 

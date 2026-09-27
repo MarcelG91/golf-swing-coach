@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test: Speicher (IndexedDB)</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #0f1f17; color: #eef5f0; padding: 16px; }
+    .ok { color: #4ade80; }
+    .fehler { color: #f87171; }
+  </style>
+</head>
+<body>
+  <!--
+    Browser-Test für speicher.js, Teil 2 (Datenbank). IndexedDB gibt es nur im
+    Browser, deshalb läuft dieser Test nicht mit node --test.
+    So starten (im Projektordner):
+      python3 -m http.server 8000 --bind 127.0.0.1
+    dann im Browser öffnen: http://127.0.0.1:8000/tests/speicher-browser.html
+    Benutzt eine eigene Test-Datenbank – deine echten Schwünge bleiben unberührt.
+  -->
+  <h1>Test: Schwünge speichern (IndexedDB)</h1>
+  <ul id="liste"></ul>
+  <p id="fazit"></p>
+
+  <script type="module">
+    import {
+      nutzeDatenbank, speichereSitzung, ladeSitzungen, ladeSchwuengeDerSitzung,
+      ladeMedium, loescheSchwung, loescheSitzung,
+    } from "../speicher.js";
+
+    const liste = document.getElementById("liste");
+    let fehler = 0;
+    function pruefe(beschreibung, bedingung) {
+      const eintrag = document.createElement("li");
+      eintrag.className = bedingung ? "ok" : "fehler";
+      eintrag.textContent = `${bedingung ? "✓" : "✗"} ${beschreibung}`;
+      liste.appendChild(eintrag);
+      if (!bedingung) fehler++;
+    }
+
+    nutzeDatenbank("golf-swing-coach-test");
+
+    // Reste eines abgebrochenen Testlaufs aufräumen
+    for (const alt of await ladeSitzungen()) await loescheSitzung(alt);
+
+    // Eine Sitzung mit zwei Schwüngen – so aufgebaut wie in app.js
+    const id = Date.now();
+    const sitzung = { id, datum: "2026-09-27", schlaeger: "Eisen 7", notiz: "Test", schwungIds: [`${id}-1`, `${id}-2`], appVersion: "test" };
+    const eintrag = (nr) => ({
+      schwung: { id: `${id}-${nr}`, sitzungId: id, nummer: nr, datum: "2026-09-27", schlaeger: "Eisen 7", ansicht: "frontal", sicher: true, kennzahlen: [{ id: "tempo", messwert: 3.1, bewertung: "gut" }] },
+      posedaten: [{ zeit: 0, punkte: null }, { zeit: 1 / 30, punkte: [{ x: 0.5, y: 0.5 }] }],
+      video: new Blob([new Uint8Array(1000 * nr)], { type: "video/mp4" }),
+      vorschau: new Blob([new Uint8Array(10)], { type: "image/jpeg" }),
+    });
+    await speichereSitzung(sitzung, [eintrag(1), eintrag(2)]);
+
+    const sitzungen = await ladeSitzungen();
+    pruefe("Sitzung wird gespeichert und wieder geladen", sitzungen.length === 1 && sitzungen[0].notiz === "Test");
+
+    const schwuenge = await ladeSchwuengeDerSitzung(sitzungen[0]);
+    pruefe("Beide Schwünge sind da, mit Kennzahlen", schwuenge.length === 2 && schwuenge[1].kennzahlen[0].messwert === 3.1);
+
+    const video = await ladeMedium(`${id}-2/video`);
+    pruefe("Video (Blob) kommt in der richtigen Größe zurück", video instanceof Blob && video.size === 2000 && video.type === "video/mp4");
+
+    const posedaten = await ladeMedium(`${id}-1/posedaten`);
+    pruefe("Posedaten kommen zurück", posedaten.length === 2 && posedaten[1].punkte[0].x === 0.5);
+
+    await loescheSchwung(sitzungen[0], `${id}-1`);
+    const nachEinzel = await ladeSitzungen();
+    pruefe("Schwung löschen: Sitzung behält den anderen", nachEinzel[0].schwungIds.join() === `${id}-2`);
+    pruefe("Schwung löschen: sein Video ist weg", (await ladeMedium(`${id}-1/video`)) === undefined);
+
+    await loescheSitzung(nachEinzel[0]);
+    pruefe("Sitzung löschen: keine Sitzung mehr", (await ladeSitzungen()).length === 0);
+    pruefe("Sitzung löschen: auch das letzte Video ist weg", (await ladeMedium(`${id}-2/video`)) === undefined);
+
+    // Letzter Schwung einer Sitzung gelöscht → Sitzung verschwindet mit
+    await speichereSitzung({ ...sitzung, schwungIds: [`${id}-1`] }, [eintrag(1)]);
+    await loescheSchwung({ ...sitzung, schwungIds: [`${id}-1`] }, `${id}-1`);
+    pruefe("Letzten Schwung löschen: Sitzung ist auch weg", (await ladeSitzungen()).length === 0);
+
+    const fazit = document.getElementById("fazit");
+    fazit.className = fehler ? "fehler" : "ok";
+    fazit.textContent = fehler ? `${fehler} Prüfung(en) fehlgeschlagen` : "Alles grün ✓";
+  </script>
+</body>
+</html>

@@ -23,6 +23,8 @@ const APP_DATEIEN = [
   "./videoanalyse.js",
   "./schwuenge.js",
   "./gesamtauswertung.js",
+  "./speicher.js",
+  "./videokuerzen.js",
   "./pwa.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",

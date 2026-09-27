@@ -11,12 +11,14 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 - Tempo, Kopf, Hüfte, Arme, Oberkörperhaltung und Drehung bewerten (Ampel: gut / Achtung / verbessern)
 - Die **3 wichtigsten Baustellen** mit Gefühl-Tipp und Übung nennen
 - Fehler direkt im Video zeigen: **rot** = deine Linie, **gelb** = Ideallinie, dazu Pfeil und Sprechblase
+- Schwünge **auf dem Handy speichern** – mit kurzem Video, Schläger und Notiz – und später wieder öffnen
 - Als App auf dem iPhone-Home-Bildschirm laufen – auch **offline** auf der Range
 
 **Inhalt:**
 [Online nutzen](#online-nutzen-handy) ·
 [Lokal starten](#starten-lokal-auf-dem-mac) ·
 [Tipps für gute Videos](#tipps-für-gute-videos) ·
+[Schwünge speichern](#schwünge-speichern) ·
 [Wenn etwas nicht klappt](#wenn-etwas-nicht-klappt) ·
 [Dateien](#dateien) ·
 [Arbeitsweise](#arbeitsweise-mit-branches) ·
@@ -88,14 +90,32 @@ Bevor die App ein Video bekommt, bereitet das iPhone es vor. Je größer das Vid
   Zum Ausprobieren: Einstellungen → Kamera → Formate → „Maximale Kompatibilität“,
   oder das Video über „Dateien“ statt über „Fotos“ auswählen.
 
+## Schwünge speichern
+
+Nach der Analyse steht unten der Kasten **„💾 Speichern“**: Datum, Schläger, Notiz, und per
+Häkchen, welche Schwünge (unsichere ⚠️ sind nicht vorausgewählt). Beim Speichern spielt jeder
+Schwung einmal durch – dabei nimmt die App ihn als kurzes Video auf.
+
+- **Wo liegen die Daten?** Nur auf diesem Gerät, in der Browser-Datenbank (IndexedDB).
+  Nichts wird hochgeladen. Home-Bildschirm-App und Safari haben getrennte Speicher.
+- **Was wird gespeichert?** Pro Schwung ein Clip (1 s vor dem Ansprechen bis 1 s nach dem
+  Finish, 720p, ca. 1–3 MB), ein Vorschaubild, alle Kennzahlen, Phasen und die Posedaten.
+- **Sitzung:** Alles aus einer Analyse gehört zusammen („27.09. · Eisen 7 · 5 Schwünge“).
+  Die Gesamtauswertung wird beim Öffnen neu berechnet.
+- **Wieder ansehen:** Oben auf **„📚 Meine Schwünge“** → Sitzung antippen. Sie öffnet sich wie
+  eine frische Analyse – mit Phasen, „Im Video zeigen“ und roten/gelben Linien.
+- **Löschen:** In der geöffneten Sitzung ganz unten (einzelner Schwung oder ganze Sitzung).
+- **Wichtig:** Gelöschte Safari-Daten oder ein verlorenes Handy = Schwünge weg.
+  Eine Sicherung zum Exportieren kommt mit Etappe 9.
+
 ## Ausprobieren ohne eigenes Video
 
 Im Ordner `testvideos/` (nur lokal, nicht auf GitHub) liegen Beispielschwünge
 aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 
-### Posedaten speichern (für die Feinabstimmung)
+### Posedaten exportieren (für die Feinabstimmung)
 
-Unter dem Ergebnis gibt es den Knopf **„💾 Posedaten speichern“**. Er lädt eine Datei
+Unter dem Ergebnis gibt es den Knopf **„⬇️ Posedaten exportieren“**. Er lädt eine Datei
 `posedaten-<videoname>.json` herunter: nur die Koordinaten der Körperpunkte pro Bild,
 kein Video. Damit lassen sich Kennzahlen und Grenzwerte am Rechner mit `node --test`
 nachprüfen, ohne das Video erneut analysieren zu müssen.
@@ -132,6 +152,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `videoanalyse.js` | Geht das Video schnell durch: abspielen statt Bild für Bild anspringen, Lücken gezielt nachholen |
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
+| `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um |
+| `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
@@ -147,6 +169,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
 | `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
+| `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
+| `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
@@ -364,7 +388,7 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 5. Weitere Kennzahlen: Vorneigung, Hüfte, Gewichtsverlagerung, Tempo – geprüft an echten Schwüngen
 - [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
-- [ ] 8. Schwünge speichern (mit gekürztem Video)
+- [x] 8. Schwünge speichern (mit gekürztem Video)
 - [ ] 9. Sicherung exportieren / einspielen
 - [ ] 10. Fortschritt messen und Langzeit-Feedback
 - [ ] 11. Optional: Coach-Feedback mit Claude
