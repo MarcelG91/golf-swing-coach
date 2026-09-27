@@ -390,8 +390,12 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
 - [x] 8. Schwünge speichern (mit gekürztem Video)
-- [ ] 9. Sicherung exportieren / einspielen
-- [ ] 10. Fortschritt messen und Langzeit-Feedback
-- [ ] 11. Optional: Coach-Feedback mit Claude
 
-Details: `docs/plan-speichern-und-fortschritt.md`
+Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
+
+- [ ] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
+- [ ] 10. Fortschritt messen und Langzeit-Feedback
+- [ ] 9. Sicherung exportieren / einspielen
+
+Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und
+`docs/plan-speichern-und-fortschritt.md` (Etappen 8–10)
