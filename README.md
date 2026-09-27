@@ -50,8 +50,10 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `app.js` | Bedienung: Video laden, Pose erkennen, Skelett zeichnen, Ergebnis anzeigen |
 | `phasen.js` | Rechnet aus den Körperpunkten die Schwungphasen und das Tempo aus |
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
+| `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
+| `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
 
@@ -104,9 +106,43 @@ Messungen an Profi- und Amateurschwüngen.
 | Vorneigung halten | von hinten | Verlust an Oberkörper-Vorneigung bis zum Treffmoment | höchstens 10° |
 | Hüfte Richtung Ball | von hinten | Schiebt die Hüfte im Abschwung zum Ball? („Early Extension“) | höchstens 12 % |
 
-**Bewusst weggelassen:** Der gestreckte Führungsarm. Auf einem normalen 2D-Video
-misst die Pose-Erkennung selbst bei Profis nur ca. 110° am Top – die Aussage wäre
-nicht verlässlich.
+### Technik-Tipps: Arme, Oberkörperhaltung, Drehung (`technik.js`)
+
+| Bereich | Kennzahl | Ansicht | Was gemessen wird | Gut |
+|---|---|---|---|---|
+| Arme | Arme beim Ansprechen | von hinten | Hängen die Hände unter den Schultern? (+ = nach dem Ball greifen) | −25 bis +15 % |
+| Arme | Führungsarm im Treffmoment | frontal | Winkel am Ellbogen des vorderen Arms (180° = gestreckt) | ab 155° |
+| Arme | Armschwung am Top | frontal | Hände sehr hoch **und** wenig Schulterdrehung = „Arme heben statt drehen“ | Hände ≤ 75 % oder volle Drehung |
+| Oberkörper | Vorneigung beim Ansprechen | von hinten | Neigung Hüfte → Schultern nach vorne | 25–45° |
+| Oberkörper | Seitneigung beim Ansprechen | frontal | Oberkörper leicht vom Ziel weg (hintere Schulter tiefer) | 0–20° |
+| Oberkörper | Oberkörper am Top | frontal | Neigt sich der Oberkörper zum Ziel? („umgekehrter Wirbelsäulenwinkel“) | höchstens 3° zum Ziel |
+| Oberkörper | Oberkörper im Treffmoment | frontal | Bleibt der Oberkörper hinter dem Ball? | ab 8° vom Ziel weg |
+| Drehung | Schulterdrehung am Top | frontal | Schätzung aus der Schulterbreite (siehe unten) | ab ca. 80° |
+| Drehung | Hüfte im Rückschwung | frontal | Schiebt die Hüfte zur Seite, statt zu drehen? („Sway“) | bis 15 % |
+
+Jede Karte hat einen Knopf **„📍 Im Video zeigen“**: Er springt zum passenden Moment
+und zeichnet die Messlinien ein – **blau** = dieser Moment, **weiß gestrichelt** = beim Ansprechen.
+
+**Die 3 wichtigsten Baustellen** stehen ganz oben, mit „So geht's“ (Gefühl) und Übung.
+Reihenfolge: erst „Verbessern“, dann „Achtung“; innerhalb davon zählen Grundlagen
+(Ansprechhaltung, Drehung) mehr, weil sich viele andere Fehler daraus ergeben.
+
+**Schulterdrehung ist eine Schätzung:** Von vorne sieht man die Schultern schmaler,
+je weiter du dich drehst. Die Pose-Erkennung setzt die Schulterpunkte aber an den
+Rand des Körpers – auch von der Seite ist der Oberkörper noch etwa halb so breit.
+Die App rechnet deshalb mit `Breite = cos(Drehung) + 0,45 · sin(Drehung)`.
+Der Faktor 0,45 ist so gewählt, dass der Profi-Testschwung am Top ca. 90° ergibt.
+
+**Bewusst weggelassen:** Der Führungsarm am Top und die Hüftdrehung.
+Am Top verdeckt der Körper den vorderen Arm – selbst beim Profi setzt die
+Pose-Erkennung den Ellbogen neben den Kopf und misst nur ca. 110°. Die Hüftpunkte
+liegen unter der Kleidung; ihr Abstand ändert sich im Video kaum, wenn die Hüfte dreht.
+Für den Arm am Top gibt es stattdessen eine **„Selbst prüfen“**-Karte: Sie springt
+zum Top und blendet das Skelett aus, damit du selbst hinschauen kannst.
+
+**Geprüft wurde so:** an den 4 echten Testschwüngen, an denselben Schwüngen gespiegelt
+(= Linkshänder) und am Profi-Schwung mit gezielt eingebauten Fehlern
+(gebeugter Arm, Oberkörper vor dem Ball, Sway, wenig Drehung, nach dem Ball greifen).
 
 **Genauigkeit:** Bei 30 Bildern pro Sekunde dauert der Abschwung nur 6–9 Bilder.
 Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
