@@ -1,9 +1,19 @@
-# Videos und Posedaten bleiben privat auf deinem Mac und landen nicht auf GitHub
-*.mp4
-*.mov
-*.m4v
-*.webm
-posedaten-*.json
+# Videos und Posedaten bleiben privat auf deinem Gerät und landen nicht auf GitHub.
+# Groß- UND Kleinschreibung, weil das iPhone z. B. „IMG_1234.MOV“ speichert und
+# Git auf Linux-Servern die Schreibweise unterscheidet. Geprüft wird das von
+# tests/keine-videos.test.mjs.
+*.[mM][pP]4
+*.[mM][oO][vV]
+*.[mM]4[vV]
+*.[wW][eE][bB][mM]
+*.[mM][kK][vV]
+*.[aA][vV][iI]
+*.3[gG][pP]
+*.[hH][eE][vV][cC]
+[pP]osedaten-*.json
+
+# Eigene Videos am besten nur in diesem Ordner ablegen
+videos/
 
 # macOS-Systemdateien
 .DS_Store
