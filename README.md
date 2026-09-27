@@ -15,7 +15,8 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
   getrennt von Safari. Sie muss also einmal **vom Home-Bildschirm aus** mit Internet geöffnet werden.
 - Fehlt offline etwas, nennt die App in der Statuszeile genau, welche Datei fehlt.
 - **Updates:** Mit Internet holt sich die App bei jedem Start automatisch die neueste Version.
-  Die Versionsnummer steht ganz unten.
+  Der Service Worker fragt dafür bei jeder App-Datei kurz beim Server nach – so passen
+  alle Dateien immer zur selben Version zusammen. Die Versionsnummer steht ganz unten.
 - **„Daten geschützt ✓“** unten erscheint, wenn der Browser zugesagt hat, die Daten der App
   nicht automatisch zu löschen (klappt in der Regel nur als Home-Bildschirm-App).
 - „Video auswählen oder aufnehmen“ tippen → direkt filmen oder ein Video aus den Fotos wählen.
@@ -142,8 +143,7 @@ gh pr create --fill                      # Checks abwarten, dann mergen
 gh pr merge --merge --delete-branch
 ```
 
-Nach 1–2 Minuten ist der alte Stand online. Die App holt ihn sich beim nächsten Start mit Internet
-(der Browser kann Dateien bis zu 10 Minuten zwischenspeichern).
+Nach 1–2 Minuten ist der alte Stand online. Die App holt ihn sich beim nächsten Start mit Internet.
 
 ## So geht die App das Video durch
 

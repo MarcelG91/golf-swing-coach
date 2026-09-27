@@ -4,7 +4,7 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.7.2";
+export const APP_VERSION = "0.7.3";
 
 // Muss zu den Namen in sw.js passen
 const CACHE_APP = "app-v1";
