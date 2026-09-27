@@ -80,6 +80,7 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
 | `technik.js` | Technik-Tipps zu Armen, Oberkörperhaltung und Drehung, wählt die 3 wichtigsten Baustellen aus |
 | `ideallinien.js` | Rechnet aus, wo die gelbe Ideallinie im Video liegt (rot = deine Linie außerhalb des Zielbereichs) |
+| `videoanalyse.js` | Geht das Video schnell durch: abspielen statt Bild für Bild anspringen, Lücken gezielt nachholen |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
@@ -89,6 +90,7 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
 | `tests/ideallinien.test.mjs` | Prüft, dass die gelben Ideallinien im richtigen Winkel und an der richtigen Stelle liegen |
+| `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
 | `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
@@ -142,6 +144,33 @@ gh pr merge --merge --delete-branch
 
 Nach 1–2 Minuten ist der alte Stand online. Die App holt ihn sich beim nächsten Start mit Internet
 (der Browser kann Dateien bis zu 10 Minuten zwischenspeichern).
+
+## So geht die App das Video durch
+
+Früher wurde jedes Einzelbild angesprungen. Auf dem iPhone ist das sehr langsam:
+Safari muss iPhone-Videos (HEVC, oft 4K) bei jedem Sprung ab dem letzten
+Schlüsselbild neu entschlüsseln.
+
+Jetzt (`videoanalyse.js`):
+
+1. Die App misst, wie lange die Pose-Erkennung pro Bild braucht – mit dem Originalbild
+   und mit einer auf 720 Pixel verkleinerten Kopie – und nimmt das Schnellere.
+2. Das Video wird **abgespielt**, und jedes Bild auf dem 1/30-s-Raster wird erkannt.
+   Kommt die Erkennung nicht hinterher, spielt die App automatisch langsamer ab
+   (und wieder schneller, sobald es rund läuft).
+3. Übersprungene Bilder werden am Ende **gezielt nachgeholt** – so ist das Ergebnis
+   Bild für Bild dasselbe wie beim alten Verfahren.
+
+Nach der Analyse steht in der Statuszeile z. B.
+`Analyse fertig (6,9 s · 35 ms pro Bild · GPU · verkleinert · abgespielt, 3 Bilder nachgeholt)`:
+
+| Angabe | Bedeutung |
+|---|---|
+| `6,9 s` | Dauer der ganzen Analyse |
+| `35 ms pro Bild` | Rechenzeit der Pose-Erkennung pro Bild – je kleiner, desto schneller das Gerät |
+| `GPU` / `CPU` | Rechnet der Grafikchip (schnell) oder der Prozessor (langsamer)? |
+| `verkleinert` | Die 720-Pixel-Kopie war schneller als das Originalbild |
+| `abgespielt, … nachgeholt` | Verfahren; „nachgeholt“ = Bilder, die beim Abspielen übersprungen wurden |
 
 ## So erkennt die App die Phasen
 
