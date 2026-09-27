@@ -3,6 +3,15 @@
 Eine Web-App, die Golfschwung-Videos analysiert und Verbesserungstipps gibt.
 Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen das Gerät nicht.
 
+## Online nutzen (Handy)
+
+👉 **https://marcelg91.github.io/golf-swing-coach/**
+
+- Auf dem iPhone in Safari öffnen → Teilen → „Zum Home-Bildschirm“: dann startet die App wie eine normale App.
+- „Video auswählen oder aufnehmen“ tippen → direkt filmen oder ein Video aus den Fotos wählen.
+- Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die Pose-Erkennung.
+- Die Online-Version ist immer der Stand von `main`. Nach einem Merge dauert es 1–2 Minuten, bis sie aktualisiert ist.
+
 ## Starten (lokal auf dem Mac)
 
 ```bash
@@ -45,6 +54,22 @@ aus öffentlichen GitHub-Projekten. Quellen: `tests/daten/QUELLEN.md`.
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
+
+## Arbeitsweise mit Branches
+
+`main` ist immer lauffähig – daraus wird die Online-Version gebaut.
+Jede neue Etappe oder Änderung bekommt einen eigenen Branch:
+
+```bash
+git checkout main && git pull                 # neuesten Stand holen
+git checkout -b etappe-7-coach-feedback       # neuen Branch anlegen
+# ... arbeiten, testen ...
+git add . && git commit -m "Beschreibung"
+git push -u origin etappe-7-coach-feedback    # Branch hochladen
+gh pr create --fill                           # Pull Request anlegen
+gh pr merge --merge --delete-branch           # nach Prüfung in main übernehmen
+git checkout main && git pull                 # zurück auf main
+```
 
 ## Tests ausführen
 
@@ -93,5 +118,5 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 3. Schwungphasen erkennen (Ansprechen, Top, Treffmoment, Finish) + Tempo
 - [x] 4. Kopfstabilität (Höhe + seitlich) mit Tipp
 - [x] 5. Weitere Kennzahlen: Vorneigung, Hüfte, Gewichtsverlagerung, Tempo – geprüft an echten Schwüngen
-- [ ] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
+- [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
 - [ ] 7. Optional: Coach-Feedback mit Claude
