@@ -217,7 +217,7 @@ function zeichneSkelett(punkte) {
     const kopfIdeal = linien.some((l) => ["kopfhoehe", "kopfSeitlich"].includes(l.k.id) && ausserhalb(l.k));
     if (!kopfIdeal) zeichneKopfMarke(staerke);
   }
-  if (auswahl) zeichneAbweichungen(linien, auswahl);
+  if (auswahl) zeichneAbweichungen(linien, auswahl, punkte);
 }
 
 // Welche Kennzahlen sollen im gerade gezeigten Videobild eingezeichnet werden?
@@ -270,7 +270,7 @@ function zeichneKopfMarke(staerke) {
 // Rot = deine Körperlinie außerhalb des Zielbereichs, Gelb = Ideallinie.
 // (Bei "Im Video zeigen" einer guten Kennzahl ist die Linie grün.)
 // ---------------------------------------------------------------
-function zeichneAbweichungen(linien, auswahl) {
+function zeichneAbweichungen(linien, auswahl, punkte) {
   const px = (p) => ({ x: p.x * canvas.width, y: p.y * canvas.height });
   const staerke = Math.max(3, canvas.width / 160);
 
@@ -309,10 +309,15 @@ function zeichneAbweichungen(linien, auswahl) {
     for (const l of ideal) linie(l, GELB, staerke * 1.2);
     for (const c of idealKreise) kreis(c, GELB, staerke);
   }
+  // Pfeile: von deiner roten Linie in Richtung der gelben Ideallinie
+  for (const { k, pfeile } of linien) {
+    if (!ausserhalb(k)) continue;
+    for (const p of pfeile) zeichnePfeil(px(p.von), px(p.bis), staerke);
+  }
 
   // Beschriftung oben links
   const schrift = Math.max(14, canvas.height * 0.028);
-  let legende = "rot = außerhalb des Zielbereichs · gelb = Ideallinie";
+  let legende = "rot = außerhalb des Zielbereichs · gelb = Ideallinie · Pfeil = so korrigieren";
   if (auswahl.ohneSkelett) legende = "Schau selbst hin – das Skelett ist ausgeblendet";
   else if (auswahl.alleGut) legende = "Alle hier gemessenen Linien liegen im Zielbereich";
   else if (auswahl.kennzahlen.length === 0) legende = "Dafür gibt es keine Linie im Bild";
@@ -328,7 +333,167 @@ function zeichneAbweichungen(linien, auswahl) {
   ctx.font = `${schrift * 0.75}px -apple-system, BlinkMacSystemFont, sans-serif`;
   ctx.fillStyle = "#cbd5e1";
   ctx.fillText(zeilen[1], schrift, schrift * 2.8, breite - schrift);
+
+  // Sprechblasen mit dem Hinweis, was zu tun ist – nicht über der Beschriftung
+  const beschriftung = { x: 0, y: 0, w: breite + schrift, h: schrift * 3.6 };
+  const blasen = linien.filter(({ k, hinweis, anker }) => ausserhalb(k) && hinweis && anker);
+  // Was die Blasen möglichst nicht verdecken sollen: rote/gelbe Linien und Pfeile
+  // (wichtig) sowie die Körperpunkte (weniger wichtig)
+  const hindernisse = punkte.map((p) => ({ ...px(p), gewicht: 1 }));
+  const abtasten = ({ von, bis }) => {
+    for (let t = 0; t <= 1; t += 0.125) {
+      hindernisse.push({ x: (von.x + (bis.x - von.x) * t) * canvas.width, y: (von.y + (bis.y - von.y) * t) * canvas.height, gewicht: 4 });
+    }
+  };
+  for (const { k, ist, ideal, pfeile, istKreise } of linien) {
+    if (!ausserhalb(k)) continue;
+    [...ist, ...ideal, ...pfeile].forEach(abtasten);
+    for (const c of istKreise) hindernisse.push({ ...px(c.mitte), gewicht: 4 });
+  }
+  zeichneSprechblasen(
+    blasen.map(({ hinweis, anker }) => ({ text: hinweis, anker: px(anker) })),
+    [beschriftung],
+    hindernisse
+  );
   ctx.restore();
+}
+
+// Weißer Pfeil mit Spitze. Sehr kurze Pfeile werden etwas verlängert,
+// damit man die Richtung trotzdem erkennt.
+function zeichnePfeil(von, bis, staerke) {
+  const dx = bis.x - von.x, dy = bis.y - von.y;
+  const laenge = Math.hypot(dx, dy);
+  if (laenge < 1) return;
+  const spitze = staerke * 3;
+  const l = Math.max(laenge, spitze * 2.5);
+  const ux = dx / laenge, uy = dy / laenge;
+  const ende = { x: von.x + ux * l, y: von.y + uy * l };
+  const basis = { x: ende.x - ux * spitze, y: ende.y - uy * spitze };
+
+  ctx.save();
+  ctx.setLineDash([]);
+  ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+  ctx.shadowBlur = staerke;
+  ctx.strokeStyle = "#ffffff";
+  ctx.fillStyle = "#ffffff";
+  ctx.lineWidth = staerke * 0.9;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(von.x, von.y);
+  ctx.lineTo(basis.x, basis.y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(ende.x, ende.y);
+  ctx.lineTo(basis.x - uy * spitze * 0.6, basis.y + ux * spitze * 0.6);
+  ctx.lineTo(basis.x + uy * spitze * 0.6, basis.y - ux * spitze * 0.6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+}
+
+// Sprechblasen: Text in einem weißen Kästchen mit gelbem Rand und einem
+// Zipfel, der auf deine rote Linie zeigt. Für jede Blase werden viele Plätze
+// rund um den Punkt ausprobiert; gewählt wird der, der am wenigsten verdeckt.
+function zeichneSprechblasen(eintraege, belegt, hindernisse) {
+  const f = Math.max(13, canvas.height * 0.022);
+  const rand = f * 0.4;
+  const maxBreite = Math.min(canvas.width * 0.6, f * 15);
+  const begrenze = (wert, min, max) => Math.max(min, Math.min(max, wert));
+  const ueberlappung = (a, b) =>
+    Math.max(0, Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x)) *
+    Math.max(0, Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y));
+
+  ctx.save();
+  ctx.setLineDash([]);
+  ctx.font = `600 ${f}px -apple-system, BlinkMacSystemFont, sans-serif`;
+  for (const { text, anker } of eintraege) {
+    const zeilen = umbrechen(text, maxBreite - 2 * rand);
+    const w = Math.max(...zeilen.map((z) => ctx.measureText(z).width)) + 2 * rand;
+    const h = zeilen.length * f * 1.25 + rand * 1.2;
+
+    // Plätze in 8 Richtungen und 4 Abständen um den Punkt herum bewerten
+    let beste = null;
+    for (const abstand of [2, 4, 6.5, 9.5].map((a) => a * f)) {
+      for (let r = 0; r < 8; r++) {
+        const winkel = (r * Math.PI) / 4 - Math.PI / 2; // oben zuerst
+        const dx = Math.cos(winkel), dy = Math.sin(winkel);
+        const mx = anker.x + dx * (abstand + (w / 2) * Math.abs(dx));
+        const my = anker.y + dy * (abstand + (h / 2) * Math.abs(dy));
+        const b = {
+          x: begrenze(mx - w / 2, rand, canvas.width - w - rand),
+          y: begrenze(my - h / 2, rand, canvas.height - h - rand),
+          w,
+          h,
+        };
+        let kosten = abstand / f; // lieber nah am Punkt
+        for (const p of hindernisse) {
+          if (p.x > b.x - rand && p.x < b.x + w + rand && p.y > b.y - rand && p.y < b.y + h + rand) kosten += p.gewicht * 2;
+        }
+        for (const o of belegt) kosten += (ueberlappung(b, o) / (w * h)) * 400;
+        // Der Punkt selbst darf nicht unter der Blase verschwinden
+        if (anker.x > b.x && anker.x < b.x + w && anker.y > b.y && anker.y < b.y + h) kosten += 200;
+        if (!beste || kosten < beste.kosten) beste = { ...b, kosten };
+      }
+    }
+    const blase = beste;
+    belegt.push(blase);
+
+    // Zipfel: vom nächsten Punkt am Kästchen Richtung Anker
+    const rx = begrenze(anker.x, blase.x + rand, blase.x + w - rand);
+    const ry = begrenze(anker.y, blase.y, blase.y + h);
+    const zx = anker.x - rx, zy = anker.y - ry;
+    const zl = Math.hypot(zx, zy);
+    ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+    ctx.shadowBlur = f * 0.4;
+    ctx.fillStyle = "rgba(255, 255, 255, 0.96)";
+    if (zl > f * 0.8) {
+      const ux = zx / zl, uy = zy / zl;
+      const spitze = { x: anker.x - ux * f * 0.5, y: anker.y - uy * f * 0.5 };
+      ctx.beginPath();
+      ctx.moveTo(rx - uy * f * 0.45, ry + ux * f * 0.45);
+      ctx.lineTo(spitze.x, spitze.y);
+      ctx.lineTo(rx + uy * f * 0.45, ry - ux * f * 0.45);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // Kästchen mit runden Ecken und gelbem Rand
+    rundesRechteck(blase.x, blase.y, w, h, rand * 1.5);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = GELB;
+    ctx.lineWidth = Math.max(2, f * 0.15);
+    ctx.stroke();
+    ctx.fillStyle = "#111827";
+    zeilen.forEach((z, i) => ctx.fillText(z, blase.x + rand, blase.y + rand * 0.6 + f * (1 + i * 1.25) - f * 0.15));
+  }
+  ctx.restore();
+}
+
+// Text in Zeilen aufteilen, die höchstens maxBreite breit sind
+function umbrechen(text, maxBreite) {
+  const zeilen = [];
+  let zeile = "";
+  for (const wort of text.split(" ")) {
+    const probe = zeile ? `${zeile} ${wort}` : wort;
+    if (zeile && ctx.measureText(probe).width > maxBreite) {
+      zeilen.push(zeile);
+      zeile = wort;
+    } else {
+      zeile = probe;
+    }
+  }
+  if (zeile) zeilen.push(zeile);
+  return zeilen;
+}
+
+function rundesRechteck(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
 }
 
 // ---------------------------------------------------------------

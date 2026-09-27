@@ -27,6 +27,7 @@ function koerper({ huefte = { x: 0.3, y: 0.6 }, schulter = { x: 0.3, y: 0.35 }, 
 
 const KONTEXT = {
   seitenverhaeltnis: SV,
+  rechtshaender: true,
   ziel: 1, // Ziel rechts im Bild
   richtungBall: 1,
   fuehrung: { schulter: 11, ellbogen: 13, handgelenk: 15 },
@@ -46,6 +47,11 @@ test("Oberkörper im Treffmoment: gelbe Linie mit Idealneigung vom Ziel weg", ()
   nahe(winkelZurSenkrechten(l.ist[0]), 10, 0.01, "gemessen");
   nahe(winkelZurSenkrechten(l.ideal[0]), -IDEAL.oberkoerperTreff, 0.01, "ideal (vom Ziel weg = links)");
   nahe(laenge(l.ideal[0]), laenge(l.ist[0]), 1e-9, "gleiche Länge");
+  // Pfeil von der roten Schultermitte zum Ende der gelben Linie, Hinweis mit Richtung
+  nahe(l.pfeile[0].von.x, l.ist[0].bis.x, 1e-9, "Pfeil beginnt an der roten Linie");
+  nahe(l.pfeile[0].bis.x, l.ideal[0].bis.x, 1e-9, "Pfeil endet an der gelben Linie");
+  assert.match(l.hinweis, /nach links/);
+  assert.deepEqual(l.anker, l.pfeile[0].von);
 });
 
 test("Vorneigung von hinten: Ideallinie 35° Richtung Ball", () => {
@@ -62,6 +68,12 @@ test("Führungsarm: gelbe Linie ist ein gerader Arm gleicher Länge", () => {
   const S = inHoehen(p[11]), H = inHoehen(p[15]), E = inHoehen(l.ideal[0].bis);
   const kreuz = (H.x - S.x) * (E.y - S.y) - (H.y - S.y) * (E.x - S.x);
   nahe(kreuz, 0, 1e-12, "Richtung");
+  // Pfeil vom Ellbogen genau auf die gelbe Linie
+  const Z = inHoehen(l.pfeile[0].bis);
+  nahe((H.x - S.x) * (Z.y - S.y) - (H.y - S.y) * (Z.x - S.x), 0, 1e-12, "Pfeilende auf der Linie");
+  assert.match(l.hinweis, /^Linken Arm gerade lassen/);
+  const links = ideallinien({ id: "fuehrungsarmTreff" }, p, p, { ...KONTEXT, rechtshaender: false });
+  assert.match(links.hinweis, /^Rechten Arm/);
 });
 
 test("Kopf: gelbe Linien markieren die Kopfposition beim Ansprechen", () => {
@@ -83,6 +95,9 @@ test("Hüfte im Rückschwung: gelbe Hüfte zurück an der Ansprechposition", () 
   const l = ideallinien({ id: "hueftSway" }, jetzt, ansprechen, KONTEXT);
   const m = { x: (l.ideal[0].von.x + l.ideal[0].bis.x) / 2 };
   nahe(m.x, (ansprechen[23].x + ansprechen[24].x) / 2, 1e-9, "Hüftmitte");
+  // Hüfte ist nach links gerutscht → Pfeil und Hinweis zeigen nach rechts
+  assert.ok(l.pfeile[0].bis.x > l.pfeile[0].von.x);
+  assert.match(l.hinweis, /^Hüfte zurück nach rechts/);
 });
 
 test("Schulterdrehung: gelbe Schulterlinie so schmal wie bei 90° Drehung", () => {
@@ -114,7 +129,9 @@ for (const name of ["faceon_profi", "faceon_amateur", "hinten_amateur_a", "hinte
       const l = ideallinien(k, bildBei(phasen[k.phase].zeit), bildBei(phasen.ansprechen.zeit), technik);
       assert.ok(l.ist.length + l.istKreise.length > 0, `${k.id}: keine gemessene Linie`);
       assert.ok(l.ideal.length > 0, `${k.id}: keine Ideallinie`);
-      for (const { von, bis } of [...l.ist, ...l.ideal]) {
+      assert.ok(l.pfeile.length > 0, `${k.id}: kein Pfeil`);
+      assert.ok(l.hinweis.length > 5, `${k.id}: kein Hinweis`);
+      for (const { von, bis } of [...l.ist, ...l.ideal, ...l.pfeile]) {
         for (const w of [von.x, von.y, bis.x, bis.y]) assert.ok(Number.isFinite(w), `${k.id}: ungültige Koordinate`);
       }
     }
