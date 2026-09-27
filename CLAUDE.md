@@ -1,0 +1,64 @@
+# Golf Swing Coach – Regeln für Claude
+
+Web-App (GitHub Pages), die Golfschwung-Videos im Browser analysiert (MediaPipe Pose)
+und Tipps gibt. Läuft offline als Home-Bildschirm-App auf dem iPhone.
+Live: https://marcelg91.github.io/golf-swing-coach/ · Repo: MarcelG91/golf-swing-coach
+
+## Für wen
+
+Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
+- Auf Deutsch antworten, Schritte kurz erklären, Terminal-Befehle einzeln und kopierbar.
+- Bei jedem neuen Werkzeug oder Dienst kurz begründen, warum dieses.
+- Kommentare im Code auf Deutsch und anfängerfreundlich, Namen auf Deutsch (wie bisher).
+
+## Arbeitsweise: 1 Chat = 1 Branch = 1 Pull Request
+
+1. **Start:** `git checkout main && git pull`, dann `git checkout -b <thema>`.
+   Vorher prüfen: `git status` sauber? Liegen noch andere lokale Branches herum, die nicht
+   auf GitHub sind (`git branch -vv`)? Dann erst nachfragen.
+2. **Nur das eine Thema** des Branches bearbeiten. Neue Ideen → in „Offene Punkte“ unten
+   notieren statt mit einbauen.
+3. **Prüfen:** `node --test` (alle Tests grün), bei Änderungen an der Oberfläche auch im
+   Browser ansehen (`python3 -m http.server 8000 --bind 127.0.0.1`).
+4. **Abschluss im selben Chat:** committen, `git push -u origin <thema>`,
+   `gh pr create --fill`, warten bis die Checks grün sind, `gh pr merge --merge --delete-branch`,
+   `git checkout main && git pull`. Kein Chat endet mit ungepushter Arbeit.
+5. Parallel laufende Chats dürfen nicht dieselben Dateien ändern (v. a. `app.js`, `sw.js`,
+   `README.md`) – sonst nacheinander.
+
+## Pflichten bei Änderungen
+
+- **Neue JS-Datei?** In `sw.js` (`APP_DATEIEN`) und `pwa.js` (`APP_DATEIEN`) eintragen,
+  sonst fehlt sie offline.
+- **Jede Änderung an der App:** `APP_VERSION` in `pwa.js` erhöhen (steht unten in der App –
+  so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
+- **Keine Videos, keine exportierten Posedaten ins Repo** (`tests/keine-videos.test.mjs`
+  und `.gitignore` wachen darüber). Testvideos nur lokal in `testvideos/`.
+- Rechenlogik (Phasen, Kennzahlen, Technik, Raster) bleibt frei von Browser-Code, damit
+  sie mit `node --test` prüfbar ist. Echte Testschwünge: `tests/daten/`.
+- README-Dateiliste aktuell halten.
+
+## Wichtige Dateien
+
+| Datei | Aufgabe |
+|---|---|
+| `app.js` | Oberfläche, Video, Zeichnen, Ablauf der Analyse |
+| `videoanalyse.js` | Video schnell durchgehen (abspielen statt springen, Lücken nachholen) |
+| `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
+| `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
+| `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
+
+## Bekannte Eigenheiten iPhone / Safari
+
+- Home-Bildschirm-App hat eigenen Speicher (getrennt von Safari) → einmal von dort online öffnen.
+- Pose-Modell kommt mit `Vary: Origin` → Cache immer mit `ignoreVary: true` abfragen.
+- Bild-für-Bild-Springen in iPhone-Videos (HEVC/4K) ist sehr langsam → `videoanalyse.js` spielt ab.
+- Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
+  diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.
+
+## Offene Punkte
+
+- iPhone-Test der schnellen Analyse (Version ≥ 0.7.3): Statuszeile „Analyse fertig (…)“ auswerten.
+- Etappe 8: Schwünge lokal speichern (IndexedDB, gekürztes Video) – siehe `docs/`.
+- Etappe 9: Sicherung exportieren/einspielen · Etappe 10: Fortschritt und Langzeit-Feedback.
+- Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.
