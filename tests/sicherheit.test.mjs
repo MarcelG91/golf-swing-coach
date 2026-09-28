@@ -94,3 +94,12 @@ test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
     assert.doesNotMatch(code, /\b(document|window|navigator|localStorage|indexedDB|fetch)\b|innerHTML/, `${datei} enthält Browser-Code`);
   }
 });
+
+test("Robuste Analyse: Knöpfe im finally frei, zentrale Fehleranzeige, Startsignal (S2, S7, S9)", () => {
+  const analyse = APP.slice(APP.indexOf("async function analysiereAlles"), APP.indexOf("// 4b. Mehrere Schwünge"));
+  assert.match(analyse, /finally\s*{[\s\S]*?analyseLaeuft = false;[\s\S]*?setzeKnoepfeAktiv\(true\)/, "S2: Knöpfe im finally freigeben");
+  assert.match(APP, /addEventListener\("error"/, "S7: Fehler in der Statuszeile");
+  assert.match(APP, /addEventListener\("unhandledrejection"/, "S7: abgelehnte Promises in der Statuszeile");
+  assert.match(APP, /dataset\.appGestartet = /, "S9: app.js meldet den Start");
+  assert.match(PWA, /dataset\.appGestartet/, "S9: pwa.js prüft den Start");
+});

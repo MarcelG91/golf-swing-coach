@@ -4,7 +4,7 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.13.1";
+export const APP_VERSION = "0.14.0";
 
 // Muss zu den Namen in sw.js passen
 const CACHE_APP = "app-v1";
@@ -150,6 +150,18 @@ $("installKnopf").addEventListener("click", async () => {
   installAngebot = null;
   $("installHinweis").hidden = true;
 });
+
+// ---------------------------------------------------------------
+// 3b. Befund S9: Kommt beim Öffnen eine App-Datei nicht an (z. B. schlechtes Netz),
+// startet app.js nie – und die App bliebe ohne Hinweis bei "Lade …" stehen.
+// app.js setzt beim Start data-app-gestartet; fehlt das nach 20 s, um Neuladen bitten.
+// ---------------------------------------------------------------
+setTimeout(() => {
+  if (document.documentElement.dataset.appGestartet) return;
+  $("status").textContent =
+    "Die App ist nicht vollständig geladen (schlechtes Netz?). Bitte die Seite neu laden – " +
+    "am iPhone: App schließen und neu öffnen.";
+}, 20000);
 
 // ---------------------------------------------------------------
 // 4. Offline und Pose-Erkennung noch nie geladen? Verständlich erklären.

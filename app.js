@@ -24,7 +24,7 @@ import { ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
 // Rote Abweichungen und gelbe Ideallinien im Video (siehe ideallinien.js)
 import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
-import { analysiereVideo, springe } from "./videoanalyse.js";
+import { analysiereVideo, springe, pruefeVideoLaenge } from "./videoanalyse.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
 // Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
@@ -168,6 +168,8 @@ let bewertung = null;
 let technik = null; // Arme, Oberkörper, Drehung (technik.js)
 let phasenErgebnis = null; // Zeitpunkte von Ansprechen, Top, Treffmoment, Finish
 let alleKennzahlen = []; // alle Kennzahlen mit Kennung, Kategorie und Videomoment
+let ladeStart = null; // Zeitpunkt der Videoauswahl (für die Ladezeit, Befund S8)
+let videoLadezeit = null; // Sekunden von der Auswahl bis das Video in der App ist
 let aktuellerGedanke = ""; // Schwunggedanke der wichtigsten Baustelle (wird mit der Sitzung gespeichert)
 // Welche Kennzahl gerade per "Im Video zeigen" eingezeichnet wird
 let aktiveMessung = null;
@@ -672,7 +674,12 @@ function ladeDatei(datei) {
   geladeneDatei = datei;
   videoName = datei.name;
   return new Promise((fertig, fehler) => {
-    video.addEventListener("loadedmetadata", () => fertig(), { once: true });
+    video.addEventListener("loadedmetadata", () => {
+      // Befund S3: ohne endliche Länge weiß die Analyse nicht, wann sie fertig ist
+      const laenge = pruefeVideoLaenge(video.duration);
+      if (laenge.lesbar) fertig();
+      else fehler(new Error(`„${datei.name}“: ${laenge.hinweis}`));
+    }, { once: true });
     video.addEventListener("error", () => fehler(new Error(`„${datei.name}“ lässt sich nicht abspielen`)), { once: true });
     const neueAdresse = URL.createObjectURL(datei);
     video.src = neueAdresse; // Video bleibt auf deinem Gerät
@@ -735,38 +742,57 @@ async function analysiereAlles() {
   setzeErgebnisZurueck();
   alleSchwuenge = [];
   const nichtLesbar = [];
+  const abgebrochen = [];
   let sekunden = 0;
   let letzterLauf = null;
 
-  for (const [nr, datei] of dateien.entries()) {
-    const vorsilbe = dateien.length > 1 ? `Video ${nr + 1} von ${dateien.length} · ` : "";
-    try {
-      await ladeDatei(datei);
-    } catch {
-      nichtLesbar.push(datei.name); // z. B. Format, das dieser Browser nicht kann
-      continue;
-    }
-    const lauf = await analysiereGeladenesVideo(vorsilbe);
-    sekunden += lauf.sekunden;
-    letzterLauf = lauf;
+  // Befund S2: Was auch schiefgeht – am Ende (finally) sind die Knöpfe wieder frei.
+  try {
+    for (const [nr, datei] of dateien.entries()) {
+      const vorsilbe = dateien.length > 1 ? `Video ${nr + 1} von ${dateien.length} · ` : "";
+      try {
+        await ladeDatei(datei);
+      } catch (fehler) {
+        console.warn(fehler);
+        nichtLesbar.push(datei.name); // z. B. Format, das dieser Browser nicht kann
+        continue;
+      }
+      let lauf;
+      try {
+        lauf = await analysiereGeladenesVideo(vorsilbe);
+      } catch (fehler) {
+        // Ein Video scheitert (z. B. Speicher voll) – mit den anderen weitermachen
+        console.error(fehler);
+        abgebrochen.push(datei.name);
+        continue;
+      }
+      sekunden += lauf.sekunden;
+      letzterLauf = lauf;
 
-    // Alle Schwünge in diesem Video finden. Jeder Schwung merkt sich sein Video –
-    // und alle Bilder des Videos, damit das Skelett später überall passt.
-    const seitenverhaeltnis = video.videoWidth / video.videoHeight;
-    for (const schwung of findeSchwuenge(lauf.bilder, seitenverhaeltnis)) {
-      alleSchwuenge.push({ ...schwung, datei, videoBilder: lauf.bilder });
+      // Alle Schwünge in diesem Video finden. Jeder Schwung merkt sich sein Video –
+      // und alle Bilder des Videos, damit das Skelett später überall passt.
+      const seitenverhaeltnis = video.videoWidth / video.videoHeight;
+      for (const schwung of findeSchwuenge(lauf.bilder, seitenverhaeltnis)) {
+        alleSchwuenge.push({ ...schwung, datei, videoBilder: lauf.bilder });
+      }
     }
+    // Fortlaufend nummerieren – über alle Videos hinweg
+    alleSchwuenge.forEach((s, i) => (s.nummer = i + 1));
+  } catch (fehler) {
+    console.error(fehler);
+    setStatus(`Die Analyse ist abgebrochen (${fehler.message || fehler.name}). Probiere ein kürzeres Video oder lade die Seite neu.`);
+    return;
+  } finally {
+    video.playbackRate = Number(tempoSelect.value); // Abspieltempo wieder wie eingestellt
+    analyseLaeuft = false;
+    setzeKnoepfeAktiv(true);
   }
-  // Fortlaufend nummerieren – über alle Videos hinweg
-  alleSchwuenge.forEach((s, i) => (s.nummer = i + 1));
 
-  video.playbackRate = Number(tempoSelect.value); // Abspieltempo wieder wie eingestellt
-  analyseLaeuft = false;
-  setzeKnoepfeAktiv(true);
-
-  const hinweisNichtLesbar = nichtLesbar.length ? ` Nicht lesbar: ${nichtLesbar.join(", ")}.` : "";
+  const hinweisNichtLesbar =
+    (nichtLesbar.length ? ` Nicht lesbar: ${nichtLesbar.join(", ")}.` : "") +
+    (abgebrochen.length ? ` Abgebrochen: ${abgebrochen.join(", ")}.` : "");
   if (!letzterLauf) {
-    setStatus(`Kein Video ließ sich abspielen. Probiere es als MP4 oder in Safari.${hinweisNichtLesbar}`);
+    setStatus(`Kein Video ließ sich auswerten. Probiere es als MP4 oder in Safari.${hinweisNichtLesbar}`);
     return;
   }
 
@@ -780,7 +806,8 @@ async function analysiereAlles() {
   // Diese Werte helfen bei der Fehlersuche, falls die Analyse langsam ist
   const messwerte =
     `${zahl(sekunden, 1)} s · ${Math.round(letzterLauf.msProBild)} ms pro Bild · ` +
-    `${genutzterRechner || "?"}${letzterLauf.verkleinert ? " · verkleinert" : ""} · ${letzterLauf.verfahren}`;
+    `${genutzterRechner || "?"}${letzterLauf.verkleinert ? " · verkleinert" : ""} · ${letzterLauf.verfahren}` +
+    (videoLadezeit !== null ? ` · Video geladen in ${zahl(videoLadezeit, 1)} s` : "");
   const anzahl = alleSchwuenge.filter((s) => s.phasen).length;
   const gefunden = alleSchwuenge.length > 1 || dateien.length > 1 ? `${anzahl} Schwünge gefunden. ` : "";
   setStatus(`${gefunden}Analyse fertig (${messwerte}).${hinweisNichtLesbar}`);
@@ -2092,6 +2119,8 @@ videoInput.addEventListener("change", () => {
   gespeicherteSitzung = null;
   setzeErgebnisZurueck();
   setStatus(`Lade „${dateien[0].name}“ …`);
+  ladeStart = performance.now(); // Befund S8: Wie lange braucht das Video, bis es in der App ist?
+  videoLadezeit = null;
   // Das erste Video gleich zeigen. Fehler meldet schon video.addEventListener("error") unten.
   geladeneDatei = null;
   ladeDatei(dateien[0]).catch(() => {});
@@ -2111,8 +2140,13 @@ video.addEventListener("loadedmetadata", () => {
   video.currentTime = 0; // löst "seeked" aus → erstes Bild wird analysiert
   // Während der Analyse und beim Wechseln zwischen Schwüngen nicht dazwischenreden
   if (analyseLaeuft || alleSchwuenge.length) return;
+  if (ladeStart !== null) {
+    videoLadezeit = (performance.now() - ladeStart) / 1000;
+    ladeStart = null;
+  }
   const was = dateien.length > 1 ? `${dateien.length} Videos ausgewählt` : "Video geladen";
-  if (poseStatus === "bereit") setStatus(`${was}. Tippe auf „Analysieren“ oder spiel es ab.`);
+  const lang = pruefeVideoLaenge(video.duration).hinweis; // Befund S3: Hinweis bei langen Videos
+  if (poseStatus === "bereit") setStatus(`${was}. Tippe auf „Analysieren“ oder spiel es ab.${lang ? ` ${lang}` : ""}`);
   else if (poseStatus === "fehler") setStatus(`Video geladen – aber: ${poseFehlerText}`);
   else setStatus("Video geladen. Die Pose-Erkennung lädt noch …");
 });
@@ -2188,6 +2222,18 @@ allesLoeschenBtn.addEventListener("click", loescheAllesAusEinstellungen);
 loeschHaken.addEventListener("change", () => {
   loeschBestaetigen.disabled = !loeschHaken.checked;
 });
+
+// Befund S7: Unerwartete Fehler nicht nur in der Entwicklerkonsole, sondern in der Statuszeile
+window.addEventListener("error", (ereignis) => {
+  setStatus(`Unerwarteter Fehler: ${ereignis.message || "unbekannt"}. Wenn etwas hängt: Seite neu laden.`);
+});
+window.addEventListener("unhandledrejection", (ereignis) => {
+  const grund = ereignis.reason?.message || String(ereignis.reason || "unbekannt");
+  setStatus(`Unerwarteter Fehler: ${grund}. Wenn etwas hängt: Seite neu laden.`);
+});
+
+// Befund S9: Signal an pwa.js – app.js und alle seine Dateien sind angekommen
+document.documentElement.dataset.appGestartet = "ja";
 
 // Los geht's
 zeigeLevelAuswahl();

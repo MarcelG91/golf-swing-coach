@@ -97,9 +97,8 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
   Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
 - iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
-- **Reihenfolge ab jetzt (Entscheidung 28.09.): `robuste-analyse` → 11b → 10 → 9**
-  (11a und `speicher-verwalten` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
-  `robuste-analyse`: Befunde S2, S3, S7, S9 aus `docs/sicherheit/bericht.md` (S2 ist P1).
+- **Reihenfolge ab jetzt: 11b → 10 → 9** (11a, `speicher-verwalten`, `tipps-neu`, `uebungsmodus` und
+  `robuste-analyse` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
   11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
   Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
 - 11b vorab klären: **Teilen mit Freunden.** Die App selbst läuft bei jedem kostenlos; nur der Coach
@@ -112,8 +111,8 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Erststart-Hänger im lokalen Chrome-Test (28.09., geklärt): Ursache ist der einfache Python-Server.
   Er hält nur 5 wartende Verbindungen; beim ersten Laden (App-Dateien + Service Worker gleichzeitig)
   bricht er einzelne ab (`ERR_CONNECTION_RESET`), dann läuft `app.js` nicht an. Live 4 von 4
-  Erststarts in Ordnung. Lokal: einmal neu laden. Dass die App dabei stumm hängt, ist Befund S9
-  (kommt mit in `robuste-analyse`).
+  Erststarts in Ordnung. Lokal: einmal neu laden. Seit 0.14.0 bittet die App nach 20 s selbst um
+  Neuladen (Befund S9 erledigt).
 - Optional: Auch „Schwung löschen“ / „Sitzung löschen“ auf den neuen Lösch-Dialog umstellen
   (einheitlich, ca. 20 Zeilen) – Vorschlag aus dem Check vom 28.09.
 - Darstellung seit 11a: In den Level-Karten (⚙️ Einstellungen) wird die Beschreibung in eine schmale
@@ -126,6 +125,8 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - **Übungsfiguren fachlich:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
   `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung von hinten
   erst mit einem korrekten Profi-Schwung von hinten als Testdatei.
+- iPhone-Test robuste Analyse (Version ≥ 0.14.0): Zeile „Analyse fertig (… · Video geladen in … s)“
+  notieren – zeigt, wie lange das Video braucht, bis es in der App ist (Befund S8).
 - iPhone-Test Tipps neu + Übungsmodus (Version ≥ 0.13.0): Wischen flüssig? Figuren verständlich? Skala
   lesbar? Bleibt der Bildschirm im Übungsmodus an (Wake Lock ab iOS 16.4)?
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.
