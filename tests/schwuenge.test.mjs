@@ -136,6 +136,13 @@ test("Gesamtauswertung: ein Ausreißer ist keine Baustelle, ein häufiger Fehler
   assert.deepEqual(g.baustellen.map((k) => k.id), ["arm"]);
 });
 
+test("Gesamtauswertung: Baustellenzahl lässt sich passend zum Level begrenzen", () => {
+  const [gruppe] = gesamtauswertung([
+    schwung("frontal", [kz("a", "verbessern", 1), kz("b", "verbessern", 2), kz("c", "verbessern", 3)]),
+  ], 1);
+  assert.deepEqual(gruppe.baustellen.map((k) => k.id), ["a"]);
+});
+
 test("Gesamtauswertung: typischer Wert passt zur Bewertung (Fall aus dem Browsertest)", () => {
   // Profi senkt den Kopf leicht ab (gut), Amateur richtet sich auf (verbessern)
   const [g] = gesamtauswertung([

@@ -32,6 +32,8 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
   sonst fehlt sie offline.
 - **Jede Änderung an der App:** `APP_VERSION` in `pwa.js` erhöhen (steht unten in der App –
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
+- Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
+  Sitzung hält zusätzlich fest, welches Level beim Speichern gewählt war.
 - **Keine Videos, keine exportierten Posedaten ins Repo** (`tests/keine-videos.test.mjs`
   und `.gitignore` wachen darüber). Testvideos nur lokal in `testvideos/`.
 - Rechenlogik (Phasen, Kennzahlen, Technik, Raster) bleibt frei von Browser-Code, damit
@@ -68,6 +70,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB) und als Clip ausschneiden |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
+| `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 | `docs/plan-etappe-11-level-und-coach.md` | Plan für Etappe 11: Level-gerechte Tipps (11a) und Coach mit Claude (11b) |

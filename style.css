@@ -232,6 +232,29 @@ body {
   cursor: pointer;
 }
 .umschalter button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
+.level-anzeige { margin: 8px 0 0; color: var(--text-leise); font-size: 0.9rem; }
+
+.level-auswahl { display: grid; gap: 8px; max-width: 620px; }
+.level-auswahl label {
+  display: grid;
+  grid-template-columns: 20px 30px 1fr;
+  gap: 2px 10px;
+  align-items: center;
+  padding: 12px;
+  text-align: left;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.level-auswahl label.aktiv { border-color: var(--akzent); box-shadow: inset 3px 0 var(--akzent); }
+.level-auswahl input { width: 18px; height: 18px; accent-color: var(--akzent); }
+.level-auswahl .symbol { grid-row: span 2; font-size: 1.5rem; }
+.level-auswahl small { color: var(--text-leise); }
+.level-vorschlag { margin: 12px 0 18px; padding: 12px; border-left: 4px solid var(--akzent); background: var(--flaeche); }
+.level-vorschlag p { margin: 0 0 8px; }
+.level-vorschlag button { margin: 4px 8px 0 0; }
 
 .speichern { margin-top: 24px; padding-top: 12px; border-top: 1px solid #2c5a43; }
 .formular { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }

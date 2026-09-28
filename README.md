@@ -10,6 +10,7 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 - Skelett über das Video zeichnen und die Phasen finden: Ansprechen, Top, Treffmoment, Finish
 - Tempo, Kopf, Hüfte, Arme, Oberkörperhaltung und Drehung bewerten (Ampel: gut / Achtung / verbessern)
 - Die **3 wichtigsten Baustellen** mit Gefühl-Tipp und Übung nennen
+- Tipps passend zu deinem Level anzeigen: Einsteiger, Fortgeschritten oder Könner
 - Fehler direkt im Video zeigen: **rot** = deine Linie, **gelb** = Ideallinie, dazu Pfeil und Sprechblase
 - Schwünge **auf dem Handy speichern** – mit kurzem Video, Schläger und Notiz – und später wieder öffnen
 - Als App auf dem iPhone-Home-Bildschirm laufen – auch **offline** auf der Range
@@ -108,6 +109,14 @@ Schwung einmal durch – dabei nimmt die App ihn als kurzes Video auf.
 - **Wichtig:** Gelöschte Safari-Daten oder ein verlorenes Handy = Schwünge weg.
   Eine Sicherung zum Exportieren kommt mit Etappe 9.
 
+## Level und Tipps
+
+Unter **⚙️ Einstellungen** wählst du Einsteiger, Fortgeschritten oder Könner. Das Level
+bestimmt, welche Kennzahlen und wie viele Baustellen die App zeigt; gemessen und mit der
+Sitzung gespeichert werden weiterhin alle Kennzahlen. Die Auswahl liegt lokal auf dem Gerät.
+Nach mindestens zehn sicheren gespeicherten Schwüngen kann die App einen Levelwechsel
+vorschlagen. Sie ändert das Level nie selbst.
+
 ## Ausprobieren ohne eigenes Video
 
 Im Ordner `testvideos/` (nur lokal, nicht auf GitHub) liegen Beispielschwünge
@@ -152,6 +161,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `videoanalyse.js` | Geht das Video schnell durch: abspielen statt Bild für Bild anspringen, Lücken gezielt nachholen |
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
+| `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
@@ -170,6 +180,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
+| `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
 | `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung |

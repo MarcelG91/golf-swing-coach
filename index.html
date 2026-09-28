@@ -31,7 +31,9 @@
     <nav class="umschalter">
       <button id="zuAnalyse" class="aktiv">🔍 Analyse</button>
       <button id="zuGespeichert">📚 Meine Schwünge</button>
+      <button id="zuEinstellungen">⚙️ Einstellungen</button>
     </nav>
+    <p id="levelAnzeige" class="level-anzeige" hidden></p>
   </header>
 
   <main id="analyseBereich">
@@ -107,12 +109,17 @@
       </p>
       <div id="baustellenListe" class="kennzahlen"></div>
 
+      <div id="lobBereich" hidden>
+        <h3>Das machst du schon gut</h3>
+        <div id="lobListe" class="kennzahlen"></div>
+      </div>
+
       <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->
       <h3>Alle Kennzahlen</h3>
       <div id="kennzahlenListe" class="kennzahlen"></div>
 
       <!-- Was die App nicht sicher messen kann -->
-      <h3>👀 Selbst prüfen</h3>
+      <h3 id="selbstCheckTitel">👀 Selbst prüfen</h3>
       <div id="selbstCheckListe" class="kennzahlen"></div>
 
       <p class="hinweis klein-text">
@@ -172,8 +179,16 @@
   <!-- Meine Schwünge: alle gespeicherten Sitzungen (Etappe 8) -->
   <main id="gespeichertBereich" hidden>
     <h2>📚 Meine Schwünge</h2>
+    <section id="levelVorschlag" class="level-vorschlag" hidden aria-live="polite"></section>
     <p id="belegung" class="hinweis"></p>
     <div id="sitzungsListe" class="sitzungen"></div>
+  </main>
+
+  <main id="einstellungenBereich" hidden>
+    <h2>⚙️ Einstellungen</h2>
+    <h3>Dein Golf-Level</h3>
+    <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
+    <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
   </main>
 
   <footer class="fuss">
