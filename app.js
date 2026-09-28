@@ -125,6 +125,7 @@ let aktiveMessung = null;
 // Mehrere Videos / mehrere Schwünge
 let dateien = []; // ausgewählte Videodateien
 let geladeneDatei = null; // welche davon gerade im Videoplayer steckt
+let videoAdresse = null;
 let alleSchwuenge = []; // alle gefundenen Schwünge aus allen Videos (siehe schwuenge.js)
 let aktuellerSchwung = null; // welcher davon gerade im Detail zu sehen ist
 
@@ -618,7 +619,10 @@ function ladeDatei(datei) {
   return new Promise((fertig, fehler) => {
     video.addEventListener("loadedmetadata", () => fertig(), { once: true });
     video.addEventListener("error", () => fehler(new Error(`„${datei.name}“ lässt sich nicht abspielen`)), { once: true });
-    video.src = URL.createObjectURL(datei); // Video bleibt auf deinem Gerät
+    const neueAdresse = URL.createObjectURL(datei);
+    video.src = neueAdresse; // Video bleibt auf deinem Gerät
+    if (videoAdresse) URL.revokeObjectURL(videoAdresse);
+    videoAdresse = neueAdresse;
   });
 }
 
@@ -1041,10 +1045,11 @@ function exportiereDaten() {
   };
   const blob = new Blob([JSON.stringify(daten)], { type: "application/json" });
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
+  const adresse = URL.createObjectURL(blob);
+  link.href = adresse;
   link.download = `posedaten-${videoName.replace(/\.[^.]+$/, "") || "schwung"}.json`;
   link.click();
-  URL.revokeObjectURL(link.href);
+  setTimeout(() => URL.revokeObjectURL(adresse), 60_000);
 }
 
 // ---------------------------------------------------------------

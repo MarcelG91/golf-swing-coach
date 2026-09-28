@@ -1,7 +1,8 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 27.09.2026 · geprüft auf `main` @ `f100c18` (Version 0.9.0)
+Stand: 27.09.2026 · geprüft auf `origin/main` @ `56c9d56` (Version 0.9.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
+Zusätzlich geprüft: lokaler Fix-Branch `check-2026-09-27` (Version 0.9.1, nicht veröffentlicht).
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos verlassen das Handy nicht, und im Repo liegen
 weder Videos noch Geheimnisse. Offen sind vor allem die Echtheitsprüfung des nachgeladenen
@@ -16,8 +17,8 @@ MediaPipe-Codes, der Schutz von `main` und die Fehlerbehandlung während der Ana
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos bleiben auf dem Handy. Offen: noreply-Adresse für Commits (V5), Pläne für Etappe 9 und 11 (V6, V2). |
 | Cybersecurity | Gelb | MediaPipe kommt ohne Echtheitsprüfung von jsDelivr und Google (C1), noch keine CSP (C3). |
-| Test und Deploy | Gelb | 62 Tests und Video-Wächter laufen bei jedem Pull Request. Schutz von `main` noch nicht bestätigt (T1), kein Browser-Test (T3). |
-| Stabilität | Gelb | Offline-Start und Zeichenfläche gelöst. Ein Fehler mitten in der Analyse sperrt weiter die Knöpfe (S2). |
+| Test und Deploy | Gelb | 66 Tests und Video-Wächter laufen im lokalen Check-Branch; Schutz von `main` fehlt (T1), kein automatisierter Browser-Test (T3). |
+| Stabilität | Gelb | Offline-Start und Zeichenfläche gelöst. Fixes für Object-URLs (S5, S6) liegen lokal; ein Analysefehler sperrt weiter die Knöpfe (S2). |
 | Geschwindigkeit | Gelb | Analyse spielt das Video jetzt ab statt Bild für Bild zu springen. iPhone-Messung steht noch aus (S8). |
 
 ## Befunde
@@ -69,8 +70,8 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | S2 | P1 | Teilweise | `analysiereAlles()` fängt Fehler beim Laden eines Videos ab. Scheitert aber die Analyse selbst, bleiben alle Knöpfe gesperrt, bis die Seite neu geladen wird. | `try/finally` um die ganze Analyse, verständliche Meldung, Knöpfe immer wieder freigeben. |
 | S3 | P2 | Offen | Keine Längengrenze und keine Prüfung, ob die Videolänge endlich ist. | `Number.isFinite(video.duration)` prüfen, ab etwa 20 s pro Video einen Hinweis zeigen. |
 | S4 | P2 | Erledigt 27.09. | Zeichenfläche war so groß wie das Video (bei 4K rund 33 MB). | Auf höchstens 1280 px begrenzt. |
-| S5 | P2 | Offen | Beim Laden eines Videos entsteht eine Browser-Adresse (`URL.createObjectURL`), die nie freigegeben wird. Mit mehreren Videos pro Analyse wächst der Speicher. | Alte Adresse mit `URL.revokeObjectURL` freigeben, sobald das nächste Video geladen ist. |
-| S6 | P3 | Offen | „Posedaten speichern“ gibt die Datei-Adresse sofort nach dem Klick frei. Safari auf dem iPhone findet die Datei dann oft nicht mehr. | Freigabe um 60 s verzögern. |
+| S5 | P2 | Teilweise (Fix lokal, Prüfung/PR ausstehend) | Beim Laden eines Videos entsteht eine Browser-Adresse (`URL.createObjectURL`), die nie freigegeben wird. Mit mehreren Videos pro Analyse wächst der Speicher. | Im Branch `check-2026-09-27` wird die alte Adresse beim Laden des nächsten Videos freigegeben. |
+| S6 | P3 | Teilweise (Fix lokal, Prüfung/PR ausstehend) | „Posedaten speichern“ gibt die Datei-Adresse sofort nach dem Klick frei. Safari auf dem iPhone findet die Datei dann oft nicht mehr. | Im Branch `check-2026-09-27` wird die Freigabe um 60 s verzögert. |
 | S7 | P3 | Offen | Unerwartete Fehler landen nur in der Entwicklerkonsole. | Zentrale Fehleranzeige in der Statuszeile. |
 | S8 | P1 | Teilweise | Videos brauchen auf dem iPhone lange, bis sie in der App sind. Die Ursache liegt meist vor der App (Umwandeln in Safari, iCloud-Download, 4K). | Tipps im README (PR #6). Analyse deutlich schneller (PR #8), Statuszeile zeigt Messwerte. Offen: iPhone-Messung auswerten, Ladezeit des Videos selbst messen. |
 
