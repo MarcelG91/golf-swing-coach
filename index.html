@@ -15,6 +15,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Swing Coach">
+  <!-- Hell oder dunkel: läuft bewusst sofort (ohne "module"/"defer"),
+       damit die Seite nicht erst dunkel aufblitzt und dann hell wird -->
+  <script src="darstellung.js"></script>
 </head>
 <body>
   <!-- Hinweis: App zum Home-Bildschirm hinzufügen (steuert pwa.js) -->
@@ -25,24 +28,46 @@
   </div>
 
   <header>
-    <h1>⛳ Golf Swing Coach</h1>
-    <p class="untertitel">Video hochladen – die App erkennt deine Körperhaltung.</p>
-    <!-- Umschalter: blendet jeweils einen der beiden Bereiche unten ein (Etappe 8) -->
-    <nav class="umschalter">
-      <button id="zuAnalyse" class="aktiv">🔍 Analyse</button>
-      <button id="zuGespeichert">📚 Meine Schwünge</button>
-      <button id="zuEinstellungen">⚙️ Einstellungen</button>
+    <div class="kopfzeile">
+      <h1>⛳ Golf Swing Coach</h1>
+      <p id="levelAnzeige" class="level-anzeige" hidden></p>
+    </div>
+    <!-- Umschalter: blendet jeweils einen der Bereiche unten ein (Etappe 8).
+         style.css setzt ihn als Tab-Leiste an den unteren Rand. Die Symbole sind
+         kleine Zeichnungen (SVG) direkt hier im HTML – nichts wird nachgeladen. -->
+    <nav class="umschalter" aria-label="Bereiche">
+      <button id="zuAnalyse" class="aktiv">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="M16 10.5 22 7v10l-6-3.5"/></svg>
+        Analyse
+      </button>
+      <button id="zuGespeichert">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 13h8M8 16.5h5"/></svg>
+        Meine Schwünge
+      </button>
+      <button id="zuEinstellungen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
+        Einstellungen
+      </button>
     </nav>
-    <p id="levelAnzeige" class="level-anzeige" hidden></p>
   </header>
 
   <main id="analyseBereich">
-    <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar -->
-    <label class="upload">
-      <input type="file" id="videoInput" accept="video/*" multiple>
-      <span>🎥 Video auswählen oder aufnehmen</span>
-    </label>
-    <p class="hinweis">Ein Video mit einem Schlag, ein langes mit mehreren Schlägen – oder gleich mehrere Videos.</p>
+    <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar.
+         Die Filmtipps blendet style.css aus, sobald ein Video geladen ist. -->
+    <section class="start-karte">
+      <h2>Schwung analysieren</h2>
+      <p class="hinweis start-text">Film deinen Schlag – die App erkennt deine Körperhaltung und zeigt dir, woran du arbeiten kannst.</p>
+      <label class="upload">
+        <input type="file" id="videoInput" accept="video/*" multiple>
+        <span>🎥 Video auswählen oder aufnehmen</span>
+      </label>
+      <ul class="filmtipps">
+        <li><span aria-hidden="true">📱</span><b>Hüfthöhe</b>Höhe der Kamera</li>
+        <li><span aria-hidden="true">📏</span><b>ca. 3 m</b>Abstand zu dir</li>
+        <li><span aria-hidden="true">🧍</span><b>Ganz im Bild</b>mit Schläger</li>
+      </ul>
+      <p class="hinweis">Von vorne oder von hinten. Ein Video mit einem Schlag, ein langes mit mehreren Schlägen – oder gleich mehrere Videos.</p>
+    </section>
 
     <!-- Statuszeile: zeigt, was die App gerade macht -->
     <p id="status" class="status">Lade die Pose-Erkennung …</p>
@@ -203,9 +228,22 @@
 
   <main id="einstellungenBereich" hidden>
     <h2>⚙️ Einstellungen</h2>
-    <h3>Dein Golf-Level</h3>
-    <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
-    <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
+    <section class="einstellung">
+      <h3>Dein Golf-Level</h3>
+      <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
+      <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
+    </section>
+
+    <!-- Hell / Dunkel: steuert darstellung.js, gemerkt im localStorage unter "darstellung" -->
+    <section class="einstellung">
+      <h3>🌗 Darstellung</h3>
+      <div id="darstellungAuswahl" class="segmente" role="radiogroup" aria-label="Darstellung">
+        <label><input type="radio" name="darstellung" value="auto"> Automatisch</label>
+        <label><input type="radio" name="darstellung" value="hell"> Hell</label>
+        <label><input type="radio" name="darstellung" value="dunkel"> Dunkel</label>
+      </div>
+      <p class="hinweis">Automatisch folgt der Einstellung deines iPhones. Tipp für die Range: Hell ist in der Sonne besser lesbar.</p>
+    </section>
 
     <!-- Coach mit Claude (Etappe 11b): freiwillig, eigener API-Schlüssel nur auf diesem Gerät -->
     <section class="coach-einstellung">

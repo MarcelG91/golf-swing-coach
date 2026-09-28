@@ -1,19 +1,84 @@
-/* Farben an einer Stelle, damit man sie leicht ändern kann */
+/* =====================================================================
+   Design-Grundlagen: alle Farben, Abstände und Rundungen an einer Stelle.
+   Dunkel ist der Standard. Hell kommt, wenn das iPhone auf hell steht
+   (prefers-color-scheme) oder wenn man in den Einstellungen "Hell" wählt
+   (dann setzt darstellung.js <html data-darstellung="hell">).
+   ===================================================================== */
 :root {
-  --hintergrund: #0f1f17;
-  --flaeche: #173326;
+  color-scheme: dark; /* Browser-eigene Teile (Auswahllisten, Häkchen) passen sich an */
+  --grund: #0c1813;          /* Seitenhintergrund */
+  --flaeche: #14271e;        /* Karten, Kästen */
+  --flaeche-innen: #0f1f17;  /* Karte in einer Karte */
+  --rand: #24473a;
   --text: #eef5f0;
-  --text-leise: #a9c2b3;
-  --akzent: #4ade80;
+  --text-leise: #a3bcad;
+  --akzent: #4ade80;         /* Hauptfarbe: wichtige Knöpfe, aktive Auswahl */
+  --auf-akzent: #052e16;     /* Schrift auf einem grünen Knopf */
+
+  /* Bewertungsfarben der Karten */
+  --gut: #4ade80;
+  --achtung: #fbbf24;
+  --verbessern: #f87171;
+  --unsicher: #64748b;
+  --info: #7dd3fc;
+  --auf-farbe: #06140c;      /* Schrift auf den farbigen Abzeichen */
+  --rot-text: #ef4444;
+  --gelb-text: #facc15;
+
+  /* Kleine farbige Kästen in den Karten */
+  --tipp-grund: #0b2a1c;
+  --gefuehl-grund: #0b2238;
+  --gedanke-verlauf: #1d4a33;
+  --skala-rot: #4a2a2a;
+  --skala-gut: #2f7a4f;
+  --skala-achtung: #6b5a1e;
+
+  --schatten: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 20px rgba(0, 0, 0, 0.25);
+  --r-klein: 10px;           /* Rundung: Knöpfe, Eingabefelder */
+  --r: 14px;                 /* Rundung: Karten */
+  --r-gross: 20px;           /* Rundung: große Kästen */
+  --leiste-hoehe: 64px;      /* Tab-Leiste unten (ohne Home-Balken) */
+}
+
+/* Heller Farbsatz. Er steht zweimal da, weil CSS "automatisch hell ODER
+   von Hand hell gewählt" nicht in einer einzigen Regel ausdrücken kann. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-darstellung="dunkel"]) {
+    color-scheme: light;
+    --grund: #f2f6f3; --flaeche: #ffffff; --flaeche-innen: #f1f5f2; --rand: #d6e3da;
+    --text: #10231a; --text-leise: #53675b; --akzent: #15803d; --auf-akzent: #ffffff;
+    --gut: #15803d; --achtung: #b45309; --verbessern: #dc2626; --info: #0369a1; --auf-farbe: #ffffff;
+    --rot-text: #dc2626; --gelb-text: #a16207;
+    --tipp-grund: #e6f5eb; --gefuehl-grund: #e7f0fb; --gedanke-verlauf: #d4f3df;
+    --skala-rot: #f5d0d0; --skala-gut: #86d3a3; --skala-achtung: #f1da8f;
+    --schatten: 0 1px 2px rgba(16, 35, 26, 0.06), 0 6px 20px rgba(16, 35, 26, 0.08);
+  }
+}
+:root[data-darstellung="hell"] {
+  color-scheme: light;
+  --grund: #f2f6f3; --flaeche: #ffffff; --flaeche-innen: #f1f5f2; --rand: #d6e3da;
+  --text: #10231a; --text-leise: #53675b; --akzent: #15803d; --auf-akzent: #ffffff;
+  --gut: #15803d; --achtung: #b45309; --verbessern: #dc2626; --info: #0369a1; --auf-farbe: #ffffff;
+  --rot-text: #dc2626; --gelb-text: #a16207;
+  --tipp-grund: #e6f5eb; --gefuehl-grund: #e7f0fb; --gedanke-verlauf: #d4f3df;
+  --skala-rot: #f5d0d0; --skala-gut: #86d3a3; --skala-achtung: #f1da8f;
+  --schatten: 0 1px 2px rgba(16, 35, 26, 0.06), 0 6px 20px rgba(16, 35, 26, 0.08);
 }
 
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
+  /* Systemschrift: auf dem iPhone SF Pro – sieht gut aus und muss nicht geladen werden */
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: var(--hintergrund);
+  line-height: 1.45;
+  background: var(--grund);
   color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  /* Platz für Notch / Home-Balken, unten zusätzlich für die Tab-Leiste */
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    calc(var(--leiste-hoehe) + env(safe-area-inset-bottom) + 12px) env(safe-area-inset-left);
 }
 
 header, main {
@@ -21,33 +86,223 @@ header, main {
   margin: 0 auto;
   padding: 16px;
 }
+main { padding-top: 4px; }
 
-h1 { margin: 8px 0 4px; font-size: 1.6rem; }
-.untertitel { margin: 0; color: var(--text-leise); }
+h1 { margin: 0; font-size: 1.3rem; letter-spacing: -0.01em; }
+h2 { font-size: 1.25rem; letter-spacing: -0.01em; }
+main > h2 { margin: 8px 0 14px; }
+.hinweis { margin: 0 0 10px; color: var(--text-leise); font-size: 0.9rem; }
+.klein-text { font-size: 0.8rem; margin-top: 12px; }
+.status { color: var(--text-leise); min-height: 1.4em; font-size: 0.95rem; }
 
-/* Upload-Button: das echte Datei-Feld wird versteckt, der Text ist klickbar */
-.upload input { display: none; }
-.upload span {
-  display: inline-block;
-  padding: 12px 20px;
+a, summary { color: var(--akzent); }
+summary { cursor: pointer; font-size: 0.9rem; }
+
+/* Sichtbarer Rahmen, wenn man per Tastatur unterwegs ist (nicht beim Tippen mit dem Finger) */
+:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; }
+
+/* ---------------------------------------------------------------------
+   Knöpfe: ein System mit drei Sorten
+   .haupt  = die eine wichtigste Aktion (grün, gefüllt)
+   .klein  = Nebenaktion (nur Rand)
+   .gefahr = löscht endgültig (rot)
+   --------------------------------------------------------------------- */
+button {
+  font: inherit;
+  -webkit-tap-highlight-color: transparent; /* kein grauer Blitz beim Antippen auf dem iPhone */
+  touch-action: manipulation;               /* kein Zoom bei schnellem Doppeltippen */
+  transition: transform 0.1s, background-color 0.15s, border-color 0.15s;
+}
+/* Kleines "Einsinken" beim Antippen – fühlt sich wie ein echter Knopf an */
+button:active:not(:disabled) { transform: scale(0.97); }
+button:disabled { opacity: 0.5; cursor: wait; }
+
+button.haupt {
+  padding: 12px 18px;
   background: var(--akzent);
-  color: #06140c;
-  font-weight: 600;
-  border-radius: 10px;
+  color: var(--auf-akzent);
+  font-weight: 650;
+  border: 1px solid var(--akzent);
+  border-radius: var(--r-klein);
+  font-size: 1rem;
+  cursor: pointer;
+}
+button.klein {
+  margin-top: 8px;
+  padding: 9px 13px;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+button.gefahr {
+  padding: 10px 16px;
+  background: #b91c1c;
+  color: #fff;
+  border: 1px solid #b91c1c;
+  border-radius: var(--r-klein);
+  font-size: 1rem;
+  font-weight: 650;
   cursor: pointer;
 }
 
-.status { color: var(--text-leise); min-height: 1.4em; }
+/* ---------------------------------------------------------------------
+   Kopf und Tab-Leiste
+   --------------------------------------------------------------------- */
+.kopfzeile { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+.level-anzeige {
+  margin: 0;
+  padding: 4px 10px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: 999px;
+  color: var(--text-leise);
+  font-size: 0.85rem;
+}
 
+/* Die drei Bereiche als Leiste unten – wie bei iPhone-Apps, gut mit dem Daumen erreichbar.
+   Bewusst ohne Weichzeichner-Effekt (backdrop-filter): der kostet beim Abspielen
+   des Videos Rechenzeit. */
+.umschalter {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  padding: 6px max(8px, env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));
+  min-height: calc(var(--leiste-hoehe) + env(safe-area-inset-bottom));
+  background: var(--flaeche);
+  border-top: 1px solid var(--rand);
+}
+.umschalter button {
+  flex: 1;
+  max-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 4px;
+  background: none;
+  border: none;
+  color: var(--text-leise);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.umschalter button.aktiv { color: var(--akzent); }
+.umschalter svg { width: 26px; height: 26px; }
+
+/* Hinweis "Als App installieren" (steuert pwa.js) */
+.install-hinweis {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: calc(100% - 32px);
+  max-width: 868px;
+  margin: 12px auto 0;
+  padding: 12px 14px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: var(--r);
+  box-shadow: var(--schatten);
+  font-size: 0.95rem;
+}
+.install-hinweis span { flex: 1; }
+.install-hinweis .haupt { padding: 8px 12px; }
+.install-hinweis .schliessen {
+  background: none;
+  border: none;
+  color: var(--text-leise);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.fuss {
+  max-width: 900px;
+  margin: 8px auto 16px;
+  padding: 0 16px;
+  color: var(--text-leise);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* ---------------------------------------------------------------------
+   Start: Video auswählen mit kurzen Filmtipps
+   --------------------------------------------------------------------- */
+.start-karte {
+  padding: 18px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-gross);
+  box-shadow: var(--schatten);
+}
+.start-karte h2 { margin: 0 0 4px; }
+.start-karte .hinweis:last-child { margin: 12px 0 0; }
+
+/* Upload-Knopf: das echte Datei-Feld wird versteckt, der Text ist klickbar */
+.upload { display: block; margin-top: 14px; }
+.upload input { display: none; }
+.upload span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 54px;
+  padding: 12px 16px;
+  text-align: center;
+  background: var(--akzent);
+  color: var(--auf-akzent);
+  font-size: 1.05rem;
+  font-weight: 650;
+  border-radius: var(--r);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.upload span:active { transform: scale(0.98); }
+
+.filmtipps {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.filmtipps li {
+  padding: 10px 6px;
+  background: var(--flaeche-innen);
+  border-radius: var(--r-klein);
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: var(--text-leise);
+}
+.filmtipps li span { display: block; font-size: 1.3rem; margin-bottom: 2px; }
+.filmtipps b { display: block; color: var(--text); font-size: 0.9rem; }
+
+/* Sobald ein Video geladen ist, braucht man die Filmtipps nicht mehr.
+   :has() = "enthält" – so geht das ohne zusätzliches JavaScript. */
+#analyseBereich:has(#buehne:not([hidden])) :is(.start-text, .filmtipps, .start-karte .hinweis:last-child) { display: none; }
+#analyseBereich:has(#buehne:not([hidden])) .start-karte h2 { display: none; }
+#analyseBereich:has(#buehne:not([hidden])) .upload { margin-top: 0; }
+
+/* ---------------------------------------------------------------------
+   Video mit Skelett und Steuerung
+   --------------------------------------------------------------------- */
 /* Video und Canvas liegen exakt übereinander.
    --ratio (Breite/Höhe des Videos) setzt app.js, damit auch Hochkant-Videos passen. */
 .buehne {
   position: relative;
   width: min(100%, calc(70vh * var(--ratio, 1.78)));
   margin: 0 auto;
-  border-radius: 12px;
+  border-radius: var(--r);
   overflow: hidden;
   background: #000;
+  box-shadow: var(--schatten);
 }
 .buehne video { display: block; width: 100%; height: auto; }
 .buehne canvas {
@@ -70,32 +325,28 @@ h1 { margin: 8px 0 4px; font-size: 1.6rem; }
   padding: 10px 14px;
   background: var(--flaeche);
   color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
   font-size: 1rem;
   cursor: pointer;
 }
 .steuerung label { display: flex; gap: 6px; align-items: center; }
+.steuerung input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--akzent); }
+.steuerung button.haupt { background: var(--akzent); color: var(--auf-akzent); border-color: var(--akzent); }
 
-[hidden] { display: none !important; }
-
-/* --- Etappe 3: Analyse und Ergebnis --- */
-.steuerung button.haupt {
-  background: var(--akzent);
-  color: #06140c;
-  font-weight: 600;
-  border-color: var(--akzent);
-}
-button:disabled { opacity: 0.5; cursor: wait; }
-
+/* ---------------------------------------------------------------------
+   Ergebnis der Analyse
+   --------------------------------------------------------------------- */
 .ergebnis {
   margin-top: 20px;
   padding: 16px;
   background: var(--flaeche);
-  border-radius: 12px;
+  border: 1px solid var(--rand);
+  border-radius: var(--r-gross);
+  box-shadow: var(--schatten);
 }
-.ergebnis h2 { font-size: 1.1rem; margin: 8px 0; }
-.hinweis { margin: 0 0 10px; color: var(--text-leise); font-size: 0.9rem; }
+.ergebnis h2 { font-size: 1.15rem; margin: 8px 0; }
+.ergebnis h3 { font-size: 1.05rem; margin: 22px 0 6px; }
 
 .phasen {
   display: grid;
@@ -105,275 +356,71 @@ button:disabled { opacity: 0.5; cursor: wait; }
 .phasen button {
   padding: 12px;
   text-align: left;
-  background: var(--hintergrund);
+  background: var(--flaeche-innen);
   color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 10px;
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
   font-size: 1rem;
   cursor: pointer;
 }
 .phasen button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
 .phasen small { display: block; color: var(--text-leise); margin-top: 2px; }
 
-/* --- Etappe 4+5: Bewertungskarten --- */
+/* Bewertungskarten: die Farbe links zeigt gut / achtung / verbessern */
 .kennzahlen { display: grid; gap: 10px; }
 .karte {
   padding: 12px 14px;
-  background: var(--hintergrund);
-  border-radius: 10px;
-  border-left: 5px solid var(--farbe, #64748b);
+  background: var(--flaeche-innen);
+  border-radius: var(--r-klein);
+  border-left: 5px solid var(--farbe, var(--unsicher));
 }
-.karte.gut { --farbe: #4ade80; }
-.karte.achtung { --farbe: #fbbf24; }
-.karte.verbessern { --farbe: #f87171; }
-.karte.unsicher { --farbe: #64748b; }
+.karte.gut { --farbe: var(--gut); }
+.karte.achtung { --farbe: var(--achtung); }
+.karte.verbessern { --farbe: var(--verbessern); }
+.karte.unsicher { --farbe: var(--unsicher); }
 .karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .karte-kopf strong { font-size: 1.05rem; }
 .karte .wert { font-size: 1.3rem; font-weight: 700; color: var(--farbe); }
 .karte .abzeichen {
-  font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-  padding: 2px 8px; border-radius: 999px; background: var(--farbe); color: #06140c;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  padding: 2px 8px; border-radius: 999px; background: var(--farbe); color: var(--auf-farbe);
 }
 .karte p { margin: 6px 0 0; line-height: 1.45; }
 .karte .detail { color: var(--text-leise); font-size: 0.85rem; }
-.karte .tipp { background: #0b2a1c; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
-.klein-text { font-size: 0.8rem; margin-top: 12px; }
+.karte .tipp { background: var(--tipp-grund); padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
 
-/* --- Technik-Tipps: Baustellen, Bereiche, "Im Video zeigen" --- */
-.ergebnis h3 { font-size: 1.05rem; margin: 22px 0 6px; }
 .kennzahlen h4 { margin: 10px 0 0; font-size: 0.95rem; color: var(--text-leise); }
-.karte .gefuehl { background: #0b2238; padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
+.karte .gefuehl { background: var(--gefuehl-grund); padding: 8px 10px; border-radius: 8px; margin-top: 8px; }
 .karte details { margin-top: 8px; }
-.karte summary { cursor: pointer; color: var(--akzent); font-size: 0.9rem; }
 .karte button.zeigen {
   margin-top: 10px;
   padding: 8px 12px;
   background: transparent;
   color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
   font-size: 0.9rem;
   cursor: pointer;
 }
 .karte button.zeigen:hover { border-color: var(--akzent); }
 #baustellenListe .karte { border-left-width: 7px; }
 .legende { display: block; margin-top: 2px; }
-.legende .rot { color: #ef4444; }
-.legende .gelb { color: #facc15; }
+.legende .rot { color: var(--rot-text); }
+.legende .gelb { color: var(--gelb-text); }
 
-.warnungen { color: #fbbf24; padding-left: 20px; }
+.warnungen { color: var(--achtung); padding-left: 20px; }
 .warnungen:empty { display: none; }
 
-button.klein {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: transparent;
-  color: var(--text-leise);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-/* --- Etappe 7: Installationshinweis und Fußzeile --- */
-body {
-  /* Platz für Notch / Home-Balken, wenn die App im Vollbild läuft */
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
-.install-hinweis {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  width: calc(100% - 32px);
-  max-width: 868px;
-  margin: 12px auto 0;
-  padding: 12px 14px;
-  background: var(--flaeche);
-  border: 1px solid #2c5a43;
-  border-radius: 12px;
-  line-height: 1.4;
-}
-.install-hinweis span { flex: 1; }
-.install-hinweis .haupt {
-  padding: 8px 12px;
-  background: var(--akzent);
-  color: #06140c;
-  font-weight: 600;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.install-hinweis .schliessen {
-  background: none;
-  border: none;
-  color: var(--text-leise);
-  font-size: 1.1rem;
-  cursor: pointer;
-  padding: 4px 8px;
-}
-.fuss {
-  max-width: 900px;
-  margin: 8px auto 24px;
-  padding: 0 16px;
-  color: var(--text-leise);
-  font-size: 0.8rem;
-  text-align: center;
-}
-
-/* --- Etappe 8: Speichern und Meine Schwünge --- */
-.umschalter { display: flex; gap: 8px; margin-top: 12px; }
-.umschalter button {
-  flex: 1;
-  padding: 10px 12px;
-  background: var(--flaeche);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-.umschalter button.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
-.level-anzeige { margin: 8px 0 0; color: var(--text-leise); font-size: 0.9rem; }
-
-.level-auswahl { display: grid; gap: 8px; max-width: 620px; }
-.level-auswahl label {
-  display: grid;
-  grid-template-columns: 20px 30px 1fr;
-  gap: 2px 10px;
-  align-items: center;
-  padding: 12px;
-  text-align: left;
-  background: var(--flaeche);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
-  cursor: pointer;
-}
-.level-auswahl label.aktiv { border-color: var(--akzent); box-shadow: inset 3px 0 var(--akzent); }
-.level-auswahl input { width: 18px; height: 18px; accent-color: var(--akzent); }
-.level-auswahl .symbol { grid-row: span 2; font-size: 1.5rem; }
-.level-auswahl small { color: var(--text-leise); }
-.level-vorschlag { margin: 12px 0 18px; padding: 12px; border-left: 4px solid var(--akzent); background: var(--flaeche); }
-.level-vorschlag p { margin: 0 0 8px; }
-.level-vorschlag button { margin: 4px 8px 0 0; }
-
-.speichern { margin-top: 24px; padding-top: 12px; border-top: 1px solid #2c5a43; }
-.formular { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
-.formular label { display: grid; gap: 4px; font-size: 0.9rem; color: var(--text-leise); }
-.formular .breit { grid-column: 1 / -1; }
-.formular input, .formular select {
-  padding: 10px;
-  background: var(--hintergrund);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
-  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
-}
-.auswahl { display: grid; gap: 6px; margin-bottom: 12px; }
-.auswahl label { display: flex; gap: 10px; align-items: center; }
-.auswahl input { width: 20px; height: 20px; }
-.auswahl small { color: var(--text-leise); }
-button.haupt {
-  padding: 12px 18px;
-  background: var(--akzent);
-  color: #06140c;
-  font-weight: 600;
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.sitzungen { display: grid; gap: 10px; }
-.sitzungen button {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  padding: 10px;
-  text-align: left;
-  background: var(--flaeche);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 12px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-.sitzungen img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
-.sitzungen small { display: block; color: var(--text-leise); margin-top: 2px; }
-/* Sitzung ohne Video und ohne Vorschaubild: Platzhalter statt Bild */
-.sitzungen .ohne-bild {
-  display: grid;
-  place-items: center;
-  width: 72px;
-  height: 72px;
-  flex-shrink: 0;
-  border-radius: 8px;
-  background: var(--hintergrund);
-  font-size: 1.8rem;
-}
-
-/* --- Speicher verwalten: Daten auf diesem Gerät, Rückfrage vor dem Löschen --- */
-.daten { margin-top: 28px; padding-top: 12px; border-top: 1px solid #2c5a43; max-width: 620px; }
-.daten h4 { margin: 18px 0 4px; font-size: 1rem; }
-.daten-zeile { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-.daten-zeile select {
-  padding: 8px;
-  background: var(--hintergrund);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 8px;
-  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
-}
-.daten-zeile button.klein { margin-top: 0; }
-
-/* Rot = hier wird endgültig gelöscht */
-button.gefahr {
-  padding: 10px 16px;
-  background: #7f1d1d;
-  color: #fff;
-  border: 1px solid #ef4444;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.loesch-dialog {
-  width: min(520px, calc(100vw - 32px));
-  padding: 18px;
-  background: var(--flaeche);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 14px;
-}
-.loesch-dialog::backdrop { background: rgba(0, 0, 0, 0.65); } /* abgedunkelte Seite dahinter */
-.loesch-dialog h2 { margin: 0 0 10px; font-size: 1.15rem; }
-.loesch-dialog p { margin: 12px 0 4px; }
-.loesch-dialog ul { margin: 0; padding-left: 20px; line-height: 1.45; }
-.loesch-dialog .warnung { color: #fbbf24; }
-.loesch-dialog .haken { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; cursor: pointer; }
-.loesch-dialog .haken input { width: 20px; height: 20px; flex-shrink: 0; accent-color: #ef4444; }
-.loesch-dialog .knoepfe { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 18px; }
-.loesch-dialog .knoepfe button:first-child {
-  padding: 10px 16px;
-  background: var(--hintergrund);
-  color: var(--text);
-  border: 1px solid #2c5a43;
-  border-radius: 10px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-.loesch-dialog button:disabled { cursor: not-allowed; }
-
-/* --- Tipps neu: Schwunggedanke, Wisch-Karten, Strichfigur, Skala, Übung --- */
+/* Schwunggedanke für die Range */
 .gedanke-oben {
   margin: 8px 0 16px;
   padding: 14px 16px;
-  background: linear-gradient(135deg, #1d4a33, var(--hintergrund));
-  border: 1px solid #2c5a43;
-  border-radius: 16px;
+  background: linear-gradient(135deg, var(--gedanke-verlauf), var(--flaeche-innen));
+  border: 1px solid var(--rand);
+  border-radius: var(--r);
 }
 .gedanke-oben small { color: var(--text-leise); font-size: 0.8rem; }
-.gedanke-oben div { font-size: 1.4rem; font-weight: 700; margin-top: 2px; }
+.gedanke-oben div { font-size: 1.4rem; font-weight: 700; margin-top: 2px; line-height: 1.3; }
 
 .karten-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
 .karten-kopf .hinweis { margin: 0; white-space: nowrap; }
@@ -392,8 +439,6 @@ button.gefahr {
   -webkit-overflow-scrolling: touch;
 }
 .karten::-webkit-scrollbar { display: none; }
-/* Sichtbarer Rahmen, wenn die Karten per Tastatur ausgewählt sind */
-.karten:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; }
 .karte.baustelle {
   flex: 0 0 86%;
   max-width: 440px;
@@ -402,37 +447,40 @@ button.gefahr {
   flex-direction: column;
   border-left: none;
   border-top: 5px solid var(--farbe);
-  border-radius: 16px;
+  border-radius: var(--r);
   padding: 14px;
 }
 .karte .moment { font-size: 0.8rem; color: var(--text-leise); }
 .karte .kurz { font-size: 1.15rem; font-weight: 700; line-height: 1.3; margin-top: 8px; }
 .karte.baustelle .kurz { font-size: 1.25rem; }
-.karte .warum { color: #d6e6dc; }
+.karte .warum { color: var(--text); opacity: 0.9; }
 .karte .warum b { color: var(--farbe); }
-.karte .gedanke { background: #0b2238; padding: 9px 12px; border-radius: 10px; font-weight: 600; margin-top: 10px; }
+.karte .gedanke { background: var(--gefuehl-grund); padding: 9px 12px; border-radius: var(--r-klein); font-weight: 600; margin-top: 10px; }
 
 .punkte { display: flex; justify-content: center; gap: 7px; margin: 10px 0 0; }
-.punkte i { width: 7px; height: 7px; border-radius: 50%; background: #2c5a43; transition: width 0.2s; }
+.punkte i { width: 7px; height: 7px; border-radius: 50%; background: var(--rand); transition: width 0.2s; }
 .punkte i.aktiv { width: 20px; border-radius: 4px; background: var(--akzent); }
 
-/* Strichfigur aus deinen Posedaten */
-.figur { background: #0b1812; border-radius: 12px; margin-top: 10px; }
+/* Strichfigur aus deinen Posedaten. Der Kasten bleibt auch im hellen Modus dunkel,
+   weil die Figuren (app.js, uebungsbilder.js) hell auf dunkel gezeichnet sind. */
+.figur { background: #0b1812; border-radius: var(--r-klein); margin-top: 10px; }
 .figur svg { display: block; width: 100%; height: 170px; }
-.figur .legende { display: flex; justify-content: center; gap: 14px; margin: 0; padding: 0 0 6px; font-size: 0.75rem; color: var(--text-leise); }
+.figur .legende { display: flex; justify-content: center; gap: 14px; margin: 0; padding: 0 0 6px; font-size: 0.75rem; color: #a3bcad; }
 .figur .legende span::before { content: ""; display: inline-block; width: 14px; height: 3px; margin-right: 5px; vertical-align: middle; border-radius: 2px; }
+.figur .legende .rot { color: #a3bcad; }
+.figur .legende .gelb { color: #a3bcad; }
 .figur .legende .rot::before { background: #ef4444; }
 .figur .legende .gelb::before { background: #facc15; }
 
 /* Skala mit Zielbereich */
 .skala { margin-top: 12px; }
-.skala .balken { position: relative; height: 10px; border-radius: 999px; background: #4a2a2a; }
+.skala .balken { position: relative; height: 10px; border-radius: 999px; background: var(--skala-rot); }
 .skala .zone { position: absolute; top: 0; bottom: 0; }
-.skala .zone.gut { background: #2f7a4f; }
-.skala .zone.achtung { background: #6b5a1e; }
+.skala .zone.gut { background: var(--skala-gut); }
+.skala .zone.achtung { background: var(--skala-achtung); }
 .skala .marke {
   position: absolute; top: -5px; width: 4px; height: 20px; margin-left: -2px;
-  background: var(--text); border-radius: 2px; box-shadow: 0 0 0 2px var(--hintergrund);
+  background: var(--text); border-radius: 2px; box-shadow: 0 0 0 2px var(--flaeche-innen);
 }
 .skala .beschriftung { display: flex; justify-content: space-between; gap: 8px; margin-top: 6px; font-size: 0.78rem; color: var(--text-leise); }
 .skala .beschriftung strong { color: var(--farbe); }
@@ -443,32 +491,198 @@ button.gefahr {
   list-style: none;
   padding: 11px 12px;
   background: var(--akzent);
-  color: #06140c;
+  color: var(--auf-akzent);
   font-weight: 700;
   font-size: 0.95rem;
-  border-radius: 10px;
+  border-radius: var(--r-klein);
 }
 .karte details.uebung summary::-webkit-details-marker { display: none; }
 .karte details.uebung ol { margin: 10px 0 0; padding-left: 22px; line-height: 1.45; }
 .karte details.uebung li { margin-bottom: 4px; }
+.karte details.uebung button.starten { width: 100%; margin-top: 8px; }
 /* "Im Video zeigen" sitzt immer unten, auch wenn die Nachbarkarte länger ist */
 .karte.baustelle button.zeigen { margin-top: auto; align-self: flex-start; }
 .karte.baustelle > :nth-last-child(2) { margin-bottom: 12px; }
 
 .gut-liste { list-style: none; padding: 0; margin: 10px 0 4px; display: grid; gap: 8px; }
 .gut-liste li { display: flex; gap: 8px; line-height: 1.35; }
-.gut-liste li::before { content: "✓"; color: var(--akzent); font-weight: 800; }
+.gut-liste li::before { content: "✓"; color: var(--gut); font-weight: 800; }
 
-/* --- Übungsmodus: Vollbild, große Schrift und große Knöpfe für die Range --- */
+/* ---------------------------------------------------------------------
+   Speichern, Meine Schwünge, Formulare
+   --------------------------------------------------------------------- */
+.speichern { margin-top: 24px; padding-top: 12px; border-top: 1px solid var(--rand); }
+.speichern > button.klein { margin-right: 6px; }
+.formular { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+.formular label { display: grid; gap: 4px; font-size: 0.9rem; color: var(--text-leise); }
+.formular .breit { grid-column: 1 / -1; }
+.formular input, .formular select, .daten-zeile select {
+  padding: 10px;
+  background: var(--flaeche-innen);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
+}
+.auswahl { display: grid; gap: 6px; margin-bottom: 12px; }
+.auswahl label { display: flex; gap: 10px; align-items: center; }
+.auswahl input { width: 20px; height: 20px; accent-color: var(--akzent); }
+.auswahl small { color: var(--text-leise); }
+
+.sitzungen { display: grid; gap: 10px; }
+.sitzungen button {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 10px;
+  text-align: left;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r);
+  box-shadow: var(--schatten);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.sitzungen img { width: 72px; height: 72px; object-fit: cover; border-radius: var(--r-klein); background: #000; flex-shrink: 0; }
+.sitzungen small { display: block; color: var(--text-leise); margin-top: 2px; }
+/* Sitzung ohne Video und ohne Vorschaubild: Platzhalter statt Bild */
+.sitzungen .ohne-bild {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: var(--r-klein);
+  background: var(--flaeche-innen);
+  font-size: 1.8rem;
+}
+
+/* ---------------------------------------------------------------------
+   Einstellungen: Abschnitte als Karten
+   --------------------------------------------------------------------- */
+#einstellungenBereich > section,
+#einstellungenBereich > .einstellung {
+  max-width: 620px;
+  margin: 0 0 16px;
+  padding: 16px;
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-gross);
+  box-shadow: var(--schatten);
+}
+#einstellungenBereich h3 { margin: 0 0 6px; font-size: 1.05rem; }
+
+.level-auswahl { display: grid; gap: 8px; }
+/* Raster: Kreis | Symbol | Name und darunter die Beschreibung */
+.level-auswahl label {
+  display: grid;
+  grid-template-columns: 20px 30px 1fr;
+  gap: 2px 10px;
+  align-items: center;
+  padding: 12px;
+  text-align: left;
+  background: var(--flaeche-innen);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+  cursor: pointer;
+}
+.level-auswahl label.aktiv { border-color: var(--akzent); box-shadow: 0 0 0 1px var(--akzent); }
+.level-auswahl input { grid-row: span 2; width: 18px; height: 18px; accent-color: var(--akzent); }
+.level-auswahl .symbol { grid-row: span 2; font-size: 1.5rem; }
+/* Beschreibung ausdrücklich in die breite dritte Spalte – sonst rutscht sie
+   in die schmale Symbol-Spalte und wird Wort für Wort umgebrochen */
+.level-auswahl small { grid-column: 3; color: var(--text-leise); }
+
+/* Hell / Dunkel / Automatisch: drei Knöpfe nebeneinander (Segmente) */
+.segmente {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
+  margin: 8px 0 10px;
+  background: var(--flaeche-innen);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+}
+.segmente label {
+  display: block;
+  padding: 9px 4px;
+  text-align: center;
+  border-radius: 7px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-leise);
+  cursor: pointer;
+}
+/* Das echte Auswahlfeld ist unsichtbar, bleibt aber per Tastatur bedienbar */
+.segmente input { position: absolute; opacity: 0; pointer-events: none; }
+.segmente label:has(input:checked) { background: var(--flaeche); color: var(--text); box-shadow: var(--schatten); }
+.segmente label:has(input:focus-visible) { outline: 2px solid var(--akzent); }
+
+.level-vorschlag {
+  margin: 0 0 18px;
+  padding: 14px;
+  border-left: 4px solid var(--akzent);
+  background: var(--flaeche);
+  border-radius: var(--r-klein);
+}
+.level-vorschlag p { margin: 0 0 8px; }
+.level-vorschlag button { margin: 4px 8px 0 0; }
+
+.coach-einstellung ol { line-height: 1.5; padding-left: 22px; }
+.coach-einstellung .formular { margin-top: 10px; }
+.coach-einstellung > button { margin-right: 6px; }
+
+/* Speicher verwalten */
+.daten h4 { margin: 18px 0 4px; font-size: 1rem; }
+.daten-zeile { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.daten-zeile select { padding: 8px; }
+.daten-zeile button.klein { margin-top: 0; }
+
+/* ---------------------------------------------------------------------
+   Dialoge: Rückfrage vor dem Löschen, Einwilligung Coach
+   --------------------------------------------------------------------- */
+.loesch-dialog {
+  width: min(520px, calc(100vw - 32px));
+  padding: 20px;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-gross);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+}
+.loesch-dialog::backdrop { background: rgba(0, 0, 0, 0.6); } /* abgedunkelte Seite dahinter */
+.loesch-dialog h2 { margin: 0 0 10px; font-size: 1.15rem; }
+.loesch-dialog p { margin: 12px 0 4px; }
+.loesch-dialog ul { margin: 0; padding-left: 20px; line-height: 1.45; }
+.loesch-dialog .warnung { color: var(--achtung); }
+.loesch-dialog .haken { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; cursor: pointer; }
+.loesch-dialog .haken input { width: 20px; height: 20px; flex-shrink: 0; accent-color: #ef4444; }
+.loesch-dialog .knoepfe { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.loesch-dialog .knoepfe button:first-child {
+  padding: 10px 16px;
+  background: var(--flaeche-innen);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+  font-size: 1rem;
+  cursor: pointer;
+}
+.loesch-dialog button:disabled { cursor: not-allowed; }
+
+/* ---------------------------------------------------------------------
+   Übungsmodus: Vollbild, große Schrift und große Knöpfe für die Range
+   --------------------------------------------------------------------- */
 body.ohne-scrollen { overflow: hidden; }
-.karte details.uebung button.starten { width: 100%; margin-top: 8px; }
 .uebungsmodus {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 20; /* liegt über der Tab-Leiste (10) */
   display: flex;
   flex-direction: column;
-  background: var(--hintergrund);
+  background: var(--grund);
   padding: calc(env(safe-area-inset-top) + 12px) 18px calc(env(safe-area-inset-bottom) + 16px);
 }
 .uebung-oben { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 1.1rem; }
@@ -478,47 +692,50 @@ body.ohne-scrollen { overflow: hidden; }
   background: var(--flaeche); color: var(--text); font-size: 1.2rem; cursor: pointer;
 }
 .uebungsmodus .fortschritt { display: flex; gap: 6px; margin-top: 12px; }
-.uebungsmodus .fortschritt i { flex: 1; height: 4px; border-radius: 2px; background: #2c5a43; }
+.uebungsmodus .fortschritt i { flex: 1; height: 4px; border-radius: 2px; background: var(--rand); }
 .uebungsmodus .fortschritt i.fertig { background: var(--akzent); }
 .uebung-mitte {
   flex: 1; min-height: 0;
   display: flex; flex-direction: column; justify-content: center; gap: 10px;
   text-align: center;
 }
-.uebungsbild { background: #0b1812; border-radius: 16px; }
+.uebungsbild { background: #0b1812; border-radius: var(--r); }
 .uebungsbild svg { display: block; width: 100%; height: min(42vh, 340px); }
-.uebung-takt { margin: 0; min-height: 1.4em; color: var(--gelb, #facc15); font-size: 1.3rem; font-weight: 700; }
+.uebung-takt { margin: 0; min-height: 1.4em; color: var(--gelb-text); font-size: 1.3rem; font-weight: 700; }
 .uebung-mitte .hinweis { margin: 0; }
 .uebung-schritt { margin: 0; font-size: 1.45rem; font-weight: 700; line-height: 1.3; }
 .zaehlknopf {
   width: 180px; height: 180px; margin: 8px auto 0;
   border-radius: 50%; border: 6px solid var(--akzent);
   background: var(--flaeche); color: var(--text); cursor: pointer;
-  touch-action: manipulation; /* kein Zoom bei schnellem Doppeltippen */
 }
 .zaehlknopf .zahl { display: block; font-size: 3.2rem; font-weight: 800; }
 .zaehlknopf small { color: var(--text-leise); font-size: 0.95rem; }
 .zaehlknopf:active { transform: scale(0.96); }
 .uebung-unten { display: flex; gap: 10px; }
 .uebung-unten button {
-  flex: 1; padding: 16px; font-size: 1.1rem; border-radius: 12px; cursor: pointer;
-  background: transparent; color: var(--text); border: 1px solid #2c5a43;
+  flex: 1; padding: 16px; font-size: 1.1rem; border-radius: var(--r); cursor: pointer;
+  background: transparent; color: var(--text); border: 1px solid var(--rand);
 }
-.uebung-unten button.haupt { background: var(--akzent); color: #06140c; border: none; font-weight: 700; }
+.uebung-unten button.haupt { background: var(--akzent); color: var(--auf-akzent); border: none; font-weight: 700; }
 
-/* --- Coach mit Claude (Etappe 11b) --- */
-.coach { margin-top: 22px; padding-top: 14px; border-top: 1px solid #2c5a43; }
+/* ---------------------------------------------------------------------
+   Coach mit Claude (Etappe 11b)
+   --------------------------------------------------------------------- */
+.coach { margin-top: 22px; padding-top: 14px; border-top: 1px solid var(--rand); }
 .coach h3 { margin-top: 0; }
 .coach #coachAntwort { margin-bottom: 12px; }
 .coach details { margin-top: 8px; }
-.coach summary { cursor: pointer; color: var(--akzent); font-size: 0.9rem; }
 pre.vorschau {
   max-height: 260px; overflow: auto; margin: 8px 0 0; padding: 10px;
-  background: var(--hintergrund); border-radius: 8px; font-size: 0.75rem; white-space: pre-wrap;
+  background: var(--flaeche-innen); border-radius: 8px; font-size: 0.75rem; white-space: pre-wrap;
 }
-.karte.coach-antwort { --farbe: #7dd3fc; border-left-width: 5px; }
+.karte.coach-antwort { --farbe: var(--info); border-left-width: 5px; }
 .karte.coach-antwort .lob, .karte.coach-antwort .naechstes { margin-top: 8px; }
 .karte.coach-antwort .herkunft { color: var(--text-leise); font-size: 0.78rem; margin-top: 12px; }
-.coach-einstellung { margin: 18px 0 26px; }
-.coach-einstellung ol { line-height: 1.5; padding-left: 22px; }
-.coach-einstellung .formular { margin-top: 10px; }
+
+/* Wer in den iPhone-Einstellungen "Bewegung reduzieren" an hat, bekommt keine Animationen */
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  button:active:not(:disabled), .upload span:active, .zaehlknopf:active { transform: none; }
+}

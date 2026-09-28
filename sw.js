@@ -15,6 +15,7 @@ const APP_DATEIEN = [
   "./",
   "./index.html",
   "./style.css",
+  "./darstellung.js",
   "./app.js",
   "./phasen.js",
   "./kennzahlen.js",

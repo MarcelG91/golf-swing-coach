@@ -52,6 +52,13 @@ Bildschirmfoto festhalten und an Claude geben – daraus werden die nächsten Ei
 - [ ] Nur wenn du die Testschwünge nicht brauchst: „Alles löschen“ →
       Level noch gewählt? Coach-Schlüssel noch da? App offline weiter nutzbar (Flugmodus)?
 
+## 7. Neues Design (Version ≥ 0.16)
+
+- [ ] Tab-Leiste unten: liegt sie über dem Home-Balken, nicht dahinter? Alle drei Tabs gut antippbar?
+- [ ] Einstellungen → Darstellung: Hell, Dunkel, Automatisch umschalten. App neu starten – bleibt die Wahl?
+- [ ] Auf der Range in der Sonne: Hell besser lesbar? Ergebnis-Karten, Skala und Farben (gelb/rot) gut erkennbar?
+- [ ] Nach dem Laden eines Videos: verschwinden die Filmtipps, bleibt der Knopf „Video auswählen“?
+
 ## Rückmeldung an Claude
 
 Bildschirmfotos aus 1, 2 und 6 plus kurze Stichworte zu 3–5 reichen. Danach werden in

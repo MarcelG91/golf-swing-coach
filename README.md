@@ -205,7 +205,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | Datei | Aufgabe |
 |---|---|
 | `index.html` | Aufbau der Seite (Buttons, Video, Leinwand) |
-| `style.css` | Aussehen |
+| `style.css` | Aussehen: Design-Variablen (Farben, Abstände) für Hell und Dunkel, Tab-Leiste unten |
+| `darstellung.js` | Hell / Dunkel / Automatisch – läuft sofort beim Laden, damit nichts falsch aufblitzt |
 | `app.js` | Bedienung: Video laden, Pose erkennen, Skelett zeichnen, Ergebnis anzeigen |
 | `phasen.js` | Rechnet aus den Körperpunkten die Schwungphasen und das Tempo aus |
 | `kennzahlen.js` | Bewertet den Schwung (Kennzahlen, Ampel, Übungstipps) |
