@@ -1509,13 +1509,15 @@ async function frageCoach() {
   const schwung = aktuellerSchwung;
   const schluessel = leseEinstellung(SCHLUESSEL_NAME);
   if (!schwung || !schluessel) return;
-  if (!(await frageCoachEinwilligung())) return;
 
+  // Sperre SOFORT setzen – noch vor dem ersten await (Einwilligung). Sonst kämen zwei
+  // schnelle Tipps beide an der Prüfung oben vorbei und es gäbe zwei bezahlte Anfragen.
   coachLaeuft = true;
-  zeigeCoachKnopf(); // Knopf gesperrt, Hinweis "denkt nach"
+  zeigeCoachKnopf(); // Knopf gesperrt
   const level = aktuellesLevel; // Stand beim Tippen – falls du währenddessen das Level wechselst
   let Anthropic = null;
   try {
+    if (!(await frageCoachEinwilligung())) return; // "Abbrechen": finally gibt den Knopf wieder frei
     const { wichtigste, sichtbar } = coachGrundlage();
     const anfrage = baueCoachAnfrage(await coachDatenJetzt());
     try {

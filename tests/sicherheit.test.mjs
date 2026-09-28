@@ -147,3 +147,12 @@ test("Check 11b: eine Coach-Anfrage zur Zeit, Antwort nur in den eigenen Schwung
   const loesche = APP.slice(APP.indexOf("function loescheCoachSchluessel"), APP.indexOf("function coachGrundlage"));
   assert.match(loesche, /removeItem\(EINWILLIGUNG_NAME\)/, "Schlüssel löschen nimmt auch die Einwilligung zurück");
 });
+
+test("Coach: Sperre gegen Doppeltipp steht VOR dem ersten await (sonst zwei bezahlte Anfragen)", () => {
+  // Kommentarzeilen weglassen – dort darf das Wort "await" ruhig vorkommen
+  const funktion = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("// Die Coach-Antwort als Karte"))
+    .split("\n").filter((zeile) => !zeile.trim().startsWith("//")).join("\n");
+  const sperre = funktion.indexOf("coachLaeuft = true");
+  const erstesAwait = funktion.indexOf("await ");
+  assert.ok(sperre > 0 && erstesAwait > 0 && sperre < erstesAwait, "coachLaeuft = true muss vor dem ersten await stehen");
+});
