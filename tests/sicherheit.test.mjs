@@ -85,7 +85,7 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
 // ---------------------------------------------------------------
 const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
-  "tipps.js", "strichfigur.js", "uebungsbilder.js", "schwuenge.js", "gesamtauswertung.js",
+  "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
@@ -115,4 +115,15 @@ test("Check robuste Analyse: keine Umgehung der Längenprüfung, keine Fehlalarm
   // Kommt app.js nach dem 20-s-Hinweis doch noch an, verschwindet der Hinweis wieder
   assert.match(APP, /startsWith\("Die App ist nicht vollständig geladen"\)/, "S9: Hinweis wird zurückgenommen");
   assert.match(PWA, /Die App ist nicht vollständig geladen/, "S9: gleicher Text in pwa.js");
+});
+
+test("Coach (V2): Schlüssel nur im localStorage, SDK mit fester Version, nie in Speicher oder Export", () => {
+  const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
+  assert.ok(!speicher.includes("coachSchluessel"), "Der Schlüssel gehört nie in die Schwung-Datenbank");
+  assert.match(APP, /const COACH_SDK_URL = "https:\/\/cdn\.jsdelivr\.net\/npm\/@anthropic-ai\/sdk@\d+\.\d+\.\d+\/\+esm"/, "SDK-Version fest");
+  assert.equal(APP.match(/dangerouslyAllowBrowser/g)?.length, 2, "Browser-Freigabe nur an der einen Stelle (plus Kommentar)");
+  const exportTeil = APP.slice(APP.indexOf("function exportiereDaten"), APP.indexOf("function heute"));
+  assert.ok(!/localStorage|coach/i.test(exportTeil), "Posedaten-Export enthält nichts vom Coach");
+  // Die SDK-Datei wird nicht offline gespeichert (der Coach braucht ohnehin Internet)
+  assert.ok(!SERVICE_WORKER.includes("@anthropic-ai/sdk"));
 });

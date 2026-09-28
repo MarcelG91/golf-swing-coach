@@ -80,6 +80,7 @@ export function schwungZumSpeichern(schwung, { start, ende, versatz = 0 }) {
       technik: schwung.technik,
       seitenverhaeltnis: schwung.bewertung.seitenverhaeltnis,
       videoName: schwung.datei?.name ?? "",
+      coach: schwung.coach ?? null, // Antwort des Coachs (Etappe 11b), falls schon geholt
     },
     posedaten,
   };
@@ -202,6 +203,15 @@ export async function speichereSitzung(sitzung, eintraege) {
     if (video) medien.put(video, `${schwung.id}/video`);
     if (vorschau) medien.put(vorschau, `${schwung.id}/vorschau`);
   }
+  await abgeschlossen(t);
+}
+
+// Einen gespeicherten Schwung überschreiben (z. B. um die Coach-Antwort nachzutragen).
+// Fasst nur den Schwung-Eintrag an – Videos und Posedaten bleiben, wie sie sind.
+export async function aktualisiereSchwung(schwung) {
+  const db = await oeffne();
+  const t = db.transaction("schwuenge", "readwrite");
+  t.objectStore("schwuenge").put(schwung);
   await abgeschlossen(t);
 }
 

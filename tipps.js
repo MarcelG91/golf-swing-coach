@@ -316,6 +316,12 @@ export const VARIANTEN = Object.fromEntries(
   Object.entries(TIPPS).map(([id, t]) => [id, Object.keys(t).filter((v) => v !== "gut")]),
 );
 
+// Alle Tipps als Liste (jede Kennzahl, jede Spielart) – z. B. für den Systemtext des Coachs
+export function alleTipps(rechtshaender = true) {
+  const s = seiten(rechtshaender);
+  return TIPP_IDS.flatMap((id) => VARIANTEN[id].map((v) => ({ id, variante: v, ...TIPPS[id][v](s) })));
+}
+
 export function tipp(k, rechtshaender = true) {
   const eintrag = TIPPS[k.id];
   if (!eintrag) return null;

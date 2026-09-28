@@ -117,6 +117,19 @@
       <div id="baustellenListe" class="karten" tabindex="0" role="region" aria-label="Deine Baustellen, zur Seite wischen"></div>
       <div id="kartenPunkte" class="punkte" aria-hidden="true"></div>
 
+      <!-- Coach mit Claude (Etappe 11b): nur sichtbar, wenn ein eigener API-Schlüssel eingetragen ist -->
+      <section id="coachBox" class="coach" hidden>
+        <h3>🧑‍🏫 Coach mit Claude</h3>
+        <div id="coachAntwort"></div>
+        <button id="coachKnopf" class="haupt">Coach-Feedback holen</button>
+        <p id="coachHinweis" class="hinweis">Sendet deine Kennzahlen an Anthropic (Claude) · ca. 5 Cent</p>
+        <details>
+          <summary>Was wird gesendet?</summary>
+          <p class="hinweis">Genau diese Daten – dazu ein fester Anleitungstext für Claude. Nie Videos, Bilder, Posedaten, Notizen oder Datum.</p>
+          <pre id="coachVorschau" class="vorschau"></pre>
+        </details>
+      </section>
+
       <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->
       <h3>Alle Kennzahlen</h3>
       <div id="kennzahlenListe" class="kennzahlen"></div>
@@ -194,6 +207,37 @@
     <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
     <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
 
+    <!-- Coach mit Claude (Etappe 11b): freiwillig, eigener API-Schlüssel nur auf diesem Gerät -->
+    <section class="coach-einstellung">
+      <h3>🧑‍🏫 Coach mit Claude (freiwillig)</h3>
+      <p class="hinweis">
+        Der Coach schreibt dir nach einer Analyse ein kurzes, persönliches Feedback. Dafür sendet die App
+        deine Kennzahlen an Anthropic (Claude) – Videos, Bilder und Posedaten verlassen das Gerät nie.
+        Du brauchst einen eigenen API-Schlüssel; ein Feedback kostet etwa 5 Cent.
+      </p>
+      <details>
+        <summary>So richtest du den Schlüssel ein (einmalig, ca. 10 Minuten)</summary>
+        <ol>
+          <li>Auf console.anthropic.com anmelden und Guthaben aufladen (z. B. 5 €).</li>
+          <li>Einen eigenen Workspace „Golf Coach“ anlegen und dort ein monatliches Ausgabenlimit setzen (z. B. 2 €).</li>
+          <li>In diesem Workspace einen API-Schlüssel erstellen und unten einfügen.</li>
+        </ol>
+        <p class="hinweis">
+          Warum Workspace und Limit? Der Schlüssel liegt im Browser dieses Geräts. Mit Limit ist der mögliche
+          Schaden auf wenige Euro begrenzt, und du kannst den Schlüssel in der Console jederzeit sperren.
+          Er steht nie im Code, nie auf GitHub und wird beim Löschen der Schwünge nicht angefasst.
+        </p>
+      </details>
+      <div class="formular">
+        <label class="breit">API-Schlüssel
+          <input type="password" id="coachSchluessel" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
+        </label>
+      </div>
+      <button id="coachSchluesselSpeichern" class="haupt">Schlüssel speichern</button>
+      <button id="coachSchluesselLoeschen" class="klein" hidden>🗑 Schlüssel löschen</button>
+      <p id="coachSchluesselStatus" class="hinweis" aria-live="polite"></p>
+    </section>
+
     <!-- Gespeicherte Schwünge aufräumen. Alles passiert nur auf diesem Gerät. -->
     <section class="daten">
       <h3>💾 Daten auf diesem Gerät</h3>
@@ -227,6 +271,28 @@
   <!-- Rückfrage vor dem Löschen. <dialog> ist im Browser eingebaut (keine Bibliothek nötig).
        method="dialog" schließt das Fenster beim Tippen auf einen Knopf und merkt sich
        dessen value – so weiß app.js, ob "Abbrechen" oder "Löschen" gewählt wurde. -->
+  <dialog id="coachEinwilligung" class="loesch-dialog">
+    <form method="dialog">
+      <h2>Kennzahlen an Claude senden?</h2>
+      <p>Für das Coach-Feedback sendet die App an Anthropic (Claude):</p>
+      <ul>
+        <li>dein Level, die Ansicht (vorne/hinten), Rechts- oder Linkshänder</li>
+        <li>die Kennzahlen deines Levels: Name, Wert, Bewertung, Zielbereich</li>
+        <li>einen kurzen Verlauf („x von 10 im Zielbereich“)</li>
+      </ul>
+      <p><strong>Nie gesendet:</strong> Videos, Bilder, Posedaten, Notizen, Videonamen, Datum.</p>
+      <p class="hinweis">
+        Wie bei jeder Webseite sieht Anthropic dabei deine IP-Adresse und die Browserkennung. Anthropic
+        verarbeitet die Anfrage nach seinen Datenschutzbedingungen für die API (anthropic.com → Legal).
+        Die Antwort wird mit dem Schwung nur auf diesem Gerät gespeichert.
+      </p>
+      <div class="knoepfe">
+        <button value="nein" autofocus>Abbrechen</button>
+        <button value="ja" class="haupt">Einverstanden</button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="loeschDialog" class="loesch-dialog">
     <form method="dialog">
       <h2 id="loeschTitel"></h2>

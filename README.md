@@ -1,7 +1,8 @@
 # ⛳ Golf Swing Coach
 
 Eine Web-App, die Golfschwung-Videos analysiert und Verbesserungstipps gibt.
-Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen das Gerät nicht.
+Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos, Bilder und Posedaten verlassen das Gerät nie.
+Nur der freiwillige **Coach mit Claude** sendet – nach deiner Einwilligung – Kennzahlen an Anthropic.
 
 **Was die App kann:**
 
@@ -132,6 +133,19 @@ Sitzung gespeichert werden weiterhin alle Kennzahlen. Die Auswahl liegt lokal au
 Nach mindestens zehn sicheren gespeicherten Schwüngen kann die App einen Levelwechsel
 vorschlagen. Sie ändert das Level nie selbst.
 
+### Coach mit Claude (freiwillig)
+
+Mit einem **eigenen API-Schlüssel** von Anthropic (⚙️ Einstellungen) erscheint nach einer Analyse der
+Knopf „Coach-Feedback holen“. Claude bekommt nur die Kennzahlen deines Levels (Name, Wert, Bewertung,
+Zielbereich), Level, Ansicht und einen kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder
+Datum. Vor dem ersten Senden fragt die App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
+
+- Claude wählt den Fokus aus deinen gemessenen Baustellen und schreibt Lob und Begründung im Ton deines
+  Levels. Die **Übung kommt immer aus der App** (fachlich geprüft) – Claude erfindet keine Übungen.
+- Modell: Claude Opus 5, ca. 3–6 US-Cent pro Feedback. Die Antwort wird mit dem Schwung gespeichert.
+- Der Schlüssel liegt nur im Browser dieses Geräts. Am besten einen eigenen Workspace mit
+  Ausgabenlimit anlegen (Anleitung in den Einstellungen). „Alles löschen“ lässt den Schlüssel stehen.
+
 ### So sehen die Tipps aus
 
 Nach der Analyse stehen die Baustellen als **Wisch-Karten** nebeneinander (zur Seite wischen,
@@ -203,6 +217,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
 | `tipps.js` | Alle kurzen Tipp-Texte an einer Stelle: Kurzzeile, Warum, Schwunggedanke, Übung, Lob; dazu die Skala mit Zielbereich |
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
+| `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |
 | `uebungsbilder.js` | Figuren und Animationen für den Übungsmodus (Profi-Posen, Schläger, Stab, Wand, Takt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
@@ -223,6 +238,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
+| `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |

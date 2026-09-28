@@ -48,7 +48,9 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 - **Videos, Einzelbilder, Posedaten und Kennzahlen verlassen das Gerät nie.** Kein Upload,
   kein `fetch` mit Nutzerdaten. Neue Internetadressen nur nach Rückfrage; erlaubt sind
-  `cdn.jsdelivr.net` und `storage.googleapis.com` (MediaPipe und Modell).
+  `cdn.jsdelivr.net` (MediaPipe, Anthropic-SDK) und `storage.googleapis.com` (Modell).
+  **Einzige Ausnahme: der freiwillige Coach** (Etappe 11b, `coach.js`) sendet nach Einwilligung Kennzahlen
+  an `api.anthropic.com` – nie Videos, Bilder, Posedaten, Notizen, Namen oder Datum (Test: `tests/coach.test.mjs`).
 - **Keine Schlüssel, Tokens oder Passwörter im Code** – das Repo ist öffentlich.
   Coach-Feedback mit Claude (Etappe 11b): entschieden am 27.09. – eigener API-Schlüssel des
   Nutzers, nur auf dem Gerät, nur nach Einwilligung, nur Kennzahlen, einzige neue Adresse
@@ -74,6 +76,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
+| `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
@@ -97,9 +100,11 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
   Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
 - iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
-- **Reihenfolge ab jetzt: 11b → 10 → 9** (11a, `speicher-verwalten`, `tipps-neu`, `uebungsmodus` und
+- **Reihenfolge ab jetzt: 10 → 9** (11a, 11b, `speicher-verwalten`, `tipps-neu`, `uebungsmodus` und
   `robuste-analyse` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
-  11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
+  Etappe 9 muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
+- Echter Coach-Test (11b, Version ≥ 0.15.0): Marcel trägt am Mac seinen Schlüssel ein; alle drei Level
+  durchprobieren – passen Ton, Länge, Fokus? Echte Kosten pro Feedback notieren (Anzeige in der Antwort).
   Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
 - 11b vorab klären: **Teilen mit Freunden.** Die App selbst läuft bei jedem kostenlos; nur der Coach
   kostet. Optionen: eigener Schlüssel (Plan) · Schlüssel je Freund aus Marcels Workspace mit Limit ·
