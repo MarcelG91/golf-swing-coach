@@ -38,6 +38,11 @@ import {
   loescheSchwung,
   loescheSitzung,
   speicherBelegung,
+  ladeMedienGroessen,
+  loescheVideosUndBilder,
+  loescheAlles,
+  zaehleBilder,
+  sitzungenAelterAls,
 } from "./speicher.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
@@ -110,6 +115,20 @@ const schwungLoeschenBtn = $("schwungLoeschen");
 const sitzungLoeschenBtn = $("sitzungLoeschen");
 const belegungText = $("belegung");
 const sitzungsListe = $("sitzungsListe");
+// Speicher verwalten: Videos löschen, alles löschen
+const videosSitzungLoeschenBtn = $("videosSitzungLoeschen");
+const datenUebersicht = $("datenUebersicht");
+const videosAuswahl = $("videosAuswahl");
+const videosLoeschenBtn = $("videosLoeschen");
+const allesLoeschenBtn = $("allesLoeschen");
+const datenMeldung = $("datenMeldung");
+const loeschDialog = $("loeschDialog");
+const loeschTitel = $("loeschTitel");
+const loeschWeg = $("loeschWeg");
+const loeschBleibt = $("loeschBleibt");
+const loeschHakenZeile = $("loeschHakenZeile");
+const loeschHaken = $("loeschHaken");
+const loeschBestaetigen = $("loeschBestaetigen");
 
 const ctx = canvas.getContext("2d");
 const zeichner = new DrawingUtils(ctx);
@@ -639,6 +658,17 @@ function ladeDatei(datei) {
   });
 }
 
+// Video aus dem Player nehmen und seine Browser-Adresse freigeben. Sonst hält der
+// Browser die Videodatei im Arbeitsspeicher fest – auch nachdem sie gelöscht wurde.
+function gibVideoFrei() {
+  video.pause();
+  video.removeAttribute("src");
+  video.load(); // Player leert sich und lässt die Datei los
+  if (videoAdresse) URL.revokeObjectURL(videoAdresse);
+  videoAdresse = null;
+  geladeneDatei = null;
+}
+
 // Das Video, das gerade im Player steckt, Bild für Bild durchgehen.
 // vorsilbe = z. B. "Video 2 von 3 · " für die Statuszeile
 async function analysiereGeladenesVideo(vorsilbe) {
@@ -837,9 +867,9 @@ async function waehleSchwung(s) {
   if (s.datei) {
     await ladeDatei(s.datei);
   } else {
-    // Gespeichert ohne Video (Gerät konnte keinen Clip aufnehmen): nur die Auswertung zeigen
-    video.pause();
-    geladeneDatei = null;
+    // Ohne Video gespeichert (Gerät konnte keinen Clip aufnehmen) oder Video
+    // später gelöscht: nur die Auswertung zeigen
+    gibVideoFrei();
     buehne.hidden = steuerung.hidden = true;
   }
   analyseBilder = s.videoBilder;
@@ -1154,6 +1184,7 @@ function zeigeSpeicherKaesten() {
   if (gespeicherteSitzung) {
     const { datum, schlaeger, notiz } = gespeicherteSitzung;
     gespeichertInfo.textContent = `${deutschesDatum(datum)} · ${schlaeger}${notiz ? ` · ${notiz}` : ""}`;
+    videosSitzungLoeschenBtn.hidden = !alleSchwuenge.some((s) => s.datei); // noch Videos da?
     speichernBox.hidden = true;
     return;
   }
@@ -1334,7 +1365,14 @@ function zeigeBereich(welcher) {
   zuEinstellungenBtn.classList.toggle("aktiv", welcher === "einstellungen");
   if (welcher === "gespeichert") {
     video.pause();
-    zeigeMeineSchwuenge();
+    zeigeMeineSchwuenge().catch((fehler) => {
+      console.error(fehler);
+      belegungText.textContent = `Die gespeicherten Schwünge ließen sich nicht laden (${fehler.message || fehler.name}).`;
+    });
+  }
+  if (welcher === "einstellungen") {
+    datenMeldung.textContent = "";
+    zeigeDatenUebersicht();
   }
 }
 
@@ -1342,10 +1380,12 @@ async function zeigeMeineSchwuenge() {
   const belegung = await speicherBelegung();
   belegungText.textContent = belegung
     ? `Die App belegt auf diesem Gerät ${Math.round(belegung.belegt / 1e6)} MB ` +
-      `(inkl. Pose-Erkennung, möglich wären ca. ${zahl(belegung.verfuegbar / 1e9, 1)} GB).`
+      `(inkl. Pose-Erkennung, möglich wären ca. ${zahl(belegung.verfuegbar / 1e9, 1)} GB). ` +
+      "Platz schaffen kannst du unter ⚙️ Einstellungen."
     : "";
 
   const sitzungen = await ladeSitzungen();
+  const groessen = await ladeMedienGroessen(); // Welche Sitzungen haben noch Videos?
   try {
     await zeigeLevelVorschlag();
   } catch (fehler) {
@@ -1364,11 +1404,13 @@ async function zeigeMeineSchwuenge() {
     const knopf = document.createElement("button");
     knopf.innerHTML = `<img alt=""><span><strong></strong><small></small></span>`;
     const anzahl = sitzung.schwungIds.length;
+    const ohneVideo = zaehleBilder(groessen, sitzung.schwungIds).videos === 0;
     knopf.querySelector("strong").textContent = `${deutschesDatum(sitzung.datum)} · ${sitzung.schlaeger}`;
     knopf.querySelector("small").textContent =
       `${anzahl} ${anzahl === 1 ? "Schwung" : "Schwünge"}` +
       `${sitzung.level ? ` · ${LEVEL_OPTIONEN.find((option) => option.wert === sitzung.level)?.name || ""}` : ""}` +
-      `${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}`;
+      `${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}` +
+      `${ohneVideo ? " · 📊 nur Kennzahlen" : ""}`;
     // Vorschaubild des ersten Schwungs. createObjectURL macht aus der gespeicherten
     // Datei eine Adresse, die <img> anzeigen kann.
     const vorschau = await ladeMedium(`${sitzung.schwungIds[0]}/vorschau`);
@@ -1376,6 +1418,12 @@ async function zeigeMeineSchwuenge() {
       const adresse = URL.createObjectURL(vorschau);
       vorschauAdressen.push(adresse);
       knopf.querySelector("img").src = adresse;
+    } else {
+      // Kein Bild (mehr) da: Platzhalter statt leerem Kasten
+      const platzhalter = document.createElement("span");
+      platzhalter.className = "ohne-bild";
+      platzhalter.textContent = "📊";
+      knopf.querySelector("img").replaceWith(platzhalter);
     }
     knopf.addEventListener("click", () => oeffneSitzung(sitzung));
     sitzungsListe.appendChild(knopf);
@@ -1440,56 +1488,277 @@ async function zeigeLevelVorschlag(nachSpeichern = false) {
 // deshalb funktionieren Gesamtauswertung, Phasen und "Im Video zeigen" ohne Extra-Code.
 async function oeffneSitzung(sitzung) {
   setStatus("Lade gespeicherte Sitzung …");
-  const schwuenge = [];
-  for (const eintrag of await ladeSchwuengeDerSitzung(sitzung)) {
-    const posedaten = await ladeMedium(`${eintrag.id}/posedaten`);
-    const clip = await ladeMedium(`${eintrag.id}/video`);
-    schwuenge.push({
-      ...eintrag,
-      bilder: posedaten,
-      videoBilder: posedaten,
-      // Als Datei mit dem Namen des Originalvideos – so steht er überall richtig da
-      datei: clip ? new File([clip], eintrag.videoName || "Schwung", { type: clip.type }) : null,
-    });
+  try {
+    const schwuenge = [];
+    for (const eintrag of await ladeSchwuengeDerSitzung(sitzung)) {
+      const posedaten = await ladeMedium(`${eintrag.id}/posedaten`);
+      const clip = await ladeMedium(`${eintrag.id}/video`);
+      schwuenge.push({
+        ...eintrag,
+        bilder: posedaten,
+        videoBilder: posedaten,
+        // Als Datei mit dem Namen des Originalvideos – so steht er überall richtig da
+        datei: clip ? new File([clip], eintrag.videoName || "Schwung", { type: clip.type }) : null,
+      });
+    }
+    video.pause();
+    setzeErgebnisZurueck();
+    dateien = [];
+    alleSchwuenge = schwuenge;
+    gespeicherteSitzung = sitzung;
+    zeigeBereich("analyse");
+    zeigeUebersicht();
+    zeigeSpeicherKaesten();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    await waehleSchwung(alleSchwuenge[0]);
+    return true;
+  } catch (fehler) {
+    console.error(fehler);
+    setStatus(`Die Sitzung ließ sich nicht öffnen (${fehler.message || fehler.name}).`);
+    return false;
   }
-  video.pause();
-  setzeErgebnisZurueck();
-  dateien = [];
-  alleSchwuenge = schwuenge;
-  gespeicherteSitzung = sitzung;
-  zeigeBereich("analyse");
-  zeigeUebersicht();
-  zeigeSpeicherKaesten();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-  await waehleSchwung(alleSchwuenge[0]);
 }
+
+// ---------------------------------------------------------------
+// 5d. Löschen: einzelne Schwünge, Sitzungen, Videos oder alles
+// Alles passiert nur in der Datenbank auf diesem Gerät (speicher.js).
+// ---------------------------------------------------------------
+
+// "3 Videos", "1 Video" – Anzahl mit passender Einzahl/Mehrzahl
+const stueck = (anzahl, eins, mehr) => `${anzahl} ${anzahl === 1 ? eins : mehr}`;
+// Bytes als gut lesbare Größe: 3 400 000 → "3,4 MB", 140 000 000 → "140 MB"
+const mb = (bytes) => `${zahl(bytes / 1e6, bytes < 1e7 ? 1 : 0)} MB`;
+
+// Während gelöscht wird, alle Lösch-Knöpfe und den Umschalter oben sperren –
+// ein zweites Antippen soll nicht dazwischenfunken.
+function sperreLoeschKnoepfe(gesperrt) {
+  for (const knopf of [videosSitzungLoeschenBtn, schwungLoeschenBtn, sitzungLoeschenBtn, videosLoeschenBtn, allesLoeschenBtn]) {
+    knopf.disabled = gesperrt;
+  }
+  setzeKnoepfeAktiv(!gesperrt);
+}
+
+// Eine Lösch-Aktion ausführen: Knöpfe sperren, Fehler verständlich melden, Knöpfe
+// immer wieder freigeben (finally). Liefert true, wenn gelöscht wurde.
+// Die Datenbank löscht ganz oder gar nicht – "Es wurde nichts gelöscht" stimmt also.
+async function loescheMitSperre(aktion, melde = setStatus) {
+  sperreLoeschKnoepfe(true);
+  try {
+    await aktion();
+    return true;
+  } catch (fehler) {
+    console.error(fehler);
+    melde(`Löschen hat nicht geklappt (${fehler.message || fehler.name}). Es wurde nichts gelöscht.`);
+    return false;
+  } finally {
+    sperreLoeschKnoepfe(false);
+  }
+}
+
+// Rückfrage vor dem Löschen: Was wird gelöscht, was bleibt?
+// Liefert true nur, wenn "Löschen" angetippt wurde. Abbrechen, Esc oder Wegwischen
+// des Fensters liefern false – dann passiert nichts.
+// mitHaken: Der Löschen-Knopf wird erst nach dem Häkchen antippbar (für "Alles löschen").
+function frageLoeschen({ titel, weg, bleibt, knopf, mitHaken = false }) {
+  loeschTitel.textContent = titel;
+  for (const [liste, zeilen] of [[loeschWeg, weg], [loeschBleibt, bleibt]]) {
+    liste.replaceChildren(
+      ...zeilen.map((text) => {
+        const eintrag = document.createElement("li");
+        eintrag.textContent = text; // Texte immer als Text einsetzen, nie als HTML
+        return eintrag;
+      })
+    );
+  }
+  loeschHakenZeile.hidden = !mitHaken;
+  loeschHaken.checked = false;
+  loeschBestaetigen.textContent = knopf;
+  loeschBestaetigen.disabled = mitHaken;
+  loeschDialog.returnValue = ""; // sonst stünde hier noch die Antwort vom letzten Mal
+  loeschDialog.showModal();
+  return new Promise((fertig) => {
+    loeschDialog.addEventListener("close", () => fertig(loeschDialog.returnValue === "loeschen"), { once: true });
+  });
+}
+
+// Zeilen für die Rückfrage: welche Videos und Bilder weg sind (nur, was es wirklich gibt)
+function bilderZeilen({ videos, vorschauen, bytes }) {
+  return [
+    videos ? `${stueck(videos, "Video", "Videos")} (ca. ${mb(bytes)})` : null,
+    vorschauen ? stueck(vorschauen, "Vorschaubild", "Vorschaubilder") : null,
+  ].filter(Boolean);
+}
+
+// Was bei "Videos löschen" bleibt – steht so in beiden Rückfragen
+const BLEIBT_BEI_VIDEOS = [
+  "alle Kennzahlen und Bewertungen",
+  "Datum, Schläger und Notiz jeder Sitzung",
+  "die Posedaten (nur Zahlen, kein Bild)",
+  "dein Level und deine Originalvideos in der Fotos-App",
+];
 
 async function loescheAktuellenSchwung() {
   const s = aktuellerSchwung;
+  const sitzung = gespeicherteSitzung;
   if (!confirm(`Schwung ${s.nummer} wirklich löschen? Das lässt sich nicht rückgängig machen.`)) return;
-  await loescheSchwung(gespeicherteSitzung, s.id);
-  const rest = gespeicherteSitzung.schwungIds.filter((id) => id !== s.id);
+  if (!(await loescheMitSperre(() => loescheSchwung(sitzung, s.id)))) return;
+  const rest = sitzung.schwungIds.filter((id) => id !== s.id);
   // War es der letzte Schwung, ist auch die Sitzung weg (siehe speicher.js)
-  if (rest.length) await oeffneSitzung({ ...gespeicherteSitzung, schwungIds: rest });
+  if (rest.length) await oeffneSitzung({ ...sitzung, schwungIds: rest });
   else schliesseGeloeschteSitzung();
 }
 
 async function loescheGanzeSitzung() {
-  const anzahl = gespeicherteSitzung.schwungIds.length;
-  const frage = `Sitzung vom ${deutschesDatum(gespeicherteSitzung.datum)} mit ${anzahl} ${anzahl === 1 ? "Schwung" : "Schwüngen"} wirklich löschen? Das lässt sich nicht rückgängig machen.`;
+  const sitzung = gespeicherteSitzung;
+  const anzahl = sitzung.schwungIds.length;
+  const frage = `Sitzung vom ${deutschesDatum(sitzung.datum)} mit ${anzahl} ${anzahl === 1 ? "Schwung" : "Schwüngen"} wirklich löschen? Das lässt sich nicht rückgängig machen.`;
   if (!confirm(frage)) return;
-  await loescheSitzung(gespeicherteSitzung);
+  if (!(await loescheMitSperre(() => loescheSitzung(sitzung)))) return;
   schliesseGeloeschteSitzung();
+}
+
+// In der geöffneten Sitzung: nur Videos und Vorschaubilder löschen, Kennzahlen bleiben
+async function loescheVideosDerSitzung() {
+  const sitzung = gespeicherteSitzung;
+  let umfang;
+  try {
+    umfang = zaehleBilder(await ladeMedienGroessen(), sitzung.schwungIds);
+  } catch (fehler) {
+    console.error(fehler);
+    setStatus(`Die gespeicherten Videos ließen sich nicht lesen (${fehler.message || fehler.name}).`);
+    return;
+  }
+  const ja = await frageLoeschen({
+    titel: `Videos der Sitzung vom ${deutschesDatum(sitzung.datum)} löschen?`,
+    weg: bilderZeilen(umfang),
+    bleibt: BLEIBT_BEI_VIDEOS,
+    knopf: "Videos löschen",
+  });
+  if (!ja) return;
+  if (!(await loescheMitSperre(() => loescheVideosUndBilder([sitzung])))) return;
+  // Neu laden – jetzt ohne Video. Klappt das nicht, das gelöschte Video nicht weiter zeigen.
+  if (await oeffneSitzung(sitzung)) {
+    setStatus(`✓ Videos gelöscht – ca. ${mb(umfang.bytes)} frei. Die Kennzahlen sind noch da.`);
+  } else {
+    leereSitzungsAnsicht();
+    setStatus("✓ Videos gelöscht. Die Sitzung ließ sich danach nicht neu öffnen – bitte unter „Meine Schwünge“ antippen.");
+  }
+}
+
+// Einstellungen: Videos und Bilder aller (oder aller alten) Sitzungen löschen
+async function loescheVideosAusEinstellungen() {
+  datenMeldung.textContent = "";
+  const nurAlte = videosAuswahl.value === "alt";
+  let sitzungen;
+  let groessen;
+  try {
+    const alle = await ladeSitzungen();
+    sitzungen = nurAlte ? sitzungenAelterAls(alle, 30, heute()) : alle;
+    groessen = await ladeMedienGroessen();
+  } catch (fehler) {
+    console.error(fehler);
+    datenMeldung.textContent = `Die gespeicherten Daten ließen sich nicht lesen (${fehler.message || fehler.name}).`;
+    return;
+  }
+  const umfang = zaehleBilder(groessen, sitzungen.flatMap((s) => s.schwungIds));
+  if (umfang.videos + umfang.vorschauen === 0) {
+    datenMeldung.textContent = nurAlte
+      ? "In Sitzungen, die älter als 30 Tage sind, liegen keine Videos."
+      : "Es sind keine Videos gespeichert.";
+    return;
+  }
+  const betroffen = sitzungen.filter((s) => {
+    const { videos, vorschauen } = zaehleBilder(groessen, s.schwungIds);
+    return videos + vorschauen > 0;
+  });
+  const wo = stueck(betroffen.length, "Sitzung", "Sitzungen");
+  const ja = await frageLoeschen({
+    titel: nurAlte ? `Videos aus ${wo} (älter als 30 Tage) löschen?` : `Videos aus ${wo} löschen?`,
+    weg: bilderZeilen(umfang),
+    bleibt: BLEIBT_BEI_VIDEOS,
+    knopf: "Videos löschen",
+  });
+  if (!ja) return;
+  const melde = (text) => { datenMeldung.textContent = text; };
+  if (!(await loescheMitSperre(() => loescheVideosUndBilder(betroffen), melde))) return;
+  // Ist eine betroffene Sitzung gerade geöffnet, nimmt sie das Video noch im Speicher mit
+  if (gespeicherteSitzung && betroffen.some((s) => s.id === gespeicherteSitzung.id)) leereSitzungsAnsicht();
+  melde(`✓ ${stueck(umfang.videos, "Video", "Videos")} gelöscht – ca. ${mb(umfang.bytes)} frei. Die Kennzahlen sind noch da.`);
+  await zeigeDatenUebersicht();
+}
+
+// Einstellungen: alle gespeicherten Schwünge löschen (nur die Datenbank der App)
+async function loescheAllesAusEinstellungen() {
+  datenMeldung.textContent = "";
+  let sitzungen;
+  let groessen;
+  try {
+    sitzungen = await ladeSitzungen();
+    groessen = await ladeMedienGroessen();
+  } catch (fehler) {
+    console.error(fehler);
+    datenMeldung.textContent = `Die gespeicherten Daten ließen sich nicht lesen (${fehler.message || fehler.name}).`;
+    return;
+  }
+  const schwungIds = sitzungen.flatMap((s) => s.schwungIds);
+  const ja = await frageLoeschen({
+    titel: "Alle gespeicherten Schwünge löschen?",
+    weg: [
+      `${stueck(sitzungen.length, "Sitzung", "Sitzungen")} mit ${stueck(schwungIds.length, "Schwung", "Schwüngen")}`,
+      "alle Kennzahlen, Notizen und Posedaten",
+      ...bilderZeilen(zaehleBilder(groessen, schwungIds)),
+    ],
+    bleibt: [
+      "dein Level",
+      "die App selbst und die Offline-Dateien (Pose-Erkennung)",
+      "deine Originalvideos in der Fotos-App",
+      "Dateien, die du exportiert hast",
+    ],
+    knopf: "Alles löschen",
+    mitHaken: true,
+  });
+  if (!ja) return;
+  const melde = (text) => { datenMeldung.textContent = text; };
+  if (!(await loescheMitSperre(loescheAlles, melde))) return;
+  // "Level-Vorschlag erst wieder ab X Schwüngen" bezog sich auf die gelöschten Schwünge.
+  // Nur diesen einen Eintrag entfernen – das Level selbst bleibt.
+  localStorage.removeItem("levelVorschlagAb");
+  if (gespeicherteSitzung) leereSitzungsAnsicht();
+  melde("✓ Alle gespeicherten Schwünge sind gelöscht. Dein Level ist unverändert.");
+  await zeigeDatenUebersicht();
+}
+
+// Übersicht in den Einstellungen: Was liegt gerade auf dem Gerät?
+async function zeigeDatenUebersicht() {
+  try {
+    const sitzungen = await ladeSitzungen();
+    const groessen = await ladeMedienGroessen();
+    const schwungIds = sitzungen.flatMap((s) => s.schwungIds);
+    const { videos, vorschauen, bytes } = zaehleBilder(groessen, schwungIds);
+    datenUebersicht.textContent = sitzungen.length
+      ? `Gespeichert: ${stueck(sitzungen.length, "Sitzung", "Sitzungen")} · ` +
+        `${stueck(schwungIds.length, "Schwung", "Schwünge")} · ${stueck(videos, "Video", "Videos")} (ca. ${mb(bytes)})`
+      : "Noch keine Schwünge gespeichert.";
+    videosLoeschenBtn.disabled = videos + vorschauen === 0;
+    allesLoeschenBtn.disabled = sitzungen.length === 0 && groessen.size === 0;
+  } catch (fehler) {
+    console.error(fehler);
+    datenUebersicht.textContent = `Die gespeicherten Daten ließen sich nicht lesen (${fehler.message || fehler.name}).`;
+  }
+}
+
+// Die geöffnete gespeicherte Sitzung aus der Ansicht nehmen (sie wurde gelöscht)
+function leereSitzungsAnsicht() {
+  gespeicherteSitzung = null;
+  alleSchwuenge = [];
+  gibVideoFrei();
+  setzeErgebnisZurueck();
+  buehne.hidden = steuerung.hidden = true;
 }
 
 // Nach dem Löschen: alles leeren und zurück zur Liste
 function schliesseGeloeschteSitzung() {
-  video.pause();
-  gespeicherteSitzung = null;
-  alleSchwuenge = [];
-  geladeneDatei = null;
-  setzeErgebnisZurueck();
-  buehne.hidden = steuerung.hidden = true;
+  leereSitzungsAnsicht();
   zeigeBereich("gespeichert");
   setStatus("Gelöscht.");
 }
@@ -1530,6 +1799,7 @@ video.addEventListener("loadedmetadata", () => {
 });
 
 video.addEventListener("error", () => {
+  if (!video.getAttribute("src")) return; // Video wurde absichtlich entladen (gibVideoFrei)
   setStatus("Dieses Video kann der Browser nicht abspielen. Probiere es als MP4 oder in Safari.");
 });
 
@@ -1574,6 +1844,13 @@ zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
 sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
+videosSitzungLoeschenBtn.addEventListener("click", loescheVideosDerSitzung);
+videosLoeschenBtn.addEventListener("click", loescheVideosAusEinstellungen);
+allesLoeschenBtn.addEventListener("click", loescheAllesAusEinstellungen);
+// Bei "Alles löschen": Der rote Knopf wird erst mit dem Häkchen antippbar
+loeschHaken.addEventListener("change", () => {
+  loeschBestaetigen.disabled = !loeschHaken.checked;
+});
 
 // Los geht's
 zeigeLevelAuswahl();

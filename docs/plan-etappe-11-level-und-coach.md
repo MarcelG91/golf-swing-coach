@@ -234,6 +234,12 @@ kurz warten · keine Verbindung. Der Knopf wird in jedem Fall wieder freigegeben
 
 ## Zusammenspiel mit den anderen Etappen
 
+- **Speicher aufräumen (0.11.0, schon umgesetzt):** „Alles löschen“ leert nur die Schwung-Datenbank.
+  Coach-Antworten (`sitzung.coach`) verschwinden damit automatisch; der API-Schlüssel liegt im
+  `localStorage` und bleibt – `tests/sicherheit.test.mjs` verbietet `localStorage.clear()`. Beim Bau
+  von 11b die Rückfrage-Texte in `app.js` um „Coach-Antworten“ (weg) und „Coach-Schlüssel“ (bleibt)
+  ergänzen.
+
 - **Etappe 10 (Fortschritt)** nutzt das Level: Der Trainingsfokus kommt nur aus den Kennzahlen
   deines Levels. `verlaufKurz()` aus 11b wird dort durch `fortschritt.js` ersetzt.
 - **Etappe 9 (Sicherung)** steht jetzt am Ende. Bis dahin gilt: Home-Bildschirm-App und

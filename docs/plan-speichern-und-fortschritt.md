@@ -1,6 +1,6 @@
 # Plan: Schwünge speichern und Fortschritt messen
 
-Stand: 27.09.2026 · Status: **Etappe 7 und 8 umgesetzt** (Version 0.9.0), Etappe 9 und 10 offen
+Stand: 28.09.2026 · Status: **Etappe 7 und 8 umgesetzt** (Version 0.9.0), **Speicher aufräumen** umgesetzt (Version 0.11.0), Etappe 9 und 10 offen
 
 ## Ziel
 
@@ -70,6 +70,10 @@ iPhone (Safari / Home-Bildschirm-App)
   Bei 10 GB freiem Speicher reicht das für über 1.000 Schwünge.
 - Die App zeigt den belegten Speicher an und bietet an, alte Videos zu löschen,
   aber die Kennzahlen zu behalten (die reichen für den Fortschritt).
+  *Umgesetzt in 0.11.0 (Branch `speicher-verwalten`):* ⚙️ Einstellungen → „Daten auf diesem Gerät“.
+  „Videos und Bilder löschen“ (älter als 30 Tage, alle, oder je Sitzung) entfernt Clips und
+  Vorschaubilder; Kennzahlen und Posedaten bleiben – Etappe 10 kann damit weiter rechnen und alte
+  Schwünge neu auswerten. „Alles löschen“ leert die Datenbank, Level und Offline-Dateien bleiben.
 
 ## Was pro Schwung gespeichert wird
 

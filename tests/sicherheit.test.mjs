@@ -50,3 +50,30 @@ test("Alle JavaScript-Appdateien stehen in beiden Offline-Listen", () => {
 test("Kein dynamischer Code wird ausgeführt", () => {
   assert.doesNotMatch(QUELLTEXT, /\beval\s*\(|\bnew\s+Function\s*\(|setTimeout\(\s*["'`]/);
 });
+
+// ---------------------------------------------------------------
+// Speichern und Löschen bleiben lokal und fassen nur die Schwung-Datenbank an
+// ---------------------------------------------------------------
+
+// Kommentare entfernen: Dort dürfen die Wörter stehen – z. B. als Erklärung, warum
+// wir etwas NICHT tun. "https://" bleibt erhalten (vor dem // steht kein Leerzeichen).
+const ohneKommentare = (text) =>
+  text.replace(/\/\*[\s\S]*?\*\/|<!--[\s\S]*?-->/g, "").replace(/(^|\s)\/\/.*$/gm, "$1");
+const SPEICHER_CODE = ohneKommentare(QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text);
+
+test("speicher.js sendet nichts ins Netz", () => {
+  assert.doesNotMatch(SPEICHER_CODE, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|WebSocket|EventSource/);
+});
+
+test("speicher.js fasst den localStorage nicht an (Level, später Coach-Schlüssel)", () => {
+  assert.doesNotMatch(SPEICHER_CODE, /localStorage|sessionStorage/);
+});
+
+test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offline-Speicher gelöscht", () => {
+  // localStorage.clear() würde Level und Coach-Schlüssel mitlöschen,
+  // deleteDatabase() die Datenbank im Ganzen (Löschen geht nur gezielt über speicher.js).
+  assert.doesNotMatch(ohneKommentare(QUELLTEXT), /localStorage\.clear\s*\(|sessionStorage\.clear\s*\(|indexedDB\.deleteDatabase/);
+  // Alte Offline-Speicher räumt nur der Service Worker beim Update auf.
+  const ohneServiceWorker = QUELLDATEIEN.filter(({ datei }) => datei !== "sw.js").map(({ text }) => ohneKommentare(text)).join("\n");
+  assert.doesNotMatch(ohneServiceWorker, /caches\.delete\s*\(/);
+});

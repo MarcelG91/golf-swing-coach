@@ -170,6 +170,7 @@
       <div id="gespeichertBox" class="speichern" hidden>
         <h2>📚 Gespeicherte Sitzung</h2>
         <p id="gespeichertInfo" class="hinweis"></p>
+        <button id="videosSitzungLoeschen" class="klein">🎞 Videos dieser Sitzung löschen</button>
         <button id="schwungLoeschen" class="klein">🗑 Diesen Schwung löschen</button>
         <button id="sitzungLoeschen" class="klein">🗑 Ganze Sitzung löschen</button>
       </div>
@@ -189,7 +190,59 @@
     <h3>Dein Golf-Level</h3>
     <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
     <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
+
+    <!-- Gespeicherte Schwünge aufräumen. Alles passiert nur auf diesem Gerät. -->
+    <section class="daten">
+      <h3>💾 Daten auf diesem Gerät</h3>
+      <p id="datenUebersicht" class="hinweis"></p>
+
+      <h4>🎞 Videos und Bilder löschen – Kennzahlen bleiben</h4>
+      <p class="hinweis">
+        Videos brauchen fast den ganzen Platz. Kennzahlen, Notizen und Posedaten bleiben
+        erhalten, der Level-Vorschlag funktioniert weiter.
+      </p>
+      <div class="daten-zeile">
+        <select id="videosAuswahl" aria-label="Von welchen Sitzungen?">
+          <option value="alt" selected>von Sitzungen älter als 30 Tage</option>
+          <option value="alle">von allen Sitzungen</option>
+        </select>
+        <button id="videosLoeschen" class="klein">Löschen …</button>
+      </div>
+
+      <h4>🗑 Alle gespeicherten Schwünge löschen</h4>
+      <p class="hinweis">Löscht alles unter „Meine Schwünge“ – auch die Kennzahlen.</p>
+      <button id="allesLoeschen" class="gefahr">Alles löschen …</button>
+
+      <p class="hinweis klein-text">
+        Bleibt immer erhalten: dein Level, die App selbst mit den Offline-Dateien und deine
+        Originalvideos in der Fotos-App.
+      </p>
+      <p id="datenMeldung" class="status" aria-live="polite"></p>
+    </section>
   </main>
+
+  <!-- Rückfrage vor dem Löschen. <dialog> ist im Browser eingebaut (keine Bibliothek nötig).
+       method="dialog" schließt das Fenster beim Tippen auf einen Knopf und merkt sich
+       dessen value – so weiß app.js, ob "Abbrechen" oder "Löschen" gewählt wurde. -->
+  <dialog id="loeschDialog" class="loesch-dialog">
+    <form method="dialog">
+      <h2 id="loeschTitel"></h2>
+      <p><strong>Wird gelöscht:</strong></p>
+      <ul id="loeschWeg"></ul>
+      <p><strong>Bleibt erhalten:</strong></p>
+      <ul id="loeschBleibt"></ul>
+      <p class="warnung">Es gibt noch keine Sicherung – das lässt sich nicht rückgängig machen.</p>
+      <label id="loeschHakenZeile" class="haken">
+        <input type="checkbox" id="loeschHaken">
+        <span>Ich weiß, dass damit alle gespeicherten Schwünge endgültig weg sind.</span>
+      </label>
+      <div class="knoepfe">
+        <!-- autofocus: "Abbrechen" ist vorausgewählt -->
+        <button value="abbrechen" autofocus>Abbrechen</button>
+        <button value="loeschen" id="loeschBestaetigen" class="gefahr"></button>
+      </div>
+    </form>
+  </dialog>
 
   <footer class="fuss">
     <span id="version"></span> · <span id="netzStatus"></span> · <span id="offlineStatus"></span> · <span id="speicherStatus"></span>

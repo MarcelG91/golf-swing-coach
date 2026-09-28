@@ -3,6 +3,16 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-28 · Branch `speicher-verwalten` @ 01584d9 · main @ 1f7ea52 · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.10.0) und `origin/speicher-verwalten` (0.11.0, noch ohne PR) in eigenen Worktrees; `node --test` main 77/77, Branch 84/84 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
+- Browser (Chrome ohne Fenster, lokal): `tests/speicher-browser.html` 23/23 grün. Echter Ablauf mit zwei Testvideos: „Videos älter als 30 Tage“, „Videos dieser Sitzung“ und „Alles löschen“ löschen genau das Angekündigte; Kennzahlen und Posedaten bleiben bei „Videos löschen“; Level, andere Einstellungen und Offline-Speicher bleiben immer; Abbrechen, Esc und Enter löschen nichts; Knöpfe danach wieder frei; Video-Adresse freigegeben. Platz wird sofort frei (Test-Datenbank 41 MB → 0,1 MB auf der Platte).
+- Live: Version 0.10.0, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 7 App-Dateien gleich `origin/main`. Frisches Profil: „Bereit“ und „Offline bereit ✓“ nach höchstens 1,5 s, Warmstart 0,3 s ohne Übertragung; Service Worker aktiv; Erststart 4 von 4 in Ordnung. Keine Konsolenfehler.
+- Erststart-Hänger aus dem lokalen Test geklärt: Ursache ist der einfache Python-Server (bricht bei vielen gleichzeitigen Anfragen Verbindungen ab), nicht die App. Neu S9: Die App meldet einen solchen Ladeabbruch nicht.
+- Datenschutz/Sicherheit: keine Videos oder Posedaten in Git, keine Geheimnismuster, nur erlaubte Hosts, keine neuen Netzwerkaufrufe; neue Texte nur per `textContent`. Branch-Schutz weiter aus (T1). Merge-Commits von GitHub tragen weiter die Geschäftsadresse (V5).
+- Verbessert: S2 (Löschen und Öffnen gespeicherter Sitzungen mit Fehlerbehandlung), S5 (auch beim Entfernen gelöschter Videos). Offen P1: V2 (erst 11b), C1, C2, S2, S8, T1.
+- Nach dem Check im selben Branch umgesetzt: Nach „Videos dieser Sitzung löschen“ überdeckt die Erfolgsmeldung keinen Fehler beim Neuöffnen mehr; Regel in `CLAUDE.md` präzisiert (Lösch-Dialog nur bei „Videos löschen“ und „Alles löschen“); Notiz zum Erststart-Hänger korrigiert.
+- Nicht geprüft: echtes iPhone/Safari, Zwei-Faktor, CI auf dem Branch (noch kein PR), Tests mit Node 22 (CI-Version).
+
 ## Golf-App-Check 2026-09-28 · PR #17 · main @ 92cdea3 · Urteil 🟡
 - Geprüft: `origin/main` und `etappe-11a-level` @ `5cf56da`; `node --test` 77/77 grün, JavaScript-Syntax und `git diff --check` grün; PR-Check „Tests“ erfolgreich.
 - Browser lokal: alle drei Testvideos in allen drei Leveln ausgewertet; Einsteiger zeigt je Ansicht mindestens 3 Kennzahlen, eine Baustelle, keine Kopf-Kennzahlen und keine „Selbst prüfen“-Karten. Levelwahl bleibt nach Neuladen erhalten. Schmale Ansicht (390 px) ohne horizontalen Überlauf; Service Worker aktiv und „Offline bereit ✓“. Testsitzung mit Level gespeichert und anschließend gelöscht.

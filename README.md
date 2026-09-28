@@ -13,6 +13,7 @@ Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos verlassen d
 - Tipps passend zu deinem Level anzeigen: Einsteiger, Fortgeschritten oder Könner
 - Fehler direkt im Video zeigen: **rot** = deine Linie, **gelb** = Ideallinie, dazu Pfeil und Sprechblase
 - Schwünge **auf dem Handy speichern** – mit kurzem Video, Schläger und Notiz – und später wieder öffnen
+- Speicher aufräumen: **alte Videos löschen, Kennzahlen behalten** – oder alles löschen
 - Als App auf dem iPhone-Home-Bildschirm laufen – auch **offline** auf der Range
 
 **Inhalt:**
@@ -109,6 +110,20 @@ Schwung einmal durch – dabei nimmt die App ihn als kurzes Video auf.
 - **Wichtig:** Gelöschte Safari-Daten oder ein verlorenes Handy = Schwünge weg.
   Eine Sicherung zum Exportieren kommt mit Etappe 9.
 
+### Speicher aufräumen
+
+Unter **⚙️ Einstellungen → „💾 Daten auf diesem Gerät“** steht, wie viele Sitzungen, Schwünge
+und Videos gespeichert sind. Vor jedem Löschen zeigt die App, **was gelöscht wird und was
+bleibt**; „Abbrechen“ ist vorausgewählt. Alles passiert nur auf dem Gerät.
+
+| Aktion | Wird gelöscht | Bleibt erhalten |
+|---|---|---|
+| **🎞 Videos und Bilder löschen** – für Sitzungen älter als 30 Tage, alle Sitzungen oder (in einer geöffneten Sitzung) nur diese | Videos und Vorschaubilder (fast der ganze Platz) | Kennzahlen, Bewertungen, Notizen, Posedaten – die Sitzung zeigt danach die Auswertung ohne Video, in der Liste steht „📊 nur Kennzahlen“ |
+| **🗑 Alles löschen** (zweiter Schritt: Häkchen setzen) | alle Sitzungen, Schwünge, Kennzahlen, Videos, Vorschaubilder und Posedaten | dein Level, die App mit ihren Offline-Dateien, deine Originalvideos in der Fotos-App, exportierte Dateien |
+
+Die Speicheranzeige des Browsers („Die App belegt …“) sinkt nach dem Löschen manchmal erst
+etwas später – die Meldung direkt nach dem Löschen nennt den frei gewordenen Platz.
+
 ## Level und Tipps
 
 Unter **⚙️ Einstellungen** wählst du Einsteiger, Fortgeschritten oder Könner. Das Level
@@ -162,7 +177,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
-| `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um |
+| `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
@@ -181,9 +196,9 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
-| `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
+| `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
-| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung |
+| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Einstellungen oder Offline-Dateien löscht |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
 
@@ -401,7 +416,7 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 5. Weitere Kennzahlen: Vorneigung, Hüfte, Gewichtsverlagerung, Tempo – geprüft an echten Schwüngen
 - [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
-- [x] 8. Schwünge speichern (mit gekürztem Video)
+- [x] 8. Schwünge speichern (mit gekürztem Video) – und aufräumen (Videos löschen, Kennzahlen behalten)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 

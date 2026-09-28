@@ -299,3 +299,67 @@ button.haupt {
 }
 .sitzungen img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; background: #000; flex-shrink: 0; }
 .sitzungen small { display: block; color: var(--text-leise); margin-top: 2px; }
+/* Sitzung ohne Video und ohne Vorschaubild: Platzhalter statt Bild */
+.sitzungen .ohne-bild {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--hintergrund);
+  font-size: 1.8rem;
+}
+
+/* --- Speicher verwalten: Daten auf diesem Gerät, Rückfrage vor dem Löschen --- */
+.daten { margin-top: 28px; padding-top: 12px; border-top: 1px solid #2c5a43; max-width: 620px; }
+.daten h4 { margin: 18px 0 4px; font-size: 1rem; }
+.daten-zeile { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.daten-zeile select {
+  padding: 8px;
+  background: var(--hintergrund);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 8px;
+  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
+}
+.daten-zeile button.klein { margin-top: 0; }
+
+/* Rot = hier wird endgültig gelöscht */
+button.gefahr {
+  padding: 10px 16px;
+  background: #7f1d1d;
+  color: #fff;
+  border: 1px solid #ef4444;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.loesch-dialog {
+  width: min(520px, calc(100vw - 32px));
+  padding: 18px;
+  background: var(--flaeche);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 14px;
+}
+.loesch-dialog::backdrop { background: rgba(0, 0, 0, 0.65); } /* abgedunkelte Seite dahinter */
+.loesch-dialog h2 { margin: 0 0 10px; font-size: 1.15rem; }
+.loesch-dialog p { margin: 12px 0 4px; }
+.loesch-dialog ul { margin: 0; padding-left: 20px; line-height: 1.45; }
+.loesch-dialog .warnung { color: #fbbf24; }
+.loesch-dialog .haken { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; cursor: pointer; }
+.loesch-dialog .haken input { width: 20px; height: 20px; flex-shrink: 0; accent-color: #ef4444; }
+.loesch-dialog .knoepfe { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.loesch-dialog .knoepfe button:first-child {
+  padding: 10px 16px;
+  background: var(--hintergrund);
+  color: var(--text);
+  border: 1px solid #2c5a43;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.loesch-dialog button:disabled { cursor: not-allowed; }
