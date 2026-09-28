@@ -103,3 +103,16 @@ test("Robuste Analyse: Knöpfe im finally frei, zentrale Fehleranzeige, Startsig
   assert.match(APP, /dataset\.appGestartet = /, "S9: app.js meldet den Start");
   assert.match(PWA, /dataset\.appGestartet/, "S9: pwa.js prüft den Start");
 });
+
+test("Check robuste Analyse: keine Umgehung der Längenprüfung, keine Fehlalarme", () => {
+  const laden = APP.slice(APP.indexOf("function ladeDatei"), APP.indexOf("function gibVideoFrei"));
+  // Scheitert das Laden, darf die Datei nicht als "geladen" gelten (sonst überspringt die Analyse S3)
+  assert.match(laden, /geladeneDatei = null/, "ladeDatei vergisst nicht lesbare Dateien");
+  // Jedes play() fängt seine Ablehnung selbst ab – sonst meldet S7 harmlose Abbrüche als Fehler
+  for (const [aufruf] of QUELLTEXT.matchAll(/\.play\(\)[^;\n]*/g)) {
+    assert.match(aufruf, /\.catch\(/, `play() ohne catch: ${aufruf}`);
+  }
+  // Kommt app.js nach dem 20-s-Hinweis doch noch an, verschwindet der Hinweis wieder
+  assert.match(APP, /startsWith\("Die App ist nicht vollständig geladen"\)/, "S9: Hinweis wird zurückgenommen");
+  assert.match(PWA, /Die App ist nicht vollständig geladen/, "S9: gleicher Text in pwa.js");
+});

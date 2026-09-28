@@ -4,7 +4,7 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.14.0";
+export const APP_VERSION = "0.14.1";
 
 // Muss zu den Namen in sw.js passen
 const CACHE_APP = "app-v1";
@@ -158,6 +158,8 @@ $("installKnopf").addEventListener("click", async () => {
 // ---------------------------------------------------------------
 setTimeout(() => {
   if (document.documentElement.dataset.appGestartet) return;
+  // Steht schon der genauere Offline-Hinweis (Abschnitt 4) da, diesen stehen lassen
+  if (!$("status").textContent.startsWith("Lade die Pose-Erkennung")) return;
   $("status").textContent =
     "Die App ist nicht vollständig geladen (schlechtes Netz?). Bitte die Seite neu laden – " +
     "am iPhone: App schließen und neu öffnen.";

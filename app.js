@@ -674,13 +674,19 @@ function ladeDatei(datei) {
   geladeneDatei = datei;
   videoName = datei.name;
   return new Promise((fertig, fehler) => {
+    // Nicht lesbar: "geladeneDatei" wieder vergessen. Sonst hielte der nächste Aufruf
+    // (z. B. "Analysieren") das Video für fertig geladen und würde die Prüfung überspringen.
+    const scheitern = (text) => {
+      if (geladeneDatei === datei) geladeneDatei = null;
+      fehler(new Error(text));
+    };
     video.addEventListener("loadedmetadata", () => {
       // Befund S3: ohne endliche Länge weiß die Analyse nicht, wann sie fertig ist
       const laenge = pruefeVideoLaenge(video.duration);
       if (laenge.lesbar) fertig();
-      else fehler(new Error(`„${datei.name}“: ${laenge.hinweis}`));
+      else scheitern(`„${datei.name}“: ${laenge.hinweis}`);
     }, { once: true });
-    video.addEventListener("error", () => fehler(new Error(`„${datei.name}“ lässt sich nicht abspielen`)), { once: true });
+    video.addEventListener("error", () => scheitern(`„${datei.name}“ lässt sich nicht abspielen`), { once: true });
     const neueAdresse = URL.createObjectURL(datei);
     video.src = neueAdresse; // Video bleibt auf deinem Gerät
     if (videoAdresse) URL.revokeObjectURL(videoAdresse);
@@ -2170,7 +2176,9 @@ video.addEventListener("pause", () => {
 });
 
 playPauseBtn.addEventListener("click", () => {
-  if (video.paused) video.play();
+  // play() kann harmlos scheitern (z. B. sofort wieder Pause getippt). Das gehört nicht
+  // als "Unerwarteter Fehler" in die Statuszeile, nur in die Konsole.
+  if (video.paused) video.play().catch((fehler) => console.warn(fehler));
   else video.pause();
 });
 
@@ -2234,6 +2242,11 @@ window.addEventListener("unhandledrejection", (ereignis) => {
 
 // Befund S9: Signal an pwa.js – app.js und alle seine Dateien sind angekommen
 document.documentElement.dataset.appGestartet = "ja";
+// Bei sehr langsamem Netz kann app.js erst nach dem 20-s-Hinweis aus pwa.js ankommen.
+// Dann läuft die App doch – den Hinweis "neu laden" wieder durch den Ladetext ersetzen.
+if (statusText.textContent.startsWith("Die App ist nicht vollständig geladen")) {
+  setStatus("Lade die Pose-Erkennung …");
+}
 
 // Los geht's
 zeigeLevelAuswahl();
