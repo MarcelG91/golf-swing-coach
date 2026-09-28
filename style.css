@@ -392,6 +392,8 @@ button.gefahr {
   -webkit-overflow-scrolling: touch;
 }
 .karten::-webkit-scrollbar { display: none; }
+/* Sichtbarer Rahmen, wenn die Karten per Tastatur ausgewählt sind */
+.karten:focus-visible { outline: 2px solid var(--akzent); outline-offset: 2px; }
 .karte.baustelle {
   flex: 0 0 86%;
   max-width: 440px;

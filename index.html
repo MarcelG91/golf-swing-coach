@@ -112,7 +112,9 @@
         <h3>🎯 Deine Baustellen</h3>
         <span id="kartenZaehler" class="hinweis"></span>
       </div>
-      <div id="baustellenListe" class="karten"></div>
+      <!-- tabindex="0": auch mit der Tastatur (Pfeiltasten) wischbar; role/aria-label:
+           Bildschirmleser sagen an, was dieser Bereich ist -->
+      <div id="baustellenListe" class="karten" tabindex="0" role="region" aria-label="Deine Baustellen, zur Seite wischen"></div>
       <div id="kartenPunkte" class="punkte" aria-hidden="true"></div>
 
       <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->

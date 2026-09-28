@@ -1146,6 +1146,9 @@ function baueUebung(uebung, { offen = false } = {}) {
 function baueSkala(s, { anzeige, ohneZahlen }) {
   const box = neu("div", "skala");
   const balken = neu("div", "balken");
+  // Für Bildschirmleser: der Balken als ein "Bild" mit Beschreibung in Worten
+  balken.setAttribute("role", "img");
+  balken.setAttribute("aria-label", `${s.name}: ${anzeige}. ${s.ziel}`);
   const zone = ([von, bis], klasse) => {
     const links = skalaPosition(s, von);
     const element = neu("div", `zone ${klasse}`);
