@@ -40,6 +40,7 @@ import {
   speicherBelegung,
 } from "./speicher.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
+import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -77,6 +78,7 @@ const ansichtInfo = $("ansichtInfo");
 const kennzahlenListe = $("kennzahlenListe");
 const baustellenListe = $("baustellenListe");
 const selbstCheckListe = $("selbstCheckListe");
+const selbstCheckTitel = $("selbstCheckTitel");
 const warnungenListe = $("warnungen");
 const exportierenBtn = $("exportieren");
 const uebersichtBox = $("uebersicht");
@@ -87,8 +89,15 @@ const schwungTitel = $("schwungTitel");
 // Etappe 8: Speichern und Meine Schwünge
 const zuAnalyseBtn = $("zuAnalyse");
 const zuGespeichertBtn = $("zuGespeichert");
+const zuEinstellungenBtn = $("zuEinstellungen");
 const analyseBereich = $("analyseBereich");
 const gespeichertBereich = $("gespeichertBereich");
+const einstellungenBereich = $("einstellungenBereich");
+const levelAnzeige = $("levelAnzeige");
+const levelAuswahl = $("levelAuswahl");
+const levelVorschlagBox = $("levelVorschlag");
+const lobBereich = $("lobBereich");
+const lobListe = $("lobListe");
 const speichernBox = $("speichernBox");
 const speichernDatum = $("speichernDatum");
 const speichernSchlaeger = $("speichernSchlaeger");
@@ -132,6 +141,9 @@ let aktuellerSchwung = null; // welcher davon gerade im Detail zu sehen ist
 // Speichern (Etappe 8)
 let gespeicherteSitzung = null; // aus "Meine Schwünge" geöffnet? (null = frisch analysiert)
 let schonGespeichert = false; // verhindert, dass dieselbe Analyse zweimal gespeichert wird
+let aktuellesLevel = LEVEL_OPTIONEN.some((option) => option.wert === localStorage.getItem("level"))
+  ? localStorage.getItem("level")
+  : null;
 
 // Ergebnis der letzten Analyse vergessen (neues Video, neue Analyse)
 function setzeErgebnisZurueck() {
@@ -330,7 +342,8 @@ function technikImBild() {
   if (!video.paused) return null;
   const phase = PHASEN.find((p) => imBild(phasenErgebnis[p.schluessel].zeit));
   if (!phase) return null;
-  const gemessen = alleKennzahlen.filter((k) => k.phase === phase.schluessel && MIT_LINIE.has(k.id));
+  const sichtbare = fuerLevel(alleKennzahlen, aktuellesLevel).sichtbar;
+  const gemessen = sichtbare.filter((k) => k.phase === phase.schluessel && MIT_LINIE.has(k.id));
   if (gemessen.length === 0) return null;
   const abweichungen = gemessen.filter(ausserhalb);
   return {
@@ -738,7 +751,11 @@ function zeigeUebersicht() {
 
   // 1. Gesamtauswertung, getrennt nach Ansicht
   gesamtListe.innerHTML = "";
-  const gruppen = gesamtauswertung(alleSchwuenge);
+  const gefilterteSchwuenge = alleSchwuenge.map((s) => ({
+    ...s,
+    kennzahlen: fuerLevel(s.kennzahlen || [], aktuellesLevel).sichtbar,
+  }));
+  const gruppen = gesamtauswertung(gefilterteSchwuenge, anzahlBaustellen(aktuellesLevel));
   const nichtGezaehlt = alleSchwuenge.filter((s) => !s.sicher).length;
   if (nichtGezaehlt) {
     const hinweis = document.createElement("p");
@@ -855,7 +872,7 @@ async function waehleSchwung(s) {
 
 function setzeKnoepfeAktiv(aktiv) {
   // Umschalter auch sperren: Ein Wechsel hält das Video an und würde Analyse/Speichern stören
-  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput, zuAnalyseBtn, zuGespeichertBtn]) {
+  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput, zuAnalyseBtn, zuGespeichertBtn, zuEinstellungenBtn]) {
     knopf.disabled = !aktiv;
   }
   analysierenBtn.disabled = !aktiv || poseStatus !== "bereit";
@@ -905,36 +922,61 @@ function zeigeBewertung() {
   // Alle Kennzahlen (aus kennzahlen.js und technik.js) mit Kategorie und Videomoment
   const alle = [...bewertung.kennzahlen, ...technik.kennzahlen].map(ordneEin);
   alleKennzahlen = alle;
+  const { sichtbar, fuerSpaeter } = fuerLevel(alle, aktuellesLevel);
 
   // 1. Die wichtigsten Baustellen – ausführlich, mit Übung
   baustellenListe.innerHTML = "";
-  const baustellen = wichtigsteBaustellen(alle);
+  const baustellen = wichtigsteBaustellen(sichtbar, anzahlBaustellen(aktuellesLevel));
   if (baustellen.length === 0) {
     const lob = document.createElement("p");
     lob.className = "karte gut";
     lob.textContent = "Keine größere Baustelle gefunden – stark! Filme als Nächstes die andere Ansicht, dann prüft die App weitere Punkte.";
     baustellenListe.appendChild(lob);
   }
-  baustellen.forEach((k, i) => baustellenListe.appendChild(baueKarte(k, { nummer: i + 1, offen: true })));
+  const einsteiger = aktuellesLevel === LEVEL.EINSTEIGER;
+  baustellen.forEach((k, i) => baustellenListe.appendChild(baueKarte(k, {
+    nummer: i + 1,
+    offen: true,
+    ohneMesswert: einsteiger,
+    hilfenZuerst: einsteiger,
+    erklaerungZuklappen: einsteiger,
+  })));
 
   // 2. Alle Kennzahlen nach Bereichen
   kennzahlenListe.innerHTML = "";
-  for (const kategorie of KATEGORIEN) {
-    // Erst was zu verbessern ist, dann Achtung, dann was schon gut ist
-    const rang = { verbessern: 0, achtung: 1, unsicher: 2, gut: 3 };
-    const inKategorie = alle
-      .filter((k) => k.kategorie === kategorie.schluessel)
-      .sort((a, b) => rang[a.bewertung] - rang[b.bewertung]);
-    if (inKategorie.length === 0) continue;
-    const titel = document.createElement("h4");
-    titel.textContent = kategorie.name;
-    kennzahlenListe.appendChild(titel);
-    for (const k of inKategorie) kennzahlenListe.appendChild(baueKarte(k));
+  lobListe.innerHTML = "";
+  const lob = aktuellesLevel === LEVEL.KOENNER ? [] : sichtbar.filter((k) => k.bewertung === "gut").slice(0, 2);
+  lobBereich.hidden = lob.length === 0;
+  lob.forEach((k) => lobListe.appendChild(baueKarte(k)));
+
+  const aktuelleListe = document.createElement("div");
+  aktuelleListe.className = "kennzahlen";
+  baueKennzahlenGruppen(aktuelleListe, sichtbar);
+  if (aktuellesLevel === LEVEL.KOENNER) kennzahlenListe.appendChild(aktuelleListe);
+  else {
+    const details = document.createElement("details");
+    const zusammenfassung = document.createElement("summary");
+    zusammenfassung.textContent = `Alle Kennzahlen dieses Levels (${sichtbar.length})`;
+    details.append(zusammenfassung, aktuelleListe);
+    kennzahlenListe.appendChild(details);
+  }
+  if (fuerSpaeter.length) {
+    const details = document.createElement("details");
+    const zusammenfassung = document.createElement("summary");
+    zusammenfassung.textContent = `Für später (${fuerSpaeter.length})`;
+    const spaeterListe = document.createElement("div");
+    spaeterListe.className = "kennzahlen";
+    baueKennzahlenGruppen(spaeterListe, fuerSpaeter);
+    details.append(zusammenfassung, spaeterListe);
+    kennzahlenListe.appendChild(details);
   }
 
   // 3. Was die App nicht sicher messen kann: selbst im Video nachschauen
   selbstCheckListe.innerHTML = "";
-  for (const check of technik.selbstChecks) {
+  const selbstChecks = aktuellesLevel === LEVEL.EINSTEIGER ? [] : technik.selbstChecks;
+  selbstCheckTitel.hidden = selbstChecks.length === 0;
+  selbstCheckListe.hidden = selbstChecks.length === 0;
+  for (const check of selbstChecks) {
     const karte = document.createElement("article");
     karte.className = "karte unsicher";
     karte.innerHTML = `<div class="karte-kopf"><strong></strong></div><p class="text"></p>`;
@@ -945,8 +987,28 @@ function zeigeBewertung() {
   }
 }
 
-// Eine Karte für eine Kennzahl. offen = Tipp und Übung direkt sichtbar (Baustellen).
-function baueKarte(k, { nummer = null, offen = false } = {}) {
+// Gruppen nach Themen sortiert, damit die Karten beim Aufklappen leicht zu finden sind.
+function baueKennzahlenGruppen(container, kennzahlen) {
+  for (const kategorie of KATEGORIEN) {
+    const rang = { verbessern: 0, achtung: 1, unsicher: 2, gut: 3 };
+    const inKategorie = kennzahlen
+      .filter((k) => k.kategorie === kategorie.schluessel)
+      .sort((a, b) => rang[a.bewertung] - rang[b.bewertung]);
+    if (inKategorie.length === 0) continue;
+    const titel = document.createElement("h4");
+    titel.textContent = kategorie.name;
+    container.appendChild(titel);
+    for (const k of inKategorie) container.appendChild(baueKarte(k));
+  }
+}
+
+function baueKarte(k, {
+  nummer = null,
+  offen = false,
+  ohneMesswert = false,
+  hilfenZuerst = false,
+  erklaerungZuklappen = false,
+} = {}) {
   const karte = document.createElement("article");
   karte.className = `karte ${k.bewertung}`;
   // textContent statt innerHTML für die Texte: sicher und einfach
@@ -960,9 +1022,20 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
     <p class="text"></p>`;
   karte.querySelector("strong").textContent = nummer ? `${nummer}. ${k.name}` : k.name;
   karte.querySelector(".abzeichen").textContent = STUFEN[k.bewertung];
-  karte.querySelector(".wert").textContent = k.wert;
-  karte.querySelector(".detail").textContent = k.detail;
-  karte.querySelector(".text").textContent = k.text;
+  const wert = karte.querySelector(".wert");
+  const detail = karte.querySelector(".detail");
+  const text = karte.querySelector(".text");
+  wert.textContent = k.wert;
+  detail.textContent = k.detail;
+  text.textContent = k.text;
+  if (ohneMesswert) {
+    wert.hidden = true;
+    detail.hidden = true;
+  }
+  if (erklaerungZuklappen) {
+    detail.remove();
+    text.remove();
+  }
 
   // "So geht's" (Gefühl) und Übung – bei den Baustellen offen, sonst zum Aufklappen
   const hilfen = [];
@@ -982,6 +1055,13 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
       absatz.textContent = text;
       behaelter.appendChild(absatz);
     }
+  }
+  if (erklaerungZuklappen) {
+    const erklaerung = document.createElement("details");
+    const zusammenfassung = document.createElement("summary");
+    zusammenfassung.textContent = "Warum ist das wichtig?";
+    erklaerung.append(zusammenfassung, detail, text);
+    karte.appendChild(erklaerung);
   }
   if (k.phase) karte.appendChild(zeigenKnopf(k));
   return karte;
@@ -1096,6 +1176,41 @@ function zeigeSpeicherKaesten() {
   }
 }
 
+function zeigeLevelAuswahl() {
+  levelAuswahl.innerHTML = "";
+  for (const option of LEVEL_OPTIONEN) {
+    const label = document.createElement("label");
+    label.className = option.wert === aktuellesLevel ? "aktiv" : "";
+    label.innerHTML = `<input type="radio" name="level" value=""><span class="symbol"></span><strong></strong><small></small>`;
+    const radio = label.querySelector("input");
+    radio.value = option.wert;
+    radio.checked = option.wert === aktuellesLevel;
+    label.querySelector(".symbol").textContent = option.symbol;
+    label.querySelector("strong").textContent = option.name;
+    label.querySelector("small").textContent = option.beschreibung;
+    radio.addEventListener("change", () => setzeLevel(option.wert));
+    levelAuswahl.appendChild(label);
+  }
+  levelAnzeige.hidden = !aktuellesLevel;
+  levelAnzeige.textContent = aktuellesLevel
+    ? `Dein Level: ${LEVEL_OPTIONEN.find((option) => option.wert === aktuellesLevel).symbol} ${LEVEL_OPTIONEN.find((option) => option.wert === aktuellesLevel).name}`
+    : "";
+}
+
+function setzeLevel(level) {
+  if (!LEVEL_OPTIONEN.some((option) => option.wert === level)) return;
+  const warNochNichtGewahlt = !aktuellesLevel;
+  aktuellesLevel = level;
+  aktiveMessung = null;
+  localStorage.setItem("level", level);
+  localStorage.removeItem("levelVorschlagAb");
+  zeigeLevelAuswahl();
+  if (bewertung && technik) zeigeBewertung();
+  if (bewertung && video.readyState >= 2 && video.paused) analysiereAktuellesBild();
+  if (alleSchwuenge.length) zeigeUebersicht();
+  if (warNochNichtGewahlt) zeigeBereich("analyse");
+}
+
 // Kleines Vorschaubild für die Liste: die Top-Position mit Skelett, als JPEG
 async function macheVorschau(s) {
   const zeit = s.phasen.top.zeit;
@@ -1173,6 +1288,7 @@ async function speichereAuswahl() {
       datum,
       schlaeger,
       notiz: speichernNotiz.value.trim(),
+      level: aktuellesLevel,
       schwungIds: eintraege.map((e) => e.schwung.id),
       appVersion: APP_VERSION,
     };
@@ -1198,6 +1314,7 @@ async function speichereAuswahl() {
       `✓ ${anzahl} gespeichert – zu finden unter „Meine Schwünge“.` +
         (ohneVideo ? ` ${ohneVideo} davon ohne Video: Dieses Gerät konnte keinen Clip aufnehmen.` : "")
     );
+    zeigeLevelVorschlag(true).catch((fehler) => console.warn("Level-Vorschlag konnte nicht geprüft werden:", fehler));
   }
 }
 
@@ -1208,10 +1325,13 @@ let vorschauAdressen = []; // Adressen der Vorschaubilder – werden beim Neuzei
 
 // Oben umschalten zwischen "Analyse" und "Meine Schwünge"
 function zeigeBereich(welcher) {
+  if (!aktuellesLevel) welcher = "einstellungen";
   analyseBereich.hidden = welcher !== "analyse";
   gespeichertBereich.hidden = welcher !== "gespeichert";
+  einstellungenBereich.hidden = welcher !== "einstellungen";
   zuAnalyseBtn.classList.toggle("aktiv", welcher === "analyse");
   zuGespeichertBtn.classList.toggle("aktiv", welcher === "gespeichert");
+  zuEinstellungenBtn.classList.toggle("aktiv", welcher === "einstellungen");
   if (welcher === "gespeichert") {
     video.pause();
     zeigeMeineSchwuenge();
@@ -1226,6 +1346,11 @@ async function zeigeMeineSchwuenge() {
     : "";
 
   const sitzungen = await ladeSitzungen();
+  try {
+    await zeigeLevelVorschlag();
+  } catch (fehler) {
+    console.warn("Level-Vorschlag konnte nicht geladen werden:", fehler);
+  }
   vorschauAdressen.forEach((adresse) => URL.revokeObjectURL(adresse));
   vorschauAdressen = [];
   sitzungsListe.innerHTML = "";
@@ -1241,7 +1366,9 @@ async function zeigeMeineSchwuenge() {
     const anzahl = sitzung.schwungIds.length;
     knopf.querySelector("strong").textContent = `${deutschesDatum(sitzung.datum)} · ${sitzung.schlaeger}`;
     knopf.querySelector("small").textContent =
-      `${anzahl} ${anzahl === 1 ? "Schwung" : "Schwünge"}${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}`;
+      `${anzahl} ${anzahl === 1 ? "Schwung" : "Schwünge"}` +
+      `${sitzung.level ? ` · ${LEVEL_OPTIONEN.find((option) => option.wert === sitzung.level)?.name || ""}` : ""}` +
+      `${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}`;
     // Vorschaubild des ersten Schwungs. createObjectURL macht aus der gespeicherten
     // Datei eine Adresse, die <img> anzeigen kann.
     const vorschau = await ladeMedium(`${sitzung.schwungIds[0]}/vorschau`);
@@ -1253,6 +1380,59 @@ async function zeigeMeineSchwuenge() {
     knopf.addEventListener("click", () => oeffneSitzung(sitzung));
     sitzungsListe.appendChild(knopf);
   }
+}
+
+async function zeigeLevelVorschlag(nachSpeichern = false) {
+  levelVorschlagBox.hidden = true;
+  if (!aktuellesLevel) return;
+
+  const sitzungen = await ladeSitzungen();
+  const schwuengeJeSitzung = await Promise.all(sitzungen.map(ladeSchwuengeDerSitzung));
+  const schwuenge = schwuengeJeSitzung.flat().filter(Boolean);
+  const sichereAnzahl = schwuenge.filter((schwung) => schwung.sicher).length;
+  const erneutAb = Number(localStorage.getItem("levelVorschlagAb")) || 0;
+  if (sichereAnzahl < 10 || sichereAnzahl < erneutAb) return;
+
+  const vorschlag = levelVorschlag(schwuenge, aktuellesLevel);
+  if (!vorschlag) return;
+  const neuesLevel = LEVEL_OPTIONEN.find((option) => option.wert === vorschlag.nach);
+  const richtung = vorschlag.art === "aufsteigen" ? "Deine Grundlagen sitzen" : "Deine Grundlagen wackeln gerade";
+  const hinweis = `${richtung} in etwa ${vorschlag.gruenVonZehn} von 10 Schwüngen. ` +
+    (vorschlag.art === "aufsteigen"
+      ? `Bereit für ${neuesLevel.symbol} ${neuesLevel.name}?`
+      : `Möchtest du eine Zeit lang zurück zu ${neuesLevel.symbol} ${neuesLevel.name}?`);
+  const fehlende = vorschlag.fehlendeKennzahlen.length
+    ? " Einige Kennzahlen wurden wegen weniger als drei Messungen nicht gewertet, zum Beispiel wenn eine Ansicht noch fehlt."
+    : "";
+
+  if (nachSpeichern) {
+    if (confirm(`${hinweis}${fehlende}`)) {
+      setzeLevel(vorschlag.nach);
+      setStatus(`Dein Level ist jetzt ${neuesLevel.symbol} ${neuesLevel.name}.`);
+    } else {
+      localStorage.setItem("levelVorschlagAb", String(sichereAnzahl + 10));
+    }
+    return;
+  }
+
+  const text = document.createElement("p");
+  text.textContent = `${hinweis}${fehlende}`;
+  const wechseln = document.createElement("button");
+  wechseln.className = "haupt";
+  wechseln.textContent = "Level wechseln";
+  wechseln.addEventListener("click", () => {
+    setzeLevel(vorschlag.nach);
+    levelVorschlagBox.hidden = true;
+  });
+  const spaeter = document.createElement("button");
+  spaeter.className = "klein";
+  spaeter.textContent = "Noch nicht";
+  spaeter.addEventListener("click", () => {
+    localStorage.setItem("levelVorschlagAb", String(sichereAnzahl + 10));
+    levelVorschlagBox.hidden = true;
+  });
+  levelVorschlagBox.replaceChildren(text, wechseln, spaeter);
+  levelVorschlagBox.hidden = false;
 }
 
 // Eine gespeicherte Sitzung in der normalen Analyse-Ansicht öffnen.
@@ -1391,10 +1571,13 @@ exportierenBtn.addEventListener("click", exportiereDaten);
 speichernKnopf.addEventListener("click", speichereAuswahl);
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
+zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
 sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 
 // Los geht's
+zeigeLevelAuswahl();
+zeigeBereich(aktuellesLevel ? "analyse" : "einstellungen");
 ladePoseErkennung().catch((fehler) => {
   poseFehlerText = `Die Pose-Erkennung konnte nicht starten (${fehler.message}).`;
   setzePoseStatus("fehler");

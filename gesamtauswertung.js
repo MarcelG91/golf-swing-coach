@@ -10,7 +10,7 @@
 // Reine Rechnerei ohne Browser → testbar mit node --test.
 // ===============================================================
 
-export function gesamtauswertung(schwuenge) {
+export function gesamtauswertung(schwuenge, anzahl = 3) {
   const gezaehlt = schwuenge.filter((s) => s.sicher);
   const ergebnis = [];
   for (const ansicht of ["frontal", "hinten"]) {
@@ -26,7 +26,7 @@ export function gesamtauswertung(schwuenge) {
       }
     }
     const kennzahlen = [...nachId.values()].map(fasseZusammen);
-    ergebnis.push({ ansicht, anzahl: gruppe.length, kennzahlen, baustellen: baustellenGesamt(kennzahlen) });
+    ergebnis.push({ ansicht, anzahl: gruppe.length, kennzahlen, baustellen: baustellenGesamt(kennzahlen, anzahl) });
   }
   return ergebnis;
 }
