@@ -101,18 +101,19 @@
       <h2>Deine Bewertung</h2>
       <p id="ansichtInfo" class="hinweis"></p>
 
-      <!-- Die 3 wichtigsten Punkte zuerst – mit Übung -->
-      <h3>🎯 Deine wichtigsten Baustellen</h3>
-      <p class="hinweis">
-        Fang oben an – oft lösen sich andere Punkte dann von selbst.
-        „Im Video zeigen“ springt zum passenden Moment und zeichnet die Messlinien ein.
-      </p>
-      <div id="baustellenListe" class="kennzahlen"></div>
-
-      <div id="lobBereich" hidden>
-        <h3>Das machst du schon gut</h3>
-        <div id="lobListe" class="kennzahlen"></div>
+      <!-- Schwunggedanke: ein Merksatz für die Range (von der wichtigsten Baustelle) -->
+      <div id="gedankeBox" class="gedanke-oben" hidden>
+        <small>💭 Heute auf der Range</small>
+        <div id="gedankeText"></div>
       </div>
+
+      <!-- Die wichtigsten Baustellen als Wisch-Karten, die letzte Karte = "Läuft schon gut" -->
+      <div class="karten-kopf">
+        <h3>🎯 Deine Baustellen</h3>
+        <span id="kartenZaehler" class="hinweis"></span>
+      </div>
+      <div id="baustellenListe" class="karten"></div>
+      <div id="kartenPunkte" class="punkte" aria-hidden="true"></div>
 
       <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->
       <h3>Alle Kennzahlen</h3>

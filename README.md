@@ -132,6 +132,22 @@ Sitzung gespeichert werden weiterhin alle Kennzahlen. Die Auswahl liegt lokal au
 Nach mindestens zehn sicheren gespeicherten Schwüngen kann die App einen Levelwechsel
 vorschlagen. Sie ändert das Level nie selbst.
 
+### So sehen die Tipps aus
+
+Nach der Analyse stehen die Baustellen als **Wisch-Karten** nebeneinander (zur Seite wischen,
+die Punkte darunter zeigen, wo du bist). Jede Karte zeigt:
+
+- eine **Strichfigur** aus deinen eigenen Posedaten im passenden Moment – rot = du, gelb = Ziel
+  (sofort da, ohne im Video zu springen – das wäre auf dem iPhone langsam),
+- **eine Zeile**, was los ist, und **„Warum?“** in 1–2 Sätzen,
+- eine **Skala** mit grünem Zielbereich und deinem Wert (für Einsteiger ohne Zahlen),
+- den **Schwunggedanken** 💭 und die **Übung** in kurzen Schritten zum Aufklappen.
+
+Die letzte Karte zeigt, was schon gut läuft. Der Schwunggedanke der wichtigsten Baustelle steht
+oben („Heute auf der Range“) und wird mit der Sitzung gespeichert. Alle Texte stehen in `tipps.js`;
+sie wurden gegen Golf-Fachquellen geprüft (Stand und Quellen: `docs/plan-tipps-neu.md`).
+Die App ersetzt trotzdem keine Trainerstunde.
+
 ## Ausprobieren ohne eigenes Video
 
 Im Ordner `testvideos/` (nur lokal, nicht auf GitHub) liegen Beispielschwünge
@@ -177,6 +193,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
+| `tipps.js` | Alle kurzen Tipp-Texte an einer Stelle: Kurzzeile, Warum, Schwunggedanke, Übung, Lob; dazu die Skala mit Zielbereich |
+| `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
@@ -196,6 +214,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
+| `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
 | `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Einstellungen oder Offline-Dateien löscht |

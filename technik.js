@@ -167,8 +167,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       k.tipp = "Arme baumeln lassen: Ansprechhaltung ohne Schläger, Arme 3 Sekunden locker hängen lassen, Hände zusammenführen und erst dann den Schläger hineinlegen. Vor jedem Übungsball, bis es automatisch geht.";
     } else {
       k.text = "Deine Hände sind beim Ansprechen sehr nah am Körper. Dann haben die Arme im Abschwung keinen Platz – du musst ausweichen oder dich aufrichten.";
-      k.gefuehl = "Zwischen Griffende und Oberschenkel passt etwa eine Handbreite. Die Arme hängen senkrecht unter den Schultern.";
-      k.tipp = `Handbreit-Check: Halte beim Ansprechen die ${s.hen} Hand flach zwischen Griffende und deinen ${s.fen} Oberschenkel. Passt sie knapp hinein, stimmt der Abstand.`;
+      k.gefuehl = "Zwischen Griffende und Oberschenkel passt etwa eine Faust. Die Arme hängen senkrecht unter den Schultern.";
+      k.tipp = `Faust-Check: Halte beim Ansprechen die ${s.hen} Hand als Faust zwischen Griffende und deinen ${s.fen} Oberschenkel. Passt sie knapp hinein, stimmt der Abstand.`;
     }
     neu(k);
 
@@ -339,7 +339,7 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       st.text = "Am Top bleibt dein Oberkörper hinter dem Ball. Sehr gut!";
     } else {
       st.text = `Am Top neigt sich dein Oberkörper zum Ziel („umgekehrter Wirbelsäulenwinkel“). Dein Gewicht bleibt dann auf dem ${s.fen} Fuß, und im Abschwung fällst du nach hinten. Das kostet Kraft, macht die Treffer unsauber und belastet den unteren Rücken.`;
-      st.gefuehl = `Dreh dich im Rückschwung um deine Wirbelsäule und lass den Oberkörper über dem ${s.hen} Bein. Am Top ist dein Kopf eher über dem ${s.hen} Knie als über dem ${s.fen}.`;
+      st.gefuehl = `Dreh dich im Rückschwung um deine Wirbelsäule und lass den Oberkörper über dem ${s.hen} Bein. Am Top bleibt dein Brustbein hinter dem Ball.`;
       st.tipp = "Spiegel-Check: Stell dich frontal vor einen Spiegel, hol langsam zum Top aus und halte an. Deine Wirbelsäule ist senkrecht oder leicht vom Ziel weg geneigt – niemals zum Ziel. 10× langsam.";
     }
     neu(st);
