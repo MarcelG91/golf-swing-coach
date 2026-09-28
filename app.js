@@ -1165,6 +1165,7 @@ function baueUebung(uebung, { offen = false, gedanke = "" } = {}) {
 let aktiveUebung = null; // { daten, gedanke, schritt, anzahl, vorherFokus }
 let uebungAnimation = null; // Nummer von requestAnimationFrame – zum Anhalten
 let bildschirmSperre = null; // Wake Lock: hält den Bildschirm an, solange geübt wird
+let weiterGesperrtBis = 0; // Schutz gegen Doppeltipp: aus "Los geht's" wird an gleicher Stelle "Fertig"
 
 function oeffneUebung(daten, gedanke) {
   aktiveUebung = { daten, gedanke, schritt: 0, anzahl: 0, vorherFokus: document.activeElement };
@@ -1205,6 +1206,7 @@ function zeigeUebungsSchritt() {
     uebungSchrittNr.textContent = gedanke ? `💭 „${gedanke}“` : "";
     uebungSchritt.textContent = fertig ? "Geschafft! Stark. ✓" : "Jetzt üben – tippe nach jeder Wiederholung.";
     uebungZaehlerBtn.hidden = false;
+    weiterGesperrtBis = performance.now() + 400;
     uebungZaehlerBtn.replaceChildren(neu("span", "zahl", fertig ? "✓" : String(anzahl)), neu("small", "", `von ${daten.wiederholungen}`));
     uebungZaehlerBtn.setAttribute("aria-label", `Wiederholung zählen, ${anzahl} von ${daten.wiederholungen}`);
   } else {
@@ -2162,6 +2164,7 @@ baustellenListe.addEventListener("scroll", aktualisiereKartenPunkte, { passive: 
 uebungZuBtn.addEventListener("click", schliesseUebung);
 uebungZurueckBtn.addEventListener("click", () => { aktiveUebung.schritt--; zeigeUebungsSchritt(); });
 uebungWeiterBtn.addEventListener("click", () => {
+  if (performance.now() < weiterGesperrtBis) return;
   if (aktiveUebung.schritt === aktiveUebung.daten.schritte.length) schliesseUebung();
   else { aktiveUebung.schritt++; zeigeUebungsSchritt(); }
 });
