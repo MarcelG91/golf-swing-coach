@@ -93,45 +93,60 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
   diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.
 
-## Offene Punkte
+## Offene Punkte – priorisierter Backlog (Stand 28.09.)
 
-- iPhone-Test der schnellen Analyse (Version ≥ 0.7.3): Statuszeile „Analyse fertig (…)“ auswerten.
-- iPhone-Test mehrere Schwünge (Version ≥ 0.8.0): echtes langes Video von der Range mit mehreren
-  Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
-  Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
-- iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
-- **Reihenfolge ab jetzt: 10 → 9** (11a, 11b, `speicher-verwalten`, `tipps-neu`, `uebungsmodus` und
-  `robuste-analyse` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
-  Etappe 9 muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
-- Echter Coach-Test (11b, Version ≥ 0.15.0): Marcel trägt am Mac seinen Schlüssel ein; alle drei Level
-  durchprobieren – passen Ton, Länge, Fokus? Echte Kosten pro Feedback notieren (Anzeige in der Antwort).
-  Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
-- 11b vorab klären: **Teilen mit Freunden.** Die App selbst läuft bei jedem kostenlos; nur der Coach
-  kostet. Optionen: eigener Schlüssel (Plan) · Schlüssel je Freund aus Marcels Workspace mit Limit ·
-  schlüsselfreier Knopf „Für Claude kopieren“ (Text in die eigene Claude-App einfügen) · Vermittler-
-  Server (verworfen). Außerdem prüfen: Modellwahl, ob Prompt Caching sich lohnt (5-Minuten-Cache,
-  meist nur ein Feedback pro Sitzung), SDK oder `fetch`, ehrlicher Text zu IP/Browserkennung.
-- iPhone-Test Speicher aufräumen (Version ≥ 0.11.0): Videos einer Sitzung löschen, danach
-  Speicheranzeige vorher/nachher vergleichen; „Alles löschen“ → Level noch da, offline weiter nutzbar?
-- Erststart-Hänger im lokalen Chrome-Test (28.09., geklärt): Ursache ist der einfache Python-Server.
-  Er hält nur 5 wartende Verbindungen; beim ersten Laden (App-Dateien + Service Worker gleichzeitig)
-  bricht er einzelne ab (`ERR_CONNECTION_RESET`), dann läuft `app.js` nicht an. Live 4 von 4
-  Erststarts in Ordnung. Lokal: einmal neu laden. Seit 0.14.0 bittet die App nach 20 s selbst um
-  Neuladen (Befund S9 erledigt).
-- Optional: Auch „Schwung löschen“ / „Sitzung löschen“ auf den neuen Lösch-Dialog umstellen
-  (einheitlich, ca. 20 Zeilen) – Vorschlag aus dem Check vom 28.09.
-- Darstellung seit 11a: In den Level-Karten (⚙️ Einstellungen) wird die Beschreibung in eine schmale
-  Spalte gequetscht („Ich / lerne / gerade …“) – Grid-Spalte der `<small>` in `style.css` festlegen.
-- **Tipps fachlich:** Golf-Technik muss stimmen (Marcels Anforderung: keine falsche Technik). Texte nur in
-  `tipps.js` ändern, mit Quelle; danach Liste in `docs/plan-tipps-neu.md` neu erzeugen. Offen: Durchsicht
-  der Liste durch einen Golflehrer (PGA-Pro). Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`)
-  zeigt die App nicht mehr – vor Nutzung (z. B. Coach 11b) an `tipps.js` angleichen (z. B. Tempo „oben kurz
-  ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
-- **Übungsfiguren fachlich:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
-  `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung von hinten
-  erst mit einem korrekten Profi-Schwung von hinten als Testdatei.
-- iPhone-Test robuste Analyse (Version ≥ 0.14.0): Zeile „Analyse fertig (… · Video geladen in … s)“
-  notieren – zeigt, wie lange das Video braucht, bis es in der App ist (Befund S8).
-- iPhone-Test Tipps neu + Übungsmodus (Version ≥ 0.13.0): Wischen flüssig? Figuren verständlich? Skala
-  lesbar? Bleibt der Bildschirm im Übungsmodus an (Wake Lock ab iOS 16.4)?
+Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. Neue Ideen hier passend einsortieren.
+
+### 🔴 Priorität 1 – Gebautes in der Praxis absichern
+
+1. **iPhone-Praxistest** (Marcel, ca. 30 min) – Checkliste: `docs/iphone-testliste.md`. Bündelt:
+   - Schnelle Analyse (≥ 0.7.3) und Ladezeit (≥ 0.14.0, Befund S8): Zeile „Analyse fertig (… · Video geladen in … s)“.
+   - Mehrere Schwünge (≥ 0.8.0): langes Range-Video + Mehrfachauswahl. Alle Schläge gefunden? Falsche Treffer
+     (Aufteen)? Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
+   - Speichern im Flugmodus (≥ 0.9.0): sitzt das Skelett im gespeicherten Clip?
+   - Aufräumen (≥ 0.11.0): Speicheranzeige vorher/nachher; „Alles löschen“ → Level noch da, offline nutzbar?
+   - Tipps neu + Übungsmodus (≥ 0.13.0): Wischen flüssig? Figuren/Skala verständlich? Bildschirm bleibt an (Wake Lock ab iOS 16.4)?
+2. **Echter Coach-Test** (Marcel, ≥ 0.15.0, ca. 20 Cent): alle drei Level – passen Ton, Länge, Fokus? Kosten notieren.
+   Kommt „unvollständig“, `max_tokens` in `coach.js` von 4000 anheben.
+3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) durch einen PGA-Pro.
+4. **Aufräum-Runde** (Claude, ein PR, 1–2 h):
+   - Level-Karten (⚙️ Einstellungen): Beschreibung wird in eine schmale Spalte gequetscht („Ich / lerne / gerade …“) –
+     Grid-Spalte der `<small>` in `style.css` festlegen.
+   - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
+     `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
+   - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen
+     und `api.anthropic.com` als erlaubten Host nennen.
+
+### 🟡 Priorität 2 – Nächste Etappen
+
+5. **Etappe 10: Fortschritt** (Plan in `docs/plan-speichern-und-fortschritt.md`). Größter Nutzen fürs Golf-Lernen.
+6. **Sicherheits-Etappe C1 + C3** (ca. ½ Tag, nur nach Absprache): MediaPipe, Modell und Anthropic-SDK selbst
+   ausliefern bzw. mit Prüfsummen, danach CSP. **Pflicht, bevor Freunde die App nutzen.**
+7. **Automatischer Browser-Test (T3):** Chrome ohne Fenster über das DevTools-Protokoll (ohne neue Bibliothek) –
+   Seite lädt, „Bereit“, keine Konsolenfehler.
+8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
+   Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
+
+### 🟢 Priorität 3 – Später / bei Bedarf
+
+- **Teilen mit Freunden** (erst nach Nr. 6): Die App läuft bei jedem kostenlos, nur der Coach kostet. Optionen:
+  eigener Schlüssel (umgesetzt) · Schlüssel je Freund aus Marcels Workspace mit Limit · schlüsselfreier Knopf
+  „Für Claude kopieren“. Dazu kurzer Datenschutzhinweis für die ganze App (V4).
+- **Zeitgrenze beim Video-Laden (S10):** erst nach der iPhone-Messung aus Nr. 1 festlegen.
+- **Übungsfiguren von hinten:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
+  `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung erst mit einem
+  korrekten Profi-Schwung von hinten als Testdatei.
+- Einheitlicher Lösch-Dialog auch für „Schwung löschen“ / „Sitzung löschen“ (ca. 20 Zeilen, Check 28.09.).
+- LICENSE und Lizenzen der Testdaten-Quellen (C6) · MediaPipe-Update 0.10.14 → 1.x in eigenem Branch (C4).
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.
+
+### Dauerhafte Regeln und Hinweise
+
+- **Tipps fachlich:** Golf-Technik muss stimmen (Marcels Anforderung: keine falsche Technik). Texte nur in
+  `tipps.js` ändern, mit Quelle; danach Liste in `docs/plan-tipps-neu.md` neu erzeugen.
+- **C7:** Keine weitere GitHub-Pages-Seite unter MarcelG91 veröffentlichen (alle Pages-Seiten eines Kontos teilen
+  sich im Browser den Speicher, also auch Coach-Schlüssel und Schwünge) – außer die App zieht vorher auf eine
+  eigene Domain um.
+- Erststart-Hänger im lokalen Chrome-Test (28.09., geklärt): Der einfache Python-Server bricht beim ersten Laden
+  einzelne Verbindungen ab (`ERR_CONNECTION_RESET`), dann läuft `app.js` nicht an. Live in Ordnung. Lokal: einmal
+  neu laden. Seit 0.14.0 bittet die App nach 20 s selbst um Neuladen (S9 erledigt).
