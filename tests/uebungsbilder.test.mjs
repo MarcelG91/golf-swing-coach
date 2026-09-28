@@ -142,3 +142,31 @@ test("Linkshänder: Figur gespiegelt, Ausschnitt passt", () => {
   });
   assert.equal(links.ausschnitt.x, 200 - rechts.ausschnitt.x - rechts.ausschnitt.breite);
 });
+
+// Golf-App-Check: app.js zeichnet jedes Element als SVG und baut das Bild in der Animation
+// ca. 30-mal pro Sekunde neu. Deshalb: nur Elementarten, die app.js kennt (sonst landet
+// "undefined" im Bild), nur endliche Zahlen (NaN ergibt Fehler im Browser) und wenige
+// Elemente pro Bild (schont den Akku auf dem iPhone).
+test("Alle Übungsbilder: nur bekannte Elemente, endliche Zahlen, wenige Elemente pro Bild", () => {
+  const ARTEN = ["linie", "kreis", "rechteck", "text"];
+  const zahlen = (el) => [el.von, el.bis, el.mitte, el.bei].filter(Boolean).flat()
+    .concat([el.radius, el.breite, el.x, el.y, el.hoehe].filter((z) => z !== undefined));
+  for (const name of UEBUNGEN_MIT_BILDERN) {
+    for (let schritt = 0; schritt < 10; schritt++) { // keine Übung hat mehr als 10 Schritte
+      const bild = bildZuSchritt(name, schritt);
+      if (!bild) continue;
+      const dauer = gesamtDauer(bild) || 1;
+      for (const ms of [0, dauer * 0.25, dauer * 0.5, dauer * 0.75]) {
+        for (const rechtshaender of [true, false]) {
+          const { ausschnitt, elemente } = zeichnung(bild, ms, rechtshaender);
+          assert.ok(Object.values(ausschnitt).every(Number.isFinite), `${name} ${schritt}: Ausschnitt`);
+          assert.ok(elemente.length <= 40, `${name} ${schritt}: ${elemente.length} Elemente`);
+          for (const el of elemente) {
+            assert.ok(ARTEN.includes(el.art), `${name} ${schritt}: unbekannte Art ${el.art}`);
+            assert.ok(zahlen(el).every(Number.isFinite), `${name} ${schritt}: keine Zahl in ${el.art}`);
+          }
+        }
+      }
+    }
+  }
+});

@@ -1171,6 +1171,9 @@ function oeffneUebung(daten, gedanke) {
   uebungTitel.textContent = daten.name;
   uebungsmodus.hidden = false;
   document.body.classList.add("ohne-scrollen"); // Seite dahinter soll nicht mitscrollen
+  // Seite dahinter "inert" schalten: Tabulator und Bildschirmleser bleiben so im Übungsmodus
+  // (aria-modal allein hält die Tastatur nicht fest)
+  for (const teil of document.body.children) if (teil !== uebungsmodus) teil.inert = true;
   bildschirmAnlassen();
   zeigeUebungsSchritt();
   uebungZuBtn.focus();
@@ -1181,6 +1184,7 @@ function schliesseUebung() {
   halteUebungsbildAn();
   uebungsmodus.hidden = true;
   document.body.classList.remove("ohne-scrollen");
+  for (const teil of document.body.children) teil.inert = false;
   bildschirmFreigeben();
   aktiveUebung.vorherFokus?.focus?.();
   aktiveUebung = null;
@@ -1278,8 +1282,16 @@ function zeichneUebungsbild({ ausschnitt: a, elemente, text }) {
 async function bildschirmAnlassen() {
   if (!("wakeLock" in navigator) || bildschirmSperre) return;
   try {
-    bildschirmSperre = await navigator.wakeLock.request("screen");
-    bildschirmSperre.addEventListener("release", () => { bildschirmSperre = null; });
+    const sperre = await navigator.wakeLock.request("screen");
+    // Die Anfrage braucht einen Moment. Wurde die Übung inzwischen geschlossen (oder kam
+    // eine zweite Anfrage schneller an), die neue Sperre gleich wieder freigeben –
+    // sonst bliebe der Bildschirm dauerhaft an.
+    if (!aktiveUebung || bildschirmSperre) {
+      await sperre.release();
+      return;
+    }
+    bildschirmSperre = sperre;
+    sperre.addEventListener("release", () => { if (bildschirmSperre === sperre) bildschirmSperre = null; });
   } catch (fehler) {
     console.warn("Bildschirm kann nicht angelassen werden:", fehler);
   }
