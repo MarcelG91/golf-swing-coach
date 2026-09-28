@@ -3,6 +3,14 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-28 · Branch `tipps-neu` @ de889b1 · main @ 18dc5c4 · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.11.0) im eigenen Worktree und `tipps-neu` (0.12.0, noch nicht hochgeladen); `node --test` main 84/84, Branch 92/92, mit Check-Fix 93/93 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
+- Live: Version 0.11.0, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 7 App-Dateien gleich `origin/main`. CI auf `main` grün. Branch-Schutz weiter aus (T1).
+- Datenschutz/Sicherheit: keine Videos oder Posedaten in Git, keine Geheimnismuster, nur erlaubte Hosts, keine neuen Netzwerkaufrufe. Neue Texte und der gespeicherte Schwunggedanke nur per `textContent`; einziges neues `innerHTML` ist fester Text für die SVG-Fläche. Neue Dateien in beiden Offline-Listen, Version erhöht. Strichfigur wird nur einmal pro Bewertung gebaut (nicht pro Videobild), Fehler beim Berechnen werden abgefangen.
+- Neu: keine Befund-ID. Barrierefreiheit der Wisch-Karten verbessert (Tastatur, Beschreibung der Skala). V5: Der Branch-Commit trägt noch die Geschäftsadresse – vor dem Hochladen korrigieren. Offen P1: V2 (erst 11b), C1, C2, S2, S8, T1.
+- Fix-Branch: `check-tipps-neu` (2 Commits): Tastatur/Bildschirmleser, Test „Rechenlogik ohne Browser-Code“, Version 0.12.1; Bericht und Protokoll.
+- Nicht geprüft: Browser-Messung durch den Prüfer (lokal kein Playwright, kein Claude in Chrome; die Bau-Sitzung hat Chrome ohne Fenster mit Testvideos genutzt), echtes iPhone/Safari, Zwei-Faktor, CI auf dem Branch (noch kein PR).
+
 ## Golf-App-Check 2026-09-28 · Branch `speicher-verwalten` @ 01584d9 · main @ 1f7ea52 · Urteil 🟡
 - Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.10.0) und `origin/speicher-verwalten` (0.11.0, noch ohne PR) in eigenen Worktrees; `node --test` main 77/77, Branch 84/84 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
 - Browser (Chrome ohne Fenster, lokal): `tests/speicher-browser.html` 23/23 grün. Echter Ablauf mit zwei Testvideos: „Videos älter als 30 Tage“, „Videos dieser Sitzung“ und „Alles löschen“ löschen genau das Angekündigte; Kennzahlen und Posedaten bleiben bei „Videos löschen“; Level, andere Einstellungen und Offline-Speicher bleiben immer; Abbrechen, Esc und Enter löschen nichts; Knöpfe danach wieder frei; Video-Adresse freigegeben. Platz wird sofort frei (Test-Datenbank 41 MB → 0,1 MB auf der Platte).

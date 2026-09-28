@@ -77,3 +77,20 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
   const ohneServiceWorker = QUELLDATEIEN.filter(({ datei }) => datei !== "sw.js").map(({ text }) => ohneKommentare(text)).join("\n");
   assert.doesNotMatch(ohneServiceWorker, /caches\.delete\s*\(/);
 });
+
+// ---------------------------------------------------------------
+// Rechenlogik bleibt frei von Browser-Code (Regel aus CLAUDE.md)
+// So bleiben diese Dateien mit node --test prüfbar – und die Texte der Tipps
+// können nie direkt als HTML in die Seite geraten.
+// ---------------------------------------------------------------
+const RECHENLOGIK = [
+  "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
+  "tipps.js", "strichfigur.js", "schwuenge.js", "gesamtauswertung.js",
+];
+
+test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
+  for (const datei of RECHENLOGIK) {
+    const code = ohneKommentare(QUELLDATEIEN.find((q) => q.datei === datei).text);
+    assert.doesNotMatch(code, /\b(document|window|navigator|localStorage|indexedDB|fetch)\b|innerHTML/, `${datei} enthält Browser-Code`);
+  }
+});

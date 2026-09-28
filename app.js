@@ -46,6 +46,10 @@ import {
 } from "./speicher.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
+// Kurze Tipps (Kurzzeile, Warum, Schwunggedanke, Übung) und die Skala auf den Karten
+import { tipp, gutText, skala, skalaPosition } from "./tipps.js";
+// Kleine Strichfigur aus deinen Posedaten für die Karten (ohne Springen im Video)
+import { strichfigur } from "./strichfigur.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -101,8 +105,11 @@ const einstellungenBereich = $("einstellungenBereich");
 const levelAnzeige = $("levelAnzeige");
 const levelAuswahl = $("levelAuswahl");
 const levelVorschlagBox = $("levelVorschlag");
-const lobBereich = $("lobBereich");
-const lobListe = $("lobListe");
+// Wisch-Karten und Schwunggedanke
+const gedankeBox = $("gedankeBox");
+const gedankeText = $("gedankeText");
+const kartenZaehler = $("kartenZaehler");
+const kartenPunkte = $("kartenPunkte");
 const speichernBox = $("speichernBox");
 const speichernDatum = $("speichernDatum");
 const speichernSchlaeger = $("speichernSchlaeger");
@@ -147,6 +154,7 @@ let bewertung = null;
 let technik = null; // Arme, Oberkörper, Drehung (technik.js)
 let phasenErgebnis = null; // Zeitpunkte von Ansprechen, Top, Treffmoment, Finish
 let alleKennzahlen = []; // alle Kennzahlen mit Kennung, Kategorie und Videomoment
+let aktuellerGedanke = ""; // Schwunggedanke der wichtigsten Baustelle (wird mit der Sitzung gespeichert)
 // Welche Kennzahl gerade per "Im Video zeigen" eingezeichnet wird
 let aktiveMessung = null;
 
@@ -172,6 +180,7 @@ function setzeErgebnisZurueck() {
   phasenErgebnis = null;
   aktiveMessung = null;
   alleKennzahlen = [];
+  aktuellerGedanke = "";
   ergebnisBox.hidden = true;
 }
 
@@ -954,30 +963,27 @@ function zeigeBewertung() {
   alleKennzahlen = alle;
   const { sichtbar, fuerSpaeter } = fuerLevel(alle, aktuellesLevel);
 
-  // 1. Die wichtigsten Baustellen – ausführlich, mit Übung
-  baustellenListe.innerHTML = "";
+  // 1. Die wichtigsten Baustellen als Wisch-Karten – eine Karte pro Baustelle,
+  //    zum Schluss eine Karte "Läuft schon gut"
+  baustellenListe.replaceChildren();
+  baustellenListe.scrollLeft = 0;
   const baustellen = wichtigsteBaustellen(sichtbar, anzahlBaustellen(aktuellesLevel));
-  if (baustellen.length === 0) {
-    const lob = document.createElement("p");
-    lob.className = "karte gut";
-    lob.textContent = "Keine größere Baustelle gefunden – stark! Filme als Nächstes die andere Ansicht, dann prüft die App weitere Punkte.";
-    baustellenListe.appendChild(lob);
-  }
+  const rechtshaender = technik.rechtshaender;
   const einsteiger = aktuellesLevel === LEVEL.EINSTEIGER;
-  baustellen.forEach((k, i) => baustellenListe.appendChild(baueKarte(k, {
-    nummer: i + 1,
-    offen: true,
-    ohneMesswert: einsteiger,
-    hilfenZuerst: einsteiger,
-    erklaerungZuklappen: einsteiger,
-  })));
+  baustellen.forEach((k) => baustellenListe.appendChild(baueBaustellenKarte(k, { rechtshaender, einsteiger })));
+  baustellenListe.appendChild(baueGutKarte(sichtbar.filter((k) => k.bewertung === "gut"), {
+    rechtshaender,
+    keineBaustelle: baustellen.length === 0,
+  }));
+  aktualisiereKartenPunkte();
+
+  // Schwunggedanke der wichtigsten Baustelle oben hervorheben
+  aktuellerGedanke = baustellen.length ? tipp(baustellen[0], rechtshaender)?.gedanke || "" : "";
+  gedankeText.textContent = aktuellerGedanke ? `„${aktuellerGedanke}“` : "";
+  gedankeBox.hidden = !aktuellerGedanke;
 
   // 2. Alle Kennzahlen nach Bereichen
   kennzahlenListe.innerHTML = "";
-  lobListe.innerHTML = "";
-  const lob = aktuellesLevel === LEVEL.KOENNER ? [] : sichtbar.filter((k) => k.bewertung === "gut").slice(0, 2);
-  lobBereich.hidden = lob.length === 0;
-  lob.forEach((k) => lobListe.appendChild(baueKarte(k)));
 
   const aktuelleListe = document.createElement("div");
   aktuelleListe.className = "kennzahlen";
@@ -1032,69 +1038,217 @@ function baueKennzahlenGruppen(container, kennzahlen) {
   }
 }
 
-function baueKarte(k, {
-  nummer = null,
-  offen = false,
-  ohneMesswert = false,
-  hilfenZuerst = false,
-  erklaerungZuklappen = false,
-} = {}) {
-  const karte = document.createElement("article");
-  karte.className = `karte ${k.bewertung}`;
-  // textContent statt innerHTML für die Texte: sicher und einfach
-  karte.innerHTML = `
-    <div class="karte-kopf">
-      <strong></strong>
-      <span class="abzeichen"></span>
-    </div>
-    <div class="wert"></div>
-    <p class="detail"></p>
-    <p class="text"></p>`;
-  karte.querySelector("strong").textContent = nummer ? `${nummer}. ${k.name}` : k.name;
-  karte.querySelector(".abzeichen").textContent = STUFEN[k.bewertung];
-  const wert = karte.querySelector(".wert");
-  const detail = karte.querySelector(".detail");
-  const text = karte.querySelector(".text");
-  wert.textContent = k.wert;
-  detail.textContent = k.detail;
-  text.textContent = k.text;
-  if (ohneMesswert) {
-    wert.hidden = true;
-    detail.hidden = true;
-  }
-  if (erklaerungZuklappen) {
-    detail.remove();
-    text.remove();
-  }
+// Kleines Hilfsmittel: Element mit Klasse und Text bauen (Text immer per textContent – sicher)
+function neu(tag, klasse = "", text = "") {
+  const element = document.createElement(tag);
+  if (klasse) element.className = klasse;
+  if (text) element.textContent = text;
+  return element;
+}
 
-  // "So geht's" (Gefühl) und Übung – bei den Baustellen offen, sonst zum Aufklappen
-  const hilfen = [];
-  if (k.gefuehl) hilfen.push(["gefuehl", `🎯 So geht's: ${k.gefuehl}`]);
-  if (k.tipp) hilfen.push(["tipp", `💡 Übung: ${k.tipp}`]);
-  if (hilfen.length) {
-    const behaelter = offen ? karte : document.createElement("details");
-    if (!offen) {
-      const zusammenfassung = document.createElement("summary");
-      zusammenfassung.textContent = "So verbesserst du es";
-      behaelter.appendChild(zusammenfassung);
-      karte.appendChild(behaelter);
-    }
-    for (const [klasse, text] of hilfen) {
-      const absatz = document.createElement("p");
-      absatz.className = klasse;
-      absatz.textContent = text;
-      behaelter.appendChild(absatz);
-    }
+// Kompakte Karte für "Alle Kennzahlen" und die Gesamtauswertung:
+// Name, Bewertung, Wert und EINE Zeile – Warum, Übung und Messdetails zum Aufklappen.
+function baueKarte(k, { nummer = null, offen = false } = {}) {
+  const rechtshaender = haendigkeit();
+  const karte = neu("article", `karte ${k.bewertung}`);
+  const kopf = neu("div", "karte-kopf");
+  kopf.append(neu("strong", "", nummer ? `${nummer}. ${k.name}` : k.name), neu("span", "abzeichen", STUFEN[k.bewertung]));
+  karte.append(kopf, neu("div", "wert", k.wert));
+
+  const hilfe = ausserhalb(k) ? tipp(k, rechtshaender) : null;
+  if (hilfe) karte.append(neu("p", "kurz", hilfe.kurz));
+  else if (k.bewertung === "gut") karte.append(neu("p", "kurz", gutText(k, rechtshaender)));
+  else karte.append(neu("p", "text", k.text)); // nicht bewertbar: der Grund steht im Text
+
+  const mehr = neu("details");
+  mehr.open = offen;
+  mehr.append(neu("summary", "", hilfe ? "Warum & Übung" : "Messung"));
+  if (hilfe) {
+    mehr.append(neu("p", "warum", hilfe.warum), neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
+    if (hilfe.uebung) mehr.append(baueUebung(hilfe.uebung, { offen: true }));
   }
-  if (erklaerungZuklappen) {
-    const erklaerung = document.createElement("details");
-    const zusammenfassung = document.createElement("summary");
-    zusammenfassung.textContent = "Warum ist das wichtig?";
-    erklaerung.append(zusammenfassung, detail, text);
-    karte.appendChild(erklaerung);
-  }
-  if (k.phase) karte.appendChild(zeigenKnopf(k));
+  mehr.append(neu("p", "detail", k.detail));
+  karte.append(mehr);
+  if (k.phase) karte.append(zeigenKnopf(k));
   return karte;
+}
+
+// Große Wisch-Karte für eine Baustelle: Bild, Kurzzeile, Warum, Skala,
+// Schwunggedanke, Übung und "Im Video zeigen"
+function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
+  const hilfe = tipp(k, rechtshaender);
+  const karte = neu("article", `karte baustelle ${k.bewertung}`);
+  const kopf = neu("div", "karte-kopf");
+  kopf.append(neu("span", "abzeichen", STUFEN[k.bewertung]));
+  if (k.phase) kopf.append(neu("span", "moment", `📍 ${PHASEN_NAME[k.phase]}`));
+  karte.append(kopf);
+
+  const figur = baueFigur(k);
+  if (figur) karte.append(figur);
+
+  karte.append(neu("p", "kurz", hilfe ? hilfe.kurz : k.name));
+  const warum = neu("p", "warum");
+  warum.append(neu("b", "", "Warum? "), hilfe ? hilfe.warum : k.text);
+  karte.append(warum);
+
+  const s = skala(k);
+  if (s) karte.append(baueSkala(s, { anzeige: k.wert, ohneZahlen: einsteiger }));
+  if (hilfe) {
+    karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
+    if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung));
+  }
+  if (k.gefuehl) {
+    const gefuehl = neu("details");
+    gefuehl.append(neu("summary", "", "So fühlt es sich richtig an"), neu("p", "", k.gefuehl));
+    karte.append(gefuehl);
+  }
+  if (k.phase) karte.append(zeigenKnopf(k));
+  return karte;
+}
+
+// Letzte Wisch-Karte: was schon im Zielbereich liegt
+function baueGutKarte(gute, { rechtshaender, keineBaustelle }) {
+  const karte = neu("article", "karte baustelle gut");
+  const kopf = neu("div", "karte-kopf");
+  kopf.append(neu("span", "abzeichen", "Läuft schon gut"));
+  karte.append(kopf);
+  karte.append(neu("p", "kurz", keineBaustelle ? "Keine größere Baustelle – stark! ✓" : "Das machst du schon richtig ✓"));
+  if (keineBaustelle) {
+    karte.append(neu("p", "warum", "Filme als Nächstes die andere Ansicht, dann prüft die App weitere Punkte."));
+  }
+  if (gute.length) {
+    const liste = neu("ul", "gut-liste");
+    for (const k of gute.slice(0, 5)) liste.append(neu("li", "", gutText(k, rechtshaender)));
+    karte.append(liste);
+  }
+  const alle = neu("button", "zeigen", "Alle Kennzahlen ansehen ›");
+  alle.addEventListener("click", () => {
+    // Nur die umschließende Box "Alle Kennzahlen …" aufklappen (bei Könnern gibt es keine)
+    kennzahlenListe.querySelector(":scope > details")?.setAttribute("open", "");
+    kennzahlenListe.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+  karte.append(alle);
+  return karte;
+}
+
+// Übung: aufklappbar, Schritte als nummerierte Liste
+function baueUebung(uebung, { offen = false } = {}) {
+  const block = neu("details", "uebung");
+  block.open = offen;
+  block.append(neu("summary", "", `▶ Übung: ${uebung.name} · ${uebung.wiederholungen}×`));
+  const schritte = neu("ol");
+  for (const schritt of uebung.schritte) schritte.append(neu("li", "", schritt));
+  block.append(schritte);
+  return block;
+}
+
+// Balken mit grünem Zielbereich (gelb = Achtung, Rest rot) und einer Marke für deinen Wert
+function baueSkala(s, { anzeige, ohneZahlen }) {
+  const box = neu("div", "skala");
+  const balken = neu("div", "balken");
+  // Für Bildschirmleser: der Balken als ein "Bild" mit Beschreibung in Worten
+  balken.setAttribute("role", "img");
+  balken.setAttribute("aria-label", `${s.name}: ${anzeige}. ${s.ziel}`);
+  const zone = ([von, bis], klasse) => {
+    const links = skalaPosition(s, von);
+    const element = neu("div", `zone ${klasse}`);
+    element.style.left = `${links}%`;
+    element.style.width = `${skalaPosition(s, bis) - links}%`;
+    return element;
+  };
+  for (const bereich of s.achtung) balken.append(zone(bereich, "achtung"));
+  balken.append(zone(s.gut, "gut"));
+  const marke = neu("div", "marke");
+  marke.style.left = `${skalaPosition(s, s.wert)}%`;
+  balken.append(marke);
+
+  const beschriftung = neu("div", "beschriftung");
+  const du = neu("span", "", ohneZahlen ? "weißer Strich = du" : `${s.name}: `);
+  if (!ohneZahlen) du.append(neu("strong", "", anzeige));
+  beschriftung.append(du, neu("span", "", ohneZahlen ? "grün = Ziel" : s.ziel));
+  box.append(balken, beschriftung);
+  return box;
+}
+
+// Strichfigur aus DEINEN Körperpunkten im passenden Moment, mit roter (du) und
+// gelber (Ziel) Linie wie im Video. Kein Springen im Video – deshalb sofort da.
+function baueFigur(k) {
+  if (!k.phase || !MIT_LINIE.has(k.id) || !phasenErgebnis || !technik) return null;
+  let figur;
+  try {
+    const bild = gespeichertesBild(phasenErgebnis[k.phase].zeit);
+    const ansprechen = gespeichertesBild(phasenErgebnis.ansprechen.zeit);
+    if (!bild || !ansprechen) return null;
+    const linien = ideallinien(k, bild.punkte, ansprechen.punkte, technik);
+    figur = strichfigur(bild.punkte, linien, technik.seitenverhaeltnis || 1);
+  } catch (fehler) {
+    // Z. B. gespeicherter Schwung ohne Posedaten: dann eben ohne Bild
+    console.warn("Strichfigur nicht möglich:", fehler);
+    return null;
+  }
+  const { ausschnitt: a, staerke } = figur;
+  // Die SVG-Fläche baut der Browser aus festem Text. Ihren Namensraum (namespaceURI)
+  // brauchen Linien und Kreise – so muss keine Adresse im Code stehen.
+  const huelle = document.createElement("div");
+  huelle.innerHTML = "<svg></svg>";
+  const svg = huelle.firstChild;
+  const SVG = svg.namespaceURI;
+  svg.setAttribute("viewBox", `${a.x} ${a.y} ${a.breite} ${a.hoehe}`);
+  svg.setAttribute("aria-hidden", "true");
+  const linie = ({ von, bis }, farbe, breite, gestrichelt = false) => {
+    const l = document.createElementNS(SVG, "line");
+    for (const [name, wert] of [["x1", von.x], ["y1", von.y], ["x2", bis.x], ["y2", bis.y]]) l.setAttribute(name, wert);
+    l.setAttribute("stroke", farbe);
+    l.setAttribute("stroke-width", breite);
+    l.setAttribute("stroke-linecap", "round");
+    if (gestrichelt) l.setAttribute("stroke-dasharray", `${breite * 2} ${breite * 1.6}`);
+    svg.append(l);
+  };
+  const kreis = ({ mitte, radius }, farbe, breite, gestrichelt = false) => {
+    const c = document.createElementNS(SVG, "circle");
+    c.setAttribute("cx", mitte.x);
+    c.setAttribute("cy", mitte.y);
+    c.setAttribute("r", Math.max(radius, breite * 1.5));
+    c.setAttribute("fill", "none");
+    c.setAttribute("stroke", farbe);
+    c.setAttribute("stroke-width", breite);
+    if (gestrichelt) c.setAttribute("stroke-dasharray", `${breite * 2} ${breite * 1.6}`);
+    svg.append(c);
+  };
+  for (const knochen of figur.knochen) linie(knochen, "#cfe3d6", staerke);
+  kreis(figur.kopf, "#cfe3d6", staerke);
+  for (const l of figur.rot) linie(l, ROT, staerke * 1.6);
+  for (const c of figur.rotKreise) kreis(c, ROT, staerke * 1.3);
+  for (const l of figur.gelb) linie(l, GELB, staerke * 1.3, true);
+  for (const c of figur.gelbKreise) kreis(c, GELB, staerke * 1.3, true);
+
+  const box = neu("div", "figur");
+  const legende = neu("div", "legende");
+  legende.append(neu("span", "rot", "du"), neu("span", "gelb", "Ziel"));
+  box.append(svg, legende);
+  return box;
+}
+
+// Punkte unter den Wisch-Karten und "1 von 3" passend zur sichtbaren Karte
+function aktualisiereKartenPunkte() {
+  const karten = [...baustellenListe.children];
+  if (karten.length < 2) {
+    kartenPunkte.replaceChildren();
+    kartenZaehler.textContent = "";
+    return;
+  }
+  const breite = karten[0].offsetWidth + 12; // 12 = Abstand zwischen den Karten (style.css)
+  const nummer = breite > 12 ? Math.min(karten.length - 1, Math.round(baustellenListe.scrollLeft / breite)) : 0;
+  if (kartenPunkte.children.length !== karten.length) {
+    kartenPunkte.replaceChildren(...karten.map(() => neu("i")));
+  }
+  [...kartenPunkte.children].forEach((punkt, i) => punkt.classList.toggle("aktiv", i === nummer));
+  kartenZaehler.textContent = `${nummer + 1} von ${karten.length} · wischen ›`;
+}
+
+// Rechts- oder Linkshänder? Für "linker/rechter Arm" in den Tipps.
+function haendigkeit() {
+  return technik?.rechtshaender ?? alleSchwuenge.find((s) => s.technik)?.technik.rechtshaender ?? true;
 }
 
 function zeigenKnopf(k) {
@@ -1182,8 +1336,9 @@ const deutschesDatum = (iso) => iso.split("-").reverse().join(".");
 function zeigeSpeicherKaesten() {
   gespeichertBox.hidden = !gespeicherteSitzung;
   if (gespeicherteSitzung) {
-    const { datum, schlaeger, notiz } = gespeicherteSitzung;
-    gespeichertInfo.textContent = `${deutschesDatum(datum)} · ${schlaeger}${notiz ? ` · ${notiz}` : ""}`;
+    const { datum, schlaeger, notiz, gedanke } = gespeicherteSitzung;
+    gespeichertInfo.textContent = `${deutschesDatum(datum)} · ${schlaeger}${notiz ? ` · ${notiz}` : ""}` +
+      `${gedanke ? ` · 💭 „${gedanke}“` : ""}`;
     videosSitzungLoeschenBtn.hidden = !alleSchwuenge.some((s) => s.datei); // noch Videos da?
     speichernBox.hidden = true;
     return;
@@ -1320,6 +1475,7 @@ async function speichereAuswahl() {
       schlaeger,
       notiz: speichernNotiz.value.trim(),
       level: aktuellesLevel,
+      gedanke: aktuellerGedanke, // Schwunggedanke, der beim Speichern oben stand
       schwungIds: eintraege.map((e) => e.schwung.id),
       appVersion: APP_VERSION,
     };
@@ -1410,6 +1566,7 @@ async function zeigeMeineSchwuenge() {
       `${anzahl} ${anzahl === 1 ? "Schwung" : "Schwünge"}` +
       `${sitzung.level ? ` · ${LEVEL_OPTIONEN.find((option) => option.wert === sitzung.level)?.name || ""}` : ""}` +
       `${sitzung.notiz ? ` · ${sitzung.notiz}` : ""}` +
+      `${sitzung.gedanke ? ` · 💭 „${sitzung.gedanke}“` : ""}` +
       `${ohneVideo ? " · 📊 nur Kennzahlen" : ""}`;
     // Vorschaubild des ersten Schwungs. createObjectURL macht aus der gespeicherten
     // Datei eine Adresse, die <img> anzeigen kann.
@@ -1839,6 +1996,8 @@ skelettAn.addEventListener("change", analysiereAktuellesBild);
 analysierenBtn.addEventListener("click", analysiereAlles);
 exportierenBtn.addEventListener("click", exportiereDaten);
 speichernKnopf.addEventListener("click", speichereAuswahl);
+// Wisch-Karten: Punkte und "1 von 3" beim Wischen mitführen
+baustellenListe.addEventListener("scroll", aktualisiereKartenPunkte, { passive: true });
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
