@@ -3,6 +3,15 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-28 · Branch `etappe-11b-coach-claude` @ 4078604 · main @ 7f228dc · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.14.1) im eigenen Worktree und `etappe-11b-coach-claude` (0.15.0, noch nicht hochgeladen); `node --test` main 105/105, Branch 112/112, mit Check-Fix 113/113 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt mit `main` zusammenführen.
+- Live: Version 0.14.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 6 App-Dateien gleich `origin/main`. CI auf `main` grün, `main` geschützt.
+- Coach (V2): Gesendet wird nur die feste Auswahl aus `coachDaten()`; Namen, Werte und Zielbereiche der Kennzahlen sind feste App-Texte (kein Dateiname, keine Notiz, kein Datum). Schlüssel nur im `localStorage`, angezeigt nur die letzten 4 Zeichen, nicht in Datenbank, Export oder Seite; Fehlermeldungen sind feste Texte. Antwort nur per `textContent`. Einwilligung vor dem ersten Senden. Anfrage (Modell, Rückfall bei Ablehnung, adaptives Denken, strukturierte Antwort) passt zur aktuellen API. CORS-Vorabfrage an `api.anthropic.com` ohne Schlüssel beantwortet (kostenlos); keine echte Anfrage gesendet.
+- Datenschutz/Sicherheit sonst: keine Videos oder Posedaten in Git, keine Geheimnismuster, Hosts nur jsDelivr, Google und (Coach) Anthropic; einziger neuer Netzwerkweg ist der Coach. Neue Datei in beiden Offline-Listen, Version erhöht.
+- Neu: S11 (P2, Coach-Knopf während laufender Anfrage wieder frei – im Check-Fix erledigt), C7 (P3, gemeinsamer Browser-Speicher aller Pages-Seiten des Kontos; derzeit nur eine Seite). C1 erweitert um das Anthropic-SDK. Erledigt (im Branch): V2. Offen P1: C1, S8 (iPhone-Messung).
+- Fix-Branch: `check-etappe-11b` (2 Commits): eine Coach-Anfrage zur Zeit, Antwort und Meldung nur beim eigenen Schwung, nur das Feld `coach` wird nachgetragen (gelöschte Schwünge bleiben gelöscht), `api.anthropic.com` ausdrücklich gesetzt und im Host-Test festgeschrieben, „Schlüssel löschen“ nimmt die Einwilligung zurück, Version 0.15.1; Bericht und Protokoll.
+- Nicht geprüft: Browser-Ablauf durch den Prüfer (lokal kein Playwright, kein Claude in Chrome; die Bau-Sitzung hat den Ablauf in Chrome ohne Fenster mit abgefangenen Anfragen geprüft), Check-Fix im Browser, echte Anfrage an Claude (kostet Geld, nur mit Marcels OK), echtes iPhone/Safari, CI auf dem Branch (noch kein PR).
+
 ## Golf-App-Check 2026-09-28 · Branch `robuste-analyse` @ 9d1162c · main @ 20750c0 · Urteil 🟡
 - Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.13.1) im eigenen Worktree und `robuste-analyse` (0.14.0, noch nicht hochgeladen); `node --test` main 102/102, Branch 104/104, mit Check-Fix 105/105 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt mit `main` zusammenführen.
 - Live: Version 0.13.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 5 App-Dateien gleich `origin/main`. CI auf `main` grün, `main` geschützt.

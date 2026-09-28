@@ -1,12 +1,14 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 28.09.2026 · geprüft auf `origin/main` @ `20750c0` (Version 0.13.1) und Branch `robuste-analyse` @ `9d1162c` (Version 0.14.0, mit Check-Fix 0.14.1)
+Stand: 28.09.2026 · geprüft auf `origin/main` @ `7f228dc` (Version 0.14.1) und Branch `etappe-11b-coach-claude` @ `4078604` (Version 0.15.0, mit Check-Fix 0.15.1)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
-**Kurz:** Die App ist im Kern sicher gebaut. Videos verlassen das Handy nicht, und im Repo liegen
-weder Videos noch Geheimnisse. Offen sind vor allem die Echtheitsprüfung des nachgeladenen
-MediaPipe-Codes und ein Test im echten Browser. Die Fehlerbehandlung der Analyse ist seit 0.14.0 robust
-(Etappe S2, noch im Branch). `main` ist seit 28.09. per Regel geschützt,
+**Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
+und im Repo liegen weder Videos noch Geheimnisse. Seit 0.15.0 (Etappe 11b, noch im Branch) gibt es
+den **ersten gewollten Datenweg**: Der freiwillige Coach sendet nach Einwilligung nur Kennzahlen an
+`api.anthropic.com`, mit dem eigenen API-Schlüssel des Nutzers (V2). Offen sind vor allem die
+Echtheitsprüfung des nachgeladenen Fremdcodes – seit 11b auch des Anthropic-SDK, das den Schlüssel
+sieht (C1) – und ein Test im echten Browser. `main` ist seit 28.09. per Regel geschützt,
 das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etappe S0 erledigt).
 
 > **Regel für diesen öffentlichen Bericht:** keine Geheimnisse und keine Anleitung, wie man eine
@@ -16,10 +18,10 @@ das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etappe S0 erledi
 
 | Thema | Ampel | Kurzbewertung |
 |---|---|---|
-| Videos und Datenschutz | Grün | Videos und Kennzahlen bleiben auf dem Handy. Neu (0.11.0): Videos gezielt oder alles löschen – im Browser nachgeprüft: gelöscht wird nur, was die Rückfrage nennt, Level und Offline-Dateien bleiben, der Platz wird frei. V2 betrifft erst Teil 11b. |
-| Cybersecurity | Gelb | MediaPipe kommt ohne Echtheitsprüfung von jsDelivr und Google (C1), noch keine CSP (C3). |
-| Test und Deploy | Gelb | 105 Tests grün (Branch `robuste-analyse` mit Check-Fix; `main` 102). Die neue Prüfung der Videolänge hat eigene Tests. `main` ist seit 28.09. per Regel geschützt (T1 erledigt). Offen: kein automatisierter Browser-Test (T3). |
-| Stabilität | Grün | Seit 0.14.0 (Branch `robuste-analyse`): Analyse, Speichern und Löschen geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt, lange Videos bekommen einen Hinweis, ein Ladeabbruch beim ersten Öffnen wird gemeldet. Offen nur S10 (P3). |
+| Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach (0.15.0): eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. |
+| Cybersecurity | Gelb | MediaPipe und seit 0.15.0 das Anthropic-SDK kommen ohne Echtheitsprüfung von jsDelivr und Google (C1); das SDK sieht den API-Schlüssel. Noch keine CSP (C3). Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). |
+| Test und Deploy | Gelb | 113 Tests grün (Branch `etappe-11b-coach-claude` mit Check-Fix; `main` 105). `coach.js` hat eigene Tests, ohne echte (kostenpflichtige) Anfrage. `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach (Check-Fix 0.15.1): nur eine Anfrage zur Zeit (S11). Offen nur S10 (P3). |
 | Geschwindigkeit | Gelb | Warmstart bis „Bereit“ 0,3 s ohne Datenübertragung. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
 ## Befunde
@@ -32,9 +34,9 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | Nr | Prio | Status | Befund | Maßnahme |
 |---|---|---|---|---|
 | V1 | P1 | Erledigt 27.09. (PR #6) | Lokaler Testserver war im ganzen WLAN erreichbar. | README: `python3 -m http.server 8000 --bind 127.0.0.1` |
-| V2 | P1 vor Etappe 11b | Offen (Weg entschieden 27.09.) | Coach-Feedback mit Claude wäre der erste Weg, auf dem Daten das Handy verlassen. | Kein API-Schlüssel im Code. Marcel hat sich gegen einen Vermittler-Server und für den **eigenen Schlüssel des Nutzers** entschieden (nur auf dem Gerät, eigener Workspace mit Ausgabenlimit, nie in Sicherung/Repo). Nur Kennzahlen senden, vorher sichtbar fragen, README-Versprechen anpassen. Plan: `docs/plan-etappe-11-level-und-coach.md`. |
+| V2 | P1 vor Etappe 11b | Erledigt 28.09. (Branch `etappe-11b-coach-claude`, 0.15.0 + Check-Fix 0.15.1, noch nicht gemergt) | Coach-Feedback mit Claude ist der erste Weg, auf dem Daten das Handy verlassen. | Umgesetzt wie entschieden: **eigener Schlüssel des Nutzers** nur im `localStorage` des Geräts (nie im Code, in der Datenbank oder im Export; angezeigt werden nur die letzten 4 Zeichen). Gesendet wird nur eine feste Auswahl (`coachDaten()` in `coach.js`: Level, Ansicht, Händigkeit, Anzahl Schwünge, Kennzahlen mit Name/Wert/Bewertung/Zielbereich, kurzer Verlauf) – Test mit Dateiname, Notiz, Datum und Posedaten als Köder. Einwilligung vor dem ersten Senden; „Schlüssel löschen“ nimmt sie zurück (Check-Fix). Einzige neue Adresse `api.anthropic.com`, im Code ausdrücklich gesetzt und per Test auf `app.js` beschränkt. README-Versprechen angepasst. Offen: echter Test mit Marcels Schlüssel. |
 | V3 | P2 | Erledigt 27.09. (PR #6) | `.gitignore` schützte `IMG_1234.MOV` nur auf dem Mac, einige Formate fehlten. | Groß-/Kleinschreibung, weitere Formate, Video-Wächter-Test. |
-| V4 | P3 | Offen | jsDelivr, Google und GitHub sehen IP-Adresse und Zeitpunkt beim Laden. | Für private Nutzung unkritisch. Nutzen Freunde die App, einen kurzen Datenschutzhinweis ergänzen. C1 würde jsDelivr und Google entfernen. |
+| V4 | P3 | Offen | jsDelivr, Google und GitHub sehen IP-Adresse und Zeitpunkt beim Laden; wer den Coach nutzt, zusätzlich Anthropic. | Für private Nutzung unkritisch. Der Einwilligungsdialog des Coachs nennt IP-Adresse und Browserkennung. Nutzen Freunde die App, einen kurzen Datenschutzhinweis für die ganze App ergänzen. C1 würde jsDelivr und Google entfernen. |
 | V5 | P3 | Erledigt 28.09., manuell (ältere Commits akzeptiert) | Ältere Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. | Globale Git-Einstellung auf dem Mac ist die noreply-Adresse; in GitHub sind „Keep my email addresses private“ und „Block command line pushes that expose my email“ an. Die Historie wird bewusst nicht umgeschrieben (bräuchte Force-Push). Merge-Commits von GitHub beim nächsten PR stichprobenartig prüfen. |
 | V6 | P2 vor Etappe 9 | Offen | Geplante Sicherung mit Videos läge in iCloud Drive nicht Ende-zu-Ende verschlüsselt (außer mit „Erweiterter Datenschutz“). | Sicherung optional mit Passwort verschlüsseln (Web Crypto) oder ohne Videos anbieten. |
 | V7 | P3 | Erledigt 27.09. (dieser PR) | `.claude/settings.local.json` (persönliche Claude-Code-Einstellungen) war nicht von Git ausgeschlossen. | In `.gitignore` eingetragen. |
@@ -45,16 +47,19 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 
 **Übungsmodus (0.13.0):** Vollbild-Übungen mit Strichfiguren. Die Figuren kommen aus der neuen Rechenlogik `uebungsbilder.js` (feste Posen, kein Browser-Code, eigene Tests) und werden als SVG gezeichnet: einziges `innerHTML` ist fester Text, Beschriftungen und Übungstexte kommen per `textContent`. Kein neuer Netzwerkaufruf, keine neue Adresse, nichts wird gespeichert. Die Animation (ca. 30 Bilder pro Sekunde, höchstens 19 Elemente pro Bild) stoppt beim Schließen und beim Seitenwechsel. Der Bildschirm bleibt während der Übung an (Wake Lock) und wird beim Schließen freigegeben. Seit dem Check-Fix (0.13.1) ist die Seite dahinter für Tastatur und Bildschirmleser gesperrt, solange der Übungsmodus offen ist.
 
+**Coach mit Claude (0.15.0, Check-Fix 0.15.1):** Der Coach erscheint nur mit eigenem API-Schlüssel. Vor dem ersten Senden fragt ein Dialog um Einwilligung; unter dem Knopf steht immer, dass Kennzahlen an Anthropic gehen, und „Was wird gesendet?“ zeigt genau die Daten der Anfrage. Das SDK wird erst nach Einwilligung und nur mit Schlüssel geladen. Die Antwort wird geprüft (Fokus nur aus den gemessenen Baustellen, Texte gekürzt) und nur per `textContent` gezeigt; die Übung kommt immer aus `tipps.js`. Bei gespeicherten Schwüngen trägt die App nur das Feld `coach` in den vorhandenen Eintrag nach – wurde der Schwung inzwischen gelöscht, passiert nichts. „Videos löschen“ behält Coach-Antworten, „Alles löschen“ entfernt sie; Schlüssel und Level bleiben. Fehlermeldungen sind feste Texte, SDK-Fehlertexte gehen nur in die Entwicklerkonsole. Der Service Worker leitet die Anfragen an Anthropic (POST) nur durch und speichert sie nicht; das SDK selbst (feste Version, dazu drei kleine Hilfsdateien) legt er nach dem ersten Laden wie jede jsDelivr-Datei im Offline-Speicher ab.
+
 ### Cybersecurity (C)
 
 | Nr | Prio | Status | Befund | Maßnahme |
 |---|---|---|---|---|
-| C1 | P1 | Offen | MediaPipe-Code, Rechenkern und Modell werden ohne Echtheitsprüfung von zwei Anbietern geladen. Dieser Code sieht jedes Videobild. | Dateien selbst ausliefern (Build mit Prüfsummen) oder Prüfsummen im Service Worker kontrollieren. Größerer Umbau, nur nach Absprache. |
+| C1 | P1 | Offen (seit 0.15.0 erweitert) | MediaPipe-Code, Rechenkern und Modell werden ohne Echtheitsprüfung von zwei Anbietern geladen. Dieser Code sieht jedes Videobild. Seit 11b kommt das Anthropic-SDK dazu (von jsDelivr erzeugte Bündel, feste Version): Es läuft nur bei Coach-Nutzern, sieht dann aber den API-Schlüssel und läuft mit denselben Rechten wie die App. | Dateien selbst ausliefern (Build mit Prüfsummen) oder Prüfsummen im Service Worker kontrollieren – das SDK gleich mit einbeziehen. Bis dahin begrenzt das Ausgabenlimit des eigenen Workspaces den Schaden. Größerer Umbau, nur nach Absprache. |
 | C2 | P1 | Erledigt 28.09., manuell | Das GitHub-Konto ist der Generalschlüssel zur App. | Zwei-Faktor mit Authenticator-App und Passkey, Wiederherstellungscodes sicher abgelegt, Sitzungen, Tokens, Apps und SSH-Schlüssel aufgeräumt. Nur der Zugang der Kommandozeile bleibt. Einziger Mitarbeiter am Repo ist das Hauptkonto. |
-| C3 | P2 | Offen | Keine Content Security Policy. | Nach C1 als `<meta>`-Tag: nur eigene Dateien, `'wasm-unsafe-eval'`, Daten nur an die eigene Adresse. In Safari und Chrome testen. |
+| C3 | P2 | Offen | Keine Content Security Policy. | Nach C1 als `<meta>`-Tag: nur eigene Dateien, `'wasm-unsafe-eval'`; Verbindungen nur zur eigenen Adresse, zu den zwei Anbietern der Pose-Erkennung und (Coach) zu `api.anthropic.com`. In Safari und Chrome testen. |
 | C4 | P3 | Offen | MediaPipe 0.10.14 ist gepinnt, aktuell ist 1.0.1. | Kein Eil-Update. Später gezielt in eigenem Branch mit Tests. |
 | C5 | P3 | Akzeptiert | Schutz gegen Einbetten in fremde Seiten ist auf GitHub Pages nicht setzbar. | Kein Login, keine Zahlungen, daher geringes Risiko. |
 | C6 | P3 | Offen | Kein LICENSE, Lizenzen der Testdaten-Quellen nicht vermerkt. | In `tests/daten/QUELLEN.md` ergänzen oder später eigene Schwünge verwenden. |
+| C7 | P3 | Offen (derzeit kein Risiko) | Alle GitHub-Pages-Seiten eines Kontos teilen sich im Browser einen Speicherbereich (Level, Coach-Schlüssel, Schwung-Datenbank). Derzeit hat das Konto nur diese eine Pages-Seite (per API geprüft 28.09.). | Keine weitere Pages-Seite unter diesem Konto veröffentlichen – oder die App vorher auf eine eigene (Sub-)Domain umziehen. Bei jedem Check prüfen. |
 
 ### Test und Deploy (T)
 
@@ -80,6 +85,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | S7 | P3 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Unerwartete Fehler landeten nur in der Entwicklerkonsole. | Fehler und abgelehnte Promises erscheinen in der Statuszeile. Check-Fix 0.14.1: Harmlose Abbrüche beim Abspielen gehen nur in die Konsole, damit sie keine richtige Meldung überschreiben. |
 | S8 | P1 | Teilweise | Videos brauchen auf dem iPhone lange, bis sie in der App sind. Die Ursache liegt meist vor der App (Umwandeln in Safari, iCloud-Download, 4K). | Tipps im README (PR #6). Analyse deutlich schneller (PR #8), Statuszeile zeigt Messwerte. Seit 0.14.0 zeigt „Analyse fertig (…)“ auch „Video geladen in … s“. Diese Zeit beginnt erst, wenn die Auswahl in der App ankommt – das „Wird vorbereitet“ der Foto-Auswahl davor ist nicht enthalten. Offen: iPhone-Messung auswerten. |
 | S9 | P3 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Kam beim allerersten Öffnen eine App-Datei nicht an (z. B. schlechtes Netz), blieb die App ohne Hinweis bei „Lade die Pose-Erkennung …“ stehen. | `pwa.js` prüft nach 20 s, ob `app.js` gestartet ist, und bittet sonst um Neuladen. Check-Fix 0.14.1: Kommt `app.js` bei sehr langsamem Netz doch noch an, verschwindet der Hinweis wieder; der genauere Offline-Hinweis bleibt stehen. |
+| S11 | P2 | Erledigt 28.09. (Check-Fix 0.15.1, Branch `check-etappe-11b`) | Coach: Wurde die Ansicht während einer laufenden Anfrage neu gezeichnet (Level- oder Schwungwechsel, Internet wieder da), war der Knopf wieder frei – eine zweite, bezahlte Anfrage war möglich. Fehlermeldungen konnten beim falschen Schwung erscheinen, eine Antwort bei einem Sitzungswechsel verloren gehen. | Sperre für die Dauer der Anfrage (im `finally` gelöst), Antwort und Meldung nur beim eigenen Schwung, Nachtragen per Schwung-id statt über die gerade geöffnete Sitzung. Test in `tests/sicherheit.test.mjs`. |
 | S10 | P3 | Offen | Meldet der Browser beim Laden eines Videos weder „geladen“ noch „Fehler“, wartet die Analyse ohne Zeitgrenze (Knöpfe bleiben gesperrt). Nicht beobachtet, nur im Code gesehen. | Zeitgrenze beim Laden (z. B. 30 s) mit Meldung. Erst nach der iPhone-Messung festlegen, damit große Videos nicht fälschlich abgebrochen werden. |
 
 ### Geschwindigkeit (Messwerte vom 27.09., Mac, schnelles Netz)
@@ -99,11 +105,11 @@ Warmstart bis „Bereit“: 0,3 s ohne Datenübertragung (28.09., Mac, schnelles
 |---|---|---|
 | S0 GitHub-Einstellungen | C2 Zwei-Faktor, T1 Regel für `main`, V5 E-Mail privat | Erledigt 28.09., manuell (C2, T1, V5) |
 | S1 Sicherheitsnetz | T2, V3, V1, T6 | Erledigt 27.09. (PR #6) |
-| S2 Robuste Analyse | S2, S3, S7, S9, Rest von S8 (S5, S6 erledigt) | Erledigt 28.09. im Branch `robuste-analyse` mit Check-Fix (noch nicht gemergt). Rest: iPhone-Messung (S8), S10 |
-| S3 Echtheit und Browser-Test | C1, T3, C4 | Offen, nur nach Absprache |
+| S2 Robuste Analyse | S2, S3, S7, S9, Rest von S8 (S5, S6 erledigt) | Erledigt 28.09. (PR #22). Rest: iPhone-Messung (S8), S10 |
+| S3 Echtheit und Browser-Test | C1 (inkl. Anthropic-SDK), T3, C4 | Offen, nur nach Absprache |
 | S4 Hausordnung | C3 | Offen, nach S3 |
 | Vor Etappe 9 | V6 | Offen |
-| Vor Etappe 11b | V2 | Offen (Weg entschieden 27.09.) |
+| Vor Etappe 11b | V2 | Erledigt 28.09. im Branch `etappe-11b-coach-claude` mit Check-Fix (noch nicht gemergt). Rest: echter Test mit Marcels Schlüssel |
 
 ## Quellen
 
