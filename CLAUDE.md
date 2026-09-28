@@ -34,6 +34,8 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
 - Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
   Sitzung hält zusätzlich fest, welches Level beim Speichern gewählt war.
+- Hell/Dunkel liegt unter `localStorage`-Schlüssel `darstellung` (`auto`/`hell`/`dunkel`, `darstellung.js`).
+  Farben nur über die Variablen oben in `style.css` setzen (beide Farbsätze pflegen).
 - **Keine Videos, keine exportierten Posedaten ins Repo** (`tests/keine-videos.test.mjs`
   und `.gitignore` wachen darüber). Testvideos nur lokal in `testvideos/`.
 - Rechenlogik (Phasen, Kennzahlen, Technik, Raster) bleibt frei von Browser-Code, damit
@@ -80,6 +82,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
+| `style.css` · `darstellung.js` | Aussehen (Design-Variablen, Hell/Dunkel) · Umschalter Hell/Dunkel/Automatisch |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 | `docs/plan-tipps-neu.md` | Wisch-Karten, Kurztipps, Übungsmodus – Entscheidungen, geprüfte Texte, Quellen |
 | `docs/plan-etappe-11-level-und-coach.md` | Plan für Etappe 11: Level-gerechte Tipps (11a) und Coach mit Claude (11b) |
@@ -109,9 +112,7 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
 2. **Echter Coach-Test** (Marcel, ≥ 0.15.0, ca. 20 Cent): alle drei Level – passen Ton, Länge, Fokus? Kosten notieren.
    Kommt „unvollständig“, `max_tokens` in `coach.js` von 4000 anheben.
 3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) durch einen PGA-Pro.
-4. **Aufräum-Runde** (Claude, ein PR, 1–2 h):
-   - Level-Karten (⚙️ Einstellungen): Beschreibung wird in eine schmale Spalte gequetscht („Ich / lerne / gerade …“) –
-     Grid-Spalte der `<small>` in `style.css` festlegen.
+4. **Aufräum-Runde** (Claude, ein PR, 1–2 h) – Level-Karten erledigt mit 0.16.0 (Design):
    - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
      `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
    - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen

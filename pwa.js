@@ -4,14 +4,14 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.15.1";
+export const APP_VERSION = "0.16.0";
 
 // Muss zu den Namen in sw.js passen
 const CACHE_APP = "app-v1";
 const CACHE_CDN = "cdn-v1";
 
 // Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
-const APP_DATEIEN = ["./", "./style.css", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./level.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./coach.js", "./pwa.js"];
+const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./level.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./coach.js", "./pwa.js"];
 
 const $ = (id) => document.getElementById(id);
 
