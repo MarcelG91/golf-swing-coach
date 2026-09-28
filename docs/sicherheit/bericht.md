@@ -1,11 +1,12 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 28.09.2026 · geprüft auf `origin/main` @ `c93f5f6` (Version 0.12.1) und Branch `uebungsmodus` @ `ad71505` (Version 0.13.0, mit Check-Fix 0.13.1)
+Stand: 28.09.2026 · geprüft auf `origin/main` @ `20750c0` (Version 0.13.1) und Branch `robuste-analyse` @ `9d1162c` (Version 0.14.0, mit Check-Fix 0.14.1)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos verlassen das Handy nicht, und im Repo liegen
 weder Videos noch Geheimnisse. Offen sind vor allem die Echtheitsprüfung des nachgeladenen
-MediaPipe-Codes und die Fehlerbehandlung während der Analyse. `main` ist seit 28.09. per Regel geschützt,
+MediaPipe-Codes und ein Test im echten Browser. Die Fehlerbehandlung der Analyse ist seit 0.14.0 robust
+(Etappe S2, noch im Branch). `main` ist seit 28.09. per Regel geschützt,
 das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etappe S0 erledigt).
 
 > **Regel für diesen öffentlichen Bericht:** keine Geheimnisse und keine Anleitung, wie man eine
@@ -17,9 +18,9 @@ das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etappe S0 erledi
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos und Kennzahlen bleiben auf dem Handy. Neu (0.11.0): Videos gezielt oder alles löschen – im Browser nachgeprüft: gelöscht wird nur, was die Rückfrage nennt, Level und Offline-Dateien bleiben, der Platz wird frei. V2 betrifft erst Teil 11b. |
 | Cybersecurity | Gelb | MediaPipe kommt ohne Echtheitsprüfung von jsDelivr und Google (C1), noch keine CSP (C3). |
-| Test und Deploy | Gelb | 102 Tests grün (Branch `uebungsmodus` mit Check-Fix; `main` 93). Die neue Logikdatei `uebungsbilder.js` hat eigene Tests. `main` ist seit 28.09. per Regel geschützt (T1 erledigt). Offen: kein automatisierter Browser-Test (T3). |
-| Stabilität | Gelb | Löschen und Öffnen gespeicherter Sitzungen fangen Fehler ab und geben Knöpfe wieder frei. Offen: Ein Analysefehler sperrt weiter die Knöpfe (S2); ein Ladeabbruch beim ersten Öffnen bleibt ohne Meldung (S9). |
-| Geschwindigkeit | Gelb | Warmstart bis „Bereit“ 0,3 s ohne Datenübertragung. Analyse spielt das Video ab statt Bild für Bild zu springen. iPhone-Messung steht noch aus (S8). |
+| Test und Deploy | Gelb | 105 Tests grün (Branch `robuste-analyse` mit Check-Fix; `main` 102). Die neue Prüfung der Videolänge hat eigene Tests. `main` ist seit 28.09. per Regel geschützt (T1 erledigt). Offen: kein automatisierter Browser-Test (T3). |
+| Stabilität | Grün | Seit 0.14.0 (Branch `robuste-analyse`): Analyse, Speichern und Löschen geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt, lange Videos bekommen einen Hinweis, ein Ladeabbruch beim ersten Öffnen wird gemeldet. Offen nur S10 (P3). |
+| Geschwindigkeit | Gelb | Warmstart bis „Bereit“ 0,3 s ohne Datenübertragung. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
 ## Befunde
 
@@ -71,14 +72,15 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | Nr | Prio | Status | Befund | Maßnahme |
 |---|---|---|---|---|
 | S1 | P1 | Erledigt 27.09. (Etappe 7) | App startete ohne Internet nicht. | Service Worker speichert App und Pose-Erkennung. |
-| S2 | P1 | Teilweise | `analysiereAlles()` fängt Fehler beim Laden eines Videos ab; Löschen und Öffnen gespeicherter Sitzungen fangen Fehler ab und geben Knöpfe frei (0.11.0). Scheitert aber die Analyse selbst, bleiben alle Knöpfe gesperrt, bis die Seite neu geladen wird. | `try/finally` um die ganze Analyse, verständliche Meldung, Knöpfe immer wieder freigeben. |
-| S3 | P2 | Offen | Keine Längengrenze und keine Prüfung, ob die Videolänge endlich ist. | `Number.isFinite(video.duration)` prüfen, ab etwa 20 s pro Video einen Hinweis zeigen. |
+| S2 | P1 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Scheiterte die Analyse selbst, blieben alle Knöpfe gesperrt, bis die Seite neu geladen wurde. | `try/catch/finally` um die ganze Analyse, pro Video eigene Fehlerbehandlung (die anderen Videos laufen weiter), Knöpfe im `finally` frei. Check-Fix 0.14.1: Verweigert der Browser beim Speichern das Abspielen, wird der Schwung ohne Video gespeichert, statt dass das Speichern hängt. |
+| S3 | P2 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Keine Längengrenze und keine Prüfung, ob die Videolänge endlich ist. | `pruefeVideoLaenge()` in `videoanalyse.js` (mit Tests): unbekannte Länge = nicht lesbar, ab 20 s ein Hinweis. Check-Fix 0.14.1: Die Prüfung greift auch beim ersten, schon vorgeladenen Video. |
 | S4 | P2 | Erledigt 27.09. | Zeichenfläche war so groß wie das Video (bei 4K rund 33 MB). | Auf höchstens 1280 px begrenzt. |
 | S5 | P2 | Erledigt 28.09. (PR #16) | Beim Laden eines Videos entsteht eine Browser-Adresse (`URL.createObjectURL`), die nie freigegeben wird. Mit mehreren Videos pro Analyse wächst der Speicher. | Die alte Adresse wird beim Laden des nächsten Videos freigegeben. Seit 0.11.0 auch, wenn ein gelöschtes Video aus dem Player genommen wird. |
 | S6 | P3 | Erledigt 28.09. (PR #16) | „Posedaten speichern“ gibt die Datei-Adresse sofort nach dem Klick frei. Safari auf dem iPhone findet die Datei dann oft nicht mehr. | Die Freigabe erfolgt verzögert nach 60 s. |
-| S7 | P3 | Offen | Unerwartete Fehler landen nur in der Entwicklerkonsole. | Zentrale Fehleranzeige in der Statuszeile. |
-| S8 | P1 | Teilweise | Videos brauchen auf dem iPhone lange, bis sie in der App sind. Die Ursache liegt meist vor der App (Umwandeln in Safari, iCloud-Download, 4K). | Tipps im README (PR #6). Analyse deutlich schneller (PR #8), Statuszeile zeigt Messwerte. Offen: iPhone-Messung auswerten, Ladezeit des Videos selbst messen. |
-| S9 | P3 | Offen | Kommt beim allerersten Öffnen eine App-Datei nicht an (z. B. schlechtes Netz), bleibt die App ohne Hinweis bei „Lade die Pose-Erkennung …“ stehen. Lokal nachgestellt, live nicht beobachtet. | `pwa.js` prüft nach ca. 20 s, ob `app.js` gestartet ist, und bittet sonst um Neuladen. Mit S7 im Branch `robuste-analyse`. |
+| S7 | P3 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Unerwartete Fehler landeten nur in der Entwicklerkonsole. | Fehler und abgelehnte Promises erscheinen in der Statuszeile. Check-Fix 0.14.1: Harmlose Abbrüche beim Abspielen gehen nur in die Konsole, damit sie keine richtige Meldung überschreiben. |
+| S8 | P1 | Teilweise | Videos brauchen auf dem iPhone lange, bis sie in der App sind. Die Ursache liegt meist vor der App (Umwandeln in Safari, iCloud-Download, 4K). | Tipps im README (PR #6). Analyse deutlich schneller (PR #8), Statuszeile zeigt Messwerte. Seit 0.14.0 zeigt „Analyse fertig (…)“ auch „Video geladen in … s“. Diese Zeit beginnt erst, wenn die Auswahl in der App ankommt – das „Wird vorbereitet“ der Foto-Auswahl davor ist nicht enthalten. Offen: iPhone-Messung auswerten. |
+| S9 | P3 | Erledigt 28.09. (Branch `robuste-analyse`, 0.14.0/0.14.1) | Kam beim allerersten Öffnen eine App-Datei nicht an (z. B. schlechtes Netz), blieb die App ohne Hinweis bei „Lade die Pose-Erkennung …“ stehen. | `pwa.js` prüft nach 20 s, ob `app.js` gestartet ist, und bittet sonst um Neuladen. Check-Fix 0.14.1: Kommt `app.js` bei sehr langsamem Netz doch noch an, verschwindet der Hinweis wieder; der genauere Offline-Hinweis bleibt stehen. |
+| S10 | P3 | Offen | Meldet der Browser beim Laden eines Videos weder „geladen“ noch „Fehler“, wartet die Analyse ohne Zeitgrenze (Knöpfe bleiben gesperrt). Nicht beobachtet, nur im Code gesehen. | Zeitgrenze beim Laden (z. B. 30 s) mit Meldung. Erst nach der iPhone-Messung festlegen, damit große Videos nicht fälschlich abgebrochen werden. |
 
 ### Geschwindigkeit (Messwerte vom 27.09., Mac, schnelles Netz)
 
@@ -97,7 +99,7 @@ Warmstart bis „Bereit“: 0,3 s ohne Datenübertragung (28.09., Mac, schnelles
 |---|---|---|
 | S0 GitHub-Einstellungen | C2 Zwei-Faktor, T1 Regel für `main`, V5 E-Mail privat | Erledigt 28.09., manuell (C2, T1, V5) |
 | S1 Sicherheitsnetz | T2, V3, V1, T6 | Erledigt 27.09. (PR #6) |
-| S2 Robuste Analyse | S2, S3, S7, S9, Rest von S8 (S5, S6 erledigt) | Offen – nächster Branch `robuste-analyse` |
+| S2 Robuste Analyse | S2, S3, S7, S9, Rest von S8 (S5, S6 erledigt) | Erledigt 28.09. im Branch `robuste-analyse` mit Check-Fix (noch nicht gemergt). Rest: iPhone-Messung (S8), S10 |
 | S3 Echtheit und Browser-Test | C1, T3, C4 | Offen, nur nach Absprache |
 | S4 Hausordnung | C3 | Offen, nach S3 |
 | Vor Etappe 9 | V6 | Offen |

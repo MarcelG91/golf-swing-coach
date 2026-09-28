@@ -63,6 +63,7 @@ export async function schneideClip(video, start, ende, springe) {
   // speicher.js die Posedaten passend verschieben kann – sonst läge das Skelett
   // im gespeicherten Clip ein paar Bilder neben dem Körper.
   let versatz = null;
+  let abspielFehler = null; // verweigert der Browser das Abspielen (z. B. Stromsparmodus)?
   await new Promise((fertig) => {
     let rueckruf = null; // Nummer des angemeldeten Bild-Rückrufs
     // Schluss: am Clip-Ende – oder am Videoende ("ended"), wenn der Schwung ganz am Ende liegt.
@@ -85,12 +86,18 @@ export async function schneideClip(video, start, ende, springe) {
     }
     rueckruf = video.requestVideoFrameCallback(bild);
     video.playbackRate = 1; // Echtzeit – der Rekorder nimmt in Echtzeit auf
-    video.play();
+    // Ohne catch käme nie ein Bild und nie "ended" – das Speichern hinge für immer
+    video.play().catch((fehler) => {
+      abspielFehler = fehler;
+      schluss();
+    });
   });
 
   rekorder.stop();
   await gestoppt;
   strom.getTracks().forEach((spur) => spur.stop());
+  // Der Clip wäre nur ein Standbild → Fehler melden; app.js speichert dann ohne Video
+  if (abspielFehler) throw abspielFehler;
   return {
     video: new Blob(teile, { type: format.split(";")[0] }),
     versatz: Math.max(0, versatz ?? 0),

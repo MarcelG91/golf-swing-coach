@@ -175,11 +175,14 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 |---|---|
 | Offline fehlt etwas | Die Statuszeile nennt die fehlende Datei. App **vom Home-Bildschirm aus** mit Internet öffnen und warten, bis unten „Offline bereit ✓“ steht. |
 | Update kommt nicht an | Versionsnummer ganz unten prüfen. App mit Internet komplett schließen (nach oben wischen) und neu öffnen. Nach einem Merge 1–2 Minuten warten. |
-| Analyse ist langsam | Die Zeile „Analyse fertig (…)“ notieren (siehe [unten](#so-geht-die-app-das-video-durch)). 1080p statt 4K filmen, Video vorher kürzen. |
+| Analyse ist langsam | Die Zeile „Analyse fertig (…)“ notieren – sie enthält auch, wie lange das Video zum Laden brauchte (siehe [unten](#so-geht-die-app-das-video-durch)). 1080p statt 4K filmen, Video vorher kürzen. |
 | Video lädt ewig („Wird vorbereitet“) | Siehe [Damit das Video schnell geladen ist](#damit-das-video-auf-dem-handy-schnell-geladen-ist). |
 | „Der Abschwung wirkt ungewöhnlich“ | Meist Zeitlupe oder Probeschwung – mit normaler Geschwindigkeit filmen. |
 | Skelett sitzt falsch | Ganzer Körper im Bild? Genug Licht? Keine anderen Personen im Hintergrund? |
 | Lokal: Seite leer / Fehler in der Konsole | Über `http://127.0.0.1:8000` öffnen, nicht per Doppelklick auf `index.html`. |
+| „Die App ist nicht vollständig geladen“ | Eine Datei kam beim Öffnen nicht an (schlechtes Netz). Seite neu laden, am iPhone die App schließen und neu öffnen. |
+| „Die Länge des Videos ist unbekannt“ | Das Video als normales Video (MP4/MOV) speichern, z. B. in der Fotos-App duplizieren oder kürzen. |
+| „Unerwarteter Fehler: …“ in der Statuszeile | Seite neu laden. Bleibt der Fehler, die Meldung notieren – sie hilft bei der Fehlersuche. |
 
 ## Dateien
 

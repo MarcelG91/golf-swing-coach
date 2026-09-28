@@ -16,6 +16,29 @@ export const BILD_DAUER = 1 / 30; // Raster: ein Bild alle 1/30 s
 const begrenze = (wert, min, max) => Math.min(max, Math.max(min, wert));
 
 // ---------------------------------------------------------------
+// Videolänge prüfen (Befund S3)
+// Manche Dateien melden keine endliche Länge (Infinity oder NaN) – dann kann die
+// Analyse nicht wissen, wann sie fertig ist. Solche Videos gelten als nicht lesbar.
+// Lange Videos (z. B. von der Range mit mehreren Schlägen) sind erlaubt, bekommen
+// aber einen Hinweis, wie lange die Analyse ungefähr dauert.
+// Reine Rechnerei → mit node --test prüfbar.
+// ---------------------------------------------------------------
+export const LANG_AB_SEKUNDEN = 20;
+
+export function pruefeVideoLaenge(dauer) {
+  if (!Number.isFinite(dauer) || dauer <= 0) {
+    return { lesbar: false, hinweis: "Die Länge des Videos ist unbekannt – bitte als normales Video (MP4/MOV) speichern." };
+  }
+  if (dauer < LANG_AB_SEKUNDEN) return { lesbar: true, hinweis: "" };
+  const minuten = Math.floor(dauer / 60);
+  const laenge = minuten ? `${minuten}:${String(Math.floor(dauer % 60)).padStart(2, "0")} min` : `${Math.floor(dauer)} s`;
+  return {
+    lesbar: true,
+    hinweis: `Das Video ist ${laenge} lang – die Analyse dauert etwas. Tipp: In der Fotos-App auf den Schwung kürzen.`,
+  };
+}
+
+// ---------------------------------------------------------------
 // Erkannte Bilder in ein festes Raster legen: Platz i gehört zur Zeit i / 30 s.
 // So findet die App später zu jeder Zeit im Video direkt das passende Bild
 // (analyseBilder[Math.round(zeit / BILD_DAUER)]).

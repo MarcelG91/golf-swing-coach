@@ -1,7 +1,7 @@
 // Tests für das Zeitraster der schnellen Analyse (videoanalyse.js)
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { aufRasterLegen, fehlendePlaetze, toleranzFuer, BILD_DAUER } from "../videoanalyse.js";
+import { aufRasterLegen, fehlendePlaetze, toleranzFuer, BILD_DAUER, pruefeVideoLaenge, LANG_AB_SEKUNDEN } from "../videoanalyse.js";
 
 // Erzeugt erkannte Bilder mit gegebener Bildrate; punkte = Nummer des Bilds
 function bilderMit(fps, dauer, { ohne = [] } = {}) {
@@ -78,4 +78,15 @@ test("Toleranz passt zur Bildrate", () => {
   assert.ok(Math.abs(toleranzFuer(1 / 30) / BILD_DAUER - 0.6) < 1e-9);
   assert.ok(Math.abs(toleranzFuer(1 / 24) / BILD_DAUER - 0.75) < 1e-9);
   assert.ok(Math.abs(toleranzFuer(Infinity) / BILD_DAUER - 0.75) < 1e-9);
+});
+
+test("Videolänge (S3): unendlich/unbekannt = nicht lesbar, lange Videos mit Hinweis", () => {
+  for (const dauer of [Infinity, NaN, 0, -1, undefined]) {
+    assert.equal(pruefeVideoLaenge(dauer).lesbar, false, `Dauer ${dauer}`);
+  }
+  assert.deepEqual(pruefeVideoLaenge(4.2), { lesbar: true, hinweis: "" });
+  const lang = pruefeVideoLaenge(LANG_AB_SEKUNDEN + 5);
+  assert.equal(lang.lesbar, true);
+  assert.match(lang.hinweis, /25 s lang/);
+  assert.match(pruefeVideoLaenge(119.9).hinweis, /1:59 min/); // nie "1:60"
 });
