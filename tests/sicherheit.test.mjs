@@ -20,10 +20,14 @@ function dateiliste(text) {
 }
 
 test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
-  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com"]);
-  const hosts = [...QUELLTEXT.matchAll(/https?:\/\/[^\s"'`]+/g)]
+  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com", "api.anthropic.com"]);
+  const hostsIn = (text) => [...text.matchAll(/https?:\/\/[^\s"'`]+/g)]
     .map(([adresse]) => new URL(adresse.replace(/[),;]+$/, "")).hostname);
-  assert.deepEqual([...new Set(hosts)].filter((host) => !erlaubt.has(host)), []);
+  assert.deepEqual([...new Set(hostsIn(QUELLTEXT))].filter((host) => !erlaubt.has(host)), []);
+  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js – nirgends sonst
+  const mitAnthropic = QUELLDATEIEN.filter(({ text }) => hostsIn(text).includes("api.anthropic.com")).map(({ datei }) => datei);
+  assert.deepEqual(mitAnthropic, ["app.js"]);
+  assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
 });
 
 test("MediaPipe-Version und Modell stimmen in App und Service Worker überein", () => {
@@ -85,7 +89,7 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
 // ---------------------------------------------------------------
 const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
-  "tipps.js", "strichfigur.js", "uebungsbilder.js", "schwuenge.js", "gesamtauswertung.js",
+  "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
@@ -115,4 +119,40 @@ test("Check robuste Analyse: keine Umgehung der Längenprüfung, keine Fehlalarm
   // Kommt app.js nach dem 20-s-Hinweis doch noch an, verschwindet der Hinweis wieder
   assert.match(APP, /startsWith\("Die App ist nicht vollständig geladen"\)/, "S9: Hinweis wird zurückgenommen");
   assert.match(PWA, /Die App ist nicht vollständig geladen/, "S9: gleicher Text in pwa.js");
+});
+
+test("Coach (V2): Schlüssel nur im localStorage, SDK mit fester Version, nie in Speicher oder Export", () => {
+  const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
+  assert.ok(!speicher.includes("coachSchluessel"), "Der Schlüssel gehört nie in die Schwung-Datenbank");
+  assert.match(APP, /const COACH_SDK_URL = "https:\/\/cdn\.jsdelivr\.net\/npm\/@anthropic-ai\/sdk@\d+\.\d+\.\d+\/\+esm"/, "SDK-Version fest");
+  assert.equal(APP.match(/dangerouslyAllowBrowser/g)?.length, 2, "Browser-Freigabe nur an der einen Stelle (plus Kommentar)");
+  const exportTeil = APP.slice(APP.indexOf("function exportiereDaten"), APP.indexOf("function heute"));
+  assert.ok(!/localStorage|coach/i.test(exportTeil), "Posedaten-Export enthält nichts vom Coach");
+  // Das SDK steht nicht in der Vorab-Liste des Service Workers (nach dem ersten Laden
+  // speichert er es wie jede jsDelivr-Datei – feste Version, siehe bericht.md C1)
+  assert.ok(!SERVICE_WORKER.includes("@anthropic-ai/sdk"));
+  // Der Client geht ausdrücklich an die erlaubte Adresse
+  assert.match(APP, /new Anthropic\(\{[^}]*baseURL: COACH_API_URL/);
+});
+
+test("Check 11b: eine Coach-Anfrage zur Zeit, Antwort nur in den eigenen Schwung-Eintrag", () => {
+  const frage = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("function baueCoachAntwort"));
+  assert.match(frage, /if \(coachLaeuft\) return;/, "zweites Tippen startet keine zweite Anfrage");
+  assert.match(frage, /finally \{\s*coachLaeuft = false;/, "Sperre wird im finally gelöst");
+  assert.match(APP, /coachKnopf\.disabled = !online \|\| coachLaeuft;/, "Neuzeichnen gibt den Knopf nicht frei");
+  assert.match(frage, /aktualisiereSchwung\(schwung\.id, \{ coach \}\)/, "nur das Feld coach wird nachgetragen");
+  const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
+  const aktualisiere = speicher.slice(speicher.indexOf("export async function aktualisiereSchwung"));
+  assert.match(aktualisiere, /if \(!anfrage\.result\) return;/, "gelöschter Schwung taucht nicht wieder auf");
+  const loesche = APP.slice(APP.indexOf("function loescheCoachSchluessel"), APP.indexOf("function coachGrundlage"));
+  assert.match(loesche, /removeItem\(EINWILLIGUNG_NAME\)/, "Schlüssel löschen nimmt auch die Einwilligung zurück");
+});
+
+test("Coach: Sperre gegen Doppeltipp steht VOR dem ersten await (sonst zwei bezahlte Anfragen)", () => {
+  // Kommentarzeilen weglassen – dort darf das Wort "await" ruhig vorkommen
+  const funktion = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("// Die Coach-Antwort als Karte"))
+    .split("\n").filter((zeile) => !zeile.trim().startsWith("//")).join("\n");
+  const sperre = funktion.indexOf("coachLaeuft = true");
+  const erstesAwait = funktion.indexOf("await ");
+  assert.ok(sperre > 0 && erstesAwait > 0 && sperre < erstesAwait, "coachLaeuft = true muss vor dem ersten await stehen");
 });

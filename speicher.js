@@ -80,6 +80,7 @@ export function schwungZumSpeichern(schwung, { start, ende, versatz = 0 }) {
       technik: schwung.technik,
       seitenverhaeltnis: schwung.bewertung.seitenverhaeltnis,
       videoName: schwung.datei?.name ?? "",
+      coach: schwung.coach ?? null, // Antwort des Coachs (Etappe 11b), falls schon geholt
     },
     posedaten,
   };
@@ -203,6 +204,27 @@ export async function speichereSitzung(sitzung, eintraege) {
     if (vorschau) medien.put(vorschau, `${schwung.id}/vorschau`);
   }
   await abgeschlossen(t);
+}
+
+// Einzelne Felder eines gespeicherten Schwungs ändern (z. B. die Coach-Antwort nachtragen).
+// Liest den Eintrag aus der Datenbank und ändert nur die genannten Felder – so kann nichts
+// aus dem Arbeitsspeicher (Videos, Bilder) in den Eintrag rutschen. Wurde der Schwung
+// inzwischen gelöscht, passiert nichts (er soll nicht als Rest wieder auftauchen).
+// Rückgabe: true, wenn der Eintrag noch da war und geändert wurde.
+export async function aktualisiereSchwung(id, felder) {
+  const db = await oeffne();
+  const t = db.transaction("schwuenge", "readwrite");
+  const speicher = t.objectStore("schwuenge");
+  const anfrage = speicher.get(id);
+  let geaendert = false;
+  // Im onsuccess weiterschreiben (nicht per await): so bleibt die Transaktion sicher offen
+  anfrage.onsuccess = () => {
+    if (!anfrage.result) return;
+    speicher.put({ ...anfrage.result, ...felder });
+    geaendert = true;
+  };
+  await abgeschlossen(t);
+  return geaendert;
 }
 
 // Alle Sitzungen, die neueste zuerst: nach dem eingetragenen Datum (kann bei

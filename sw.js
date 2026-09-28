@@ -29,6 +29,7 @@ const APP_DATEIEN = [
   "./tipps.js",
   "./strichfigur.js",
   "./uebungsbilder.js",
+  "./coach.js",
   "./pwa.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",

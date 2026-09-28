@@ -269,3 +269,23 @@ kurz warten · keine Verbindung. Der Knopf wird in jedem Fall wieder freigegeben
 - Rückfragen an den Coach („Wie übe ich das ohne Range?“) als kleiner Chat
 - Eigene, kürzere Einsteiger-Texte für die 5 Grundlagen-Kennzahlen
 - Vermittler-Server statt eigenem Schlüssel, falls Freunde den Coach ohne eigenen Schlüssel nutzen sollen
+
+---
+
+## Umsetzung 11b (28.09.2026, Version 0.15.0) – Abweichungen vom Plan
+
+| Punkt | Plan (27.09.) | Umgesetzt (28.09.) | Grund |
+|---|---|---|---|
+| Modell | Claude Opus 5 | **Claude Opus 5** (`claude-opus-5`), bestätigt | Marcels Wahl; steht an einer Stelle in `coach.js` |
+| Übung | Claude schreibt Gefühl und Übung | **Übung, Schritte und Schwunggedanke kommen aus `tipps.js`** – Claude wählt nur den Fokus und schreibt Lob, Begründung, „nächstes Mal“ | Seit „Tipps neu“ sind die Übungen fachlich geprüft; Claude soll keine Technik erfinden |
+| Antwortfelder | `lob`, `fokusKennzahl`, `fokusTitel`, `warum`, `gefuehl`, `uebung`, `naechstesMal` | `lob`, `fokusKennzahl`, `fokusBotschaft`, `naechstesMal` | Rest kommt aus der App |
+| Prompt Caching | ja | **nein** | Cache hält 5 Minuten; bei ca. einem Feedback pro Sitzung würde fast nur das teurere Schreiben bezahlt |
+| SDK | offizielles SDK von jsDelivr | **`@anthropic-ai/sdk@0.129.0`** (`+esm`), erst beim Tippen geladen, nicht in der Vorab-Liste des Service Workers; nach dem ersten Laden liegt es (samt drei kleinen Hilfsdateien von jsDelivr) im Offline-Speicher, wie alle jsDelivr-Dateien (Check 28.09.) | wie geplant |
+| Rückfall bei Ablehnung | `fallbacks` | `fallbacks: "default"` mit Beta `server-side-fallback-2026-07-01` | Anthropics Empfehlung |
+| Denken | adaptiv, Effort „medium“ | wie geplant | |
+| Speicherung | `sitzung.coach` | **`schwung.coach`** (pro Schwung), bei gespeicherten Sitzungen sofort nachgetragen (`aktualisiereSchwung`) | Der Coach bewertet den gerade gezeigten Schwung |
+| Freunde | offen | **nur eigener Schlüssel** | Marcels Wahl |
+
+Geprüft ohne Kosten: `tests/coach.test.mjs` und ein Browsertest, der die Anfrage an `api.anthropic.com`
+abfängt und mit einer Test-Antwort beantwortet (Einwilligung, Senden, Antwort, ungültiger Schlüssel,
+Schlüssel löschen). Offen: echter Test mit Marcels Schlüssel.

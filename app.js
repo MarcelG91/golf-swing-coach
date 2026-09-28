@@ -34,6 +34,7 @@ import {
   speichereSitzung,
   ladeSitzungen,
   ladeSchwuengeDerSitzung,
+  aktualisiereSchwung,
   ladeMedium,
   loescheSchwung,
   loescheSitzung,
@@ -52,6 +53,8 @@ import { tipp, gutText, skala, skalaPosition } from "./tipps.js";
 import { strichfigur } from "./strichfigur.js";
 // Strichfiguren zu den Übungen (Übungsmodus)
 import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
+// Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
+import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwortText, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -113,6 +116,17 @@ const gedankeText = $("gedankeText");
 const kartenZaehler = $("kartenZaehler");
 const kartenPunkte = $("kartenPunkte");
 // Übungsmodus (Vollbild)
+// Coach mit Claude
+const coachBox = $("coachBox");
+const coachAntwort = $("coachAntwort");
+const coachKnopf = $("coachKnopf");
+const coachHinweis = $("coachHinweis");
+const coachVorschau = $("coachVorschau");
+const coachEinwilligung = $("coachEinwilligung");
+const coachSchluesselFeld = $("coachSchluessel");
+const coachSchluesselSpeichernBtn = $("coachSchluesselSpeichern");
+const coachSchluesselLoeschenBtn = $("coachSchluesselLoeschen");
+const coachSchluesselStatus = $("coachSchluesselStatus");
 const uebungsmodus = $("uebungsmodus");
 const uebungTitel = $("uebungTitel");
 const uebungZuBtn = $("uebungZu");
@@ -1068,6 +1082,9 @@ function zeigeBewertung() {
     karte.appendChild(zeigenKnopf({ ...check, wert: "selbst prüfen", ohneSkelett: true }));
     selbstCheckListe.appendChild(karte);
   }
+
+  // 4. Coach mit Claude (nur mit eigenem Schlüssel)
+  zeigeCoach();
 }
 
 // Gruppen nach Themen sortiert, damit die Karten beim Aufklappen leicht zu finden sind.
@@ -1335,6 +1352,234 @@ async function bildschirmAnlassen() {
 function bildschirmFreigeben() {
   bildschirmSperre?.release().catch((fehler) => console.warn(fehler));
   bildschirmSperre = null;
+}
+
+// ---------------------------------------------------------------
+// Coach mit Claude (Etappe 11b)
+// Was gesendet wird und wie die Antwort geprüft wird, steht in coach.js.
+// Hier: Schlüssel verwalten, Einwilligung, SDK laden, Anfrage senden, Antwort zeigen.
+// ---------------------------------------------------------------
+
+// Offizielles Anthropic-SDK, feste Version, erst beim Tippen auf den Coach-Knopf geladen –
+// so startet die App weiter offline und ohne dieses Paket. Nach dem ersten Laden legt der
+// Service Worker es (wie alle jsDelivr-Dateien) im Offline-Speicher ab; es kommt nicht in die Vorab-Liste.
+const COACH_SDK_URL = "https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.129.0/+esm";
+// Die einzige Adresse, an die der Coach sendet (Regel in CLAUDE.md). Steht hier ausdrücklich,
+// statt sich auf die Voreinstellung des SDK zu verlassen – so prüft sie auch der Host-Test.
+const COACH_API_URL = "https://api.anthropic.com";
+// Läuft gerade eine Anfrage? Dann bleibt der Knopf gesperrt – auch wenn die Ansicht
+// neu gezeichnet wird (Level- oder Schwungwechsel, Internet wieder da). Sonst: doppelte Kosten.
+let coachLaeuft = false;
+// Der eigene API-Schlüssel liegt nur hier (localStorage dieses Geräts) – nie im Code,
+// nie in der Datenbank, nie in einem Export. "Alles löschen" fasst ihn nicht an.
+const SCHLUESSEL_NAME = "coachSchluessel";
+const EINWILLIGUNG_NAME = "coachEinwilligung";
+
+function leseEinstellung(name) {
+  try {
+    return localStorage.getItem(name) || "";
+  } catch {
+    return ""; // z. B. privater Modus – dann eben ohne Coach
+  }
+}
+
+function zeigeCoachEinstellung() {
+  const schluessel = leseEinstellung(SCHLUESSEL_NAME);
+  coachSchluesselLoeschenBtn.hidden = !schluessel;
+  coachSchluesselStatus.textContent = schluessel
+    ? `Schlüssel gespeichert ✓ (endet auf …${schluessel.slice(-4)}). Der Coach-Knopf erscheint nach einer Analyse.`
+    : "Kein Schlüssel eingetragen – ohne Schlüssel gibt es keinen Coach, der Rest der App läuft ganz normal.";
+}
+
+function speichereCoachSchluessel() {
+  const schluessel = coachSchluesselFeld.value.trim();
+  if (!schluessel.startsWith("sk-ant-")) {
+    coachSchluesselStatus.textContent = "Das sieht nicht wie ein Anthropic-API-Schlüssel aus (er beginnt mit „sk-ant-“).";
+    return;
+  }
+  try {
+    localStorage.setItem(SCHLUESSEL_NAME, schluessel);
+  } catch (fehler) {
+    coachSchluesselStatus.textContent = `Der Schlüssel ließ sich nicht speichern (${fehler.name}).`;
+    return;
+  }
+  coachSchluesselFeld.value = "";
+  zeigeCoachEinstellung();
+  if (bewertung) zeigeCoach();
+}
+
+function loescheCoachSchluessel() {
+  try {
+    localStorage.removeItem(SCHLUESSEL_NAME); // nur diesen einen Eintrag …
+    localStorage.removeItem(EINWILLIGUNG_NAME); // … und die Einwilligung: ein neuer Schlüssel fragt wieder
+  } catch (fehler) {
+    console.warn(fehler);
+  }
+  zeigeCoachEinstellung();
+  coachBox.hidden = true;
+}
+
+// Die sichtbaren Kennzahlen des Levels und die wichtigste Baustelle der App
+function coachGrundlage() {
+  const sichtbar = fuerLevel(alleKennzahlen, aktuellesLevel).sichtbar;
+  return { sichtbar, wichtigste: wichtigsteBaustellen(sichtbar, 1)[0] || null };
+}
+
+// Genau die Daten, die gesendet werden (für die Vorschau und die Anfrage)
+async function coachDatenJetzt() {
+  const { sichtbar, wichtigste } = coachGrundlage();
+  let verlauf = {};
+  try {
+    // Früher gespeicherte Schwünge – ohne die gerade geöffnete Sitzung
+    const sitzungen = (await ladeSitzungen()).filter((s) => s.id !== gespeicherteSitzung?.id);
+    const schwuenge = (await Promise.all(sitzungen.map(ladeSchwuengeDerSitzung))).flat();
+    verlauf = verlaufKurz(schwuenge, sichtbar.map((k) => k.id));
+  } catch (fehler) {
+    console.warn("Verlauf für den Coach nicht lesbar:", fehler); // dann eben ohne Verlauf
+  }
+  return coachDaten({
+    kennzahlen: sichtbar,
+    level: aktuellesLevel,
+    ansicht: bewertung.ansicht,
+    rechtshaender: technik.rechtshaender,
+    anzahlSchwuenge: alleSchwuenge.filter((s) => s.phasen).length || 1,
+    wichtigste,
+    verlauf,
+  });
+}
+
+// Coach-Bereich unter den Karten: nur mit Schlüssel sichtbar
+function zeigeCoach() {
+  coachBox.hidden = !leseEinstellung(SCHLUESSEL_NAME) || !bewertung;
+  if (coachBox.hidden) return;
+  coachAntwort.replaceChildren();
+  if (aktuellerSchwung?.coach) coachAntwort.append(baueCoachAntwort(aktuellerSchwung.coach));
+  coachVorschau.textContent = "Wird beim Aufklappen zusammengestellt …";
+  zeigeCoachKnopf();
+}
+
+function zeigeCoachKnopf() {
+  const online = navigator.onLine;
+  coachKnopf.disabled = !online || coachLaeuft;
+  coachKnopf.textContent = aktuellerSchwung?.coach ? "Neues Coach-Feedback holen" : "Coach-Feedback holen";
+  coachHinweis.textContent = coachLaeuft
+    ? "Der Coach denkt nach … (ca. 10–30 Sekunden)"
+    : online
+    ? "Sendet deine Kennzahlen an Anthropic (Claude) · ca. 5 Cent"
+    : "Der Coach braucht Internet. Gespeicherte Antworten bleiben lesbar.";
+}
+
+// Einwilligung einmalig vor dem ersten Senden
+function frageCoachEinwilligung() {
+  if (leseEinstellung(EINWILLIGUNG_NAME) === "ja") return Promise.resolve(true);
+  coachEinwilligung.returnValue = "";
+  coachEinwilligung.showModal();
+  return new Promise((fertig) => {
+    coachEinwilligung.addEventListener("close", () => {
+      const ja = coachEinwilligung.returnValue === "ja";
+      if (ja) {
+        try {
+          localStorage.setItem(EINWILLIGUNG_NAME, "ja");
+        } catch (fehler) {
+          console.warn(fehler); // dann fragt die App beim nächsten Mal eben noch einmal
+        }
+      }
+      fertig(ja);
+    }, { once: true });
+  });
+}
+
+// Fehler des SDK einer verständlichen Meldung zuordnen (typisierte Fehlerklassen, keine Textsuche)
+function coachFehlerArt(fehler, Anthropic) {
+  if (fehler.coachArt) return fehler.coachArt;
+  if (!Anthropic) return "unbekannt";
+  if (fehler instanceof Anthropic.AuthenticationError || fehler instanceof Anthropic.PermissionDeniedError) return "schluessel";
+  if (fehler instanceof Anthropic.RateLimitError) return "zuViele";
+  if (fehler instanceof Anthropic.InternalServerError) return "ueberlastet";
+  if (fehler instanceof Anthropic.APIConnectionError) return "verbindung"; // vor APIError prüfen (Unterklasse)
+  if (fehler instanceof Anthropic.APIError && fehler.status === 402) return "guthaben";
+  return "unbekannt";
+}
+
+const coachFehler = (art) => Object.assign(new Error(COACH_FEHLER[art]), { coachArt: art });
+
+async function frageCoach() {
+  if (coachLaeuft) return; // schon unterwegs – keine zweite (bezahlte) Anfrage
+  if (!navigator.onLine) return zeigeCoachKnopf();
+  const schwung = aktuellerSchwung;
+  const schluessel = leseEinstellung(SCHLUESSEL_NAME);
+  if (!schwung || !schluessel) return;
+
+  // Sperre SOFORT setzen – noch vor dem ersten await (Einwilligung). Sonst kämen zwei
+  // schnelle Tipps beide an der Prüfung oben vorbei und es gäbe zwei bezahlte Anfragen.
+  coachLaeuft = true;
+  zeigeCoachKnopf(); // Knopf gesperrt
+  const level = aktuellesLevel; // Stand beim Tippen – falls du währenddessen das Level wechselst
+  let Anthropic = null;
+  try {
+    if (!(await frageCoachEinwilligung())) return; // "Abbrechen": finally gibt den Knopf wieder frei
+    const { wichtigste, sichtbar } = coachGrundlage();
+    const anfrage = baueCoachAnfrage(await coachDatenJetzt());
+    try {
+      ({ default: Anthropic } = await import(COACH_SDK_URL));
+    } catch (fehler) {
+      console.error(fehler);
+      throw coachFehler("laden");
+    }
+    // dangerouslyAllowBrowser: Das SDK verlangt die ausdrückliche Erlaubnis, im Browser zu laufen,
+    // weil der Schlüssel dann im Browser liegt. Genau das ist hier gewollt (eigener Schlüssel mit Limit).
+    const client = new Anthropic({ apiKey: schluessel, baseURL: COACH_API_URL, dangerouslyAllowBrowser: true, maxRetries: 1 });
+    const antwort = await client.beta.messages.create(anfrage);
+    if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
+    if (antwort.stop_reason === "max_tokens") throw coachFehler("unvollstaendig");
+    const textBlock = antwort.content.find((block) => block.type === "text");
+    const roh = textBlock ? leseAntwortText(textBlock.text) : null;
+    if (!roh) throw coachFehler("unvollstaendig");
+
+    const coach = {
+      ...pruefeCoachAntwort(roh, { kennzahlen: sichtbar, wichtigste }),
+      level,
+      modell: antwort.model,
+      kostenCent: kostenCent(antwort.usage),
+    };
+    schwung.coach = coach;
+    // Gespeicherter Schwung (hat eine id aus der Datenbank)? Dann nur die Antwort dort nachtragen.
+    // Bewusst am Schwung selbst geprüft, nicht an der gerade geöffneten Sitzung – die kann
+    // sich während der Anfrage geändert haben.
+    if (schwung.id) await aktualisiereSchwung(schwung.id, { coach });
+    if (aktuellerSchwung === schwung) {
+      coachAntwort.replaceChildren(baueCoachAntwort(coach));
+      coachAntwort.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  } catch (fehler) {
+    console.error(fehler);
+    const art = coachFehlerArt(fehler, Anthropic);
+    // Nur beim Schwung zeigen, für den gefragt wurde (nicht bei einem inzwischen gewählten anderen)
+    if (aktuellerSchwung === schwung) coachAntwort.replaceChildren(neu("p", "karte unsicher", COACH_FEHLER[art]));
+  } finally {
+    coachLaeuft = false;
+    zeigeCoachKnopf(); // Knopf in jedem Fall wieder freigeben
+  }
+}
+
+// Die Coach-Antwort als Karte. Die Übung kommt aus der App (tipps.js), nicht von Claude.
+function baueCoachAntwort(coach) {
+  const rechtshaender = haendigkeit();
+  const karte = neu("article", "karte coach-antwort");
+  if (coach.lob) karte.append(neu("p", "lob", `👍 ${coach.lob}`));
+  const k = alleKennzahlen.find((x) => x.id === coach.fokusKennzahl);
+  const hilfe = k ? tipp(k, rechtshaender) : null;
+  if (hilfe) {
+    karte.append(neu("p", "kurz", `🎯 Dein Fokus: ${hilfe.kurz}`));
+    karte.append(neu("p", "warum", coach.fokusBotschaft || hilfe.warum));
+    karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
+    if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));
+  }
+  if (coach.naechstesMal) karte.append(neu("p", "naechstes", `➡️ ${coach.naechstesMal}`));
+  const kosten = typeof coach.kostenCent === "number" ? ` · ca. ${zahl(coach.kostenCent, 1)} US-Cent` : "";
+  karte.append(neu("p", "herkunft",
+    `Antwort von Claude${kosten}${coach.fokusErsetzt ? " · Fokus von der App gewählt" : ""} · ersetzt keine Trainerstunde`));
+  return karte;
 }
 
 // Balken mit grünem Zielbereich (gelb = Achtung, Rest rot) und einer Marke für deinen Wert
@@ -1943,7 +2188,7 @@ function bilderZeilen({ videos, vorschauen, bytes }) {
 
 // Was bei "Videos löschen" bleibt – steht so in beiden Rückfragen
 const BLEIBT_BEI_VIDEOS = [
-  "alle Kennzahlen und Bewertungen",
+  "alle Kennzahlen, Bewertungen und Coach-Antworten",
   "Datum, Schläger und Notiz jeder Sitzung",
   "die Posedaten (nur Zahlen, kein Bild)",
   "dein Level und deine Originalvideos in der Fotos-App",
@@ -2057,11 +2302,11 @@ async function loescheAllesAusEinstellungen() {
     titel: "Alle gespeicherten Schwünge löschen?",
     weg: [
       `${stueck(sitzungen.length, "Sitzung", "Sitzungen")} mit ${stueck(schwungIds.length, "Schwung", "Schwüngen")}`,
-      "alle Kennzahlen, Notizen und Posedaten",
+      "alle Kennzahlen, Notizen, Posedaten und Coach-Antworten",
       ...bilderZeilen(zaehleBilder(groessen, schwungIds)),
     ],
     bleibt: [
-      "dein Level",
+      "dein Level und dein Coach-Schlüssel",
       "die App selbst und die Offline-Dateien (Pose-Erkennung)",
       "deine Originalvideos in der Fotos-App",
       "Dateien, die du exportiert hast",
@@ -2216,6 +2461,20 @@ uebungZaehlerBtn.addEventListener("click", () => {
   zeigeUebungsSchritt();
 });
 document.addEventListener("keydown", (e) => { if (e.key === "Escape" && aktiveUebung) schliesseUebung(); });
+// Coach mit Claude: Schlüssel, Anfrage, Vorschau, Internet an/aus
+coachSchluesselSpeichernBtn.addEventListener("click", speichereCoachSchluessel);
+coachSchluesselLoeschenBtn.addEventListener("click", loescheCoachSchluessel);
+coachKnopf.addEventListener("click", frageCoach);
+coachVorschau.closest("details").addEventListener("toggle", async (e) => {
+  if (!e.target.open || !bewertung) return;
+  try {
+    coachVorschau.textContent = JSON.stringify(await coachDatenJetzt(), null, 2);
+  } catch (fehler) {
+    coachVorschau.textContent = `Vorschau nicht möglich (${fehler.message})`;
+  }
+});
+window.addEventListener("online", () => { if (!coachBox.hidden) zeigeCoachKnopf(); });
+window.addEventListener("offline", () => { if (!coachBox.hidden) zeigeCoachKnopf(); });
 // Nach dem Entsperren des Handys den Bildschirm wieder anlassen
 document.addEventListener("visibilitychange", () => { if (aktiveUebung && document.visibilityState === "visible") bildschirmAnlassen(); });
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
@@ -2250,6 +2509,7 @@ if (statusText.textContent.startsWith("Die App ist nicht vollständig geladen"))
 
 // Los geht's
 zeigeLevelAuswahl();
+zeigeCoachEinstellung();
 zeigeBereich(aktuellesLevel ? "analyse" : "einstellungen");
 ladePoseErkennung().catch((fehler) => {
   poseFehlerText = `Die Pose-Erkennung konnte nicht starten (${fehler.message}).`;

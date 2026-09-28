@@ -505,3 +505,20 @@ body.ohne-scrollen { overflow: hidden; }
   background: transparent; color: var(--text); border: 1px solid #2c5a43;
 }
 .uebung-unten button.haupt { background: var(--akzent); color: #06140c; border: none; font-weight: 700; }
+
+/* --- Coach mit Claude (Etappe 11b) --- */
+.coach { margin-top: 22px; padding-top: 14px; border-top: 1px solid #2c5a43; }
+.coach h3 { margin-top: 0; }
+.coach #coachAntwort { margin-bottom: 12px; }
+.coach details { margin-top: 8px; }
+.coach summary { cursor: pointer; color: var(--akzent); font-size: 0.9rem; }
+pre.vorschau {
+  max-height: 260px; overflow: auto; margin: 8px 0 0; padding: 10px;
+  background: var(--hintergrund); border-radius: 8px; font-size: 0.75rem; white-space: pre-wrap;
+}
+.karte.coach-antwort { --farbe: #7dd3fc; border-left-width: 5px; }
+.karte.coach-antwort .lob, .karte.coach-antwort .naechstes { margin-top: 8px; }
+.karte.coach-antwort .herkunft { color: var(--text-leise); font-size: 0.78rem; margin-top: 12px; }
+.coach-einstellung { margin: 18px 0 26px; }
+.coach-einstellung ol { line-height: 1.5; padding-left: 22px; }
+.coach-einstellung .formular { margin-top: 10px; }
