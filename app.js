@@ -1511,9 +1511,11 @@ async function oeffneSitzung(sitzung) {
     zeigeSpeicherKaesten();
     window.scrollTo({ top: 0, behavior: "smooth" });
     await waehleSchwung(alleSchwuenge[0]);
+    return true;
   } catch (fehler) {
     console.error(fehler);
     setStatus(`Die Sitzung ließ sich nicht öffnen (${fehler.message || fehler.name}).`);
+    return false;
   }
 }
 
@@ -1634,8 +1636,13 @@ async function loescheVideosDerSitzung() {
   });
   if (!ja) return;
   if (!(await loescheMitSperre(() => loescheVideosUndBilder([sitzung])))) return;
-  await oeffneSitzung(sitzung); // neu laden – jetzt ohne Video
-  setStatus(`✓ Videos gelöscht – ca. ${mb(umfang.bytes)} frei. Die Kennzahlen sind noch da.`);
+  // Neu laden – jetzt ohne Video. Klappt das nicht, das gelöschte Video nicht weiter zeigen.
+  if (await oeffneSitzung(sitzung)) {
+    setStatus(`✓ Videos gelöscht – ca. ${mb(umfang.bytes)} frei. Die Kennzahlen sind noch da.`);
+  } else {
+    leereSitzungsAnsicht();
+    setStatus("✓ Videos gelöscht. Die Sitzung ließ sich danach nicht neu öffnen – bitte unter „Meine Schwünge“ antippen.");
+  }
 }
 
 // Einstellungen: Videos und Bilder aller (oder aller alten) Sitzungen löschen

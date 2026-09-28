@@ -60,7 +60,8 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - In Commits, Pull Requests und `docs/sicherheit/` keine Details zu noch offenen Lücken.
 - **Löschen fasst nur die Schwung-Datenbank an** – nie `localStorage` (Level, später Coach-Schlüssel)
   und nie die Offline-Dateien. Kein `localStorage.clear()`, kein `deleteDatabase`; darüber wacht
-  `tests/sicherheit.test.mjs`. Vor jedem Löschen zeigt die App, was gelöscht wird und was bleibt.
+  `tests/sicherheit.test.mjs`. Vor „Videos löschen“ und „Alles löschen“ zeigt die App im Dialog, was
+  gelöscht wird und was bleibt („Schwung/Sitzung löschen“ fragen weiter kurz per `confirm()`).
 - **Nach jeder Bau-Runde `/golf-app-check` ausführen.** Er schreibt `docs/sicherheit/bericht.md`
   und `docs/sicherheit/pruefprotokoll.md` fort.
 
@@ -96,7 +97,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
 - **Reihenfolge ab jetzt (Entscheidung 28.09.): `robuste-analyse` → 11b → 10 → 9**
   (11a und `speicher-verwalten` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
-  `robuste-analyse`: Befunde S2, S3, S7 aus `docs/sicherheit/bericht.md` (S2 ist P1).
+  `robuste-analyse`: Befunde S2, S3, S7, S9 aus `docs/sicherheit/bericht.md` (S2 ist P1).
   11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
   Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
 - 11b vorab klären: **Teilen mit Freunden.** Die App selbst läuft bei jedem kostenlos; nur der Coach
@@ -106,10 +107,13 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   meist nur ein Feedback pro Sitzung), SDK oder `fetch`, ehrlicher Text zu IP/Browserkennung.
 - iPhone-Test Speicher aufräumen (Version ≥ 0.11.0): Videos einer Sitzung löschen, danach
   Speicheranzeige vorher/nachher vergleichen; „Alles löschen“ → Level noch da, offline weiter nutzbar?
-- Beobachtung 28.09.: Im Chrome-Test (ohne Fenster, frisches Profil) startet die App beim allerersten
-  Aufruf in ca. der Hälfte der Fälle nicht (`app.js` läuft nicht an, keine offene Netzanfrage) –
-  auch auf `main` (0.10.0), Neuladen hilft. Auf dem iPhone prüfen: Erstaufruf in privatem Tab.
-  Verdacht: Service Worker übernimmt die Seite beim ersten Laden (`clients.claim`).
+- Erststart-Hänger im lokalen Chrome-Test (28.09., geklärt): Ursache ist der einfache Python-Server.
+  Er hält nur 5 wartende Verbindungen; beim ersten Laden (App-Dateien + Service Worker gleichzeitig)
+  bricht er einzelne ab (`ERR_CONNECTION_RESET`), dann läuft `app.js` nicht an. Live 4 von 4
+  Erststarts in Ordnung. Lokal: einmal neu laden. Dass die App dabei stumm hängt, ist Befund S9
+  (kommt mit in `robuste-analyse`).
+- Optional: Auch „Schwung löschen“ / „Sitzung löschen“ auf den neuen Lösch-Dialog umstellen
+  (einheitlich, ca. 20 Zeilen) – Vorschlag aus dem Check vom 28.09.
 - Darstellung seit 11a: In den Level-Karten (⚙️ Einstellungen) wird die Beschreibung in eine schmale
   Spalte gequetscht („Ich / lerne / gerade …“) – Grid-Spalte der `<small>` in `style.css` festlegen.
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.
