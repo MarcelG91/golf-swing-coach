@@ -3,6 +3,12 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## GitHub-Einstellungen (Etappe S0) 2026-09-28 · main @ e64462d · manuell
+- C2 erledigt: Zwei-Faktor mit Authenticator-App und Passkey, Wiederherstellungscodes sicher abgelegt; Sitzungen, Tokens, Apps und SSH-Schlüssel von Marcel im Browser aufgeräumt. Per API geprüft: kein SSH-Schlüssel mehr hinterlegt, Kommandozeile hat weiter Zugriff, einziger Mitarbeiter am Repo ist das Hauptkonto.
+- V5 erledigt: globale Git-Einstellung auf die noreply-Adresse umgestellt (lokal geprüft), E-Mail in GitHub privat und Pushes mit echter Adresse gesperrt. Ältere Commits bleiben bewusst unverändert.
+- T1 bestätigt: Ruleset „main schützen“ per API geprüft (aktiv, keine Ausnahmen, Löschen und Force-Push gesperrt, Pull Request mit Pflicht-Check „Tests“). Dieser Doku-PR ist der erste Merge unter der Regel.
+- Nicht geprüft: Zwei-Faktor und E-Mail-Einstellung selbst (dem Token der Kommandozeile fehlt die Berechtigung) – laut Marcel eingeschaltet.
+
 ## Golf-App-Check 2026-09-28 · Branch `uebungsmodus` @ ad71505 · main @ c93f5f6 · Urteil 🟡
 - Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.12.1) im eigenen Worktree und `uebungsmodus` (0.13.0, noch nicht hochgeladen); `node --test` main 93/93, Branch 101/101, mit Check-Fix 102/102 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
 - Live: Version 0.12.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 7 App-Dateien gleich `origin/main`. CI auf `main` grün.
