@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 28.09.2026 · geprüft auf `origin/main` @ `1f7ea52` (Version 0.10.0) und Branch `speicher-verwalten` @ `01584d9` (Version 0.11.0)
+Stand: 28.09.2026 · geprüft auf `origin/main` @ `18dc5c4` (Version 0.11.0) und Branch `tipps-neu` @ `de889b1` (Version 0.12.0, mit Check-Fix 0.12.1)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos verlassen das Handy nicht, und im Repo liegen
@@ -16,7 +16,7 @@ MediaPipe-Codes, der Schutz von `main` und die Fehlerbehandlung während der Ana
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos und Kennzahlen bleiben auf dem Handy. Neu (0.11.0): Videos gezielt oder alles löschen – im Browser nachgeprüft: gelöscht wird nur, was die Rückfrage nennt, Level und Offline-Dateien bleiben, der Platz wird frei. V2 betrifft erst Teil 11b. |
 | Cybersecurity | Gelb | MediaPipe kommt ohne Echtheitsprüfung von jsDelivr und Google (C1), noch keine CSP (C3). |
-| Test und Deploy | Gelb | 84 Tests grün (Branch; `main` 77), dazu Browser-Test der Datenbank 23/23. Schutz von `main` fehlt (T1), kein automatisierter Browser-Test (T3). |
+| Test und Deploy | Gelb | 93 Tests grün (Branch `tipps-neu` mit Check-Fix; `main` 84). Neue Logikdateien `tipps.js` und `strichfigur.js` haben eigene Tests. Schutz von `main` fehlt (T1), kein automatisierter Browser-Test (T3). |
 | Stabilität | Gelb | Löschen und Öffnen gespeicherter Sitzungen fangen Fehler ab und geben Knöpfe wieder frei. Offen: Ein Analysefehler sperrt weiter die Knöpfe (S2); ein Ladeabbruch beim ersten Öffnen bleibt ohne Meldung (S9). |
 | Geschwindigkeit | Gelb | Warmstart bis „Bereit“ 0,3 s ohne Datenübertragung. Analyse spielt das Video ab statt Bild für Bild zu springen. iPhone-Messung steht noch aus (S8). |
 
@@ -33,11 +33,13 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | V2 | P1 vor Etappe 11b | Offen (Weg entschieden 27.09.) | Coach-Feedback mit Claude wäre der erste Weg, auf dem Daten das Handy verlassen. | Kein API-Schlüssel im Code. Marcel hat sich gegen einen Vermittler-Server und für den **eigenen Schlüssel des Nutzers** entschieden (nur auf dem Gerät, eigener Workspace mit Ausgabenlimit, nie in Sicherung/Repo). Nur Kennzahlen senden, vorher sichtbar fragen, README-Versprechen anpassen. Plan: `docs/plan-etappe-11-level-und-coach.md`. |
 | V3 | P2 | Erledigt 27.09. (PR #6) | `.gitignore` schützte `IMG_1234.MOV` nur auf dem Mac, einige Formate fehlten. | Groß-/Kleinschreibung, weitere Formate, Video-Wächter-Test. |
 | V4 | P3 | Offen | jsDelivr, Google und GitHub sehen IP-Adresse und Zeitpunkt beim Laden. | Für private Nutzung unkritisch. Nutzen Freunde die App, einen kurzen Datenschutzhinweis ergänzen. C1 würde jsDelivr und Google entfernen. |
-| V5 | P3 | Offen | Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. Auch die Merge-Commits von GitHub (PR #16, #17) tragen sie noch. | `git config --global user.email "292231529+MarcelG91@users.noreply.github.com"`, danach in GitHub „Keep my email addresses private“ und „Block command line pushes that expose my email“. |
+| V5 | P3 | Offen | Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. Auch die Merge-Commits von GitHub (PR #16, #17) tragen sie noch, ebenso der noch nicht hochgeladene Commit von `tipps-neu` (28.09.). | `git config --global user.email "292231529+MarcelG91@users.noreply.github.com"`, danach in GitHub „Keep my email addresses private“ und „Block command line pushes that expose my email“. |
 | V6 | P2 vor Etappe 9 | Offen | Geplante Sicherung mit Videos läge in iCloud Drive nicht Ende-zu-Ende verschlüsselt (außer mit „Erweiterter Datenschutz“). | Sicherung optional mit Passwort verschlüsseln (Web Crypto) oder ohne Videos anbieten. |
 | V7 | P3 | Erledigt 27.09. (dieser PR) | `.claude/settings.local.json` (persönliche Claude-Code-Einstellungen) war nicht von Git ausgeschlossen. | In `.gitignore` eingetragen. |
 
 **Gespeicherte Schwünge (Etappe 8), Level (Etappe 11a) und Aufräumen (0.11.0):** Gekürzte Videos, Posedaten und Vorschaubilder liegen nur in der Browser-Datenbank auf dem Handy (IndexedDB). Die aktuelle Levelwahl liegt in `localStorage`, das beim Speichern gewählte Level im Sitzungsobjekt. Es gibt keinen neuen Netzwerkaufruf; `speicher.js` und `videokuerzen.js` senden nichts ins Netz (Wächter-Test in `tests/sicherheit.test.mjs`). Einen Schwung oder eine Sitzung löschen entfernt Schwung, Video, Posedaten und Vorschau gemeinsam in einem Schritt. „Videos und Bilder löschen“ entfernt nur Videos und Vorschaubilder; Kennzahlen, Notizen und Posedaten (nur Zahlen, kein Bild) bleiben. „Alles löschen“ leert die drei Speicher der Datenbank; Level, andere Einstellungen und die Offline-Dateien bleiben, entfernt wird nur der Merker für den nächsten Level-Vorschlag. Vor diesen beiden Aktionen zeigt die App, was gelöscht wird und was bleibt. Im Browser nachgeprüft (28.09.): Es wird genau das Angekündigte gelöscht, und der Platz wird sofort frei. Die App zeigt an, wie viel Speicher belegt ist; Fehler beim Speichern und Löschen werden gemeldet. Geschützt sind die Daten durch den Gerätecode des iPhones. Eigene Verschlüsselung gibt es nicht und ist für Daten auf dem Gerät auch nicht nötig. Wichtig wird das erst bei der Sicherung (V6).
+
+**Tipps neu (0.12.0):** Neue Texte (Kurzzeile, Warum, Schwunggedanke, Übung, Skala) stehen fest in `tipps.js` und kommen nur per `textContent` in die Seite. Der Schwunggedanke wird zusätzlich im Sitzungsobjekt gespeichert und ebenfalls nur per `textContent` angezeigt. Die Strichfigur wird aus den vorhandenen Posedaten als SVG gezeichnet (einziges `innerHTML` mit festem Text); es gibt keinen neuen Netzwerkaufruf und keine neue Adresse. Seit dem Check-Fix prüft ein Test, dass die Rechenlogik-Dateien keinen Browser-Code enthalten.
 
 ### Cybersecurity (C)
 
