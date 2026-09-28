@@ -20,10 +20,14 @@ function dateiliste(text) {
 }
 
 test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
-  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com"]);
-  const hosts = [...QUELLTEXT.matchAll(/https?:\/\/[^\s"'`]+/g)]
+  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com", "api.anthropic.com"]);
+  const hostsIn = (text) => [...text.matchAll(/https?:\/\/[^\s"'`]+/g)]
     .map(([adresse]) => new URL(adresse.replace(/[),;]+$/, "")).hostname);
-  assert.deepEqual([...new Set(hosts)].filter((host) => !erlaubt.has(host)), []);
+  assert.deepEqual([...new Set(hostsIn(QUELLTEXT))].filter((host) => !erlaubt.has(host)), []);
+  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js – nirgends sonst
+  const mitAnthropic = QUELLDATEIEN.filter(({ text }) => hostsIn(text).includes("api.anthropic.com")).map(({ datei }) => datei);
+  assert.deepEqual(mitAnthropic, ["app.js"]);
+  assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
 });
 
 test("MediaPipe-Version und Modell stimmen in App und Service Worker überein", () => {
@@ -124,6 +128,22 @@ test("Coach (V2): Schlüssel nur im localStorage, SDK mit fester Version, nie in
   assert.equal(APP.match(/dangerouslyAllowBrowser/g)?.length, 2, "Browser-Freigabe nur an der einen Stelle (plus Kommentar)");
   const exportTeil = APP.slice(APP.indexOf("function exportiereDaten"), APP.indexOf("function heute"));
   assert.ok(!/localStorage|coach/i.test(exportTeil), "Posedaten-Export enthält nichts vom Coach");
-  // Die SDK-Datei wird nicht offline gespeichert (der Coach braucht ohnehin Internet)
+  // Das SDK steht nicht in der Vorab-Liste des Service Workers (nach dem ersten Laden
+  // speichert er es wie jede jsDelivr-Datei – feste Version, siehe bericht.md C1)
   assert.ok(!SERVICE_WORKER.includes("@anthropic-ai/sdk"));
+  // Der Client geht ausdrücklich an die erlaubte Adresse
+  assert.match(APP, /new Anthropic\(\{[^}]*baseURL: COACH_API_URL/);
+});
+
+test("Check 11b: eine Coach-Anfrage zur Zeit, Antwort nur in den eigenen Schwung-Eintrag", () => {
+  const frage = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("function baueCoachAntwort"));
+  assert.match(frage, /if \(coachLaeuft\) return;/, "zweites Tippen startet keine zweite Anfrage");
+  assert.match(frage, /finally \{\s*coachLaeuft = false;/, "Sperre wird im finally gelöst");
+  assert.match(APP, /coachKnopf\.disabled = !online \|\| coachLaeuft;/, "Neuzeichnen gibt den Knopf nicht frei");
+  assert.match(frage, /aktualisiereSchwung\(schwung\.id, \{ coach \}\)/, "nur das Feld coach wird nachgetragen");
+  const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
+  const aktualisiere = speicher.slice(speicher.indexOf("export async function aktualisiereSchwung"));
+  assert.match(aktualisiere, /if \(!anfrage\.result\) return;/, "gelöschter Schwung taucht nicht wieder auf");
+  const loesche = APP.slice(APP.indexOf("function loescheCoachSchluessel"), APP.indexOf("function coachGrundlage"));
+  assert.match(loesche, /removeItem\(EINWILLIGUNG_NAME\)/, "Schlüssel löschen nimmt auch die Einwilligung zurück");
 });

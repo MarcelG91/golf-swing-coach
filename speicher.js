@@ -206,13 +206,25 @@ export async function speichereSitzung(sitzung, eintraege) {
   await abgeschlossen(t);
 }
 
-// Einen gespeicherten Schwung überschreiben (z. B. um die Coach-Antwort nachzutragen).
-// Fasst nur den Schwung-Eintrag an – Videos und Posedaten bleiben, wie sie sind.
-export async function aktualisiereSchwung(schwung) {
+// Einzelne Felder eines gespeicherten Schwungs ändern (z. B. die Coach-Antwort nachtragen).
+// Liest den Eintrag aus der Datenbank und ändert nur die genannten Felder – so kann nichts
+// aus dem Arbeitsspeicher (Videos, Bilder) in den Eintrag rutschen. Wurde der Schwung
+// inzwischen gelöscht, passiert nichts (er soll nicht als Rest wieder auftauchen).
+// Rückgabe: true, wenn der Eintrag noch da war und geändert wurde.
+export async function aktualisiereSchwung(id, felder) {
   const db = await oeffne();
   const t = db.transaction("schwuenge", "readwrite");
-  t.objectStore("schwuenge").put(schwung);
+  const speicher = t.objectStore("schwuenge");
+  const anfrage = speicher.get(id);
+  let geaendert = false;
+  // Im onsuccess weiterschreiben (nicht per await): so bleibt die Transaktion sicher offen
+  anfrage.onsuccess = () => {
+    if (!anfrage.result) return;
+    speicher.put({ ...anfrage.result, ...felder });
+    geaendert = true;
+  };
   await abgeschlossen(t);
+  return geaendert;
 }
 
 // Alle Sitzungen, die neueste zuerst: nach dem eingetragenen Datum (kann bei

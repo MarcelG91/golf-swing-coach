@@ -1361,8 +1361,15 @@ function bildschirmFreigeben() {
 // ---------------------------------------------------------------
 
 // Offizielles Anthropic-SDK, feste Version, erst beim Tippen auf den Coach-Knopf geladen –
-// so startet die App weiter offline und ohne dieses Paket.
+// so startet die App weiter offline und ohne dieses Paket. Nach dem ersten Laden legt der
+// Service Worker es (wie alle jsDelivr-Dateien) im Offline-Speicher ab; es kommt nicht in die Vorab-Liste.
 const COACH_SDK_URL = "https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.129.0/+esm";
+// Die einzige Adresse, an die der Coach sendet (Regel in CLAUDE.md). Steht hier ausdrücklich,
+// statt sich auf die Voreinstellung des SDK zu verlassen – so prüft sie auch der Host-Test.
+const COACH_API_URL = "https://api.anthropic.com";
+// Läuft gerade eine Anfrage? Dann bleibt der Knopf gesperrt – auch wenn die Ansicht
+// neu gezeichnet wird (Level- oder Schwungwechsel, Internet wieder da). Sonst: doppelte Kosten.
+let coachLaeuft = false;
 // Der eigene API-Schlüssel liegt nur hier (localStorage dieses Geräts) – nie im Code,
 // nie in der Datenbank, nie in einem Export. "Alles löschen" fasst ihn nicht an.
 const SCHLUESSEL_NAME = "coachSchluessel";
@@ -1403,7 +1410,8 @@ function speichereCoachSchluessel() {
 
 function loescheCoachSchluessel() {
   try {
-    localStorage.removeItem(SCHLUESSEL_NAME); // nur diesen einen Eintrag
+    localStorage.removeItem(SCHLUESSEL_NAME); // nur diesen einen Eintrag …
+    localStorage.removeItem(EINWILLIGUNG_NAME); // … und die Einwilligung: ein neuer Schlüssel fragt wieder
   } catch (fehler) {
     console.warn(fehler);
   }
@@ -1452,9 +1460,11 @@ function zeigeCoach() {
 
 function zeigeCoachKnopf() {
   const online = navigator.onLine;
-  coachKnopf.disabled = !online;
+  coachKnopf.disabled = !online || coachLaeuft;
   coachKnopf.textContent = aktuellerSchwung?.coach ? "Neues Coach-Feedback holen" : "Coach-Feedback holen";
-  coachHinweis.textContent = online
+  coachHinweis.textContent = coachLaeuft
+    ? "Der Coach denkt nach … (ca. 10–30 Sekunden)"
+    : online
     ? "Sendet deine Kennzahlen an Anthropic (Claude) · ca. 5 Cent"
     : "Der Coach braucht Internet. Gespeicherte Antworten bleiben lesbar.";
 }
@@ -1494,14 +1504,16 @@ function coachFehlerArt(fehler, Anthropic) {
 const coachFehler = (art) => Object.assign(new Error(COACH_FEHLER[art]), { coachArt: art });
 
 async function frageCoach() {
+  if (coachLaeuft) return; // schon unterwegs – keine zweite (bezahlte) Anfrage
   if (!navigator.onLine) return zeigeCoachKnopf();
   const schwung = aktuellerSchwung;
   const schluessel = leseEinstellung(SCHLUESSEL_NAME);
   if (!schwung || !schluessel) return;
   if (!(await frageCoachEinwilligung())) return;
 
-  coachKnopf.disabled = true;
-  coachHinweis.textContent = "Der Coach denkt nach … (ca. 10–30 Sekunden)";
+  coachLaeuft = true;
+  zeigeCoachKnopf(); // Knopf gesperrt, Hinweis "denkt nach"
+  const level = aktuellesLevel; // Stand beim Tippen – falls du währenddessen das Level wechselst
   let Anthropic = null;
   try {
     const { wichtigste, sichtbar } = coachGrundlage();
@@ -1514,7 +1526,7 @@ async function frageCoach() {
     }
     // dangerouslyAllowBrowser: Das SDK verlangt die ausdrückliche Erlaubnis, im Browser zu laufen,
     // weil der Schlüssel dann im Browser liegt. Genau das ist hier gewollt (eigener Schlüssel mit Limit).
-    const client = new Anthropic({ apiKey: schluessel, dangerouslyAllowBrowser: true, maxRetries: 1 });
+    const client = new Anthropic({ apiKey: schluessel, baseURL: COACH_API_URL, dangerouslyAllowBrowser: true, maxRetries: 1 });
     const antwort = await client.beta.messages.create(anfrage);
     if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
     if (antwort.stop_reason === "max_tokens") throw coachFehler("unvollstaendig");
@@ -1524,16 +1536,15 @@ async function frageCoach() {
 
     const coach = {
       ...pruefeCoachAntwort(roh, { kennzahlen: sichtbar, wichtigste }),
-      level: aktuellesLevel,
+      level,
       modell: antwort.model,
       kostenCent: kostenCent(antwort.usage),
     };
     schwung.coach = coach;
-    // Gespeicherter Schwung? Dann die Antwort gleich dort nachtragen (ohne Video und Bilder)
-    if (gespeicherteSitzung) {
-      const { bilder, videoBilder, datei, ...eintrag } = schwung;
-      await aktualisiereSchwung({ ...eintrag, coach });
-    }
+    // Gespeicherter Schwung (hat eine id aus der Datenbank)? Dann nur die Antwort dort nachtragen.
+    // Bewusst am Schwung selbst geprüft, nicht an der gerade geöffneten Sitzung – die kann
+    // sich während der Anfrage geändert haben.
+    if (schwung.id) await aktualisiereSchwung(schwung.id, { coach });
     if (aktuellerSchwung === schwung) {
       coachAntwort.replaceChildren(baueCoachAntwort(coach));
       coachAntwort.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -1541,8 +1552,10 @@ async function frageCoach() {
   } catch (fehler) {
     console.error(fehler);
     const art = coachFehlerArt(fehler, Anthropic);
-    coachAntwort.replaceChildren(neu("p", "karte unsicher", COACH_FEHLER[art]));
+    // Nur beim Schwung zeigen, für den gefragt wurde (nicht bei einem inzwischen gewählten anderen)
+    if (aktuellerSchwung === schwung) coachAntwort.replaceChildren(neu("p", "karte unsicher", COACH_FEHLER[art]));
   } finally {
+    coachLaeuft = false;
     zeigeCoachKnopf(); // Knopf in jedem Fall wieder freigeben
   }
 }
