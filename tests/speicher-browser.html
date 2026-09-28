@@ -27,6 +27,7 @@
     import {
       nutzeDatenbank, speichereSitzung, ladeSitzungen, ladeSchwuengeDerSitzung,
       ladeMedium, loescheSchwung, loescheSitzung,
+      ladeMedienGroessen, zaehleBilder, loescheVideosUndBilder, loescheAlles,
     } from "../speicher.js";
 
     const liste = document.getElementById("liste");
@@ -38,6 +39,9 @@
       liste.appendChild(eintrag);
       if (!bedingung) fehler++;
     }
+
+    // Wie viele Sitzungen liegen in der ECHTEN Datenbank? Am Ende muss es genauso viele geben.
+    const echteVorher = (await ladeSitzungen()).length;
 
     nutzeDatenbank("golf-swing-coach-test");
 
@@ -80,6 +84,42 @@
     await speichereSitzung({ ...sitzung, schwungIds: [`${id}-1`] }, [eintrag(1)]);
     await loescheSchwung({ ...sitzung, schwungIds: [`${id}-1`] }, `${id}-1`);
     pruefe("Letzten Schwung löschen: Sitzung ist auch weg", (await ladeSitzungen()).length === 0);
+
+    // --- Aufräumen: "Videos und Bilder löschen" und "Alles löschen" ---
+    // Einstellungen im localStorage merken – die dürfen sich durch Löschen nie ändern
+    const levelVorher = localStorage.getItem("level");
+    localStorage.setItem("test-bleibt-erhalten", "ja"); // steht stellvertretend für den späteren Coach-Schlüssel
+
+    const zweite = { ...sitzung, id: id + 1, schwungIds: [`${id + 1}-1`] };
+    const eintragZweite = { ...eintrag(1), schwung: { ...eintrag(1).schwung, id: `${id + 1}-1`, sitzungId: id + 1 } };
+    await speichereSitzung(sitzung, [eintrag(1), eintrag(2)]);
+    await speichereSitzung(zweite, [eintragZweite]);
+    const kennzahlenVorher = JSON.stringify(await ladeSchwuengeDerSitzung(sitzung));
+
+    const vorher = zaehleBilder(await ladeMedienGroessen(), sitzung.schwungIds);
+    pruefe("Zählen: 2 Videos (1000 + 2000 Bytes) und 2 Vorschaubilder", vorher.videos === 2 && vorher.vorschauen === 2 && vorher.bytes === 3020);
+
+    await loescheVideosUndBilder([sitzung]);
+    pruefe("Videos löschen: Videos der Sitzung sind weg",
+      (await ladeMedium(`${id}-1/video`)) === undefined && (await ladeMedium(`${id}-2/video`)) === undefined);
+    pruefe("Videos löschen: Vorschaubilder der Sitzung sind weg", (await ladeMedium(`${id}-1/vorschau`)) === undefined);
+    pruefe("Videos löschen: Posedaten sind noch da", (await ladeMedium(`${id}-1/posedaten`))?.length === 2);
+    pruefe("Videos löschen: Kennzahlen sind unverändert", JSON.stringify(await ladeSchwuengeDerSitzung(sitzung)) === kennzahlenVorher);
+    pruefe("Videos löschen: Sitzungen bleiben", (await ladeSitzungen()).length === 2);
+    pruefe("Videos löschen: andere Sitzung behält ihr Video", (await ladeMedium(`${id + 1}-1/video`)) instanceof Blob);
+    const nachher = zaehleBilder(await ladeMedienGroessen(), sitzung.schwungIds);
+    pruefe("Zählen danach: keine Videos und Bilder mehr in dieser Sitzung", nachher.videos + nachher.vorschauen === 0);
+
+    await loescheAlles();
+    pruefe("Alles löschen: keine Sitzungen mehr", (await ladeSitzungen()).length === 0);
+    pruefe("Alles löschen: keine Schwünge mehr", (await ladeSchwuengeDerSitzung(zweite))[0] === undefined);
+    pruefe("Alles löschen: keine Videos, Bilder oder Posedaten mehr", (await ladeMedienGroessen()).size === 0);
+    pruefe("Alles löschen: Level-Einstellung unverändert", localStorage.getItem("level") === levelVorher);
+    pruefe("Alles löschen: andere Einträge im localStorage bleiben", localStorage.getItem("test-bleibt-erhalten") === "ja");
+    localStorage.removeItem("test-bleibt-erhalten");
+
+    nutzeDatenbank("golf-swing-coach");
+    pruefe("Die echte Datenbank ist unberührt", (await ladeSitzungen()).length === echteVorher);
 
     const fazit = document.getElementById("fazit");
     fazit.className = fehler ? "fehler" : "ok";

@@ -94,6 +94,50 @@ function runde(p) {
 }
 
 // ---------------------------------------------------------------
+// Teil 1b: Aufräumen – was genau wird gelöscht? (auch reine Rechnerei)
+// ---------------------------------------------------------------
+
+// Die großen Dateien pro Schwung (Schlüssel im Speicher "medien": "<id>/<art>")
+export const MEDIEN_ARTEN = ["video", "posedaten", "vorschau"];
+// "Videos und Bilder löschen": nur das, was dich zeigt. Die Posedaten bleiben –
+// das sind reine Zahlen (kein Bild), und Etappe 10 braucht sie, um alte Schwünge
+// mit verbesserten Formeln neu auszuwerten.
+export const BILD_ARTEN = ["video", "vorschau"];
+
+// Schlüssel der großen Dateien zu einigen Schwüngen, z. B.
+// medienSchluessel(["17…-1"], BILD_ARTEN) → ["17…-1/video", "17…-1/vorschau"]
+export function medienSchluessel(schwungIds, arten) {
+  return schwungIds.flatMap((id) => arten.map((art) => `${id}/${art}`));
+}
+
+// Wie viele Videos und Vorschaubilder gehören zu diesen Schwüngen, und wie groß
+// sind sie zusammen? groessen = Map "<id>/<art>" → Bytes (aus ladeMedienGroessen)
+export function zaehleBilder(groessen, schwungIds) {
+  let videos = 0;
+  let vorschauen = 0;
+  let bytes = 0;
+  for (const schluessel of medienSchluessel(schwungIds, BILD_ARTEN)) {
+    if (!groessen.has(schluessel)) continue; // schon gelöscht oder nie gespeichert
+    if (schluessel.endsWith("/video")) videos++;
+    else vorschauen++;
+    bytes += groessen.get(schluessel);
+  }
+  return { videos, vorschauen, bytes };
+}
+
+// Sitzungen, deren Datum mehr als `tage` Tage vor `heute` liegt.
+// Datumsangaben im Format "2026-09-28" (wie in der Sitzung gespeichert).
+export function sitzungenAelterAls(sitzungen, tage, heute) {
+  // In ganze Tage umrechnen. Date.UTC statt new Date("…"), damit Sommer-/Winterzeit
+  // nicht dazwischenfunkt (sonst hätte ein Tag manchmal 23 oder 25 Stunden).
+  const tagNummer = (iso) => {
+    const [jahr, monat, tag] = iso.split("-").map(Number);
+    return Date.UTC(jahr, monat - 1, tag) / 86_400_000;
+  };
+  return sitzungen.filter((s) => tagNummer(heute) - tagNummer(s.datum) > tage);
+}
+
+// ---------------------------------------------------------------
 // Teil 2: Datenbank (nur im Browser)
 //
 // Drei "Speicher" – ähnlich wie Tabellen:
@@ -202,7 +246,49 @@ export async function loescheSitzung(sitzung) {
 
 function loescheSchwungIn(t, id) {
   t.objectStore("schwuenge").delete(id);
-  for (const art of ["video", "posedaten", "vorschau"]) t.objectStore("medien").delete(`${id}/${art}`);
+  for (const schluessel of medienSchluessel([id], MEDIEN_ARTEN)) t.objectStore("medien").delete(schluessel);
+}
+
+// Welche großen Dateien liegen gespeichert, und wie groß sind sie?
+// → Map "<id>/<art>" → Bytes. Posedaten zählen mit 0 (reine Zahlen, kein Bild).
+export async function ladeMedienGroessen() {
+  const db = await oeffne();
+  // Erst nur die Schlüssel holen – das lädt keine einzige Datei
+  const schluessel = await ergebnis(db.transaction("medien").objectStore("medien").getAllKeys());
+  const bilder = schluessel.filter((s) => !s.endsWith("/posedaten"));
+  // Dann Videos und Vorschaubilder: IndexedDB liefert sie als Blob. Ein Blob ist nur ein
+  // Verweis auf die Datei – .size kostet nichts, das Video wird dafür nicht geladen.
+  const speicher = db.transaction("medien").objectStore("medien");
+  const dateien = await Promise.all(bilder.map((s) => ergebnis(speicher.get(s))));
+  const groessen = new Map(schluessel.map((s) => [s, 0]));
+  bilder.forEach((s, i) => groessen.set(s, dateien[i]?.size ?? 0));
+  return groessen;
+}
+
+// "Videos und Bilder löschen": Clips und Vorschaubilder dieser Sitzungen entfernen.
+// Sitzungen, Schwünge (mit allen Kennzahlen) und Posedaten bleiben erhalten.
+// Eine Transaktion: Entweder ist danach alles davon weg – oder bei einem Fehler nichts.
+export async function loescheVideosUndBilder(sitzungen) {
+  const db = await oeffne();
+  const t = db.transaction("medien", "readwrite");
+  const medien = t.objectStore("medien");
+  for (const schluessel of medienSchluessel(sitzungen.flatMap((s) => s.schwungIds), BILD_ARTEN)) {
+    medien.delete(schluessel);
+  }
+  await abgeschlossen(t);
+}
+
+// Alle gespeicherten Schwünge löschen: die drei Speicher dieser Datenbank leeren.
+// Bewusst NUR diese Datenbank. Level und (später) Coach-Schlüssel liegen im
+// localStorage, die Offline-Dateien beim Service Worker – beides bleibt unberührt.
+// indexedDB.deleteDatabase() wäre die Alternative, bleibt aber hängen, solange die
+// App die Datenbank geöffnet hat.
+export async function loescheAlles() {
+  const db = await oeffne();
+  const speicher = ["sitzungen", "schwuenge", "medien"];
+  const t = db.transaction(speicher, "readwrite");
+  for (const name of speicher) t.objectStore(name).clear();
+  await abgeschlossen(t);
 }
 
 // Wie viel Speicher belegt die App? (in Bytes; der Browser schätzt grob)

@@ -58,6 +58,9 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Jede asynchrone Aktion mit Fehlerbehandlung; gesperrte Knöpfe im `finally` wieder freigeben.
 - Browser-Adressen aus `URL.createObjectURL` wieder freigeben (bei Downloads verzögert).
 - In Commits, Pull Requests und `docs/sicherheit/` keine Details zu noch offenen Lücken.
+- **Löschen fasst nur die Schwung-Datenbank an** – nie `localStorage` (Level, später Coach-Schlüssel)
+  und nie die Offline-Dateien. Kein `localStorage.clear()`, kein `deleteDatabase`; darüber wacht
+  `tests/sicherheit.test.mjs`. Vor jedem Löschen zeigt die App, was gelöscht wird und was bleibt.
 - **Nach jeder Bau-Runde `/golf-app-check` ausführen.** Er schreibt `docs/sicherheit/bericht.md`
   und `docs/sicherheit/pruefprotokoll.md` fort.
 
@@ -68,7 +71,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `app.js` | Oberfläche, Video, Zeichnen, Ablauf der Analyse |
 | `videoanalyse.js` | Video schnell durchgehen (abspielen statt springen, Lücken nachholen) |
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
-| `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB) und als Clip ausschneiden |
+| `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
@@ -91,8 +94,22 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   Schlägen + Mehrfachauswahl aus Fotos. Werden alle Schläge gefunden? Falsche Treffer (z. B. Aufteen)?
   Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
 - iPhone-Test Etappe 8 (Version ≥ 0.9.0): Speichern im Flugmodus, sitzt das Skelett im gespeicherten Clip?
-- **Reihenfolge ab jetzt: 11a → 11b → 10 → 9** (Sicherung bewusst ans Ende, Entscheidung 27.09.).
-  Etappe 11a: Level + angepasste Tipps · 11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
+- **Reihenfolge ab jetzt (Entscheidung 28.09.): `robuste-analyse` → 11b → 10 → 9**
+  (11a und `speicher-verwalten` sind erledigt; Sicherung bewusst ans Ende, Entscheidung 27.09.).
+  `robuste-analyse`: Befunde S2, S3, S7 aus `docs/sicherheit/bericht.md` (S2 ist P1).
+  11b: Coach mit Claude (Plan in `docs/plan-etappe-11-level-und-coach.md`).
   Etappe 10: Fortschritt · Etappe 9: Sicherung (Plan in `docs/plan-speichern-und-fortschritt.md`).
-- Speicher sparen: „Nur Videos löschen, Kennzahlen behalten“ (für alte Sitzungen).
+- 11b vorab klären: **Teilen mit Freunden.** Die App selbst läuft bei jedem kostenlos; nur der Coach
+  kostet. Optionen: eigener Schlüssel (Plan) · Schlüssel je Freund aus Marcels Workspace mit Limit ·
+  schlüsselfreier Knopf „Für Claude kopieren“ (Text in die eigene Claude-App einfügen) · Vermittler-
+  Server (verworfen). Außerdem prüfen: Modellwahl, ob Prompt Caching sich lohnt (5-Minuten-Cache,
+  meist nur ein Feedback pro Sitzung), SDK oder `fetch`, ehrlicher Text zu IP/Browserkennung.
+- iPhone-Test Speicher aufräumen (Version ≥ 0.11.0): Videos einer Sitzung löschen, danach
+  Speicheranzeige vorher/nachher vergleichen; „Alles löschen“ → Level noch da, offline weiter nutzbar?
+- Beobachtung 28.09.: Im Chrome-Test (ohne Fenster, frisches Profil) startet die App beim allerersten
+  Aufruf in ca. der Hälfte der Fälle nicht (`app.js` läuft nicht an, keine offene Netzanfrage) –
+  auch auf `main` (0.10.0), Neuladen hilft. Auf dem iPhone prüfen: Erstaufruf in privatem Tab.
+  Verdacht: Service Worker übernimmt die Seite beim ersten Laden (`clients.claim`).
+- Darstellung seit 11a: In den Level-Karten (⚙️ Einstellungen) wird die Beschreibung in eine schmale
+  Spalte gequetscht („Ich / lerne / gerade …“) – Grid-Spalte der `<small>` in `style.css` festlegen.
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.

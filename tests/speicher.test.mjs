@@ -10,7 +10,15 @@ import { findeSchwuenge } from "../schwuenge.js";
 import { gesamtauswertung } from "../gesamtauswertung.js";
 import { bewerteSchwung } from "../kennzahlen.js";
 import { bewerteTechnik } from "../technik.js";
-import { clipGrenzen, schwungZumSpeichern } from "../speicher.js";
+import {
+  clipGrenzen,
+  schwungZumSpeichern,
+  medienSchluessel,
+  MEDIEN_ARTEN,
+  BILD_ARTEN,
+  zaehleBilder,
+  sitzungenAelterAls,
+} from "../speicher.js";
 
 const BILD = 1 / 30;
 // Die Testdaten haben gerundete Zeiten (0,0333 statt 1/30) → 1 ms Spielraum
@@ -105,4 +113,46 @@ test("Gesamtauswertung aus gespeicherten Schwüngen = aus den Originalen", () =>
     gesamtauswertung(gespeichert.map((g) => g.schwung)),
     gesamtauswertung(gespeichert.map((g) => g.original))
   );
+});
+
+// ---------------------------------------------------------------
+// Aufräumen: Was wird bei "Videos und Bilder löschen" gelöscht – und was nicht?
+// (Das eigentliche Löschen in der Datenbank prüft tests/speicher-browser.html.)
+// ---------------------------------------------------------------
+
+test("Videos und Bilder löschen: je Schwung genau Video und Vorschau, nie Posedaten", () => {
+  const schluessel = medienSchluessel(["1-1", "1-2"], BILD_ARTEN);
+  assert.deepEqual(schluessel, ["1-1/video", "1-1/vorschau", "1-2/video", "1-2/vorschau"]);
+  assert.ok(schluessel.every((s) => !s.includes("posedaten")), "Posedaten dürfen nicht dabei sein");
+});
+
+test("Schwung oder Sitzung löschen: alle drei Dateiarten", () => {
+  assert.deepEqual(medienSchluessel(["7-1"], MEDIEN_ARTEN), ["7-1/video", "7-1/posedaten", "7-1/vorschau"]);
+  // BILD_ARTEN ist eine echte Teilmenge: nichts, was es nicht auch beim vollen Löschen gibt
+  assert.ok(BILD_ARTEN.every((art) => MEDIEN_ARTEN.includes(art)));
+  assert.ok(!BILD_ARTEN.includes("posedaten"));
+});
+
+test("Zählen: nur die gewählten Schwünge, Posedaten zählen nicht, fehlende Dateien auch nicht", () => {
+  const groessen = new Map([
+    ["1-1/video", 3_000_000], ["1-1/vorschau", 20_000], ["1-1/posedaten", 0],
+    ["1-2/posedaten", 0], ["1-2/vorschau", 18_000], // Schwung ohne Video (Clip ging nicht)
+    ["2-1/video", 4_000_000], ["2-1/vorschau", 21_000], ["2-1/posedaten", 0], // andere Sitzung
+  ]);
+  assert.deepEqual(zaehleBilder(groessen, ["1-1", "1-2"]), { videos: 1, vorschauen: 2, bytes: 3_038_000 });
+  assert.deepEqual(zaehleBilder(groessen, []), { videos: 0, vorschauen: 0, bytes: 0 });
+  assert.deepEqual(zaehleBilder(new Map(), ["1-1"]), { videos: 0, vorschauen: 0, bytes: 0 });
+});
+
+test("Älter als 30 Tage: genau 30 Tage zählt noch nicht, 31 schon – auch über Monats- und Zeitumstellung", () => {
+  const sitzungen = [
+    { id: 1, datum: "2026-09-28" }, // heute
+    { id: 2, datum: "2026-08-29" }, // 30 Tage
+    { id: 3, datum: "2026-08-28" }, // 31 Tage
+    { id: 4, datum: "2025-12-31" }, // lange her
+  ];
+  assert.deepEqual(sitzungenAelterAls(sitzungen, 30, "2026-09-28").map((s) => s.id), [3, 4]);
+  // Über die Zeitumstellung Ende Oktober hinweg (ein Tag hat dort 25 Stunden)
+  assert.deepEqual(sitzungenAelterAls([{ id: 5, datum: "2026-10-01" }], 30, "2026-10-31"), []);
+  assert.deepEqual(sitzungenAelterAls([{ id: 6, datum: "2026-09-30" }], 30, "2026-10-31").map((s) => s.id), [6]);
 });
