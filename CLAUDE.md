@@ -75,7 +75,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
-| `tipps.js` · `strichfigur.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten |
+| `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 | `docs/plan-tipps-neu.md` | Wisch-Karten, Kurztipps, Übungsmodus – Entscheidungen, geprüfte Texte, Quellen |
@@ -123,8 +123,9 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
   der Liste durch einen Golflehrer (PGA-Pro). Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`)
   zeigt die App nicht mehr – vor Nutzung (z. B. Coach 11b) an `tipps.js` angleichen (z. B. Tempo „oben kurz
   ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
-- Branch `uebungsmodus` (nach `tipps-neu`): Vollbild-Übung mit animierten Strichfiguren. Posen aus dem
-  Profi-Testschwung; P2/P6/P8 über „Schaft waagerecht“ definieren (Details `docs/plan-tipps-neu.md`).
-  Entwurf dazu: klickbarer Prototyp aus dem Chat vom 28.09. (nicht im Repo).
-- iPhone-Test Tipps neu (Version ≥ 0.12.0): Wischen flüssig? Strichfigur verständlich? Skala lesbar?
+- **Übungsfiguren fachlich:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
+  `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung von hinten
+  erst mit einem korrekten Profi-Schwung von hinten als Testdatei.
+- iPhone-Test Tipps neu + Übungsmodus (Version ≥ 0.13.0): Wischen flüssig? Figuren verständlich? Skala
+  lesbar? Bleibt der Bildschirm im Übungsmodus an (Wake Lock ab iOS 16.4)?
 - Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.

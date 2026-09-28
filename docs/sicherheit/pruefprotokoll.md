@@ -3,6 +3,15 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-28 · Branch `uebungsmodus` @ ad71505 · main @ c93f5f6 · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.12.1) im eigenen Worktree und `uebungsmodus` (0.13.0, noch nicht hochgeladen); `node --test` main 93/93, Branch 101/101, mit Check-Fix 102/102 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
+- Live: Version 0.12.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 7 App-Dateien gleich `origin/main`. CI auf `main` grün.
+- T1 erledigt: Ruleset „main schützen“ aktiv, ohne Ausnahmen (Löschen, Force-Push gesperrt, nur per Pull Request, Pflicht-Check „Tests“); GitHub meldet `main` jetzt als geschützt. V5 teilweise: neue Commits mit noreply-Adresse, GitHub-Merge-Commits und die globale Git-Einstellung noch mit Geschäftsadresse.
+- Datenschutz/Sicherheit: keine Videos oder Posedaten in Git, keine Geheimnismuster, nur erlaubte Hosts, keine neuen Netzwerkaufrufe. Übungsmodus: Texte per `textContent`, einziges neues `innerHTML` ist fester Text; neue Datei in beiden Offline-Listen und in der Liste „Rechenlogik ohne Browser-Code“, Version erhöht. Animation wird beim Schließen und Seitenwechsel angehalten; höchstens 19 SVG-Elemente pro Bild.
+- Neu: keine Befund-ID. Check-Fix: Seite hinter dem Übungsmodus für Tastatur und Bildschirmleser gesperrt; Bildschirm-anlassen wird auch bei sehr schnellem Schließen freigegeben. Erledigt: T1. Offen P1: V2 (erst 11b), C1, C2, S2, S8.
+- Fix-Branch: `check-uebungsmodus` (2 Commits): Fokus und Bildschirmsperre im Übungsmodus, Test für die Übungsbilder, Version 0.13.1; Bericht und Protokoll.
+- Nicht geprüft: Browser-Messung durch den Prüfer (lokal kein Playwright, kein Claude in Chrome; die Bau-Sitzung hat Chrome ohne Fenster mit Testvideo genutzt), echtes iPhone/Safari (Wake Lock in der Home-Bildschirm-App, Flüssigkeit der Animation), Zwei-Faktor, CI auf dem Branch (noch kein PR).
+
 ## Golf-App-Check 2026-09-28 · Branch `tipps-neu` @ de889b1 · main @ 18dc5c4 · Urteil 🟡
 - Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.11.0) im eigenen Worktree und `tipps-neu` (0.12.0, noch nicht hochgeladen); `node --test` main 84/84, Branch 92/92, mit Check-Fix 93/93 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt übernehmen (Fast-Forward).
 - Live: Version 0.11.0, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 7 App-Dateien gleich `origin/main`. CI auf `main` grün. Branch-Schutz weiter aus (T1).

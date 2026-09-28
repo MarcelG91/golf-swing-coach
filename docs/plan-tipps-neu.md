@@ -171,7 +171,7 @@ gut: Oberkörper im Treffmoment vom Ziel weg
 - **warum:** Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.
 - **gedanke:** Drehen statt schieben
 - **Übung: Stab-Übung** · 10×
-  1. Stab senkrecht wenige Zentimeter neben die rechte Hüfte stecken.
+  1. Stab senkrecht direkt außen neben den rechten Fuß stecken.
   2. Langsam ausholen – die Hüfte berührt ihn nicht.
   3. Danach halbe Schwünge.
 
@@ -198,7 +198,7 @@ gut: Hüfte dreht auf der Stelle
   1. Flüssig zurückschwingen, oben keine Pause.
   2. Im gleichen Rhythmus durchschwingen.
 
-gut: Rhythmus wie gute Spieler (3 : 1)
+gut: Rhythmus wie gute Spieler (3 : 1)
 
 ### Kopfhöhe (beide Ansichten)
 
@@ -303,7 +303,7 @@ Korrigiert:
 | Po an die Wand mit Schläger, Start vor der Wand | Ohne Schläger, Arme gekreuzt, Po berührt die Wand von Anfang an | golfsmartacademy.com, TPI |
 | Knie-Tipp „außen ans Knie“ | „Hand hängen lassen“ | Die Knie-Variante ist nicht belegt und führt eher zu viel Neigung (golf-info-guide.com: beim Eisen ca. 5°) |
 | Griffende zeigt auf den Bauchnabel | Tief greifen, Griffende **am** Bauchnabel | womensgolf.com, golfdistillery.com |
-| Stab „außen neben“ die Hüfte | „wenige Zentimeter neben“ | hackmotion.com |
+| Stab „außen neben“ die Hüfte | Stab senkrecht **direkt außen neben dem rechten Fuß** | Beim Profi steht der Fuß weiter außen als die Hüfte – ein Stab an der Hüfte stünde im Fuß (Variante „am Fuß“ laut Recherche; hackmotion.com) |
 | Golftasche nur im Abschwung | Rückschwung rechte, Abschwung linke Po-Seite, langsam | TPI, whygolf.com |
 | Aufrecht → „zuerst Boden“ | Aufrecht → „flach, oft dünne Treffer“ | Häufiger so beschrieben |
 
@@ -352,7 +352,16 @@ Offene fachliche Punkte (nicht in diesem Branch):
 3. Strichfigur (`strichfigur.js`: Posedaten im Moment der Phase + Linien aus `ideallinien.js`) und Skala mit Zielbereich.
 4. Schwunggedanke oben („💭 Heute auf der Range“), wird mit der Sitzung gespeichert.
 
-**Branch `uebungsmodus`** (danach)
-Vollbild, ein Schritt pro Seite mit animierter Strichfigur, große Schrift, Zähler zum Antippen,
-Bildschirm bleibt an (Wake Lock, wo vorhanden). Posen und Animationen als eigene Datei
-(z. B. `uebungsbilder.js`, reine Daten + Zeichnen ohne Bibliothek).
+**Branch `uebungsmodus`** (umgesetzt 28.09., Version 0.13.0)
+- Vollbild, ein Schritt pro Seite, große Schrift, am Ende ein Zähler zum Antippen; Bildschirm bleibt an
+  (Wake Lock, wo vorhanden); Esc schließt; „Bewegung reduzieren“ zeigt nur das Endbild.
+- Figuren in `uebungsbilder.js` (reine Rechenlogik, Tests in `tests/uebungsbilder.test.mjs`):
+  - **Von vorne:** Posen aus dem Profi-Testschwung (Bilder 47, 58, 70, 75, 76, 78, 94), linker Arm am Top
+    korrigiert. Tests prüfen die Posen mit den Grenzwerten der App (Arm, Neigung, Sway, Kopf hinter dem Ball).
+  - **Schläger:** über seinen Winkel; kommt im Abschwung hinter dem Körper herunter (Test prüft die Richtung).
+  - **Von hinten:** nur Standbilder der geprüften Ansprechhaltung (`hinten_amateur_a`: Vorneigung 33°, Arme
+    −14 %). Die Drehung von hinten zeigen wir nicht, dafür fehlen korrekte Daten → nur Text.
+  - **Nur Text** auch dort, wo eine flache Zeichnung täuschen würde („Schläger vor der Brust“, Schritte 2–3).
+  - **Mitzählen:** Takt nach Tour Tempo, 350 ms pro Zählzeit – „und“ Start, „drei“ oben, „vier“ getroffen (3 : 1).
+- Offen: Bewegung von hinten (Po an die Wand, Golftasche) als Animation, sobald ein korrekter Profi-Schwung
+  von hinten als Testdatei vorliegt.

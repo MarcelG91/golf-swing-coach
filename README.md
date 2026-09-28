@@ -144,7 +144,12 @@ die Punkte darunter zeigen, wo du bist). Jede Karte zeigt:
 - den **Schwunggedanken** 💭 und die **Übung** in kurzen Schritten zum Aufklappen.
 
 Die letzte Karte zeigt, was schon gut läuft. Der Schwunggedanke der wichtigsten Baustelle steht
-oben („Heute auf der Range“) und wird mit der Sitzung gespeichert. Alle Texte stehen in `tipps.js`;
+oben („Heute auf der Range“) und wird mit der Sitzung gespeichert.
+
+**Übungsmodus:** In jeder Übung startet „Mit Bildern üben (Vollbild)“ eine Anleitung Schritt für
+Schritt – mit großer Schrift, einer kleinen animierten Figur pro Schritt und am Ende einem Zähler zum
+Antippen (z. B. 3 von 10). Der Bildschirm bleibt dabei an, soweit der Browser das kann. Die Figuren von
+vorne stammen aus einem echten Profi-Schwung; von hinten gibt es nur die Ausgangsstellung als Bild. Alle Texte stehen in `tipps.js`;
 sie wurden gegen Golf-Fachquellen geprüft (Stand und Quellen: `docs/plan-tipps-neu.md`).
 Die App ersetzt trotzdem keine Trainerstunde.
 
@@ -195,6 +200,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
 | `tipps.js` | Alle kurzen Tipp-Texte an einer Stelle: Kurzzeile, Warum, Schwunggedanke, Übung, Lob; dazu die Skala mit Zielbereich |
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
+| `uebungsbilder.js` | Figuren und Animationen für den Übungsmodus (Profi-Posen, Schläger, Stab, Wand, Takt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
@@ -214,6 +220,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
+| `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
