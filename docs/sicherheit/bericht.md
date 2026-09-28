@@ -5,7 +5,8 @@ Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos verlassen das Handy nicht, und im Repo liegen
 weder Videos noch Geheimnisse. Offen sind vor allem die Echtheitsprüfung des nachgeladenen
-MediaPipe-Codes und die Fehlerbehandlung während der Analyse. `main` ist seit 28.09. per Regel geschützt.
+MediaPipe-Codes und die Fehlerbehandlung während der Analyse. `main` ist seit 28.09. per Regel geschützt,
+das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etappe S0 erledigt).
 
 > **Regel für diesen öffentlichen Bericht:** keine Geheimnisse und keine Anleitung, wie man eine
 > noch offene Lücke ausnutzt. Solche Details stehen nur im Chat.
@@ -33,7 +34,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | V2 | P1 vor Etappe 11b | Offen (Weg entschieden 27.09.) | Coach-Feedback mit Claude wäre der erste Weg, auf dem Daten das Handy verlassen. | Kein API-Schlüssel im Code. Marcel hat sich gegen einen Vermittler-Server und für den **eigenen Schlüssel des Nutzers** entschieden (nur auf dem Gerät, eigener Workspace mit Ausgabenlimit, nie in Sicherung/Repo). Nur Kennzahlen senden, vorher sichtbar fragen, README-Versprechen anpassen. Plan: `docs/plan-etappe-11-level-und-coach.md`. |
 | V3 | P2 | Erledigt 27.09. (PR #6) | `.gitignore` schützte `IMG_1234.MOV` nur auf dem Mac, einige Formate fehlten. | Groß-/Kleinschreibung, weitere Formate, Video-Wächter-Test. |
 | V4 | P3 | Offen | jsDelivr, Google und GitHub sehen IP-Adresse und Zeitpunkt beim Laden. | Für private Nutzung unkritisch. Nutzen Freunde die App, einen kurzen Datenschutzhinweis ergänzen. C1 würde jsDelivr und Google entfernen. |
-| V5 | P3 | Teilweise (28.09.) | Ältere Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. Seit 28.09. nutzen neue Commits im Repo die noreply-Adresse. Die Merge-Commits von GitHub (zuletzt PR #19) tragen die Geschäftsadresse weiter, und die globale Git-Einstellung auf dem Mac ist noch die Geschäftsadresse. | `git config --global user.email "292231529+MarcelG91@users.noreply.github.com"`, danach in GitHub „Keep my email addresses private“ und „Block command line pushes that expose my email“. |
+| V5 | P3 | Erledigt 28.09., manuell (ältere Commits akzeptiert) | Ältere Commits tragen die Geschäfts-E-Mail-Adresse, das Repo ist öffentlich. | Globale Git-Einstellung auf dem Mac ist die noreply-Adresse; in GitHub sind „Keep my email addresses private“ und „Block command line pushes that expose my email“ an. Die Historie wird bewusst nicht umgeschrieben (bräuchte Force-Push). Merge-Commits von GitHub beim nächsten PR stichprobenartig prüfen. |
 | V6 | P2 vor Etappe 9 | Offen | Geplante Sicherung mit Videos läge in iCloud Drive nicht Ende-zu-Ende verschlüsselt (außer mit „Erweiterter Datenschutz“). | Sicherung optional mit Passwort verschlüsseln (Web Crypto) oder ohne Videos anbieten. |
 | V7 | P3 | Erledigt 27.09. (dieser PR) | `.claude/settings.local.json` (persönliche Claude-Code-Einstellungen) war nicht von Git ausgeschlossen. | In `.gitignore` eingetragen. |
 
@@ -48,7 +49,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | Nr | Prio | Status | Befund | Maßnahme |
 |---|---|---|---|---|
 | C1 | P1 | Offen | MediaPipe-Code, Rechenkern und Modell werden ohne Echtheitsprüfung von zwei Anbietern geladen. Dieser Code sieht jedes Videobild. | Dateien selbst ausliefern (Build mit Prüfsummen) oder Prüfsummen im Service Worker kontrollieren. Größerer Umbau, nur nach Absprache. |
-| C2 | P1 | Offen (nur Marcel prüfbar) | Das GitHub-Konto ist der Generalschlüssel zur App. | Zwei-Faktor mit Passkey oder App, Wiederherstellungscodes sichern, ungenutzte Tokens löschen. |
+| C2 | P1 | Erledigt 28.09., manuell | Das GitHub-Konto ist der Generalschlüssel zur App. | Zwei-Faktor mit Authenticator-App und Passkey, Wiederherstellungscodes sicher abgelegt, Sitzungen, Tokens, Apps und SSH-Schlüssel aufgeräumt. Nur der Zugang der Kommandozeile bleibt. Einziger Mitarbeiter am Repo ist das Hauptkonto. |
 | C3 | P2 | Offen | Keine Content Security Policy. | Nach C1 als `<meta>`-Tag: nur eigene Dateien, `'wasm-unsafe-eval'`, Daten nur an die eigene Adresse. In Safari und Chrome testen. |
 | C4 | P3 | Offen | MediaPipe 0.10.14 ist gepinnt, aktuell ist 1.0.1. | Kein Eil-Update. Später gezielt in eigenem Branch mit Tests. |
 | C5 | P3 | Akzeptiert | Schutz gegen Einbetten in fremde Seiten ist auf GitHub Pages nicht setzbar. | Kein Login, keine Zahlungen, daher geringes Risiko. |
@@ -94,7 +95,7 @@ Warmstart bis „Bereit“: 0,3 s ohne Datenübertragung (28.09., Mac, schnelles
 
 | Etappe | Inhalt | Status |
 |---|---|---|
-| S0 GitHub-Einstellungen | C2 Zwei-Faktor, T1 Regel für `main`, V5 E-Mail privat | In Arbeit – T1 erledigt 28.09., V5 teilweise, C2 nur Marcel prüfbar |
+| S0 GitHub-Einstellungen | C2 Zwei-Faktor, T1 Regel für `main`, V5 E-Mail privat | Erledigt 28.09., manuell (C2, T1, V5) |
 | S1 Sicherheitsnetz | T2, V3, V1, T6 | Erledigt 27.09. (PR #6) |
 | S2 Robuste Analyse | S2, S3, S7, S9, Rest von S8 (S5, S6 erledigt) | Offen – nächster Branch `robuste-analyse` |
 | S3 Echtheit und Browser-Test | C1, T3, C4 | Offen, nur nach Absprache |
