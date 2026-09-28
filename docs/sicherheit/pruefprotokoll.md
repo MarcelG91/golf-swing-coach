@@ -3,6 +3,15 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-28 · Branch `robuste-analyse` @ 9d1162c · main @ 20750c0 · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.13.1) im eigenen Worktree und `robuste-analyse` (0.14.0, noch nicht hochgeladen); `node --test` main 102/102, Branch 104/104, mit Check-Fix 105/105 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt mit `main` zusammenführen.
+- Live: Version 0.13.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 5 App-Dateien gleich `origin/main`. CI auf `main` grün, `main` geschützt.
+- Datenschutz/Sicherheit: keine Videos oder Posedaten in Git, keine Geheimnismuster, nur erlaubte Hosts, keine neuen Netzwerkaufrufe. Neue Meldungen (auch Dateinamen und Fehlertexte) nur per `textContent`. Keine neue Datei, Version erhöht.
+- Erledigt (im Branch): S2, S3, S7, S9; S8 teilweise (Ladezeit in der Statuszeile). Check-Fix: Längenprüfung greift auch beim vorgeladenen Video; harmlose Abspiel-Abbrüche erscheinen nicht als „Unerwarteter Fehler“; Speichern hängt nicht, wenn der Browser das Abspielen verweigert; Start-Hinweis verschwindet, wenn die App bei langsamem Netz doch noch startet.
+- Neu: S10 (P3, Laden eines Videos ohne Zeitgrenze). Offen P1: V2 (erst 11b), C1, S8 (iPhone-Messung).
+- Fix-Branch: `check-robuste-analyse` (3 Commits inkl. Übernahme von `main`): Check-Fix mit Test, Version 0.14.1; Bericht und Protokoll.
+- Nicht geprüft: Browser-Messung durch den Prüfer (lokal kein Playwright, kein Claude in Chrome; die Bau-Sitzung hat Chrome ohne Fenster mit Testvideo und absichtlich eingebauten Fehlern genutzt), Check-Fix im Browser, echtes iPhone/Safari (Stromsparmodus, Ladezeit), CI auf dem Branch (noch kein PR).
+
 ## GitHub-Einstellungen (Etappe S0) 2026-09-28 · main @ e64462d · manuell
 - C2 erledigt: Zwei-Faktor mit Authenticator-App und Passkey, Wiederherstellungscodes sicher abgelegt; Sitzungen, Tokens, Apps und SSH-Schlüssel von Marcel im Browser aufgeräumt. Per API geprüft: kein SSH-Schlüssel mehr hinterlegt, Kommandozeile hat weiter Zugriff, einziger Mitarbeiter am Repo ist das Hauptkonto.
 - V5 erledigt: globale Git-Einstellung auf die noreply-Adresse umgestellt (lokal geprüft), E-Mail in GitHub privat und Pushes mit echter Adresse gesperrt. Ältere Commits bleiben bewusst unverändert.
