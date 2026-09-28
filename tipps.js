@@ -178,7 +178,7 @@ const TIPPS = {
       warum: "Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.",
       gedanke: "Drehen statt schieben",
       uebung: { name: "Stab-Übung", wiederholungen: 10, schritte: [
-        `Stab senkrecht wenige Zentimeter neben die ${s.h} Hüfte stecken.`,
+        `Stab senkrecht direkt außen neben den ${s.hen} Fuß stecken.`,
         "Langsam ausholen – die Hüfte berührt ihn nicht.",
         "Danach halbe Schwünge.",
       ] },

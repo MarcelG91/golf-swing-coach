@@ -50,6 +50,8 @@ import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } fr
 import { tipp, gutText, skala, skalaPosition } from "./tipps.js";
 // Kleine Strichfigur aus deinen Posedaten für die Karten (ohne Springen im Video)
 import { strichfigur } from "./strichfigur.js";
+// Strichfiguren zu den Übungen (Übungsmodus)
+import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -110,6 +112,18 @@ const gedankeBox = $("gedankeBox");
 const gedankeText = $("gedankeText");
 const kartenZaehler = $("kartenZaehler");
 const kartenPunkte = $("kartenPunkte");
+// Übungsmodus (Vollbild)
+const uebungsmodus = $("uebungsmodus");
+const uebungTitel = $("uebungTitel");
+const uebungZuBtn = $("uebungZu");
+const uebungFortschritt = $("uebungFortschritt");
+const uebungBild = $("uebungBild");
+const uebungTakt = $("uebungTakt");
+const uebungSchrittNr = $("uebungSchrittNr");
+const uebungSchritt = $("uebungSchritt");
+const uebungZaehlerBtn = $("uebungZaehler");
+const uebungZurueckBtn = $("uebungZurueck");
+const uebungWeiterBtn = $("uebungWeiter");
 const speichernBox = $("speichernBox");
 const speichernDatum = $("speichernDatum");
 const speichernSchlaeger = $("speichernSchlaeger");
@@ -1065,7 +1079,7 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
   mehr.append(neu("summary", "", hilfe ? "Warum & Übung" : "Messung"));
   if (hilfe) {
     mehr.append(neu("p", "warum", hilfe.warum), neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
-    if (hilfe.uebung) mehr.append(baueUebung(hilfe.uebung, { offen: true }));
+    if (hilfe.uebung) mehr.append(baueUebung(hilfe.uebung, { offen: true, gedanke: hilfe.gedanke }));
   }
   mehr.append(neu("p", "detail", k.detail));
   karte.append(mehr);
@@ -1095,7 +1109,7 @@ function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
   if (s) karte.append(baueSkala(s, { anzeige: k.wert, ohneZahlen: einsteiger }));
   if (hilfe) {
     karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
-    if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung));
+    if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));
   }
   if (k.gefuehl) {
     const gefuehl = neu("details");
@@ -1132,14 +1146,148 @@ function baueGutKarte(gute, { rechtshaender, keineBaustelle }) {
 }
 
 // Übung: aufklappbar, Schritte als nummerierte Liste
-function baueUebung(uebung, { offen = false } = {}) {
+function baueUebung(uebung, { offen = false, gedanke = "" } = {}) {
   const block = neu("details", "uebung");
   block.open = offen;
   block.append(neu("summary", "", `▶ Übung: ${uebung.name} · ${uebung.wiederholungen}×`));
   const schritte = neu("ol");
   for (const schritt of uebung.schritte) schritte.append(neu("li", "", schritt));
-  block.append(schritte);
+  const starten = neu("button", "haupt starten", "Mit Bildern üben (Vollbild)");
+  starten.addEventListener("click", () => oeffneUebung(uebung, gedanke));
+  block.append(schritte, starten);
   return block;
+}
+
+// ---------------------------------------------------------------
+// Übungsmodus: Vollbild, ein Schritt pro Seite mit Strichfigur, am Ende ein Zähler
+// Die Figuren kommen aus uebungsbilder.js (Profi-Posen, geprüft per Test).
+// ---------------------------------------------------------------
+let aktiveUebung = null; // { daten, gedanke, schritt, anzahl, vorherFokus }
+let uebungAnimation = null; // Nummer von requestAnimationFrame – zum Anhalten
+let bildschirmSperre = null; // Wake Lock: hält den Bildschirm an, solange geübt wird
+
+function oeffneUebung(daten, gedanke) {
+  aktiveUebung = { daten, gedanke, schritt: 0, anzahl: 0, vorherFokus: document.activeElement };
+  uebungTitel.textContent = daten.name;
+  uebungsmodus.hidden = false;
+  document.body.classList.add("ohne-scrollen"); // Seite dahinter soll nicht mitscrollen
+  bildschirmAnlassen();
+  zeigeUebungsSchritt();
+  uebungZuBtn.focus();
+}
+
+function schliesseUebung() {
+  if (!aktiveUebung) return;
+  halteUebungsbildAn();
+  uebungsmodus.hidden = true;
+  document.body.classList.remove("ohne-scrollen");
+  bildschirmFreigeben();
+  aktiveUebung.vorherFokus?.focus?.();
+  aktiveUebung = null;
+}
+
+function zeigeUebungsSchritt() {
+  const { daten, schritt, anzahl, gedanke } = aktiveUebung;
+  const zaehlseite = schritt === daten.schritte.length;
+  const fertig = anzahl >= daten.wiederholungen;
+
+  // Fortschritt oben: ein Strich pro Seite (alle Schritte + Zählseite)
+  uebungFortschritt.replaceChildren(...[...daten.schritte, null].map((_, i) => neu("i", i <= schritt ? "fertig" : "")));
+
+  halteUebungsbildAn();
+  if (zaehlseite) {
+    uebungBild.hidden = true;
+    uebungTakt.textContent = "";
+    uebungSchrittNr.textContent = gedanke ? `💭 „${gedanke}“` : "";
+    uebungSchritt.textContent = fertig ? "Geschafft! Stark. ✓" : "Jetzt üben – tippe nach jeder Wiederholung.";
+    uebungZaehlerBtn.hidden = false;
+    uebungZaehlerBtn.replaceChildren(neu("span", "zahl", fertig ? "✓" : String(anzahl)), neu("small", "", `von ${daten.wiederholungen}`));
+    uebungZaehlerBtn.setAttribute("aria-label", `Wiederholung zählen, ${anzahl} von ${daten.wiederholungen}`);
+  } else {
+    const bild = bildZuSchritt(daten.name, schritt);
+    uebungBild.hidden = !bild;
+    if (bild) zeigeUebungsbild(bild);
+    else uebungTakt.textContent = "";
+    uebungSchrittNr.textContent = `Schritt ${schritt + 1} von ${daten.schritte.length}`;
+    uebungSchritt.textContent = daten.schritte[schritt];
+    uebungZaehlerBtn.hidden = true;
+  }
+  uebungZurueckBtn.disabled = schritt === 0;
+  uebungWeiterBtn.textContent = zaehlseite ? "Fertig" : schritt === daten.schritte.length - 1 ? "Los geht's ›" : "Weiter ›";
+}
+
+// Figur zeichnen – als Animation, solange der Übungsmodus offen ist.
+// Wer im System "Bewegung reduzieren" eingestellt hat, sieht nur das Endbild.
+function zeigeUebungsbild(bild) {
+  const rechtshaender = haendigkeit();
+  const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const letzte = bild.folge[bild.folge.length - 1];
+  const endbild = gesamtDauer(bild) - (letzte.halten || 0);
+  if (bild.folge.length === 1 || ruhig) {
+    zeichneUebungsbild(zeichnung(bild, ruhig ? endbild : 0, rechtshaender));
+    return;
+  }
+  const start = performance.now();
+  let zuletzt = 0;
+  const bildchen = (jetzt) => {
+    uebungAnimation = requestAnimationFrame(bildchen);
+    if (jetzt - zuletzt < 33) return; // ca. 30 Bilder pro Sekunde reichen und schonen den Akku
+    zuletzt = jetzt;
+    zeichneUebungsbild(zeichnung(bild, jetzt - start, rechtshaender));
+  };
+  uebungAnimation = requestAnimationFrame(bildchen);
+}
+
+function halteUebungsbildAn() {
+  if (uebungAnimation) cancelAnimationFrame(uebungAnimation);
+  uebungAnimation = null;
+}
+
+// Linien, Kreise, Rechtecke und Texte aus uebungsbilder.js als SVG zeichnen
+function zeichneUebungsbild({ ausschnitt: a, elemente, text }) {
+  const huelle = document.createElement("div");
+  huelle.innerHTML = "<svg></svg>"; // fester Text – den Namensraum liefert der Browser
+  const svg = huelle.firstChild;
+  const SVG = svg.namespaceURI;
+  svg.setAttribute("viewBox", `${a.x} ${a.y} ${a.breite} ${a.hoehe}`);
+  const setze = (element, werte) => { for (const [name, wert] of Object.entries(werte)) element.setAttribute(name, wert); };
+  for (const el of elemente) {
+    let neuesElement;
+    if (el.art === "linie") {
+      neuesElement = document.createElementNS(SVG, "line");
+      setze(neuesElement, { x1: el.von[0], y1: el.von[1], x2: el.bis[0], y2: el.bis[1], stroke: el.farbe, "stroke-width": el.breite, "stroke-linecap": "round" });
+      if (el.gestrichelt) neuesElement.setAttribute("stroke-dasharray", "7 6");
+    } else if (el.art === "kreis") {
+      neuesElement = document.createElementNS(SVG, "circle");
+      setze(neuesElement, { cx: el.mitte[0], cy: el.mitte[1], r: el.radius, stroke: el.farbe, "stroke-width": el.breite, fill: el.fuellen ? el.farbe : "#0b1812" });
+    } else if (el.art === "rechteck") {
+      neuesElement = document.createElementNS(SVG, "rect");
+      setze(neuesElement, { x: el.x, y: el.y, width: el.breite, height: el.hoehe, rx: 5, stroke: el.farbe, "stroke-width": 2, fill: el.farbe, "fill-opacity": 0.1 });
+    } else if (el.art === "text") {
+      neuesElement = document.createElementNS(SVG, "text");
+      setze(neuesElement, { x: el.bei[0], y: el.bei[1], fill: el.farbe, "font-size": 12, "text-anchor": "middle" });
+      neuesElement.textContent = el.inhalt;
+    }
+    svg.append(neuesElement);
+  }
+  uebungBild.replaceChildren(svg);
+  uebungTakt.textContent = text;
+}
+
+// Bildschirm anlassen (Wake Lock). Kann nicht jeder Browser – dann geht es einfach ohne.
+async function bildschirmAnlassen() {
+  if (!("wakeLock" in navigator) || bildschirmSperre) return;
+  try {
+    bildschirmSperre = await navigator.wakeLock.request("screen");
+    bildschirmSperre.addEventListener("release", () => { bildschirmSperre = null; });
+  } catch (fehler) {
+    console.warn("Bildschirm kann nicht angelassen werden:", fehler);
+  }
+}
+
+function bildschirmFreigeben() {
+  bildschirmSperre?.release().catch((fehler) => console.warn(fehler));
+  bildschirmSperre = null;
 }
 
 // Balken mit grünem Zielbereich (gelb = Achtung, Rest rot) und einer Marke für deinen Wert
@@ -1998,6 +2146,21 @@ exportierenBtn.addEventListener("click", exportiereDaten);
 speichernKnopf.addEventListener("click", speichereAuswahl);
 // Wisch-Karten: Punkte und "1 von 3" beim Wischen mitführen
 baustellenListe.addEventListener("scroll", aktualisiereKartenPunkte, { passive: true });
+// Übungsmodus: blättern, zählen, schließen (auch mit Esc)
+uebungZuBtn.addEventListener("click", schliesseUebung);
+uebungZurueckBtn.addEventListener("click", () => { aktiveUebung.schritt--; zeigeUebungsSchritt(); });
+uebungWeiterBtn.addEventListener("click", () => {
+  if (aktiveUebung.schritt === aktiveUebung.daten.schritte.length) schliesseUebung();
+  else { aktiveUebung.schritt++; zeigeUebungsSchritt(); }
+});
+uebungZaehlerBtn.addEventListener("click", () => {
+  if (aktiveUebung.anzahl < aktiveUebung.daten.wiederholungen) aktiveUebung.anzahl++;
+  navigator.vibrate?.(15); // kurzes Summen als Bestätigung (Android; das iPhone kann es nicht)
+  zeigeUebungsSchritt();
+});
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && aktiveUebung) schliesseUebung(); });
+// Nach dem Entsperren des Handys den Bildschirm wieder anlassen
+document.addEventListener("visibilitychange", () => { if (aktiveUebung && document.visibilityState === "visible") bildschirmAnlassen(); });
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));

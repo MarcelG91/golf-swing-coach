@@ -247,6 +247,27 @@
     </form>
   </dialog>
 
+  <!-- Übungsmodus: Vollbild, ein Schritt pro Seite mit Strichfigur, am Ende ein Zähler.
+       Die Inhalte setzt app.js (Bilder aus uebungsbilder.js). -->
+  <div id="uebungsmodus" class="uebungsmodus" role="dialog" aria-modal="true" aria-labelledby="uebungTitel" hidden>
+    <div class="uebung-oben">
+      <strong id="uebungTitel"></strong>
+      <button id="uebungZu" class="rund" aria-label="Übung schließen">✕</button>
+    </div>
+    <div id="uebungFortschritt" class="fortschritt" aria-hidden="true"></div>
+    <div class="uebung-mitte">
+      <div id="uebungBild" class="uebungsbild" aria-hidden="true"></div>
+      <p id="uebungTakt" class="uebung-takt" aria-hidden="true"></p>
+      <p id="uebungSchrittNr" class="hinweis"></p>
+      <p id="uebungSchritt" class="uebung-schritt" aria-live="polite"></p>
+      <button id="uebungZaehler" class="zaehlknopf" hidden></button>
+    </div>
+    <div class="uebung-unten">
+      <button id="uebungZurueck">‹ Zurück</button>
+      <button id="uebungWeiter" class="haupt">Weiter ›</button>
+    </div>
+  </div>
+
   <footer class="fuss">
     <span id="version"></span> · <span id="netzStatus"></span> · <span id="offlineStatus"></span> · <span id="speicherStatus"></span>
   </footer>
