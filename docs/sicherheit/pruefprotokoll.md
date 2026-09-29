@@ -3,6 +3,14 @@
 Neueste Einträge oben. Jeder `/golf-app-check` fügt hier einen Eintrag hinzu.
 Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 
+## Golf-App-Check 2026-09-29 · main @ b3b09d3 · Urteil 🟡
+- Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.17.0, nach PR #23–#26) im eigenen Worktree; keine offenen Branches oder Pull Requests. `node --test` main 114/114, mit Check-Fix 117/117 grün; JavaScript-Syntax und `git diff --check` grün. Keine Videos oder Posedaten in der Git-Historie, keine Geheimnismuster, Hosts nur jsDelivr, Google und (Coach) Anthropic. Alle neuen Commits mit noreply-Adresse (V5). CI auf `main` grün, `main` geschützt, weiter nur eine Pages-Seite im Konto (C7).
+- Live: Version 0.17.0, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 9 App-Dateien gleich `origin/main`. Chrome ohne Fenster, frisches Profil: „Bereit“ und „Offline bereit ✓“ nach 2,0 s, Service Worker aktiv, 2,7 MB; Warmstart 0,3 s ohne Übertragung; keine Konsolenfehler.
+- Coach (V2, 0.17.0): gesendet wird weiter nur die feste Auswahl aus `coachDaten()` – auch die neuen Hintergrund-Kennzahlen bestehen nur aus App-Namen, Messwerten und festen Zielbereich-Texten; Antwort nur per `textContent`; ältere Einwilligung gilt nicht mehr; Schlüssel nie in Datenbank oder Export. SDK 0.129.0 (aktuell) und seine drei Hilfsdateien fest versioniert. Anfrage passt zur aktuellen API. Im Browser mit abgefangener Anfrage (nichts gesendet, keine Kosten): genau eine Anfrage, gesendete Daten gleich der Vorschau.
+- Neu: S12 (P3, Antwort nach Rückfall auf ein anderes Modell mitten im Datenstrom wurde als „unvollständig“ gemeldet), V8 (P3, Einwilligung nannte zwei gesendete Felder nicht). Beide im Check-Fix erledigt. README-Fahrplan führte Etappe 11 noch als offen (korrigiert). Offen P1: C1, S8 (iPhone-Messung).
+- Fix-Branch: `check-2026-09-29` (2 Commits): `leseAntwort()` mit Tests, im Browser für Normalfall, Rückfall und Neubeginn geprüft; Einwilligung und README vollständig, Test „jedes gesendete Feld steht in der Einwilligung“; Version 0.17.1; Bericht und Protokoll.
+- Nicht geprüft: echte Anfrage an Claude (kostet Geld; der Rückfall wurde nach der API-Beschreibung nachgebaut, nicht mit echter Ablehnung beobachtet), echtes iPhone/Safari, CI auf dem Fix-Branch (noch nicht hochgeladen), Tests mit Node 22 (CI-Version; lokal Node 26).
+
 ## Golf-App-Check 2026-09-28 · Branch `etappe-11b-coach-claude` @ 4078604 · main @ 7f228dc · Urteil 🟡
 - Geprüft (unabhängiger Prüfer, lokal): `origin/main` (0.14.1) im eigenen Worktree und `etappe-11b-coach-claude` (0.15.0, noch nicht hochgeladen); `node --test` main 105/105, Branch 112/112, mit Check-Fix 113/113 grün; JavaScript-Syntax und `git diff --check` grün; Branch lässt sich ohne Konflikt mit `main` zusammenführen.
 - Live: Version 0.14.1, Seite und `app.js` HTTP 200, Cache 10 Minuten, keine CSP; SHA-256 von 6 App-Dateien gleich `origin/main`. CI auf `main` grün, `main` geschützt.

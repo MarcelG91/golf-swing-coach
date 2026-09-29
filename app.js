@@ -54,7 +54,7 @@ import { strichfigur } from "./strichfigur.js";
 // Strichfiguren zu den Übungen (Übungsmodus)
 import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
-import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwortText, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
+import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
 const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 const WASM_URL = `${MP_MODUL}/wasm`;
@@ -1548,8 +1548,9 @@ async function frageCoach() {
     const antwort = await strom.finalMessage();
     if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
     if (antwort.stop_reason === "max_tokens") throw coachFehler("unvollstaendig");
-    const textBlock = antwort.content.find((block) => block.type === "text");
-    const roh = textBlock ? leseAntwortText(textBlock.text) : null;
+    // Alle Textblöcke zusammen lesen – nach einem Rückfall auf ein anderes Modell steht die
+    // Antwort in zwei Teilen (siehe leseAntwort in coach.js)
+    const roh = leseAntwort(antwort.content);
     if (!roh) throw coachFehler("unvollstaendig");
 
     const coach = {

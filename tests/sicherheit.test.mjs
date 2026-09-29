@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { coachDaten } from "../coach.js";
 
 const PROJEKT = fileURLToPath(new URL("..", import.meta.url));
 const QUELLDATEIEN = fs.readdirSync(PROJEKT)
@@ -155,4 +156,28 @@ test("Coach: Sperre gegen Doppeltipp steht VOR dem ersten await (sonst zwei beza
   const sperre = funktion.indexOf("coachLaeuft = true");
   const erstesAwait = funktion.indexOf("await ");
   assert.ok(sperre > 0 && erstesAwait > 0 && sperre < erstesAwait, "coachLaeuft = true muss vor dem ersten await stehen");
+});
+
+test("Coach (V2): Die Einwilligung nennt jedes Feld, das gesendet wird (Check 29.09.)", () => {
+  const index = QUELLDATEIEN.find(({ datei }) => datei === "index.html").text;
+  const start = index.indexOf('<dialog id="coachEinwilligung"');
+  const dialog = index.slice(start, index.indexOf("</dialog>", start));
+  // Jedes gesendete Feld und das Stichwort, unter dem es im Dialog stehen muss.
+  // Sendet coachDaten() ein neues Feld, schlägt dieser Test fehl: dann den Dialog ergänzen,
+  // hier eintragen und – wenn eine neue Art von Daten dazukommt – EINWILLIGUNG_WERT in app.js
+  // ändern, damit alle einmal neu gefragt werden.
+  const STICHWORT = {
+    level: "Level", ansicht: "Ansicht", rechtshaender: "Linkshänder", anzahlSchwuenge: "Anzahl erkannter Schwünge",
+    kennzahlen: "alle gemessenen Kennzahlen", hintergrundKennzahlen: "als Hintergrund",
+    wichtigsteBaustelleDerApp: "wichtigste Baustelle", verlauf: "Verlauf",
+  };
+  const felder = Object.keys(coachDaten({ kennzahlen: [], level: "einsteiger", ansicht: "frontal" }));
+  assert.deepEqual([...felder].sort(), Object.keys(STICHWORT).sort(), "coachDaten() sendet ein Feld, das hier fehlt");
+  for (const [feld, wort] of Object.entries(STICHWORT)) assert.ok(dialog.includes(wort), `Die Einwilligung nennt „${feld}“ nicht`);
+});
+
+test("Coach: Antwort aus allen Textblöcken lesen – auch nach einem Rückfall im Datenstrom (Check 29.09.)", () => {
+  const frage = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("// Die Coach-Antwort als Karte"));
+  assert.match(frage, /leseAntwort\(antwort\.content\)/, "app.js nutzt leseAntwort() aus coach.js");
+  assert.doesNotMatch(frage, /content\.find\(/, "nicht nur den ersten Textblock nehmen");
 });
