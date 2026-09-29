@@ -258,7 +258,7 @@
   </main>
 
   <main id="einstellungenBereich" hidden>
-    <h2>⚙️ Einstellungen</h2>
+    <h2>Einstellungen</h2>
     <section class="einstellung">
       <h3>Dein Golf-Level</h3>
       <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
@@ -267,7 +267,7 @@
 
     <!-- Hell / Dunkel: steuert darstellung.js, gemerkt im localStorage unter "darstellung" -->
     <section class="einstellung">
-      <h3>🌗 Darstellung</h3>
+      <h3>Darstellung</h3>
       <div id="darstellungAuswahl" class="segmente" role="radiogroup" aria-label="Darstellung">
         <label><input type="radio" name="darstellung" value="auto"> Automatisch</label>
         <label><input type="radio" name="darstellung" value="hell"> Hell</label>
@@ -277,8 +277,8 @@
     </section>
 
     <!-- Coach mit Claude (Etappe 11b): freiwillig, eigener API-Schlüssel nur auf diesem Gerät -->
-    <section class="coach-einstellung">
-      <h3>🧑‍🏫 Coach mit Claude (freiwillig)</h3>
+    <section class="coach-einstellung einstellung">
+      <h3>Coach mit Claude (freiwillig)</h3>
       <p class="hinweis">
         Der Coach schreibt dir nach einer Analyse ein ausführliches, persönliches Coaching: Gesamtbild,
         Ursachen, Anleitung und Trainingsplan. Dafür sendet die App deine Kennzahlen an Anthropic (Claude) –
@@ -303,17 +303,19 @@
           <input type="password" id="coachSchluessel" autocomplete="off" spellcheck="false" placeholder="sk-ant-…">
         </label>
       </div>
-      <button id="coachSchluesselSpeichern" class="haupt">Schlüssel speichern</button>
-      <button id="coachSchluesselLoeschen" class="klein" hidden>🗑 Schlüssel löschen</button>
+      <div class="knopfzeile">
+        <button id="coachSchluesselSpeichern" class="text-aktion">Schlüssel speichern</button>
+        <button id="coachSchluesselLoeschen" class="text-link" hidden>Schlüssel löschen</button>
+      </div>
       <p id="coachSchluesselStatus" class="hinweis" aria-live="polite"></p>
     </section>
 
     <!-- Gespeicherte Schwünge aufräumen. Alles passiert nur auf diesem Gerät. -->
-    <section class="daten">
-      <h3>💾 Daten auf diesem Gerät</h3>
+    <section class="daten einstellung">
+      <h3>Daten auf diesem Gerät</h3>
       <p id="datenUebersicht" class="hinweis"></p>
 
-      <h4>🎞 Videos und Bilder löschen – Kennzahlen bleiben</h4>
+      <h4>Videos und Bilder löschen – Kennzahlen bleiben</h4>
       <p class="hinweis">
         Videos brauchen fast den ganzen Platz. Kennzahlen, Notizen und Posedaten bleiben
         erhalten, der Level-Vorschlag funktioniert weiter.
@@ -323,12 +325,14 @@
           <option value="alt" selected>von Sitzungen älter als 30 Tage</option>
           <option value="alle">von allen Sitzungen</option>
         </select>
-        <button id="videosLoeschen" class="klein">Löschen …</button>
+        <button id="videosLoeschen" class="text-link">Löschen ›</button>
       </div>
 
-      <h4>🗑 Alle gespeicherten Schwünge löschen</h4>
+      <h4>Alle gespeicherten Schwünge löschen</h4>
       <p class="hinweis">Löscht alles unter „Meine Schwünge“ – auch die Kennzahlen.</p>
-      <button id="allesLoeschen" class="gefahr">Alles löschen …</button>
+      <div class="daten-zeile">
+        <button id="allesLoeschen" class="text-gefahr">Alles löschen ›</button>
+      </div>
 
       <p class="hinweis klein-text">
         Bleibt immer erhalten: dein Level, die App selbst mit den Offline-Dateien und deine

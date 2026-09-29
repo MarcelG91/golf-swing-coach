@@ -1886,11 +1886,10 @@ function zeigeLevelAuswahl() {
   for (const option of LEVEL_OPTIONEN) {
     const label = document.createElement("label");
     label.className = option.wert === aktuellesLevel ? "aktiv" : "";
-    label.innerHTML = `<input type="radio" name="level" value=""><span class="symbol"></span><strong></strong><small></small>`;
+    label.innerHTML = `<input type="radio" name="level" value=""><span><strong></strong><small></small></span>`;
     const radio = label.querySelector("input");
     radio.value = option.wert;
     radio.checked = option.wert === aktuellesLevel;
-    label.querySelector(".symbol").textContent = option.symbol;
     label.querySelector("strong").textContent = option.name;
     label.querySelector("small").textContent = option.beschreibung;
     radio.addEventListener("change", () => setzeLevel(option.wert));
@@ -1898,7 +1897,7 @@ function zeigeLevelAuswahl() {
   }
   levelAnzeige.hidden = !aktuellesLevel;
   levelAnzeige.textContent = aktuellesLevel
-    ? `Dein Level: ${LEVEL_OPTIONEN.find((option) => option.wert === aktuellesLevel).symbol} ${LEVEL_OPTIONEN.find((option) => option.wert === aktuellesLevel).name}`
+    ? `Dein Level: ${LEVEL_OPTIONEN.find((option) => option.wert === aktuellesLevel).name}`
     : "";
 }
 
