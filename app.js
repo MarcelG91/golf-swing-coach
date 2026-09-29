@@ -88,6 +88,7 @@ const skelettAn = $("skelettAn");
 const analysierenBtn = $("analysieren");
 const ergebnisBox = $("ergebnis");
 const phasenKnoepfe = $("phasenKnoepfe");
+const phasenZeitleisteBox = $("phasenZeitleisteBox");
 const ansichtInfo = $("ansichtInfo");
 const kennzahlenListe = $("kennzahlenListe");
 const baustellenListe = $("baustellenListe");
@@ -953,6 +954,7 @@ async function waehleSchwung(s) {
     phasenErgebnis = bewertung = technik = null;
     alleKennzahlen = [];
     einzelBox.hidden = true;
+    phasenZeitleisteBox.hidden = true;
     // Bei nur einem Video mit einem Schwung gibt es sonst nichts zu zeigen
     if (alleSchwuenge.length < 2) ergebnisBox.hidden = true;
     setStatus(alleSchwuenge.length < 2 ? s.grund : `Schwung ${s.nummer}: ${s.grund}`);
@@ -985,15 +987,22 @@ function setzeKnoepfeAktiv(aktiv) {
 // 5. Ergebnis anzeigen
 // ---------------------------------------------------------------
 function zeigeErgebnis(ergebnis) {
-  // Ein Knopf pro Phase
-  phasenKnoepfe.innerHTML = "";
+  // Zeitleiste: ein Punkt pro Phase, an der echten Videozeit ausgerichtet
+  // (Position in Prozent der Videolänge – nicht gleichmäßig verteilt).
+  const dauer = video.duration || 0;
+  const position = (zeit) => (dauer > 0 ? Math.min(100, Math.max(0, (zeit / dauer) * 100)) : 0);
+  phasenKnoepfe.replaceChildren(neu("div", "zeitleiste-fortschritt"));
   for (const phase of PHASEN) {
+    const zeit = ergebnis[phase.schluessel].zeit;
     const knopf = document.createElement("button");
+    knopf.type = "button";
     knopf.dataset.phase = phase.schluessel;
-    knopf.innerHTML = `<strong>${phase.name}</strong><small>${zahl(ergebnis[phase.schluessel].zeit)} s · ${phase.info}</small>`;
+    knopf.style.left = `${position(zeit)}%`;
+    knopf.setAttribute("aria-label", `${phase.name}: ${zahl(zeit)} s · ${phase.info}`);
     knopf.addEventListener("click", () => zeigePhase(phase.schluessel, ergebnis));
     phasenKnoepfe.appendChild(knopf);
   }
+  phasenZeitleisteBox.hidden = false;
 
   // Hinweise, falls die Erkennung unsicher ist
   warnungenListe.innerHTML = "";
@@ -1778,6 +1787,18 @@ function zeigenKnopf(k) {
   return knopf;
 }
 
+// Markiert den passenden Punkt auf der Zeitleiste und zieht den Fortschritt bis dorthin
+function setzeAktivePhase(schluessel) {
+  let linksProzent = 0;
+  for (const knopf of phasenKnoepfe.querySelectorAll("button")) {
+    const aktiv = knopf.dataset.phase === schluessel;
+    knopf.classList.toggle("aktiv", aktiv);
+    if (aktiv) linksProzent = parseFloat(knopf.style.left) || 0;
+  }
+  const fortschritt = phasenKnoepfe.querySelector(".zeitleiste-fortschritt");
+  if (fortschritt) fortschritt.style.width = `${linksProzent}%`;
+}
+
 // Springt zum passenden Moment und zeichnet die Linie (rot/grün) und die Ideallinie (gelb) ein
 async function zeigeMessung(k) {
   if (!geladeneDatei) return; // gespeicherter Schwung ohne Video
@@ -1792,9 +1813,7 @@ async function zeigeMessung(k) {
   buehne.scrollIntoView({ behavior: "smooth", block: "center" });
   await springeZu(zeit);
   analysiereAktuellesBild();
-  for (const knopf of phasenKnoepfe.children) {
-    knopf.classList.toggle("aktiv", knopf.dataset.phase === k.phase);
-  }
+  setzeAktivePhase(k.phase);
   setStatus(`${k.name} – ${PHASEN_NAME[k.phase]} bei ${zahl(zeit)} s`);
 }
 
@@ -1804,9 +1823,7 @@ async function zeigePhase(schluessel, ergebnis) {
   video.pause();
   await springeZu(ergebnis[schluessel].zeit);
   analysiereAktuellesBild();
-  for (const knopf of phasenKnoepfe.children) {
-    knopf.classList.toggle("aktiv", knopf.dataset.phase === schluessel);
-  }
+  setzeAktivePhase(schluessel);
   const phase = PHASEN.find((p) => p.schluessel === schluessel);
   setStatus(`${phase.name} bei ${zahl(ergebnis[schluessel].zeit)} s`);
 }

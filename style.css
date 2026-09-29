@@ -390,6 +390,50 @@ button.text-link {
   margin-top: 16px;
 }
 
+/* Zeitleiste mit einem Punkt pro Schwungphase, an der echten Videozeit ausgerichtet
+   (app.js setzt "left" je Punkt in Prozent). Erscheint erst nach dem Analysieren. */
+#phasenZeitleisteBox .hinweis { margin: 8px 0 0; }
+.zeitleiste { position: relative; height: 18px; }
+.zeitleiste::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--rand);
+}
+.zeitleiste-fortschritt {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--akzent);
+}
+.zeitleiste button {
+  position: absolute;
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: var(--grund);
+  border: 2px solid var(--rand);
+  cursor: pointer;
+}
+.zeitleiste button.aktiv {
+  top: 1px;
+  width: 16px;
+  height: 16px;
+  background: var(--akzent);
+  border: 3px solid var(--grund);
+  box-shadow: 0 0 0 1.5px var(--akzent);
+}
+
 /* Bild zurück / Abspielen / Bild vor: runde Knöpfe, Abspielen in der Mitte größer */
 .steuerung-transport { display: flex; align-items: center; justify-content: center; gap: 20px; }
 .steuerung-transport button {
