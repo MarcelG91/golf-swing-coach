@@ -1120,7 +1120,7 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
   const karte = neu("article", `karte ${k.bewertung}`);
   const kopf = neu("div", "karte-kopf");
   kopf.append(neu("strong", "", nummer ? `${nummer}. ${k.name}` : k.name), neu("span", "abzeichen", STUFEN[k.bewertung]));
-  karte.append(kopf, neu("div", "wert", k.wert));
+  karte.append(kopf);
 
   const hilfe = ausserhalb(k) ? tipp(k, rechtshaender) : null;
   if (hilfe) karte.append(neu("p", "kurz", hilfe.kurz));
@@ -1131,39 +1131,40 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
   mehr.open = offen;
   mehr.append(neu("summary", "", hilfe ? "Warum & Übung" : "Messung"));
   if (hilfe) {
-    mehr.append(neu("p", "warum", hilfe.warum), neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
+    mehr.append(neu("p", "warum", hilfe.warum), neu("p", "gedanke", `„${hilfe.gedanke}“`));
     if (hilfe.uebung) mehr.append(baueUebung(hilfe.uebung, { offen: true, gedanke: hilfe.gedanke }));
   }
-  mehr.append(neu("p", "detail", k.detail));
+  mehr.append(neu("p", "detail", `${k.wert} · ${k.detail}`));
   karte.append(mehr);
   if (k.phase) karte.append(zeigenKnopf(k));
   return karte;
 }
 
-// Große Wisch-Karte für eine Baustelle: Bild, Kurzzeile, Warum, Skala,
-// Schwunggedanke, Übung und "Im Video zeigen"
+// Große Wisch-Karte für eine Baustelle: Strich in der Bewertungsfarbe, Bild,
+// Kurzzeile, EINE Zeile mit Wert und Ziel statt Skala-Balken, dann Übung
+// (darin auch "Warum?") und "Im Video zeigen". Der Schwunggedanke steht nur
+// noch einmal oben auf der Seite (gedankeBox) – hier nicht mehr doppelt.
 function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
   const hilfe = tipp(k, rechtshaender);
   const karte = neu("article", `karte baustelle ${k.bewertung}`);
-  const kopf = neu("div", "karte-kopf");
-  kopf.append(neu("span", "abzeichen", STUFEN[k.bewertung]));
-  if (k.phase) kopf.append(neu("span", "moment", `📍 ${PHASEN_NAME[k.phase]}`));
-  karte.append(kopf);
+  karte.append(neu("div", "baustelle-strich"));
+  const label = k.phase ? `${STUFEN[k.bewertung]} · ${PHASEN_NAME[k.phase]}` : STUFEN[k.bewertung];
+  karte.append(neu("p", "abzeichen-text", label));
 
   const figur = baueFigur(k);
   if (figur) karte.append(figur);
 
   karte.append(neu("p", "kurz", hilfe ? hilfe.kurz : k.name));
-  const warum = neu("p", "warum");
-  warum.append(neu("b", "", "Warum? "), hilfe ? hilfe.warum : k.text);
-  karte.append(warum);
 
   const s = skala(k);
-  if (s) karte.append(baueSkala(s, { anzeige: k.wert, ohneZahlen: einsteiger }));
-  if (hilfe) {
-    karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
-    if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));
-  }
+  const stat = neu("p", "stat");
+  stat.append(neu("b", "", k.wert));
+  if (s) stat.append(` · ${s.ziel}`);
+  karte.append(stat);
+
+  karte.append(neu("div", "trenner"));
+  if (hilfe?.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke, warum: hilfe.warum }));
+  else karte.append(neu("p", "warum", hilfe ? hilfe.warum : k.text));
   if (k.gefuehl) {
     const gefuehl = neu("details");
     gefuehl.append(neu("summary", "", "So fühlt es sich richtig an"), neu("p", "", k.gefuehl));
@@ -1176,11 +1177,11 @@ function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
 // Letzte Wisch-Karte: was schon im Zielbereich liegt
 function baueGutKarte(gute, { rechtshaender, keineBaustelle }) {
   const karte = neu("article", "karte baustelle gut");
-  const kopf = neu("div", "karte-kopf");
-  kopf.append(neu("span", "abzeichen", "Läuft schon gut"));
-  karte.append(kopf);
+  karte.append(neu("div", "baustelle-strich"));
+  karte.append(neu("p", "abzeichen-text", "Läuft schon gut"));
   karte.append(neu("p", "kurz", keineBaustelle ? "Keine größere Baustelle – stark! ✓" : "Das machst du schon richtig ✓"));
   if (keineBaustelle) {
+    karte.append(neu("div", "trenner"));
     karte.append(neu("p", "warum", "Filme als Nächstes die andere Ansicht, dann prüft die App weitere Punkte."));
   }
   if (gute.length) {
@@ -1198,11 +1199,13 @@ function baueGutKarte(gute, { rechtshaender, keineBaustelle }) {
   return karte;
 }
 
-// Übung: aufklappbar, Schritte als nummerierte Liste
-function baueUebung(uebung, { offen = false, gedanke = "" } = {}) {
+// Übung: aufklappbar, Schritte als nummerierte Liste. "warum" nur gesetzt, wenn
+// der Aufrufer das "Warum?" nicht schon selbst separat anzeigt (baueKarte tut das).
+function baueUebung(uebung, { offen = false, gedanke = "", warum = "" } = {}) {
   const block = neu("details", "uebung");
   block.open = offen;
-  block.append(neu("summary", "", `▶ Übung: ${uebung.name} · ${uebung.wiederholungen}×`));
+  block.append(neu("summary", "", `Übung: ${uebung.name} · ${uebung.wiederholungen}×`));
+  if (warum) block.append(neu("p", "warum", warum));
   const schritte = neu("ol");
   for (const schritt of uebung.schritte) schritte.append(neu("li", "", schritt));
   const starten = neu("button", "haupt starten", "Mit Bildern üben (Vollbild)");
@@ -1750,7 +1753,7 @@ function aktualisiereKartenPunkte() {
     kartenZaehler.textContent = "";
     return;
   }
-  const breite = karten[0].offsetWidth + 12; // 12 = Abstand zwischen den Karten (style.css)
+  const breite = karten[0].offsetWidth + 28; // 28 = Abstand zwischen den Karten (style.css)
   const nummer = breite > 12 ? Math.min(karten.length - 1, Math.round(baustellenListe.scrollLeft / breite)) : 0;
   if (kartenPunkte.children.length !== karten.length) {
     kartenPunkte.replaceChildren(...karten.map(() => neu("i")));
@@ -1764,10 +1767,13 @@ function haendigkeit() {
   return technik?.rechtshaender ?? alleSchwuenge.find((s) => s.technik)?.technik.rechtshaender ?? true;
 }
 
+// Fester Text (kein Nutzerinhalt – PHASEN_NAME kommt aus phasen.js), deshalb per innerHTML erlaubt
 function zeigenKnopf(k) {
   const knopf = document.createElement("button");
   knopf.className = "zeigen";
-  knopf.textContent = `📍 Im Video zeigen (${PHASEN_NAME[k.phase]})`;
+  knopf.innerHTML =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>' +
+    `Im Video zeigen (${PHASEN_NAME[k.phase]})`;
   knopf.addEventListener("click", () => zeigeMessung(k));
   return knopf;
 }
