@@ -733,6 +733,18 @@ pre.vorschau {
 .karte.coach-antwort { --farbe: var(--info); border-left-width: 5px; }
 .karte.coach-antwort .lob, .karte.coach-antwort .naechstes { margin-top: 8px; }
 .karte.coach-antwort .herkunft { color: var(--text-leise); font-size: 0.78rem; margin-top: 12px; }
+/* Ausführliche Antwort (ab 0.17.0): Abschnitte zum Auf- und Zuklappen */
+.karte.coach-antwort details.abschnitt { margin-top: 14px; }
+.karte.coach-antwort details.abschnitt:first-child { margin-top: 0; }
+.karte.coach-antwort details.abschnitt > summary { font-size: 1rem; font-weight: 700; color: var(--text); }
+.karte.coach-antwort details.abschnitt p { margin: 6px 0 0; line-height: 1.5; }
+.karte.coach-antwort details.abschnitt ol,
+.karte.coach-antwort details.abschnitt ul { margin: 6px 0 0; padding-left: 22px; line-height: 1.5; }
+.karte.coach-antwort details.abschnitt li + li { margin-top: 6px; }
+.karte.coach-antwort .trainingsplan li + li { margin-top: 10px; }
+.karte.coach-antwort .trainingsplan p { margin-top: 2px; }
+.karte.coach-antwort .trainingsplan .erfolg { color: var(--gut); }
+.karte.coach-antwort > .gedanke { margin-top: 14px; }
 
 /* Wer in den iPhone-Einstellungen "Bewegung reduzieren" an hat, bekommt keine Animationen */
 @media (prefers-reduced-motion: reduce) {

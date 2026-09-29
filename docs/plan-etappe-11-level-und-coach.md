@@ -289,3 +289,32 @@ kurz warten · keine Verbindung. Der Knopf wird in jedem Fall wieder freigegeben
 Geprüft ohne Kosten: `tests/coach.test.mjs` und ein Browsertest, der die Anfrage an `api.anthropic.com`
 abfängt und mit einer Test-Antwort beantwortet (Einwilligung, Senden, Antwort, ungültiger Schlüssel,
 Schlüssel löschen). Offen: echter Test mit Marcels Schlüssel.
+
+---
+
+## Überarbeitung 29.09.2026 (Version 0.17.0): ausführliches Coaching
+
+**Anlass:** Marcels erster echter Test: Die Antworten waren „zu einfach und wertlos“. Er will deutlich mehr
+Inhalt, Tiefe, Wissen, Praxis und Anleitung.
+
+**Warum die Antworten dünn waren:** 4 Felder mit je 1–2 Sätzen (Einsteiger: ein kurzer Satz, keine Zahlen);
+Übung und Schwunggedanke kamen fest aus der App, der Rest der Karte war also fast derselbe Text wie die
+Tipp-Karten; Claude sah nur die Kennzahlen des Levels und konnte kaum Zusammenhänge erkennen.
+
+| Frage | Entscheidung (29.09.) | Folge |
+|---|---|---|
+| Wie frei darf Claude sein? | **Frei mit Leitplanken** | Claude schreibt eigene Erklärungen, Anleitung und Trainingsplan. Die geprüften Tipps aus `tipps.js` stehen vollständig im Systemtext und dürfen nicht widersprochen werden; ihre Übung ist immer Teil des Plans. Zusätzliche Übungen nur aus dem verbreiteten Golfunterricht. Unter jeder Antwort: „fachlich geprüft ist nur die Übung der App“. Verworfen: erst eine große geprüfte Wissensbasis schreiben (viel Arbeit, Tiefe begrenzt). |
+| Tiefe je Level? | **Volle Tiefe für alle, Sprache je Level** | Einsteiger: gleiche Abschnitte, aber Alltagssprache ohne Fachbegriffe und Zahlen. Könner: Fachsprache und Messwerte. |
+| Welche Kennzahlen sieht Claude? | **Alle gemessenen** | `kennzahlen` (Level, nur daraus der Fokus – die App prüft das) und `hintergrundKennzahlen` (übrige, nur zum Erklären). Weiterhin nur Kennzahlen. Weil sich die gesendeten Daten ändern, fragt die App einmal neu um Einwilligung. |
+| Modell und Kosten | **Claude Opus 5, Effort „high“** | ca. 15–25 US-Cent und 30–90 Sekunden pro Coaching (Systemtext ca. 4.600 Tokens). Verworfen: „medium“ (10–15 Cent), Claude Sonnet 5 (5–8 Cent). |
+
+**Antwortfelder:** `gesamtbild`, `staerken[]`, `fokusKennzahl`, `wasPassiert`, `ursachen`, `folgen`, `anleitung[]`,
+`gefuehl`, `trainingsplan[]` (je `titel`, `anleitung`, `menge`, `erfolg`), `typischeFehler[]`, `zuHause`, `danach`,
+`naechsteAufnahme`. Ersetzt die App einen ungültigen Fokus, fallen alle Texte zum Fokus weg und die App zeigt ihre
+eigene Erklärung. Alte gespeicherte Antworten (`lob`, `fokusBotschaft`, `naechstesMal`) zeigt die App weiter an.
+
+**Technik:** `max_tokens` 16.000, Empfang als Datenstrom (`stream().finalMessage()`), damit die längere Antwort
+an kein Zeitlimit stößt; sobald Text ankommt, zeigt der Hinweis „Der Coach schreibt …“. Kein Prompt Caching
+(weiter ca. ein Coaching pro Sitzung).
+
+**Später möglich:** Rückfragen an den Coach als kleiner Chat – erst nach Marcels Test der neuen Antworten entscheiden.

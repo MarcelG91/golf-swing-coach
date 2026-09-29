@@ -1374,6 +1374,10 @@ let coachLaeuft = false;
 // nie in der Datenbank, nie in einem Export. "Alles löschen" fasst ihn nicht an.
 const SCHLUESSEL_NAME = "coachSchluessel";
 const EINWILLIGUNG_NAME = "coachEinwilligung";
+// Seit 0.17.0 gehen ALLE gemessenen Kennzahlen mit (nicht nur die des Levels). Weil sich damit
+// geändert hat, was gesendet wird, gilt eine alte Einwilligung ("ja") nicht mehr – die App fragt
+// einmal neu und speichert dann diesen Wert.
+const EINWILLIGUNG_WERT = "ja-alle-kennzahlen";
 
 function leseEinstellung(name) {
   try {
@@ -1419,15 +1423,16 @@ function loescheCoachSchluessel() {
   coachBox.hidden = true;
 }
 
-// Die sichtbaren Kennzahlen des Levels und die wichtigste Baustelle der App
+// Die sichtbaren Kennzahlen des Levels, die übrigen (nur als Hintergrund für Claude)
+// und die wichtigste Baustelle der App
 function coachGrundlage() {
-  const sichtbar = fuerLevel(alleKennzahlen, aktuellesLevel).sichtbar;
-  return { sichtbar, wichtigste: wichtigsteBaustellen(sichtbar, 1)[0] || null };
+  const { sichtbar, fuerSpaeter } = fuerLevel(alleKennzahlen, aktuellesLevel);
+  return { sichtbar, fuerSpaeter, wichtigste: wichtigsteBaustellen(sichtbar, 1)[0] || null };
 }
 
 // Genau die Daten, die gesendet werden (für die Vorschau und die Anfrage)
 async function coachDatenJetzt() {
-  const { sichtbar, wichtigste } = coachGrundlage();
+  const { sichtbar, fuerSpaeter, wichtigste } = coachGrundlage();
   let verlauf = {};
   try {
     // Früher gespeicherte Schwünge – ohne die gerade geöffnete Sitzung
@@ -1439,6 +1444,7 @@ async function coachDatenJetzt() {
   }
   return coachDaten({
     kennzahlen: sichtbar,
+    hintergrund: fuerSpaeter,
     level: aktuellesLevel,
     ansicht: bewertung.ansicht,
     rechtshaender: technik.rechtshaender,
@@ -1463,15 +1469,15 @@ function zeigeCoachKnopf() {
   coachKnopf.disabled = !online || coachLaeuft;
   coachKnopf.textContent = aktuellerSchwung?.coach ? "Neues Coach-Feedback holen" : "Coach-Feedback holen";
   coachHinweis.textContent = coachLaeuft
-    ? "Der Coach denkt nach … (ca. 10–30 Sekunden)"
+    ? "Der Coach denkt nach … (ca. 30–90 Sekunden)"
     : online
-    ? "Sendet deine Kennzahlen an Anthropic (Claude) · ca. 5 Cent"
+    ? "Sendet deine Kennzahlen an Anthropic (Claude) · ca. 15–25 Cent"
     : "Der Coach braucht Internet. Gespeicherte Antworten bleiben lesbar.";
 }
 
 // Einwilligung einmalig vor dem ersten Senden
 function frageCoachEinwilligung() {
-  if (leseEinstellung(EINWILLIGUNG_NAME) === "ja") return Promise.resolve(true);
+  if (leseEinstellung(EINWILLIGUNG_NAME) === EINWILLIGUNG_WERT) return Promise.resolve(true);
   coachEinwilligung.returnValue = "";
   coachEinwilligung.showModal();
   return new Promise((fertig) => {
@@ -1479,7 +1485,7 @@ function frageCoachEinwilligung() {
       const ja = coachEinwilligung.returnValue === "ja";
       if (ja) {
         try {
-          localStorage.setItem(EINWILLIGUNG_NAME, "ja");
+          localStorage.setItem(EINWILLIGUNG_NAME, EINWILLIGUNG_WERT);
         } catch (fehler) {
           console.warn(fehler); // dann fragt die App beim nächsten Mal eben noch einmal
         }
@@ -1529,7 +1535,14 @@ async function frageCoach() {
     // dangerouslyAllowBrowser: Das SDK verlangt die ausdrückliche Erlaubnis, im Browser zu laufen,
     // weil der Schlüssel dann im Browser liegt. Genau das ist hier gewollt (eigener Schlüssel mit Limit).
     const client = new Anthropic({ apiKey: schluessel, baseURL: COACH_API_URL, dangerouslyAllowBrowser: true, maxRetries: 1 });
-    const antwort = await client.beta.messages.create(anfrage);
+    // Als Datenstrom empfangen: Die ausführliche Antwort braucht bis zu 1–2 Minuten, und ein
+    // Datenstrom stößt dabei an kein Zeitlimit. finalMessage() wartet, bis alles da ist.
+    const strom = client.beta.messages.stream(anfrage);
+    // Sobald Text ankommt, ist das Nachdenken vorbei – das zeigt der Hinweis unter dem Knopf
+    strom.on("text", () => {
+      coachHinweis.textContent = "Der Coach schreibt seine Antwort …";
+    });
+    const antwort = await strom.finalMessage();
     if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
     if (antwort.stop_reason === "max_tokens") throw coachFehler("unvollstaendig");
     const textBlock = antwort.content.find((block) => block.type === "text");
@@ -1562,23 +1575,79 @@ async function frageCoach() {
   }
 }
 
-// Die Coach-Antwort als Karte. Die Übung kommt aus der App (tipps.js), nicht von Claude.
+// Die Coach-Antwort als Karte. Schwunggedanke und Übung zum Fokus kommen aus der App
+// (tipps.js, fachlich geprüft), alles andere schreibt Claude. Alle Texte per textContent (neu()).
+// Antworten von vor 0.17.0 haben nur lob, fokusBotschaft und naechstesMal – auch die zeigt sie an.
 function baueCoachAntwort(coach) {
   const rechtshaender = haendigkeit();
   const karte = neu("article", "karte coach-antwort");
-  if (coach.lob) karte.append(neu("p", "lob", `👍 ${coach.lob}`));
+  // Abschnitt mit Überschrift, aufgeklappt – wer ihn gelesen hat, kann ihn zuklappen
+  const abschnitt = (titel, ...inhalt) => {
+    const box = neu("details", "abschnitt");
+    box.open = true;
+    box.append(neu("summary", "", titel), ...inhalt);
+    karte.append(box);
+  };
+  const liste = (tag, eintraege) => {
+    const element = neu(tag);
+    for (const eintrag of eintraege) element.append(neu("li", "", eintrag));
+    return element;
+  };
+  // Absatz mit fettem Anfang, z. B. "Häufige Ursachen: …"
+  const absatz = (anfang, text) => {
+    const p = neu("p");
+    p.append(neu("b", "", anfang), text);
+    return p;
+  };
+
+  if (coach.lob) karte.append(neu("p", "lob", `👍 ${coach.lob}`)); // altes Format
+  if (coach.gesamtbild) abschnitt("🔎 Gesamtbild", neu("p", "", coach.gesamtbild));
+  if (coach.staerken?.length) abschnitt("👍 Das machst du schon gut", liste("ul", coach.staerken));
+
   const k = alleKennzahlen.find((x) => x.id === coach.fokusKennzahl);
   const hilfe = k ? tipp(k, rechtshaender) : null;
   if (hilfe) {
-    karte.append(neu("p", "kurz", `🎯 Dein Fokus: ${hilfe.kurz}`));
-    karte.append(neu("p", "warum", coach.fokusBotschaft || hilfe.warum));
+    const fokus = [];
+    if (coach.wasPassiert) {
+      fokus.push(absatz("Was passiert: ", coach.wasPassiert));
+      if (coach.ursachen) fokus.push(absatz("Häufige Ursachen: ", coach.ursachen));
+      if (coach.folgen) fokus.push(absatz("Folgen für den Schlag: ", coach.folgen));
+    } else {
+      // Altes Format oder Fokus von der App ersetzt: die geprüfte Erklärung der App
+      fokus.push(neu("p", "warum", coach.fokusBotschaft || hilfe.warum));
+    }
+    abschnitt(`🎯 Dein Fokus: ${hilfe.kurz}`, ...fokus);
+  }
+  if (coach.anleitung?.length) {
+    const inhalt = [liste("ol", coach.anleitung)];
+    if (coach.gefuehl) inhalt.push(absatz("So fühlt es sich an: ", coach.gefuehl));
+    abschnitt("🛠 So geht's richtig", ...inhalt);
+  }
+  if (hilfe) {
     karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
     if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));
   }
-  if (coach.naechstesMal) karte.append(neu("p", "naechstes", `➡️ ${coach.naechstesMal}`));
+  if (coach.trainingsplan?.length) {
+    const plan = neu("ol", "trainingsplan");
+    for (const block of coach.trainingsplan) {
+      const punkt = neu("li");
+      punkt.append(neu("strong", "", block.menge ? `${block.titel} · ${block.menge}` : block.titel));
+      if (block.anleitung) punkt.append(neu("p", "", block.anleitung));
+      if (block.erfolg) punkt.append(neu("p", "erfolg", `✓ ${block.erfolg}`));
+      plan.append(punkt);
+    }
+    abschnitt("📋 Dein Trainingsplan", plan);
+  }
+  if (coach.typischeFehler?.length) abschnitt("⚠️ Typische Fallen beim Üben", liste("ul", coach.typischeFehler));
+  if (coach.zuHause) abschnitt("🏠 Zu Hause üben", neu("p", "", coach.zuHause));
+  if (coach.danach) karte.append(neu("p", "naechstes", `🔭 Danach: ${coach.danach}`));
+  if (coach.naechsteAufnahme) karte.append(neu("p", "naechstes", `🎥 ${coach.naechsteAufnahme}`));
+  if (coach.naechstesMal) karte.append(neu("p", "naechstes", `➡️ ${coach.naechstesMal}`)); // altes Format
+
   const kosten = typeof coach.kostenCent === "number" ? ` · ca. ${zahl(coach.kostenCent, 1)} US-Cent` : "";
+  const geprueft = coach.gesamtbild ? " · Erklärungen und Plan von Claude, fachlich geprüft ist nur die Übung der App" : "";
   karte.append(neu("p", "herkunft",
-    `Antwort von Claude${kosten}${coach.fokusErsetzt ? " · Fokus von der App gewählt" : ""} · ersetzt keine Trainerstunde`));
+    `Antwort von Claude${kosten}${coach.fokusErsetzt ? " · Fokus von der App gewählt" : ""}${geprueft} · ersetzt keine Trainerstunde`));
   return karte;
 }
 

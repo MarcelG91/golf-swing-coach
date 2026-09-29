@@ -38,12 +38,15 @@ Bildschirmfoto festhalten und an Claude geben – daraus werden die nächsten Ei
 - [ ] App schließen, neu öffnen, Schwung aus der Liste öffnen: Clip spielt, **sitzt das Skelett** auf dem Körper?
 - [ ] Flugmodus wieder aus.
 
-## 5. Coach (Version ≥ 0.15, am Mac oder iPhone, kostet ca. 5 Cent je Feedback)
+## 5. Coach (Version ≥ 0.17, am Mac oder iPhone, kostet ca. 15–25 Cent je Coaching)
 
 - [ ] Schlüssel unter ⚙️ Einstellungen eintragen (Workspace mit Ausgabenlimit, Anleitung steht dort).
-- [ ] Denselben Schwung in allen drei Levels (Einsteiger, Fortgeschritten, Könner) Feedback holen.
-- [ ] Passen Ton und Länge zum Level? Ist der Fokus sinnvoll?
-- [ ] Kosten laut Anzeige: ___ / ___ / ___ Cent. Erschien einmal „unvollständig“?
+      Ausgabenlimit mindestens 5 € (2 € reichen nur für ca. 10 Coachings).
+- [ ] Beim ersten Coaching mit 0.17 fragt die App noch einmal um Einwilligung (jetzt alle Kennzahlen) – so gewollt.
+- [ ] Denselben Schwung in allen drei Levels (Einsteiger, Fortgeschritten, Könner) coachen lassen.
+- [ ] Genug Tiefe? Verstehst du, **warum** der Fehler passiert? Ist der Trainingsplan direkt umsetzbar?
+- [ ] Passt die Sprache zum Level (Einsteiger ohne Fachbegriffe und Zahlen)? Klingt etwas nach falscher Technik?
+- [ ] Wartezeit ca.: ___ s. Kosten laut Anzeige: ___ / ___ / ___ Cent. Erschien einmal „unvollständig“?
 
 ## 6. Aufräumen (Version ≥ 0.11) – ganz zum Schluss, löscht Daten!
 
