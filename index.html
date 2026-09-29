@@ -92,6 +92,15 @@
 
     <!-- 3. Steuerung -->
     <div id="steuerung" class="steuerung" hidden>
+      <!-- Zeitleiste mit einem Punkt pro Schwungphase, erscheint erst nach dem Analysieren.
+           app.js baut die Punkte (zeigeErgebnis) und richtet sie an der echten Videozeit aus. -->
+      <div id="phasenZeitleisteBox" hidden>
+        <div id="phasenKnoepfe" class="zeitleiste" role="group" aria-label="Schwungphasen"></div>
+        <p class="hinweis klein-text">
+          Tippe auf einen Punkt, um zu dieser Phase zu springen.
+          <span class="legende"><b class="rot">Rot</b> = außerhalb des Zielbereichs, <b class="gelb">Gelb</b> = Ideallinie.</span>
+        </p>
+      </div>
       <div class="steuerung-transport">
         <button id="zurueck" aria-label="Ein Bild zurück">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6 9 12l6 6"/></svg>
@@ -142,13 +151,6 @@
       <!-- 4b. Ein einzelner Schwung im Detail -->
       <div id="einzel">
       <h2 id="schwungTitel" hidden></h2>
-      <h2>Deine Schwungphasen</h2>
-      <p class="hinweis">
-        Tippe auf eine Phase, um zu diesem Moment im Video zu springen.
-        <span class="legende"><b class="rot">Rot</b> = Körperlinie außerhalb des Zielbereichs,
-        <b class="gelb">Gelb</b> = Ideallinie, Pfeil und Sprechblase = so korrigierst du es.</span>
-      </p>
-      <div id="phasenKnoepfe" class="phasen"></div>
 
       <ul id="warnungen" class="warnungen"></ul>
 
