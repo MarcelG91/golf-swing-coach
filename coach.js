@@ -269,6 +269,21 @@ export function leseAntwortText(inhalt) {
   }
 }
 
+// Die Antwort aus allen Inhaltsblöcken holen (Golf-App-Check 29.09.).
+// Normalfall: ein Denk-Block und EIN Textblock mit dem JSON.
+// Sonderfall "Rückfall" (fallbacks in baueCoachAnfrage): Lehnt Claude mitten in der Antwort ab,
+// schreibt ein anderes Modell im selben Datenstrom weiter. Dann stehen im Inhalt der Anfang
+// (Textblock), ein "fallback"-Block als Markierung und die Fortsetzung (zweiter Textblock) –
+// erst beide Textblöcke zusammen ergeben das JSON. Beginnt das zweite Modell doch von vorn,
+// gilt der letzte Textblock allein.
+export function leseAntwort(inhalt) {
+  const texte = (Array.isArray(inhalt) ? inhalt : [])
+    .filter((block) => block?.type === "text" && typeof block.text === "string")
+    .map((block) => block.text);
+  if (texte.length === 0) return null;
+  return leseAntwortText(texte.join("")) ?? leseAntwortText(texte.at(-1));
+}
+
 // Kosten einer Anfrage in US-Cent (aus den Token-Zahlen der Antwort)
 export function kostenCent(usage) {
   if (!usage) return null;

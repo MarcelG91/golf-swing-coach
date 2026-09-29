@@ -4,12 +4,13 @@
 // 2. Der Systemtext ist fest (kein Datum) und enthält alle geprüften Tipps der App vollständig.
 // 3. Claude kann keinen Fokus "erfinden": ungültige Antworten fallen auf die App zurück.
 // 4. Die ausführliche Antwort (ab 0.17.0) wird geprüft und gekürzt.
+// 5. Die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen.
 // Ausführen im Projektordner:  node --test
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   COACH_MODELL, SYSTEMTEXT, ANTWORT_SCHEMA, coachDaten, baueCoachAnfrage, pruefeCoachAntwort,
-  verlaufKurz, kostenCent, leseAntwortText, COACH_FEHLER,
+  verlaufKurz, kostenCent, leseAntwortText, leseAntwort, COACH_FEHLER,
 } from "../coach.js";
 import { TIPP_IDS, alleTipps } from "../tipps.js";
 
@@ -158,6 +159,29 @@ test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ers
   assert.deepEqual([lang.trainingsplan.length, lang.trainingsplan[0].titel.length], [6, 80]);
   assert.equal(leseAntwortText("kein json"), null);
   assert.deepEqual(leseAntwortText('{"lob":"x"}'), { lob: "x" });
+});
+
+test("Antwort lesen: ein Textblock, Rückfall mitten in der Antwort, Neubeginn (Check 29.09.)", () => {
+  const json = JSON.stringify(ANTWORT);
+  const teil = Math.floor(json.length * 0.4);
+  const denken = { type: "thinking", thinking: "", signature: "x" };
+  const text = (t) => ({ type: "text", text: t });
+  // So markiert die API den Wechsel auf ein anderes Modell im Datenstrom
+  const rueckfall = { type: "fallback", from: { model: "claude-opus-5" }, to: { model: "claude-opus-4-8" } };
+
+  // Normalfall: Denk-Block und EIN Textblock
+  assert.deepEqual(leseAntwort([denken, text(json)]), ANTWORT);
+  // Rückfall mitten in der Antwort: Anfang + Markierung + Fortsetzung ergeben zusammen das JSON.
+  // Vorher las die App nur den ersten Textblock und meldete "unvollständig" – trotz bezahlter Antwort.
+  assert.deepEqual(leseAntwort([denken, text(json.slice(0, teil)), rueckfall, text(json.slice(teil))]), ANTWORT);
+  // Rückfall vor dem ersten Wort: die Markierung steht vorn, danach ganz normal
+  assert.deepEqual(leseAntwort([rueckfall, denken, text(json)]), ANTWORT);
+  // Beginnt das zweite Modell von vorn, zählt der letzte Textblock
+  assert.deepEqual(leseAntwort([text(json.slice(0, teil)), rueckfall, text(json)]), ANTWORT);
+  // Kein Text, abgebrochenes JSON, gar kein Inhalt → null (die App meldet dann "unvollständig")
+  assert.equal(leseAntwort([denken]), null);
+  assert.equal(leseAntwort([text(json.slice(0, teil))]), null);
+  assert.equal(leseAntwort(undefined), null);
 });
 
 test("Verlauf: nur sichere Schwünge, höchstens die letzten 10, erst ab 2 Messungen", () => {

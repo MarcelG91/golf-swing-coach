@@ -137,7 +137,8 @@ vorschlagen. Sie ändert das Level nie selbst.
 
 Mit einem **eigenen API-Schlüssel** von Anthropic (⚙️ Einstellungen) erscheint nach einer Analyse der
 Knopf „Coach-Feedback holen“. Claude bekommt alle gemessenen Kennzahlen (Name, Wert, Bewertung,
-Zielbereich – die deines Levels für den Fokus, die übrigen als Hintergrund), Level, Ansicht und einen
+Zielbereich – die deines Levels für den Fokus, die übrigen als Hintergrund), Level, Ansicht, Rechts- oder
+Linkshänder, die Anzahl erkannter Schwünge, die wichtigste Baustelle aus Sicht der App und einen
 kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder Datum. Vor dem ersten Senden fragt die
 App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
 
@@ -247,12 +248,12 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
-| `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden |
+| `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden, die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
-| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Einstellungen oder Offline-Dateien löscht |
+| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
 
@@ -471,10 +472,11 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 6. Über GitHub Pages veröffentlichen und aufs Handy bringen
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
 - [x] 8. Schwünge speichern (mit gekürztem Video) – und aufräumen (Videos löschen, Kennzahlen behalten)
+- [x] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
+  (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 
-- [ ] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
 - [ ] 10. Fortschritt messen und Langzeit-Feedback
 - [ ] 9. Sicherung exportieren / einspielen
 
