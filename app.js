@@ -281,15 +281,18 @@ async function ladePoseErkennung() {
   setStatus(poseFehlerText);
 }
 
-// Der Analysieren-Knopf ist nur aktiv, wenn die Pose-Erkennung bereit ist
+// Der Analysieren-Knopf ist nur aktiv, wenn die Pose-Erkennung bereit ist.
+// Fester Text (kein Nutzerinhalt), deshalb per innerHTML erlaubt – so bleibt
+// beim Knopf "bereit" das Lupen-Symbol erhalten statt eines Emojis.
+const ICON_SUCHE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>';
 function setzePoseStatus(neu) {
   poseStatus = neu;
   const texte = {
-    laedt: "⏳ Pose-Erkennung lädt …",
-    bereit: "🔍 Analysieren",
-    fehler: "⚠️ Pose-Erkennung fehlt",
+    laedt: "Pose-Erkennung lädt …",
+    bereit: `${ICON_SUCHE}Analysieren`,
+    fehler: "Pose-Erkennung fehlt",
   };
-  analysierenBtn.textContent = texte[neu];
+  analysierenBtn.innerHTML = texte[neu];
   analysierenBtn.disabled = neu !== "bereit" || analyseLaeuft;
 }
 
@@ -2480,14 +2483,20 @@ video.addEventListener("error", () => {
 // Nach Springen / Einzelbild: dieses Bild analysieren
 video.addEventListener("seeked", analysiereAktuellesBild);
 
+// Icon und Beschriftung des Abspiel-Knopfs: fester Text (kein Nutzerinhalt), deshalb per innerHTML erlaubt
+const ICON_PAUSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z" fill="currentColor"/></svg>';
+const ICON_PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>';
+
 video.addEventListener("play", () => {
   aktiveMessung = null;
-  playPauseBtn.textContent = "⏸ Pause";
+  playPauseBtn.innerHTML = ICON_PAUSE;
+  playPauseBtn.setAttribute("aria-label", "Pause");
   schleife();
 });
 
 video.addEventListener("pause", () => {
-  playPauseBtn.textContent = "▶︎ Abspielen";
+  playPauseBtn.innerHTML = ICON_PLAY;
+  playPauseBtn.setAttribute("aria-label", "Abspielen");
 });
 
 playPauseBtn.addEventListener("click", () => {

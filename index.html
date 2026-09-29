@@ -29,7 +29,10 @@
 
   <header>
     <div class="kopfzeile">
-      <h1>⛳ Golf Swing Coach</h1>
+      <h1>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 21V3l11 4-11 4"/><ellipse cx="9" cy="21" rx="6" ry="1.2"/></svg>
+        Swing Coach
+      </h1>
       <p id="levelAnzeige" class="level-anzeige" hidden></p>
     </div>
     <!-- Umschalter: blendet jeweils einen der Bereiche unten ein (Etappe 8).
@@ -55,16 +58,25 @@
     <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar.
          Die Filmtipps blendet style.css aus, sobald ein Video geladen ist. -->
     <section class="start-karte">
-      <h2>Schwung analysieren</h2>
-      <p class="hinweis start-text">Film deinen Schlag – die App erkennt deine Körperhaltung und zeigt dir, woran du arbeiten kannst.</p>
+      <h2 class="start-text">Zeig mir deinen <em>Schwung.</em></h2>
+      <p class="hinweis start-text">Die Analyse läuft komplett auf deinem iPhone – dein Video verlässt nie das Gerät.</p>
       <label class="upload">
         <input type="file" id="videoInput" accept="video/*" multiple>
-        <span>🎥 Video auswählen oder aufnehmen</span>
+        <span>Video auswählen oder aufnehmen</span>
       </label>
       <ul class="filmtipps">
-        <li><span aria-hidden="true">📱</span><b>Hüfthöhe</b>Höhe der Kamera</li>
-        <li><span aria-hidden="true">📏</span><b>ca. 3 m</b>Abstand zu dir</li>
-        <li><span aria-hidden="true">🧍</span><b>Ganz im Bild</b>mit Schläger</li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="13" rx="1.5"/><path d="M12 16v5M8 21h8"/></svg>
+          <b>Hüfthöhe</b>Höhe der Kamera
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h18M6 9l-3 3 3 3M18 9l3 3-3 3"/></svg>
+          <b>ca. 3 m</b>Abstand zu dir
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v7M8 10h8M12 14l-3 7M12 14l3 7"/></svg>
+          <b>Ganz im Bild</b>mit Schläger
+        </li>
       </ul>
       <p class="hinweis">Von vorne oder von hinten. Ein Video mit einem Schlag, ein langes mit mehreren Schlägen – oder gleich mehrere Videos.</p>
     </section>
@@ -80,18 +92,35 @@
 
     <!-- 3. Steuerung -->
     <div id="steuerung" class="steuerung" hidden>
-      <button id="playPause">▶︎ Abspielen</button>
-      <button id="zurueck">◀︎ Bild</button>
-      <button id="vor">Bild ▶︎</button>
-      <label>Tempo
-        <select id="tempo">
-          <option value="0.25">0,25×</option>
-          <option value="0.5" selected>0,5×</option>
-          <option value="1">1×</option>
-        </select>
-      </label>
-      <label class="schalter"><input type="checkbox" id="skelettAn" checked> Skelett</label>
-      <button id="analysieren" class="haupt">🔍 Analysieren</button>
+      <div class="steuerung-transport">
+        <button id="zurueck" aria-label="Ein Bild zurück">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6 9 12l6 6"/></svg>
+        </button>
+        <button id="playPause" aria-label="Abspielen">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+        </button>
+        <button id="vor" aria-label="Ein Bild vor">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="steuerung-optionen">
+        <label>Tempo
+          <select id="tempo">
+            <option value="0.25">0,25×</option>
+            <option value="0.5" selected>0,5×</option>
+            <option value="1">1×</option>
+          </select>
+        </label>
+        <label class="schalter">
+          <span>Skelett</span>
+          <input type="checkbox" id="skelettAn" checked>
+          <span class="schalter-spur" aria-hidden="true"></span>
+        </label>
+      </div>
+      <button id="analysieren" class="haupt">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        Analysieren
+      </button>
     </div>
 
     <!-- 4. Ergebnis der Analyse (erscheint erst nach dem Analysieren) -->
