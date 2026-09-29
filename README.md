@@ -136,13 +136,21 @@ vorschlagen. Sie ändert das Level nie selbst.
 ### Coach mit Claude (freiwillig)
 
 Mit einem **eigenen API-Schlüssel** von Anthropic (⚙️ Einstellungen) erscheint nach einer Analyse der
-Knopf „Coach-Feedback holen“. Claude bekommt nur die Kennzahlen deines Levels (Name, Wert, Bewertung,
-Zielbereich), Level, Ansicht und einen kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder
-Datum. Vor dem ersten Senden fragt die App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
+Knopf „Coach-Feedback holen“. Claude bekommt alle gemessenen Kennzahlen (Name, Wert, Bewertung,
+Zielbereich – die deines Levels für den Fokus, die übrigen als Hintergrund), Level, Ansicht und einen
+kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder Datum. Vor dem ersten Senden fragt die
+App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
 
-- Claude wählt den Fokus aus deinen gemessenen Baustellen und schreibt Lob und Begründung im Ton deines
-  Levels. Die **Übung kommt immer aus der App** (fachlich geprüft) – Claude erfindet keine Übungen.
-- Modell: Claude Opus 5, ca. 3–6 US-Cent pro Feedback. Die Antwort wird mit dem Schwung gespeichert.
+- Seit 0.17.0 schreibt Claude ein **ausführliches Coaching**: Gesamtbild (wie hängen die Kennzahlen
+  zusammen?), Stärken, Hauptbaustelle mit Ursachen und Folgen, Schritt-für-Schritt-Anleitung,
+  Trainingsplan für die nächste Einheit, typische Fallen, Übung für zu Hause, nächste Baustelle und
+  Tipp für die nächste Aufnahme. Gleiche Tiefe in jedem Level, nur die Sprache passt sich an.
+- Der **Fokus** kommt immer aus den Baustellen deines Levels (die App prüft das). Schwunggedanke und
+  **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Erklärungen und weitere Übungen sind
+  nicht fachlich geprüft – das steht unter jeder Antwort. Leitplanken im Systemtext: den geprüften Tipps
+  nie widersprechen, nur verbreitete Standardübungen, nichts erfinden.
+- Modell: Claude Opus 5 (gründlich), ca. 15–25 US-Cent und 30–90 Sekunden pro Coaching. Die Antwort
+  wird mit dem Schwung gespeichert.
 - Der Schlüssel liegt nur im Browser dieses Geräts. Am besten einen eigenen Workspace mit
   Ausgabenlimit anlegen (Anleitung in den Einstellungen). „Alles löschen“ lässt den Schlüssel stehen.
 

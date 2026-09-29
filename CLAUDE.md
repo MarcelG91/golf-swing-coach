@@ -96,7 +96,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
   diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.
 
-## Offene Punkte – priorisierter Backlog (Stand 28.09.)
+## Offene Punkte – priorisierter Backlog (Stand 29.09.)
 
 Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. Neue Ideen hier passend einsortieren.
 
@@ -109,9 +109,11 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
    - Speichern im Flugmodus (≥ 0.9.0): sitzt das Skelett im gespeicherten Clip?
    - Aufräumen (≥ 0.11.0): Speicheranzeige vorher/nachher; „Alles löschen“ → Level noch da, offline nutzbar?
    - Tipps neu + Übungsmodus (≥ 0.13.0): Wischen flüssig? Figuren/Skala verständlich? Bildschirm bleibt an (Wake Lock ab iOS 16.4)?
-2. **Echter Coach-Test** (Marcel, ≥ 0.15.0, ca. 20 Cent): alle drei Level – passen Ton, Länge, Fokus? Kosten notieren.
-   Kommt „unvollständig“, `max_tokens` in `coach.js` von 4000 anheben.
-3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) durch einen PGA-Pro.
+2. **Echter Coach-Test** (Marcel, ≥ 0.17.0, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
+   „wertlos“ → seit 0.17.0 ausführliches Coaching (Gesamtbild, Ursachen, Anleitung, Trainingsplan, Effort „high“).
+   Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
+3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) durch einen PGA-Pro – dabei auch 2–3 echte
+   Coach-Antworten (ab 0.17.0) mitprüfen lassen, weil Claude dort frei erklärt und Übungen ergänzt.
 4. **Aufräum-Runde** (Claude, ein PR, 1–2 h) – Level-Karten erledigt mit 0.16.0 (Design):
    - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
      `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
@@ -139,7 +141,8 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
   korrekten Profi-Schwung von hinten als Testdatei.
 - Einheitlicher Lösch-Dialog auch für „Schwung löschen“ / „Sitzung löschen“ (ca. 20 Zeilen, Check 28.09.).
 - LICENSE und Lizenzen der Testdaten-Quellen (C6) · MediaPipe-Update 0.10.14 → 1.x in eigenem Branch (C4).
-- Zwei GitHub-Konten (MarcelG91 aktiv, n4n5wd8w9n-maker alt) → irgendwann zusammenlegen.
+- **Rückfragen an den Coach** (Idee 29.09.): kleiner Chat unter der Coach-Antwort („Wie übe ich das ohne Range?“).
+  Erst nach dem echten Coach-Test (Nr. 2) entscheiden, ob die ausführliche Antwort schon reicht.
 
 ### Dauerhafte Regeln und Hinweise
 
