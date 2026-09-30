@@ -99,7 +99,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9** (9 darf Marcel vorziehen). Neue Ideen hier passend einsortieren.
+Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9** (9 darf Marcel vorziehen). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -113,12 +113,13 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8 →
 2. **Echter Coach-Test** (Marcel, ≥ 0.17.0, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
    „wertlos“ → seit 0.17.0 ausführliches Coaching (Gesamtbild, Ursachen, Anleitung, Trainingsplan, Effort „high“).
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
-3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) und der Fragen in `docs/wissen/abgleich-app.md`
-   (Abschnitt 5, u. a. neue Schwunggedanken mit äußerem Fokus) durch einen PGA-Pro – dabei auch 2–3 echte
-   Coach-Antworten (ab 0.17.0) mitprüfen lassen, weil Claude dort frei erklärt und Übungen ergänzt.
+3. ~~Golflehrer-Durchsicht~~ – **entfällt** (Entscheidung 30.09.). Fachliche Absicherung stattdessen über die
+   strengen Quellenregeln (siehe „Dauerhafte Regeln“ und `docs/plan-wissensseite.md`).
 4. **Aufräum-Runde** (Claude, ein PR, 1–2 h) – Level-Karten erledigt mit 0.16.0 (Design):
    - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
      `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
+   - Sichere Umformulierungen in `tipps.js` (Verbot → positiv, gleicher Inhalt): `kopfhoehe` tief „Größe halten“,
+     `oberkoerperTreff` „Rechte Schulter geht nach unten“; danach `docs/plan-tipps-neu.md` neu erzeugen.
    - Aus `docs/wissen/abgleich-app.md` 2b: Stab-Übung in `technik.js` („neben die Hüfte“ → „neben den Fuß“),
      Selbst-Check „fliegender Ellbogen“ entschärfen.
    - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen
@@ -133,10 +134,10 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8 →
    Seite lädt, „Bereit“, keine Konsolenfehler.
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
    Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
-9. **Wissensseite** (Plan: `docs/plan-wissensseite.md`, Inhalte: `docs/wissen/`, Stand 30.09.): vierter Bereich
-   „📖 Wissen“, Texte als `wissen.js`. Vorher Marcels offene Entscheidungen im Plan klären (externe Links,
-   Bilder, Umfang der ersten Version). Dazu passend und leicht: **Ballflug-Helfer** (Startrichtung + Kurve
-   wählen → Ursache und Übung) und die übrigen Ideen aus `docs/wissen/abgleich-app.md` Abschnitt 3.
+9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`): vierter Bereich
+   „📖 Wissen“, 6 Lernpfade / 40 Lektionen (Bild, Karten, Quiz, Übung, ✓-Fortschritt) + Nachschlagen mit
+   **Ballflug-Helfer**. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet). In 5 Schritten
+   (Branches `wissen-geruest` → `wissen-schaubilder` → `wissen-pfade-2-3` → `wissen-pfade-4-6` → `wissen-nachschlagen`).
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
@@ -155,7 +156,9 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8 →
 ### Dauerhafte Regeln und Hinweise
 
 - **Golfwissen:** `docs/wissen/` ist die belegte Grundlage für neue Tipps und die Wissensseite (jede Aussage mit
-  Quelle). Neue Schwunggedanken positiv, mit äußerem Fokus (Schläger/Ball/Ziel) oder als Bild formulieren –
+  Quelle). **Es gibt keine Golflehrer-Durchsicht** (Entscheidung 30.09.) – deshalb streng: In die App kommt nur, was
+  durch Messdaten, Studie oder Regel belegt ist oder was mindestens zwei unabhängige Quellen gleich sagen;
+  Umstrittenes nur als „Trainer sind uneins“. Neue Schwunggedanken positiv, mit äußerem Fokus (Schläger/Ball/Ziel) oder als Bild formulieren –
   keine Verbote („nicht …“), siehe `docs/wissen/richtig-ueben.md`.
 - **Tipps fachlich:** Golf-Technik muss stimmen (Marcels Anforderung: keine falsche Technik). Texte nur in
   `tipps.js` ändern, mit Quelle; danach Liste in `docs/plan-tipps-neu.md` neu erzeugen.
