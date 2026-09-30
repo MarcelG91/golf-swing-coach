@@ -173,14 +173,40 @@ Variablen in `style.css` (hell und dunkel).
   Quelle und steht deshalb nicht als Regel in der App.
 - Texte der Wissensseite gelten für Rechtshänder (Hinweis auf der Übersicht).
 
+## Stand Schritte 2 + 3 (`wissen-pfade-2-3`, 0.23.0, 30.09.)
+
+- **Zusammengelegt** (Entscheidung Marcel, 30.09.): Schaubilder und Pfade 2 + 3 in einem Branch.
+- Umgesetzt: Pfad 2 „Der Vollschwung“ und Pfad 3 „Ballflug verstehen & Fehler beheben“ mit je 7 Lektionen,
+  12 neue Schaubilder (Ballposition, Messwerte Tour/Amateur, kinematische Kette, Zeitbalken 3 : 1,
+  Eintreffwinkel, Fläche + Bahn, neun Flugkurven, Schlagfläche Spitze/Ferse, Bahn von außen, tiefster Punkt,
+  Hosel-Treffer, Kurzübersicht) und Figuren aus den Profi-Posen (Top, Treffmoment, Finish als Standbild).
+- **P1–P10 als Animation**: sieben echte Posen (P1, P2, P4, P6, P7, P8, P10 – der Schläger nach den
+  Lehrbuch-Positionen aus `uebungsbilder.js`). Die P-Beschriftung steht nur da, solange die Figur in der
+  Position anhält (sonst stand kurz „Schaft waagerecht“ unter einem senkrechten Schaft). Die Animation läuft
+  nur, solange ihre Karte zu sehen ist; „Bewegung reduzieren“ zeigt nur das Endbild.
+- **Ballflug-Helfer** (Entscheidung Marcel, 30.09.: zwei Knopfgruppen): eigene Karte nach dem Quiz der Lektion
+  „Die neun Ballflüge“ (Feld `werkzeug` in `wissen.js`). Start (links / zum Ziel / rechts) und Kurve (nach links /
+  keine / nach rechts) antippen → Name, Einzelbild, Ursache nach den Ballfluggesetzen, Knopf zur passenden
+  Fehler-Lektion. Im Bereich „Nachschlagen“ (Schritt 5) wird er ein zweites Mal verlinkt.
+- **Pfad-Level**: „Der Vollschwung“ (Plan 🌱→🌿) zählt als 🌿; einzelne Lektionen darin (Phasen, Stand, Finish)
+  sind 🌱. „Ballflug“ ist 🌿, „Slice“ und „Fett/getoppt“ darin 🌱 (wie in `docs/wissen/`).
+- **Zweite Quellen nachgetragen** (Entscheidung Marcel, 30.09.): Rhythmus 3 : 1 (Yale-Messung Grober &
+  Cholewicki), Finish-Haltung (HackMotion, Bruce Bolt), Tee-Höhe (GOLF.com, Voice Caddie), Schachtel-Übung
+  (HackMotion), Linien-Übung (GOLF.com), Zwei-Bälle-Übung (Adam Young), Fußpuder-Spray (Tell Me More Golf,
+  Colorado AvidGolfer), Ballposition fest vs. wandernd (USGTF, GolfDecode → „Trainer sind uneins“).
+  Korrigiert: Die Schachtel liegt außen **und etwas vom Ziel weg** (eine Bahn von außen trifft sie vor dem Ball).
+- **Bewusst weggelassen** (nur eine Quelle oder Messrichtung unklar): Fuß ausdrehen 20–30°, „Lag“ halten,
+  Wölbung der Driver-Fläche, GOLFTEC „Shoulder Bend“ im Finish, Handtuch-Übungen.
+- Neue Übungen nur als Text: „Treffpunkt sichtbar machen“, „Schachtel außen“, „Linien-Übung“, „Zwei Bälle“.
+  Vorhandene mit Figuren: „Schläger vor der Brust“, „Hüfte bis Hüfte“, „Po an die Wand“, „Mitzählen“.
+
 ## Umsetzung in Schritten (je 1 Branch = 1 PR)
 
 | Schritt | Branch | Inhalt |
 |---|---|---|
 | 1 | `wissen-geruest` | `wissen.js` mit Datenaufbau + Tests, Bereich „📖 Wissen“, Pfad-Übersicht, Lektionsansicht (Karten, Quiz, ✓), Fortschritt, **Pfad 1 komplett** mit vorhandenen Figuren und ersten Schaubildern |
-| 2 | `wissen-schaubilder` | `schaubilder.js` mit allen Schaubildern + Tests |
-| 3 | `wissen-pfade-2-3` | Vollschwung, Ballflug + **Ballflug-Helfer** |
-| 4 | `wissen-pfade-4-6` | Rund ums Grün, Clever spielen, Besser üben |
+| 2 + 3 | `wissen-pfade-2-3` | ✓ 0.23.0: Schaubilder für Pfad 2 + 3, Vollschwung, Ballflug + **Ballflug-Helfer** (zusammengelegt) |
+| 4 | `wissen-pfade-4-6` | Rund ums Grün, Clever spielen, Besser üben – mit den Schaubildern dafür |
 | 5 | `wissen-nachschlagen` | Glossar, Irrtümer, Regeln, Ausrüstung, Suche, Verknüpfung Karte → Lektion, „Übung starten“ |
 
 Bei jedem Schritt: neue JS-Dateien in `sw.js` und `pwa.js` (`APP_DATEIEN`), `APP_VERSION` erhöhen,

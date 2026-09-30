@@ -37,7 +37,8 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 ### Merkhilfe für die Praxis
 - Startet der Ball schon falsch? → zuerst **Schlagfläche** (Griff, Handgelenk) prüfen.
 - Kurvt er zu stark? → **Bahn** prüfen (von außen nach innen = Slice).
-- Kurve passt nicht zur Bahn? → **Treffpunkt** prüfen (Spike-Spray/Fußpuder auf die Schlagfläche).
+- Kurve passt nicht zur Bahn? → **Treffpunkt** prüfen (Fußpuder-Spray dünn auf die Schlagfläche, nach dem
+  Schlag den Abdruck ansehen [TMG1][CAG1]).
 
 ## 2. Treffpunkt und Gear Effect (🌿)
 
@@ -77,7 +78,9 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 - **Übungen** [GT1][GT2]:
   1. **Griff prüfen**: 2–3 Knöchel der linken Hand von oben sichtbar.
   2. **Schachtel-Übung**: Leere Ballschachtel knapp außerhalb des Balls (auf der Seite weg vom Körper,
-     etwas davor) – beim Schwingen nicht treffen → Bahn von innen.
+     etwas vom Ziel weg) – ein Schläger von außen träfe erst die Schachtel, dann den Ball. Beim Schwingen
+     nicht treffen → Bahn von innen [GT2]. Gleiche Idee mit Schlägerhaube oder Stab als „Tor“ außen
+     vor und hinter dem Ball [HM5].
   3. **Handtuch unter der rechten Achsel**: halbe Schwünge, das Tuch bleibt eingeklemmt.
   4. **Po-an-die-Wand** (siehe App-Übung „Golftasche“/Early Extension).
 - **App-Bezug**: `hueftBall` (Early Extension), `vorneigungHalten`, Griff (noch nicht messbar).
@@ -111,7 +114,8 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
   sondern mit der **Bogenhöhe** (Aufrichten/Absacken) [AY2][HM1].
 - **Übungen** [HM1][HM2]:
   1. **Linien-Übung**: Linie auf den Boden (Spray, Kreide, Handtuchkante). Ohne Ball schwingen – der
-     Schläger soll den Boden **auf oder vor** der Linie berühren. Dann Ball auf die Linie legen.
+     Schläger soll den Boden **auf oder vor** der Linie berühren. Dann Ball auf die Linie legen
+     [HM1][HM2]. Auch GOLF.com: Bälle knapp vor eine Linie, das Divot liegt vor der Linie [GOLF3].
   2. **Handtuch-Übung**: Gefaltetes Handtuch 15–25 cm hinter den Ball. Wer es berührt, trifft zu früh.
 - **App-Bezug**: `gewicht` (Gewichtsverlagerung), `kopfhoehe`.
 
@@ -123,7 +127,8 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 - **Übungen** [HM3]:
   1. **Faust-Check**: eine Faust Platz zwischen Griffende und Oberschenkel (App-Übung bei `armeAnsprechen`).
   2. **Zwei-Bälle-Übung**: Zwei Bälle nebeneinander, ca. eine Schlägerkopfbreite Abstand. Den **inneren**
-     (körpernahen) Ball treffen, den äußeren nicht berühren.
+     (körpernahen) Ball treffen, den äußeren nicht berühren [HM3]. Adam Young legt den zweiten Ball
+     ebenso an die Spitze, damit nur Treffer mittig oder zur Spitze gelingen [AY3].
   3. **Stuhl/Stab hinter dem Po** gegen Early Extension.
 - Beruhigung: Shanks kommen oft in Serie, sind aber meist ein einfacher Abstands- oder Gleichgewichtsfehler.
 
@@ -173,4 +178,9 @@ deutlich kürzer, als Fernsehbilder vermuten lassen.
 - [GM1] Golf Monthly: Golf shank causes – https://www.golfmonthly.com/videos/long-game-tips/golf-shank-causes
 - [GOLF1] GOLF.com: How fast golfers swing driver by handicap – https://golf.com/instruction/how-fast-swing-driver-based-handicap/
 - [GOLF2] GOLF.com: Heel or toe miss with driver (Robotertest) – https://golf.com/gear/drivers/driver-miss-heel-toe-robot-test/
+- [HM5] HackMotion: Fix your outside-in golf swing (Headcover-Tor) – https://hackmotion.com/drills-to-fix-outside-in-golf-swing/
+- [GOLF3] GOLF.com: 10 keys for taking a proper divot (Linie auf dem Boden) – https://golf.com/instruction/approach-shots/10-keys-making-proper-divot/
+- [AY3] Adam Young: How to stop shanking (zweiter Ball an der Spitze) – https://www.adamyounggolf.com/how-to-stop-shanking/
+- [TMG1] Tell Me More Golf: Alternatives to impact tape (Fußpuder-Spray) – https://tellmemoregolf.com/equipment/golf-accessories/use-instead-impact-tape/
+- [CAG1] Colorado AvidGolfer: Nail your irons (Dan Sniffin, PGA, Fußpuder-Spray) – https://coloradoavidgolfer.com/iron-drill-2019/
 - [PGA-DE] PGA of Germany, Lernunterlage Golftechnik (O. Neumann, 2019), Abschnitt Eintreffwinkel/Low Point – https://www.pga.de (Ausbilderseminar-Unterlagen)

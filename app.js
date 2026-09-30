@@ -54,8 +54,8 @@ import { strichfigur } from "./strichfigur.js";
 // Strichfiguren zu den Übungen (Übungsmodus)
 import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
 // Wissen: Lernpfade, Lektionen, Quellen (reine Daten) und die Schaubilder dazu
-import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion } from "./wissen.js";
-import { schaubild, FIGUREN } from "./schaubilder.js";
+import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion, BALLFLUG_AUSWAHL, ballflugErgebnis } from "./wissen.js";
+import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
 import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
@@ -1408,6 +1408,7 @@ function merkeErledigt(id, ja) {
 
 // Übersicht: alle Pfade, der zum Level passende oben, mit "x von y" und den Lektionen
 function zeigeWissenUebersicht() {
+  halteLektionFigurAn();
   wissenLektion.hidden = true;
   wissenUebersicht.hidden = false;
   lektionKarten.replaceChildren();
@@ -1438,13 +1439,14 @@ function zeigeWissenUebersicht() {
     box.append(liste);
     pfadListe.append(box);
   }
-  pfadListe.append(neu("p", "hinweis klein-text", "Weitere Lernpfade folgen: Vollschwung, Ballflug, rund ums Grün, clever spielen, besser üben."));
+  pfadListe.append(neu("p", "hinweis klein-text", "Weitere Lernpfade folgen: rund ums Grün, clever spielen, besser üben."));
 }
 
 // Eine Lektion als Wisch-Karten: Bild + Kernsatz · Inhaltskarten · Quiz · Abschluss
 function oeffneLektion(id) {
   const l = lektion(id);
   if (!l) return;
+  halteLektionFigurAn();
   const imPfad = lektionenImPfad(l.pfad);
   wissenUebersicht.hidden = true;
   wissenLektion.hidden = false;
@@ -1462,14 +1464,111 @@ function oeffneLektion(id) {
     karte.append(neu("p", "inhalt", k.text));
     karten.push(karte);
   });
-  // 3. Quiz und 4. Abschluss
-  karten.push(quizKarte(l.quiz), abschlussKarte(l));
+  // 3. Quiz, danach (falls vorhanden) ein Werkzeug zum Ausprobieren, 4. Abschluss
+  karten.push(quizKarte(l.quiz));
+  if (l.werkzeug === "ballflugHelfer") karten.push(ballflugHelferKarte());
+  karten.push(abschlussKarte(l));
 
   lektionKarten.replaceChildren(...karten);
   lektionKarten.scrollLeft = 0;
-  aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler);
+  steuereLektionFigur(aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler));
   wissenBereich.scrollIntoView({ block: "start" });
   lektionTitel.focus({ preventScroll: true });
+}
+
+// ---------------------------------------------------------------
+// Bewegte Figur in einer Lektion (z. B. Phasen P1–P10). Sie läuft nur, solange ihre Karte
+// zu sehen ist: Wegwischen, Zurück oder ein anderer Bereich halten sie an.
+// Wer im System "Bewegung reduzieren" eingestellt hat, sieht nur das Endbild (wie im Übungsmodus).
+// ---------------------------------------------------------------
+let lektionAnimation = null; // Nummer von requestAnimationFrame – zum Anhalten
+let figurKarte = null; // Karte, deren Figur gerade läuft (oder null)
+
+function halteLektionFigurAn() {
+  if (lektionAnimation) cancelAnimationFrame(lektionAnimation);
+  lektionAnimation = null;
+  figurKarte = null;
+}
+
+// nummer = sichtbare Karte (aus aktualisierePunkte)
+function steuereLektionFigur(nummer) {
+  const karte = lektionKarten.children[nummer] || null;
+  if (karte === figurKarte) return; // dieselbe Karte: Die Animation läuft einfach weiter
+  halteLektionFigurAn();
+  const box = karte?.querySelector(".figur[data-figur]");
+  const bild = box && FIGUREN[box.dataset.figur];
+  if (!bild || bild.folge.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  figurKarte = karte;
+  const start = performance.now();
+  let zuletzt = 0;
+  const bildchen = (jetzt) => {
+    lektionAnimation = requestAnimationFrame(bildchen);
+    if (jetzt - zuletzt < 33) return; // ca. 30 Bilder pro Sekunde reichen und schonen den Akku
+    zuletzt = jetzt;
+    zeichneWissenFigur(box, bild, jetzt - start);
+  };
+  lektionAnimation = requestAnimationFrame(bildchen);
+}
+
+// Figur zum Zeitpunkt ms zeichnen, darunter die Beschriftung (z. B. „P4 · Top“).
+// Hat die Figur Beschriftungen, bleibt die Zeile immer da (auch leer) – sonst springt die Höhe.
+function zeichneWissenFigur(box, bild, ms) {
+  const { ausschnitt, elemente, text } = zeichnung(bild, ms, true);
+  box.replaceChildren(uebungsbildSvg({ ausschnitt, elemente }));
+  if (bild.folge.some((f) => f.text)) box.append(neu("p", "figur-text", text || " "));
+}
+
+// ---------------------------------------------------------------
+// Ballflug-Helfer: Start und Kurve antippen → Name, Bild und Ursache (Daten in wissen.js)
+// ---------------------------------------------------------------
+function ballflugHelferKarte() {
+  const karte = lektionsKarte("Ballflug-Helfer");
+  karte.append(neu("p", "kurz", "Wie ist dein Ball geflogen? Tippe Start und Kurve an."));
+  const gewaehlt = { start: null, kurve: null };
+  const ergebnis = neu("div", "helfer-ergebnis");
+  ergebnis.setAttribute("aria-live", "polite"); // Bildschirmleser lesen das Ergebnis vor
+
+  const zeigeErgebnis = () => {
+    ergebnis.replaceChildren();
+    if (!gewaehlt.start || !gewaehlt.kurve) return;
+    const e = ballflugErgebnis(gewaehlt.start, gewaehlt.kurve);
+    if (!e) return;
+    const bildBox = neu("div", "schaubild");
+    bildBox.setAttribute("aria-hidden", "true");
+    bildBox.append(schaubildSvg(ballflugBild(gewaehlt.start, gewaehlt.kurve)));
+    ergebnis.append(neu("p", "helfer-name", e.name), bildBox);
+    for (const satz of e.saetze) ergebnis.append(neu("p", "inhalt", satz));
+    const passend = e.lektion && lektion(e.lektion);
+    if (passend) {
+      const knopf = neu("button", "klein breit", `Mehr dazu: ${passend.titel} ›`);
+      knopf.addEventListener("click", () => oeffneLektion(passend.id));
+      ergebnis.append(knopf);
+    }
+  };
+
+  const gruppe = (frage, feld) => {
+    const box = neu("div", "helfer-gruppe");
+    box.setAttribute("role", "group");
+    box.setAttribute("aria-label", frage);
+    box.append(neu("p", "helfer-frage", frage));
+    const reihe = neu("div", "helfer-knoepfe");
+    const knoepfe = BALLFLUG_AUSWAHL[feld].map(({ wert, text }) => {
+      const knopf = neu("button", "", text);
+      knopf.setAttribute("aria-pressed", "false");
+      knopf.addEventListener("click", () => {
+        gewaehlt[feld] = wert;
+        for (const k of knoepfe) k.setAttribute("aria-pressed", String(k === knopf));
+        zeigeErgebnis();
+      });
+      return knopf;
+    });
+    reihe.append(...knoepfe);
+    box.append(reihe);
+    return box;
+  };
+
+  karte.append(gruppe("Wohin ist der Ball gestartet?", "start"), gruppe("Wie hat er gekurvt?", "kurve"), ergebnis);
+  return karte;
 }
 
 // Gleicher Aufbau wie die Baustellen-Karten (Strich, kleine Überschrift)
@@ -1545,16 +1644,25 @@ function abschlussKarte(l) {
 // Bild zur Lektion: Figur aus echten Posen (dunkler Kasten wie bei den Übungen)
 // oder Schaubild in den Farben der Seite (hell/dunkel)
 function wissensBild(name) {
-  if (FIGUREN[name]) {
+  const figur = FIGUREN[name];
+  if (figur) {
     const box = neu("div", "figur");
     box.setAttribute("aria-hidden", "true");
-    box.append(uebungsbildSvg(zeichnung(FIGUREN[name], 0, true)));
+    box.dataset.figur = name; // fester Name aus schaubilder.js – steuereLektionFigur findet die Figur so
+    // Erstes Bild; bei "Bewegung reduzieren" gleich das Endbild (wie im Übungsmodus)
+    const ruhig = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const endbild = gesamtDauer(figur) - (figur.folge[figur.folge.length - 1].halten || 0);
+    zeichneWissenFigur(box, figur, ruhig ? endbild : 0);
     return box;
   }
   const box = neu("div", "schaubild");
   box.setAttribute("aria-hidden", "true"); // Der Kernsatz daneben sagt dasselbe in Worten
   const bild = schaubild(name);
-  if (bild) box.append(schaubildSvg(bild));
+  if (bild) {
+    // Hohe Bilder (z. B. neun Flugkurven) bekommen mehr Platz, damit die Schrift lesbar bleibt
+    if (bild.ausschnitt.hoehe > bild.ausschnitt.breite * 0.6) box.classList.add("hoch");
+    box.append(schaubildSvg(bild));
+  }
   return box;
 }
 
@@ -1991,12 +2099,13 @@ function baueFigur(k) {
 
 // Punkte unter den Wisch-Karten und "1 von 3" passend zur sichtbaren Karte.
 // Gilt für die Baustellen und für die Lektionen im Bereich Wissen.
+// Gibt die Nummer der sichtbaren Karte zurück (0 = erste).
 function aktualisierePunkte(liste, punkte, zaehler) {
   const karten = [...liste.children];
   if (karten.length < 2) {
     punkte.replaceChildren();
     zaehler.textContent = "";
-    return;
+    return 0;
   }
   const breite = karten[0].offsetWidth + 28; // 28 = Abstand zwischen den Karten (style.css)
   const nummer = breite > 12 ? Math.min(karten.length - 1, Math.round(liste.scrollLeft / breite)) : 0;
@@ -2005,6 +2114,7 @@ function aktualisierePunkte(liste, punkte, zaehler) {
   }
   [...punkte.children].forEach((punkt, i) => punkt.classList.toggle("aktiv", i === nummer));
   zaehler.textContent = `${nummer + 1} von ${karten.length} · wischen ›`;
+  return nummer;
 }
 
 function aktualisiereKartenPunkte() {
@@ -2296,6 +2406,7 @@ function zeigeBereich(welcher) {
   zuGespeichertBtn.classList.toggle("aktiv", welcher === "gespeichert");
   zuWissenBtn.classList.toggle("aktiv", welcher === "wissen");
   zuEinstellungenBtn.classList.toggle("aktiv", welcher === "einstellungen");
+  if (welcher !== "wissen") halteLektionFigurAn(); // bewegte Figur einer offenen Lektion anhalten
   if (welcher === "wissen") {
     video.pause();
     zeigeWissenUebersicht();
@@ -2829,7 +2940,7 @@ zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
 wissenZurueckBtn.addEventListener("click", zeigeWissenUebersicht);
-lektionKarten.addEventListener("scroll", () => aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler), { passive: true });
+lektionKarten.addEventListener("scroll", () => steuereLektionFigur(aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler)), { passive: true });
 schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
 sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 videosSitzungLoeschenBtn.addEventListener("click", loescheVideosDerSitzung);
