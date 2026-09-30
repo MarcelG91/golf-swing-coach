@@ -404,7 +404,7 @@ export const LEKTIONEN = [
       { text: "Bekannt gemacht hat das P-System Mac O'Grady. Trainer, Spieler und Videoprogramme sprechen damit dieselbe Sprache. Die Positionen richten sich nach Schaft und Armen, nicht nach der Zeit." },
       { text: "Rückschwung: P1 Ansprechen, P2 Schaft waagerecht, P3 linker Arm waagerecht, P4 Top – der höchste Punkt, an dem die Richtung wechselt." },
       { text: "Abschwung und Durchschwung: P5 linker Arm waagerecht, P6 Schaft waagerecht, P7 Treffmoment, P8 Schaft waagerecht, P9 rechter Arm waagerecht, P10 Finish." },
-      { text: "Die Figur zeigt sieben dieser Positionen aus einem echten Profi-Schwung. Die Zeitleiste der App nutzt vier: Ansprechen (P1), Top (P4), Treffmoment (P7) und Finish (P10)." },
+      { text: "Die Figur zeigt sieben dieser Positionen: Körper aus einem echten Profi-Schwung, Schläger nach Lehrbuch. Die Zeitleiste der App nutzt vier: Ansprechen (P1), Top (P4), Treffmoment (P7) und Finish (P10)." },
     ],
     quiz: {
       frage: "Woran erkennst du P2 im Rückschwung?",
@@ -798,8 +798,9 @@ const BALLFLUG_ZUSATZ = {
 
 // start, kurve = "links" | "gerade" | "rechts" → { name, saetze, lektion } oder null
 export function ballflugErgebnis(start, kurve) {
-  const name = BALLFLUG_NAMEN[start]?.[kurve];
-  if (!name) return null;
+  // Object.hasOwn: nur die eigenen Schlüssel – "toString" & Co. zählen nicht als Richtung
+  if (!Object.hasOwn(BALLFLUG_NAMEN, start) || !Object.hasOwn(BALLFLUG_NAMEN[start], kurve)) return null;
+  const name = BALLFLUG_NAMEN[start][kurve];
   const zusatz = BALLFLUG_ZUSATZ[`${start}-${kurve}`];
   return {
     name,

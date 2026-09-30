@@ -174,6 +174,19 @@ test("Schaubilder: gültige Elemente, Zahlen statt NaN, Farben aus style.css", (
   }
 });
 
+test("Kinematische Kette: Im Treffmoment bremsen die Körperglieder, stehen aber nicht still", () => {
+  // Quelle (TPI): Jedes Glied bremst nach seiner Spitze ab – Stillstand im Treffmoment wäre falsche Technik
+  const kurven = schaubild("kinematischeKette").elemente.filter((el) => el.art === "pfad");
+  assert.equal(kurven.length, 4, "Becken, Brust, Arme, Schläger");
+  const boden = 150;
+  kurven.forEach((k, i) => {
+    const hoechst = Math.max(...k.punkte.map(([, y]) => boden - y));
+    const imTreffen = boden - k.punkte.at(-1)[1];
+    if (i < 3) assert.ok(imTreffen > 0.25 * hoechst, `Kurve ${i + 1}: im Treffmoment nur ${Math.round((imTreffen / hoechst) * 100)} %`);
+    else assert.ok(imTreffen >= 0.99 * hoechst, "Der Schläger ist im Treffmoment am schnellsten");
+  });
+});
+
 test("Figuren der Wissensseite stammen aus uebungsbilder.js und lassen sich zeichnen", () => {
   for (const [name, bild] of Object.entries(FIGUREN)) {
     const { elemente } = zeichnung(bild, 0, true);
@@ -235,10 +248,13 @@ test("Ballflug-Helfer: jede der 9 Kombinationen hat Namen, kurze Erklärung, Bil
     }
   }
   assert.equal(namen.size, 9, "neun verschiedene Namen");
-  // Unbekannte Werte führen nicht zum Absturz
-  assert.equal(ballflugErgebnis("oben", "links"), null);
-  assert.equal(ballflugErgebnis("__proto__", "links"), null);
-  assert.equal(ballflugBild("oben", "links"), null);
+  // Unbekannte Werte führen nicht zum Absturz – auf beiden Seiten (Start und Kurve)
+  for (const falsch of ["oben", "__proto__", "toString", "constructor"]) {
+    assert.equal(ballflugErgebnis(falsch, "links"), null, `Start ${falsch}`);
+    assert.equal(ballflugErgebnis("links", falsch), null, `Kurve ${falsch}`);
+    assert.equal(ballflugBild(falsch, "links"), null, `Bild Start ${falsch}`);
+    assert.equal(ballflugBild("links", falsch), null, `Bild Kurve ${falsch}`);
+  }
   // Nur die Lektion mit Werkzeug zeigt den Helfer
   assert.deepEqual(LEKTIONEN.filter((l) => l.werkzeug).map((l) => [l.id, l.werkzeug]), [["ball-neun", "ballflugHelfer"]]);
 });

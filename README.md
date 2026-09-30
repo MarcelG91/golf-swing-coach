@@ -278,6 +278,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `.github/agents/golf-app-sicherheitspruefer.agent.md` | Agent „Golf-App-Sicherheitsprüfer“ für GitHub Copilot (z. B. in VS Code): prüft Änderungen nur lesend auf Sicherheit und Datenschutz – schnelle Einzelprüfung; die Gesamtprüfung bleibt `/golf-app-check` |
 | `docs/` | Pläne und Entscheidungen |
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
+| `docs/iphone-testliste.md` | Checkliste für den Praxistest auf dem iPhone (Analyse, mehrere Schwünge, Speichern, Aufräumen, Übungsmodus) |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
 | `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (umgesetzt: Gerüst + Pfad 1, Schaubilder + Pfade 2 und 3 mit Ballflug-Helfer) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |

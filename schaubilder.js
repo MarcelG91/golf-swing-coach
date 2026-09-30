@@ -344,8 +344,8 @@ const SCHAUBILDER = {
   // Lektion „Abschwung“: kinematische Kette – vier Glieder erreichen nacheinander ihr Höchsttempo
   kinematischeKette() {
     const b = baukasten();
-    const boden = 150;
-    b.linie([30, boden], [300, boden], "rand", 1.5);
+    const boden = 150, treffmoment = 245;
+    b.linie([30, boden], [270, boden], "rand", 1.5);
     b.linie([30, boden], [30, 26], "rand", 1.5);
     pfeilspitze(b, [30, 60], [30, 26], "rand");
     b.text([36, 28], "Tempo", { farbe: "text-leise", anker: "start", groesse: 10 });
@@ -355,15 +355,21 @@ const SCHAUBILDER = {
       { name: "Arme", farbe: "achtung", spitze: 185, hoehe: 80, breite: 32 },
       { name: "Schläger", farbe: "akzent", spitze: 245, hoehe: 112, breite: 30 },
     ];
-    b.linie([245, boden], [245, 30], "text-leise", 1, true); // Treffmoment
+    b.linie([treffmoment, boden], [treffmoment, 30], "text-leise", 1, true);
     for (const g of glieder) {
+      // Bis zur Spitze eine Glocke. Danach bremst das Glied ab, steht im Treffmoment aber nicht
+      // still (TPI) – deshalb fällt die Kurve nur auf einen Restwert (schematisch, nicht gemessen).
       const punkte = [];
-      for (let x = 30; x <= 300; x += 5) punkte.push([x, boden - g.hoehe * Math.exp(-(((x - g.spitze) / g.breite) ** 2))]);
+      for (let x = 30; x <= treffmoment; x += 5) {
+        const glocke = Math.exp(-(((x - g.spitze) / g.breite) ** 2));
+        const wert = x > g.spitze ? 0.35 + 0.65 * Math.exp(-(((x - g.spitze) / (g.breite * 1.5)) ** 2)) : glocke;
+        punkte.push([x, boden - g.hoehe * wert]);
+      }
       b.pfad(punkte, g.farbe, 2.5);
       b.text([g.spitze, boden - g.hoehe - 6], g.name, { farbe: g.farbe, fett: true });
     }
     b.text([30, 164], "Top", { farbe: "text-leise", groesse: 10 });
-    b.text([245, 164], "Treffmoment", { farbe: "text-leise", groesse: 10 });
+    b.text([treffmoment, 164], "Treffmoment", { farbe: "text-leise", groesse: 10 });
     b.text([160, 180], "schematisch nach 3D-Messungen (TPI)", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 14, breite: 320, hoehe: 172 }, elemente: b.elemente };
   },
@@ -388,7 +394,7 @@ const SCHAUBILDER = {
     b.text([x0 + 1.5 * einheit, 121], "ca. 0,8 s", { farbe: "text-leise", groesse: 10 });
     b.text([x0 + 3.5 * einheit, 106], "Abschwung", { farbe: "akzent", fett: true });
     b.text([x0 + 3.5 * einheit, 121], "ca. 0,27 s", { farbe: "text-leise", groesse: 10 });
-    b.text([160, 146], "Tourspieler (Tour Tempo, Yale-Messung)", { farbe: "text-leise", groesse: 10 });
+    b.text([160, 146], "Sekunden: Tour Tempo · Verhältnis auch Yale-Messung", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 10, breite: 320, hoehe: 144 }, elemente: b.elemente };
   },
 
@@ -640,7 +646,7 @@ export function schaubild(name, hervor = null) {
 // Ballflug-Helfer: ein einzelner Ballflug von oben (start/kurve = "links" | "gerade" | "rechts")
 export function ballflugBild(start, kurve) {
   const zahl = { links: -1, gerade: 0, rechts: 1 };
-  if (!(start in zahl) || !(kurve in zahl)) return null;
+  if (!Object.hasOwn(zahl, start) || !Object.hasOwn(zahl, kurve)) return null;
   const b = baukasten();
   const ball = [160, 156];
   b.linie(ball, [160, 26], "rand", 1.5, true);
@@ -651,5 +657,5 @@ export function ballflugBild(start, kurve) {
   pfeilspitze(b, punkte[punkte.length - 2], punkte[punkte.length - 1], "akzent", 9);
   b.kreis(ball, 5, "text", 1.5, "flaeche");
   b.text([160, 176], "Blick von oben · Rechtshänder", { farbe: "text-leise", groesse: 10 });
-  return { ausschnitt: { x: 40, y: 8, breite: 240, hoehe: 174 }, elemente: b.elemente };
+  return { ausschnitt: { x: 40, y: 4, breite: 240, hoehe: 178 }, elemente: b.elemente };
 }
