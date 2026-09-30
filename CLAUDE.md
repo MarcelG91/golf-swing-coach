@@ -85,6 +85,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `style.css` · `darstellung.js` | Aussehen (Design-Variablen, Hell/Dunkel) · Umschalter Hell/Dunkel/Automatisch |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 | `docs/plan-tipps-neu.md` | Wisch-Karten, Kurztipps, Übungsmodus – Entscheidungen, geprüfte Texte, Quellen |
+| `docs/wissen/` · `docs/plan-wissensseite.md` | Wissensdatenbank Golf mit Quellen (12 Kapitel, Profile, Abgleich mit der App) · Plan für die Wissensseite |
 | `docs/plan-etappe-11-level-und-coach.md` | Plan für Etappe 11: Level-gerechte Tipps (11a) und Coach mit Claude (11b) |
 | `docs/sicherheit/` | Sicherheitsbericht (Befunde, Status) und Prüfprotokoll der Checks |
 
@@ -96,9 +97,9 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
   diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.
 
-## Offene Punkte – priorisierter Backlog (Stand 29.09.)
+## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. Neue Ideen hier passend einsortieren.
+Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9** (9 darf Marcel vorziehen). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -112,11 +113,14 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
 2. **Echter Coach-Test** (Marcel, ≥ 0.17.0, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
    „wertlos“ → seit 0.17.0 ausführliches Coaching (Gesamtbild, Ursachen, Anleitung, Trainingsplan, Effort „high“).
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
-3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) durch einen PGA-Pro – dabei auch 2–3 echte
+3. **Golflehrer-Durchsicht** der Tipps (`docs/plan-tipps-neu.md`) und der Fragen in `docs/wissen/abgleich-app.md`
+   (Abschnitt 5, u. a. neue Schwunggedanken mit äußerem Fokus) durch einen PGA-Pro – dabei auch 2–3 echte
    Coach-Antworten (ab 0.17.0) mitprüfen lassen, weil Claude dort frei erklärt und Übungen ergänzt.
 4. **Aufräum-Runde** (Claude, ein PR, 1–2 h) – Level-Karten erledigt mit 0.16.0 (Design):
    - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
      `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
+   - Aus `docs/wissen/abgleich-app.md` 2b: Stab-Übung in `technik.js` („neben die Hüfte“ → „neben den Fuß“),
+     Selbst-Check „fliegender Ellbogen“ entschärfen.
    - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen
      und `api.anthropic.com` als erlaubten Host nennen.
 
@@ -129,6 +133,10 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
    Seite lädt, „Bereit“, keine Konsolenfehler.
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
    Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
+9. **Wissensseite** (Plan: `docs/plan-wissensseite.md`, Inhalte: `docs/wissen/`, Stand 30.09.): vierter Bereich
+   „📖 Wissen“, Texte als `wissen.js`. Vorher Marcels offene Entscheidungen im Plan klären (externe Links,
+   Bilder, Umfang der ersten Version). Dazu passend und leicht: **Ballflug-Helfer** (Startrichtung + Kurve
+   wählen → Ursache und Übung) und die übrigen Ideen aus `docs/wissen/abgleich-app.md` Abschnitt 3.
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
@@ -146,6 +154,9 @@ Reihenfolge: **4 → (1 + 2 + 3 parallel bei Marcel) → 5 → 6 → 7 → 8**. 
 
 ### Dauerhafte Regeln und Hinweise
 
+- **Golfwissen:** `docs/wissen/` ist die belegte Grundlage für neue Tipps und die Wissensseite (jede Aussage mit
+  Quelle). Neue Schwunggedanken positiv, mit äußerem Fokus (Schläger/Ball/Ziel) oder als Bild formulieren –
+  keine Verbote („nicht …“), siehe `docs/wissen/richtig-ueben.md`.
 - **Tipps fachlich:** Golf-Technik muss stimmen (Marcels Anforderung: keine falsche Technik). Texte nur in
   `tipps.js` ändern, mit Quelle; danach Liste in `docs/plan-tipps-neu.md` neu erzeugen.
 - **C7:** Keine weitere GitHub-Pages-Seite unter MarcelG91 veröffentlichen (alle Pages-Seiten eines Kontos teilen
