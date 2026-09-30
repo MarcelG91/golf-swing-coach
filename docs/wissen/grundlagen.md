@@ -83,8 +83,9 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
   Boden). Beim Driver liegt der Ball auf dem Tee und soll leicht **aufwärts** getroffen werden – dafür
   weiter vorn [TM3 in `ballflug-und-fehler.md`].
 - **Folgen falscher Position**: zu weit vorn → eher getoppt oder Pull; zu weit hinten → eher Push, flach.
-- **Zwei Schulen**: Manche Lehrer (z. B. nach Ben Hogan) lassen den Ball immer an derselben Stelle
-  (links) und ändern nur den rechten Fuß. Für Einsteiger ist die Tabelle oben verbreiteter.
+- **Zwei Schulen**: Manche Lehrer lassen den Ball immer an derselben Stelle (links) und ändern nur die
+  Standbreite mit dem rechten Fuß – so spielten z. B. Hogan, Nicklaus und Nelson [USGTF1][GDC2]. Für
+  Einsteiger ist die Tabelle oben verbreiteter. Wichtig ist, bei einem System zu bleiben [GDC2].
 - **Check**: Schläger quer auf den Boden, senkrecht zur Ziellinie in die Standmitte legen – dann sieht
   man, wo „Mitte“ wirklich ist [GD1].
 
@@ -142,3 +143,5 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 - [PP1] Perfect Practice: Perfect golf posture – https://perfectpractice.com/blogs/news/perfect-golf-posture-everything-you-need-to-know
 - [DRV1] DRVN Golf: Golf posture – setup fundamentals – https://drvngolf.com/blog/golf-posture
 - [GDC1] GolfDecode: Complete guide to golf posture – https://golfdecode.com/complete-guide-to-golf-posture/
+- [GDC2] GolfDecode: Golf ball position – the right spot for every club – https://golfdecode.com/golf-ball-position/
+- [USGTF1] USGTF (United States Golf Teachers Federation): The „secret“ to the game? (zwei Ballpositions-Theorien) – https://www.usgtf.com/the-secret-to-the-game/

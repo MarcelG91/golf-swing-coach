@@ -74,8 +74,10 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 
 ## 5. Finish (🌱)
 
-- Gleichgewicht **auf dem linken Fuß**, rechte Ferse hoch, nur die Schuhspitze rechts am Boden.
-- Bauchnabel/Gürtelschnalle zeigt zum Ziel oder links davon.
+- Gleichgewicht **auf dem linken Fuß**, rechte Ferse hoch, nur die Schuhspitze rechts am Boden [HM5][BB1].
+- Bauchnabel/Gürtelschnalle zeigt zum Ziel oder links davon [HM5][BB1].
+- Ein ruhiges Finish ist die **Folge** eines guten Ablaufs, keine Pose [HM5]. Test: Kannst du es halten,
+  bis der Ball landet? [BB1]
 - **Schultern im Finish geneigt**: GOLFTEC misst bei Tourspielern im Finish ca. **32°** „Shoulder Bend“,
   bei hohen Handicaps nur ca. **3°**. Wenig Neigung deutet laut GOLFTEC auf seitliches Schieben statt
   Drehen hin [GOLF1]. (Die genaue Messrichtung von „Shoulder Bend“ bei GOLFTEC noch prüfen; nicht mit
@@ -87,6 +89,9 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 - **3 : 1**: Rückschwung dauert etwa dreimal so lang wie der Abschwung. John Novosel fand dieses
   Verhältnis bei Tourspielern aller Epochen (z. B. 24 Bilder Rückschwung zu 8 Bilder Abschwung bei 30
   Bildern pro Sekunde, also ca. 0,8 s zu 0,27 s) [TT1][MGS1]. App: `tempo`.
+- **Unabhängig gemessen** (Yale, Beschleunigungssensoren am Schaft): Bei 12 Tourspielern lag das Verhältnis
+  zwischen ca. 2,5 und 3,5, im Schnitt nahe 3,0 – und schwankte von Schwung zu Schwung kaum. Bei Lehrern,
+  guten Amateuren und Freizeitspielern lag der Schnitt ebenfalls um 3,0, streute aber viel stärker [GROB1].
 - Das **Verhältnis** ist bei guten Spielern sehr gleich, die **Gesamtdauer** unterscheidet sich (schnelle
   und ruhige Spieler) – man muss also nicht „langsam“ schwingen, sondern gleichmäßig.
 - Übung: Mitzählen „und – eins – zwei – drei (oben) – vier (Treffen)“ (App-Übung beim Tempo).
@@ -105,7 +110,7 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 | Gefühl | „durch den Ball nach unten“ | „den Ball vom Tee fegen“ |
 
 Quellen: [TM1] in `ballflug-und-fehler.md`, [HM1][VES1 in `grundlagen.md`]. **Tee-Höhe Driver**: etwa die
-halbe Ballhöhe über der Oberkante des Schlägerkopfs.
+halbe Ballhöhe über der Oberkante des Schlägerkopfs [GOLF2][VC1].
 
 ## Zahlen im Überblick (für Skalen in der App nutzbar)
 
@@ -142,3 +147,8 @@ einem Video – Werte sind nicht 1 : 1 übertragbar (siehe offene Punkte in `doc
 - [SC1] Swing Catalyst: Body mass and pressure – https://swingcatalyst.com/resources/articles/body-mass-and-pressure
 - [TT1] Tour Tempo (J. Novosel), Zusammenfassung GolfWRX-Forum/MyGolfSpy – https://mygolfspy.com/tour-tempo-review/
 - [MGS1] = [TT1]
+- [GROB1] Grober & Cholewicki (2006, Yale): Towards a biomechanical understanding of tempo in the golf swing (Messung Rück- zu Abschwung, Abb. 1) – https://arxiv.org/abs/physics/0611291
+- [HM5] HackMotion: Proper follow-through in golf – https://hackmotion.com/golf-follow-through/
+- [BB1] Bruce Bolt: How to follow through in golf – https://brucebolt.us/blogs/news/golf-follow-through
+- [GOLF2] GOLF.com: Are you teeing the ball up at the correct height? (GOLF Top 100 Teachers) – https://golf.com/instruction/driving/tee-ball-up-correct-height/
+- [VC1] Voice Caddie: The truth about golf tee height – https://voicecaddie.com/blogs/news/the-truth-about-tee-height-and-driving-distance
