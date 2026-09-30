@@ -139,10 +139,11 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
    Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
 9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1
-   `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. Vierter Bereich
-   „📖 Wissen“, 6 Lernpfade / 40 Lektionen (Bild, Karten, Quiz, Übung, ✓-Fortschritt) + Nachschlagen mit
-   **Ballflug-Helfer**. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet). In 5 Schritten
-   (Branches `wissen-geruest` → `wissen-schaubilder` → `wissen-pfade-2-3` → `wissen-pfade-4-6` → `wissen-nachschlagen`).
+   `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. **Schritte 2 + 3
+   `wissen-pfade-2-3` erledigt (0.23.0)**: Pfade „Vollschwung“ und „Ballflug“ (je 7 Lektionen), 12 Schaubilder, P1–P10
+   animiert, Ballflug-Helfer als Karte in „Die neun Ballflüge“. Offen: `wissen-pfade-4-6` → `wissen-nachschlagen`
+   (dort den Ballflug-Helfer ein zweites Mal verlinken). Vierter Bereich „📖 Wissen“, 6 Lernpfade / 40 Lektionen +
+   Nachschlagen. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
