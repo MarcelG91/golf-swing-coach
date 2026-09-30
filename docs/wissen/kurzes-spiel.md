@@ -48,7 +48,7 @@ schiefgehen [PIG1][FOY1].
 
 **Häufige Fehler**: Ball „hochlöffeln“ wollen · Gewicht geht nach rechts · Abbremsen vor dem Ball.
 
-**Übung „Landezone“**: Handtuch als Landefläche aufs Grün legen, 10 Chips darauf – dann zählen, wie
+**Übung „Landezone“** [GTS1][BB1]: Handtuch als Landefläche ein paar Schritte aufs Grün legen, 10 Chips darauf – dann zählen, wie
 viele im Umkreis von einer Schlägerlänge ums Loch liegen bleiben.
 
 ## 2. Pitchen (🌿)
@@ -117,3 +117,5 @@ Schläger soll **auf** der Linie eintreten. Dann einen Ball knapp **vor** die Li
 - [BRO1] Mark Broadie: Every Shot Counts (2014); Zusammenfassung The DIY Golfer – https://www.thediygolfer.com/reviews/every-shot-counts-book-review
 - [ARC1] Arccos: Strokes Gained – https://www.arccosgolf.com/blogs/community/strokes-gained-future-improvement-golf
 - [PG1] Practical Golf: Pros vs. Joes – https://practical-golf.com/pros-vs-joes
+- [GTS1] GOLFTEC Scramble: Get up and down more with this drill – https://scramble.golftec.com/blog/2018/12/get-up-and-down-more-with-this-drill/
+- [BB1] Bruce Bolt: Golf chipping drills for beginners – https://brucebolt.us/blogs/news/golf-chipping-drills

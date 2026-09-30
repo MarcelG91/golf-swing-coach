@@ -120,7 +120,7 @@ bleibt**; „Abbrechen“ ist vorausgewählt. Alles passiert nur auf dem Gerät.
 | Aktion | Wird gelöscht | Bleibt erhalten |
 |---|---|---|
 | **🎞 Videos und Bilder löschen** – für Sitzungen älter als 30 Tage, alle Sitzungen oder (in einer geöffneten Sitzung) nur diese | Videos und Vorschaubilder (fast der ganze Platz) | Kennzahlen, Bewertungen, Notizen, Posedaten – die Sitzung zeigt danach die Auswertung ohne Video, in der Liste steht „📊 nur Kennzahlen“ |
-| **🗑 Alles löschen** (zweiter Schritt: Häkchen setzen) | alle Sitzungen, Schwünge, Kennzahlen, Videos, Vorschaubilder und Posedaten | dein Level, die App mit ihren Offline-Dateien, deine Originalvideos in der Fotos-App, exportierte Dateien |
+| **🗑 Alles löschen** (zweiter Schritt: Häkchen setzen) | alle Sitzungen, Schwünge, Kennzahlen, Videos, Vorschaubilder und Posedaten | dein Level, dein Lernfortschritt unter „📖 Wissen“, die App mit ihren Offline-Dateien, deine Originalvideos in der Fotos-App, exportierte Dateien |
 
 Die Speicheranzeige des Browsers („Die App belegt …“) sinkt nach dem Löschen manchmal erst
 etwas später – die Meldung direkt nach dem Löschen nennt den frei gewordenen Platz.
@@ -176,6 +176,10 @@ vorne stammen aus einem echten Profi-Schwung; von hinten gibt es nur die Ausgang
 sie wurden gegen Golf-Fachquellen geprüft (Stand und Quellen: `docs/plan-tipps-neu.md`).
 Die App ersetzt trotzdem keine Trainerstunde.
 
+**📖 Wissen (seit 0.22.0):** Kurze Lektionen in Lernpfaden – wischen wie bei den Baustellen: Bild und
+Kernsatz, 2–4 Karten, eine Quizfrage, zum Schluss „✓ erledigt“, „Übung starten“ und die Quellen als Text.
+Der zum Level passende Pfad steht oben. Der Fortschritt bleibt nur auf dem Gerät (`wissenFortschritt`).
+
 ## Ausprobieren ohne eigenes Video
 
 Im Ordner `testvideos/` (nur lokal, nicht auf GitHub) liegen Beispielschwünge
@@ -229,6 +233,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
 | `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |
 | `uebungsbilder.js` | Figuren und Animationen für den Übungsmodus (Profi-Posen, Schläger, Stab, Wand, Takt) |
+| `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen |
+| `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (Weg, Loft, Griff, Schienen, Pendel, Flug : Rollen, Pfähle) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
@@ -250,10 +256,11 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
 | `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden, die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
+| `tests/wissen.test.mjs` | Prüft die Lektionen: Textlängen, Quiz mit genau einer richtigen Antwort, Quellen mit Link in `docs/wissen/`, Bilder vorhanden, Farben aus `style.css`, Fortschritt robust |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
-| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
+| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Lernfortschritt, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
 
@@ -267,8 +274,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
 | `docs/` | Pläne und Entscheidungen |
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
-| `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die geplante Wissensseite |
-| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App |
+| `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
+| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (Schritt 1 umgesetzt: Gerüst + Pfad 1) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches
@@ -480,6 +487,8 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 
 - [ ] 10. Fortschritt messen und Langzeit-Feedback
+- [ ] 12. Wissensseite mit Lernpfaden (Schritt 1 von 5 seit 0.22.0: Pfad „Start“ mit 8 Lektionen;
+  Plan: `docs/plan-wissensseite.md`)
 - [ ] 9. Sicherung exportieren / einspielen
 
 Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und

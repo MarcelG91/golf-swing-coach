@@ -158,6 +158,21 @@ Variablen in `style.css` (hell und dunkel).
   eine richtig, Erklärung ≤ 25 Wörter.
 - Texte nur per `textContent` (Sicherheitsregel), keine Links.
 
+## Stand Schritt 1 (`wissen-geruest`, 0.22.0, 30.09.)
+
+- Umgesetzt: `wissen.js`, `schaubilder.js` (7 Schaubilder für Pfad 1 – vorgezogen aus Schritt 2), Bereich
+  „📖 Wissen“, Lektion als Wisch-Karten, Quiz, ✓-Fortschritt, „Übung starten“ (vorgezogen aus Schritt 5),
+  Pfad 1 mit 8 Lektionen, Tests `tests/wissen.test.mjs`.
+- **Quellen-Kennung = `datei:KÜRZEL`** (z. B. `grundlagen:HM1`), weil die Kürzel nur innerhalb einer Datei
+  eindeutig sind. Der Test prüft, dass jede Kennung mit Link in der Datei steht.
+- **Übungen ohne Profi-Figur** (Griff aufbauen, Zwei Stäbe, Leiter, Landezone) stehen in `wissen.js` und laufen
+  im Übungsmodus nur als Text (Entscheidung Marcel, 30.09.). Lektion 5 nutzt „Schläger am Rücken“ mit Figuren.
+- **Zweite Quellen nachgetragen** (Entscheidung Marcel, 30.09.): Loft (Vessel, Mitchell Golf), Hybrid (Arccos,
+  Plugged In Golf), Haltung (Perfect Practice, DRVN, GolfDecode), Landezone (GOLFTEC, Bruce Bolt), kurzes Spiel
+  zuerst (golf-mag.de, BookGolfLessons). Die feste Reihenfolge Putt → Chip → Pitch → Eisen → Driver hat nur eine
+  Quelle und steht deshalb nicht als Regel in der App.
+- Texte der Wissensseite gelten für Rechtshänder (Hinweis auf der Übersicht).
+
 ## Umsetzung in Schritten (je 1 Branch = 1 PR)
 
 | Schritt | Branch | Inhalt |

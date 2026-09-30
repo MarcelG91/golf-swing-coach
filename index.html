@@ -47,6 +47,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 13h8M8 16.5h5"/></svg>
         Meine Schwünge
       </button>
+      <button id="zuWissen">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10 5 7 4.5 3 5v13c4-.5 7 0 9 1.5 2-1.5 5-2 9-1.5V5c-4-.5-7 0-9 1.5z"/><path d="M12 6.5v13"/></svg>
+        Wissen
+      </button>
       <button id="zuEinstellungen">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>
         Einstellungen
@@ -259,6 +263,26 @@
     <div id="sitzungsListe" class="sitzungen"></div>
   </main>
 
+  <!-- Wissen: Lernpfade aus kurzen Lektionen (wissen.js, Bilder aus schaubilder.js).
+       Die Inhalte setzt app.js – Texte immer per textContent. -->
+  <main id="wissenBereich" hidden>
+    <h2>📖 Wissen</h2>
+    <div id="wissenUebersicht">
+      <p class="hinweis">Allgemeines Golfwissen mit Quellen – ersetzt keinen Unterricht. Links und rechts gelten für Rechtshänder.</p>
+      <div id="pfadListe" class="pfade"></div>
+    </div>
+    <section id="wissenLektion" hidden>
+      <button id="wissenZurueck" class="zeigen">‹ Alle Lektionen</button>
+      <div class="karten-kopf">
+        <h3 id="lektionTitel" tabindex="-1"></h3>
+        <span id="lektionZaehler" class="hinweis nur-screenreader"></span>
+      </div>
+      <!-- Wisch-Karten wie bei den Baustellen: Bild · Inhalt · Quiz · Abschluss -->
+      <div id="lektionKarten" class="karten" tabindex="0" role="region" aria-label="Lektion, zur Seite wischen"></div>
+      <div id="lektionPunkte" class="punkte" aria-hidden="true"></div>
+    </section>
+  </main>
+
   <main id="einstellungenBereich" hidden>
     <h2>Einstellungen</h2>
     <section class="einstellung">
@@ -337,8 +361,8 @@
       </div>
 
       <p class="hinweis klein-text">
-        Bleibt immer erhalten: dein Level, die App selbst mit den Offline-Dateien und deine
-        Originalvideos in der Fotos-App.
+        Bleibt immer erhalten: dein Level, dein Lernfortschritt unter „Wissen“, die App selbst mit
+        den Offline-Dateien und deine Originalvideos in der Fotos-App.
       </p>
       <p id="datenMeldung" class="status" aria-live="polite"></p>
     </section>
