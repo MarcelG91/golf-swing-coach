@@ -106,7 +106,13 @@ in der Bewegung. Was zählt, ist der Ballflug – schau immer auch, wohin der Ba
 | `gewicht` | Kapitel 3 „Finish“ |
 | `hueftBall`, `hueftSway`, `schulterdrehung` (zusätzlich) | Kapitel 8 „Beweglichkeit“ |
 
-## 5. Offene fachliche Fragen für die Golflehrer-Durchsicht (Backlog Nr. 3)
+## 5. Offene fachliche Fragen
+
+Eine Golflehrer-Durchsicht **entfällt** (Entscheidung 30.09.). Diese Fragen bleiben deshalb offen; betroffene
+Inhalte kommen nach den strengen Regeln aus `docs/plan-wissensseite.md` **nicht** oder nur als „Trainer sind
+uneins“ in die App. Von den Schwunggedanken in 2a werden nur die sicheren Umformulierungen (Verbot → positiv)
+umgesetzt.
+
 
 1. Sind die vorgeschlagenen Schwunggedanken (2a) fachlich richtig und verständlich?
 2. `oberkoerperTreff`: Welcher äußere Gedanke passt zu „Schulter runter, nicht raus“?
