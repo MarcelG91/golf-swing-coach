@@ -30,6 +30,9 @@
   --pfahl-weiss: #ffffff;
   --pfahl-gelb: #facc15;
   --pfahl-rot: #dc2626;
+  /* Beschriftung unter den Strichfiguren. Gilt hell und dunkel gleich, weil der
+     Figurkasten (.figur) immer dunkel ist – deshalb nicht in den hellen Farbsätzen. */
+  --figur-text: #facc15;
 
   /* Kleine farbige Kästen in den Karten */
   --tipp-grund: #1a2b23;
@@ -914,6 +917,22 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
 .karte.lektion button.breit { width: 100%; margin-top: 10px; }
 .schaubild { background: var(--flaeche-innen); border-radius: var(--r-klein); margin-top: 10px; padding: 6px 4px; }
 .schaubild svg { display: block; width: 100%; height: 170px; font-family: inherit; }
+.schaubild.hoch svg { height: 230px; } /* hohe Bilder, z. B. die neun Flugkurven */
+.figur .figur-text { margin: 0; padding: 0 0 8px; text-align: center; font-weight: 700; color: var(--figur-text); }
+/* Ballflug-Helfer: zwei Knopfgruppen (Start, Kurve) und das Ergebnis */
+.helfer-gruppe { margin-top: 14px; }
+.helfer-frage { margin: 0 0 6px; font-weight: 600; }
+.helfer-knoepfe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.helfer-knoepfe button {
+  padding: 11px 6px; font-size: 0.95rem; border: 1px solid var(--rand); border-radius: var(--r-klein);
+  background: var(--flaeche-innen); color: var(--text); cursor: pointer;
+}
+.helfer-knoepfe button[aria-pressed="true"] {
+  border-color: var(--akzent-marke); box-shadow: 0 0 0 1px var(--akzent-marke); font-weight: 700;
+}
+/* Gewählt auch ohne Farbe erkennbar */
+.helfer-knoepfe button[aria-pressed="true"]::before { content: "✓ "; }
+.helfer-ergebnis .helfer-name { margin: 16px 0 0; font-size: 1.25rem; font-weight: 700; color: var(--akzent-marke); }
 .quiz-antworten { display: grid; gap: 8px; margin-top: 14px; }
 .quiz-antworten button {
   text-align: left; padding: 12px 14px; font-size: 1rem; line-height: 1.35;
