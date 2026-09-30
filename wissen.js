@@ -80,10 +80,58 @@ export const QUELLEN = {
   "regeln-etikette:ETI2": "golf-mag.de: Golf-Etikette für Anfänger",
   "regeln-etikette:DGV1": "Deutscher Golf Verband: FAQ DGV-Platzreife",
   "regeln-etikette:WIKI1": "Wikipedia: Platzerlaubnis",
+  // Pfad 2: Der Vollschwung
+  "vollschwung:HM1": "HackMotion: Golf swing positions (P1–P10)",
+  "vollschwung:DIY1": "The DIY Golfer: Swing positions",
+  "vollschwung:GT1": "PGA.com über die GOLFTEC-SwingTRU-Studie (3D-Messungen)",
+  "vollschwung:GT2": "GOLFTEC SwingTRU: 13.440 Schwünge (Pressemitteilung)",
+  "vollschwung:GT3": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "vollschwung:GOLF1": "GOLF.com: GOLFTEC-Schwungformel Neigung, Drehung, Beugung",
+  "vollschwung:RS1": "RotarySwing: The 4 pressure shifts",
+  "vollschwung:RG1": "Studie: Bodenreaktionskräfte im Golfschwung (Kraftmessplatten)",
+  "vollschwung:SC1": "Swing Catalyst: Body mass and pressure",
+  "vollschwung:HM2": "HackMotion: Erkenntnisse aus HackMotion-Messdaten",
+  "vollschwung:TPI1": "TPI: Kinematic Sequence Revisited",
+  "vollschwung:TPI2": "TPI: The Linear Kinematic Sequence",
+  "vollschwung:TT1": "Tour Tempo (John Novosel), Zusammenfassung MyGolfSpy",
+  "vollschwung:GROB1": "Grober & Cholewicki (Yale, 2006): Tempo im Golfschwung",
+  "vollschwung:HM5": "HackMotion: Proper follow-through in golf",
+  "vollschwung:BB1": "Bruce Bolt: How to follow through in golf",
+  "vollschwung:GOLF2": "GOLF.com: Tee-Höhe beim Driver (GOLF Top 100 Teachers)",
+  "vollschwung:VC1": "Voice Caddie: The truth about golf tee height",
+  "grundlagen:SWT1": "Performance Golf: Ball position by club",
+  "grundlagen:GD1": "Golf Distillery: Correct ball position",
+  "grundlagen:USGTF1": "USGTF: Zwei Theorien zur Ballposition",
+  "grundlagen:GDC2": "GolfDecode: Golf ball position",
+  // Pfad 3: Ballflug verstehen & Fehler beheben
+  "ballflug-und-fehler:TM1": "TrackMan: 6 numbers every amateur should know",
+  "ballflug-und-fehler:TM2": "TrackMan: Ultimate guide to understanding TrackMan",
+  "ballflug-und-fehler:TM3": "TrackMan: Attack Angle",
+  "ballflug-und-fehler:TM5": "TrackMan: Leistung des durchschnittlichen männlichen Amateurs",
+  "ballflug-und-fehler:TPI1": "TPI: Mehr Länge durch den Eintreffwinkel",
+  "ballflug-und-fehler:SAND": "The Sand Trap: Ball flight laws",
+  "ballflug-und-fehler:WRX1": "GolfWRX: Use the new ball flight laws",
+  "ballflug-und-fehler:GT1": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "ballflug-und-fehler:GT2": "GOLFTEC Scramble: Swing path drill to fix your slice",
+  "ballflug-und-fehler:GT3": "GOLFTEC: Griff gegen Slice und Hook",
+  "ballflug-und-fehler:HM5": "HackMotion: Fix your outside-in golf swing",
+  "ballflug-und-fehler:AY1": "Adam Young: Gear Effect",
+  "ballflug-und-fehler:AY2": "Adam Young: Fix fat and thin golf shots",
+  "ballflug-und-fehler:AY3": "Adam Young: How to stop shanking",
+  "ballflug-und-fehler:GOLF2": "GOLF.com: Fersen- oder Spitzentreffer mit dem Driver (Robotertest)",
+  "ballflug-und-fehler:GOLF3": "GOLF.com: 10 keys for taking a proper divot",
+  "ballflug-und-fehler:HM1": "HackMotion: Low point control drill",
+  "ballflug-und-fehler:HM2": "HackMotion: 6 low point control drills",
+  "ballflug-und-fehler:HM4": "HackMotion: Skying the driver",
+  "ballflug-und-fehler:MGS1": "MyGolfSpy: Driver pop-ups explained",
+  "ballflug-und-fehler:GM1": "Golf Monthly: Golf shank causes",
+  "ballflug-und-fehler:TMG1": "Tell Me More Golf: Alternativen zum Impact-Tape",
+  "ballflug-und-fehler:CAG1": "Colorado AvidGolfer: Dan Sniffin (PGA) zum Fußpuder-Spray",
 };
 
 // ---------------------------------------------------------------
 // Lernpfade. level = für wen der Pfad gedacht ist (wie in level.js).
+// Der Vollschwung (Plan: 🌱→🌿) zählt als 🌿 – einzelne Lektionen darin sind 🌱.
 // Weitere Pfade kommen in den nächsten Branches (siehe Plan).
 // ---------------------------------------------------------------
 export const PFADE = [
@@ -92,6 +140,18 @@ export const PFADE = [
     level: "einsteiger",
     titel: "Start: Vom ersten Schlag zur Platzreife",
     beschreibung: "Schläger, Griff, Haltung, erster Putt und Chip, die wichtigsten Regeln.",
+  },
+  {
+    id: "vollschwung",
+    level: "fortgeschritten",
+    titel: "Der Vollschwung",
+    beschreibung: "Phasen, Stand, Rückschwung, Abschwung, Treffmoment, Finish und Rhythmus – Driver und Eisen.",
+  },
+  {
+    id: "ballflug",
+    level: "fortgeschritten",
+    titel: "Ballflug verstehen & Fehler beheben",
+    beschreibung: "Warum der Ball kurvt, was der Treffpunkt ausmacht – und wie du Slice, Fett, Top und Shank behebst.",
   },
 ];
 
@@ -102,6 +162,7 @@ export const PFADE = [
 //   quiz: { frage, antworten: [3 Texte], richtig: Index 0–2, erklaerung },
 //   uebung (optional): { tipp: {id, messwert} } = vorhandene Übung aus tipps.js (mit Figuren)
 //                      oder { name, wiederholungen, schritte } = neue Übung nur als Text,
+//   werkzeug (optional): "ballflugHelfer" = zusätzliche Karte zum Ausprobieren nach dem Quiz,
 //   kennzahlen: passende Kennzahl-IDs der App (für die spätere Verknüpfung Karte → Lektion),
 //   quellen: Kennungen aus QUELLEN, beleg: Schlüssel aus BELEGE.
 // ---------------------------------------------------------------
@@ -330,7 +391,422 @@ export const LEKTIONEN = [
     quellen: ["regeln-etikette:RA2", "regeln-etikette:USGA1", "regeln-etikette:SIEK1", "regeln-etikette:PAR1", "regeln-etikette:ETI1", "regeln-etikette:ETI2", "regeln-etikette:DGV1", "regeln-etikette:WIKI1"],
     beleg: "regel",
   },
+
+  // ===== Pfad 2: Der Vollschwung (docs/wissen/vollschwung.md, grundlagen.md) =====
+  {
+    id: "voll-phasen",
+    pfad: "vollschwung",
+    level: "einsteiger",
+    titel: "Die Phasen P1–P10",
+    kern: "Zehn Positionen geben jedem Moment des Schwungs einen Namen.",
+    bild: "schwungPhasen",
+    karten: [
+      { text: "Bekannt gemacht hat das P-System Mac O'Grady. Trainer, Spieler und Videoprogramme sprechen damit dieselbe Sprache. Die Positionen richten sich nach Schaft und Armen, nicht nach der Zeit." },
+      { text: "Rückschwung: P1 Ansprechen, P2 Schaft waagerecht, P3 linker Arm waagerecht, P4 Top – der höchste Punkt, an dem die Richtung wechselt." },
+      { text: "Abschwung und Durchschwung: P5 linker Arm waagerecht, P6 Schaft waagerecht, P7 Treffmoment, P8 Schaft waagerecht, P9 rechter Arm waagerecht, P10 Finish." },
+      { text: "Die Figur zeigt sieben dieser Positionen aus einem echten Profi-Schwung. Die Zeitleiste der App nutzt vier: Ansprechen (P1), Top (P4), Treffmoment (P7) und Finish (P10)." },
+    ],
+    quiz: {
+      frage: "Woran erkennst du P2 im Rückschwung?",
+      antworten: ["Der Schläger ist ganz oben", "Der Schaft ist waagerecht", "Der Ball ist getroffen"],
+      richtig: 1,
+      erklaerung: "Bei P2 steht der Schaft im Rückschwung waagerecht. Die Positionen richten sich nach Schaft und Armen.",
+    },
+    kennzahlen: [],
+    quellen: ["vollschwung:HM1", "vollschwung:DIY1"],
+    beleg: "zwei-quellen",
+  },
+  {
+    id: "voll-stand",
+    pfad: "vollschwung",
+    level: "einsteiger",
+    titel: "Stand und Ballposition",
+    kern: "Je länger der Schläger, desto breiter der Stand und desto weiter links der Ball.",
+    bild: "ballposition",
+    karten: [
+      { text: "Standbreite: Mit mittleren Eisen etwa schulterbreit, mit kurzen Eisen und Wedges etwas schmaler. Mit dem Driver etwas breiter als die Schultern – das gibt Stabilität." },
+      { text: "Ballposition: Wedges in der Standmitte, das 7er-Eisen 1–2 Ballbreiten links davon, Hybrid und Holz 2–3 Ballbreiten. Der Driver liegt an der Innenseite der linken Ferse." },
+      { text: "Warum? Beim Eisen liegt der tiefste Punkt des Schwungs nach dem Ball: erst Ball, dann Boden. Den Driver triffst du vom Tee leicht aufwärts – dafür liegt der Ball weiter vorn." },
+      { text: "Trainer sind uneins: Manche lassen den Ball bei allen Schlägern an derselben Stelle und ändern nur die Standbreite – so spielten Hogan und Nicklaus. Wähle ein System und bleib dabei." },
+    ],
+    quiz: {
+      frage: "Wo liegt der Ball beim Driver?",
+      antworten: ["In der Mitte des Stands", "Vor dem rechten Fuß", "An der Innenseite der linken Ferse"],
+      richtig: 2,
+      erklaerung: "Weiter vorn triffst du den Ball vom Tee leicht aufwärts. Das bringt mit dem Driver mehr Länge.",
+    },
+    kennzahlen: [],
+    quellen: ["grundlagen:SWT1", "grundlagen:VES1", "grundlagen:GD1", "ballflug-und-fehler:TM3", "grundlagen:USGTF1", "grundlagen:GDC2"],
+    beleg: "zwei-quellen",
+  },
+  {
+    id: "voll-rueckschwung",
+    pfad: "vollschwung",
+    level: "fortgeschritten",
+    titel: "Rückschwung und Top: drehen statt schieben",
+    kern: "Am Top sind die Schultern etwa 90° gedreht – der Rücken zeigt zum Ziel.",
+    bild: "topProfi",
+    karten: [
+      { text: "3D-Messungen (GOLFTEC): Tourspieler drehen die Schultern am Top etwa 90°, bei P2 schon ca. 60°. Die Hüfte dreht bei P2 ca. 25–30°, bei vielen Freizeitspielern höchstens 15°.", bild: "messwerte" },
+      { text: "Die Hüfte dreht auf der Stelle. Wenig seitliches Schieben (Sway) am Top gehört laut GOLFTEC zu sechs Merkmalen, die mit gutem Spiel zusammenhängen. Die App misst das als Verschiebung." },
+      { text: "Am Top liegen bei Tourspielern ca. 70–80 % des Drucks auf dem rechten Fuß. Das linke Handgelenk ist flach – Amateure strecken es im Schnitt ca. 10° mehr, das öffnet die Schlagfläche." },
+      { text: "Die linke Schulter steht am Top tiefer: Tourspieler haben ca. 36° Schulterneigung, hohe Handicaps ca. 30°. Mehr Neigung hilft, den Ball von oben zu treffen." },
+    ],
+    quiz: {
+      frage: "Wie weit drehen Tourspieler die Schultern am Top etwa?",
+      antworten: ["Etwa 30°", "Etwa 90°", "Etwa 180°"],
+      richtig: 1,
+      erklaerung: "Etwa 90° laut 3D-Messungen – der Rücken zeigt dann ungefähr zum Ziel.",
+    },
+    // Vorhandene Übung mit Figuren (tipps.js, Kennzahl "Schultern drehen nicht voll")
+    uebung: { tipp: { id: "schulterdrehung", messwert: 60 } },
+    kennzahlen: ["schulterdrehung", "hueftSway", "armschwungTop", "oberkoerperTop"],
+    quellen: ["vollschwung:GT1", "vollschwung:GT2", "vollschwung:GOLF1", "vollschwung:RS1", "vollschwung:RG1", "vollschwung:HM2"],
+    beleg: "messung",
+  },
+  {
+    id: "voll-abschwung",
+    pfad: "vollschwung",
+    level: "fortgeschritten",
+    titel: "Abschwung: die kinematische Kette",
+    kern: "Erst Becken, dann Brust, dann Arme, dann Schläger – jedes Glied schneller als das vorige.",
+    bild: "kinematischeKette",
+    karten: [
+      { text: "3D-Messungen (TPI) zeigen: Becken, Brustkorb, Arme und Schläger erreichen ihr Höchsttempo nacheinander. Jedes Glied bremst dann ab und gibt Energie weiter. Der Schläger ist im Treffmoment am schnellsten." },
+      { text: "Druck zuerst nach links: Gute Spieler verlagern ihn gleich zu Beginn des Abschwungs. Bei einem gemessenen Tourspieler sank der Druck rechts im ersten Moment von ca. 80 % auf ca. 50 %." },
+      { text: "Häufiger Fehler laut GOLFTEC: Schultern und Arme starten den Abschwung. Dann kommt der Schläger von außen – Slice oder Pull. Ein Bild dafür: Die Hüfte startet, die Arme fallen nach unten." },
+    ],
+    quiz: {
+      frage: "Welches Glied erreicht im Abschwung zuerst sein Höchsttempo?",
+      antworten: ["Das Becken", "Die Arme", "Der Schläger"],
+      richtig: 0,
+      erklaerung: "Die Kette läuft vom Becken über Brust und Arme zum Schläger. Der Schläger ist erst im Treffmoment am schnellsten.",
+    },
+    uebung: { tipp: { id: "fuehrungsarmTreff", messwert: 140 } },
+    kennzahlen: ["gewicht"],
+    quellen: ["vollschwung:TPI1", "vollschwung:TPI2", "vollschwung:RS1", "vollschwung:SC1", "vollschwung:GT3"],
+    beleg: "messung",
+  },
+  {
+    id: "voll-treffmoment",
+    pfad: "vollschwung",
+    level: "fortgeschritten",
+    titel: "Treffmoment: Hüfte offen, Hände vorn",
+    kern: "Im Treffmoment: Hüfte zum Ziel geöffnet, beim Eisen die Hände vor dem Ball.",
+    bild: "treffProfi",
+    karten: [
+      { text: "Die Hüfte ist im Treffmoment bei Tourspielern ca. 36° zum Ziel geöffnet, bei hohen Handicaps nur ca. 20°. Das sind 3D-Messungen von GOLFTEC.", bild: "messwerte" },
+      { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher." },
+      { text: "Die Vorneigung bleibt bis zum Treffen, der Po bleibt hinten. Richtet sich der Körper auf (Early Extension), bleibt die Fläche laut GOLFTEC oft offen – ein häufiger Grund für Slices." },
+    ],
+    quiz: {
+      frage: "Wie weit ist die Hüfte bei Tourspielern im Treffmoment zum Ziel geöffnet?",
+      antworten: ["Gar nicht, sie steht parallel", "Ca. 90°", "Ca. 36°"],
+      richtig: 2,
+      erklaerung: "Ca. 36° laut 3D-Messungen, bei hohen Handicaps nur ca. 20°. Die Hüfte dreht vor den Armen zum Ziel.",
+    },
+    uebung: { tipp: { id: "vorneigungHalten", messwert: 20 } },
+    kennzahlen: ["vorneigungHalten", "hueftBall"],
+    quellen: ["vollschwung:GOLF1", "vollschwung:GT1", "vollschwung:HM2", "vollschwung:GT3"],
+    beleg: "messung",
+  },
+  {
+    id: "voll-finish",
+    pfad: "vollschwung",
+    level: "einsteiger",
+    titel: "Finish und Rhythmus 3 : 1",
+    kern: "Zurück dreimal so lang wie nach vorn – und im Finish ruhig stehen bleiben.",
+    bild: "finishProfi",
+    karten: [
+      { text: "Im Finish liegt fast das ganze Gewicht auf dem linken Fuß. Die rechte Ferse ist oben, nur die Schuhspitze berührt den Boden. Brust und Gürtelschnalle zeigen zum Ziel." },
+      { text: "Ein ruhiges Finish ist die Folge eines guten Ablaufs. Test: Kannst du es halten, bis der Ball landet? Die App-Übung „Finish 3 Sekunden“ trainiert genau das." },
+      { text: "Rhythmus 3 : 1: Der Rückschwung dauert etwa dreimal so lang wie der Abschwung. John Novosel maß bei Tourspielern zum Beispiel ca. 0,8 zu 0,27 Sekunden.", bild: "zeitbalken" },
+      { text: "Eine Yale-Messung bestätigt: Tourspieler liegen bei ca. 2,5 bis 3,5 : 1 und schwingen sehr gleichmäßig. Wichtig ist also ein gleichmäßiger Rhythmus, nicht besonders langsames Schwingen." },
+    ],
+    quiz: {
+      frage: "Wie lange dauert der Rückschwung bei guten Spielern im Vergleich zum Abschwung?",
+      antworten: ["Etwa dreimal so lang", "Etwa gleich lang", "Etwa halb so lang"],
+      richtig: 0,
+      erklaerung: "Rhythmus 3 : 1 – zum Mitzählen: „eins – zwei – drei“ zurück, auf „vier“ ist der Ball getroffen.",
+    },
+    uebung: { tipp: { id: "tempo", messwert: 2 } },
+    kennzahlen: ["tempo", "gewicht"],
+    quellen: ["vollschwung:HM5", "vollschwung:BB1", "vollschwung:TT1", "vollschwung:GROB1"],
+    beleg: "messung",
+  },
+  {
+    id: "voll-driver-eisen",
+    pfad: "vollschwung",
+    level: "fortgeschritten",
+    titel: "Driver und Eisen",
+    kern: "Das Eisen trifft den Ball leicht abwärts, den Driver triffst du leicht aufwärts.",
+    bild: "eintreffwinkel",
+    karten: [
+      { text: "Eisen: Der tiefste Punkt liegt nach dem Ball – erst Ball, dann Boden. TrackMan-Richtwerte für den Eintreffwinkel: 6er-Eisen ca. −3°, Pitching Wedge ca. −4°." },
+      { text: "Driver: Der Ball liegt auf dem Tee, du triffst ihn leicht aufwärts. Laut TPI bringen bei ca. 160 km/h Schlägerkopftempo +5° statt −5° rund 23 m mehr Flugweite." },
+      { text: "Beim Driver liegt der Ball an der Innenseite der linken Ferse, der Stand ist breiter. Tee-Höhe: Die halbe Ballhöhe schaut über die Oberkante des Schlägerkopfs." },
+      { text: "Der männliche Durchschnittsamateur trifft den Driver laut TrackMan mit ca. −1,6° und fliegt ca. 187 m. Mit optimalem Abflug wären bei gleichem Tempo ca. 208 m möglich." },
+    ],
+    quiz: {
+      frage: "Wie triffst du den Ball mit dem Driver am besten?",
+      antworten: ["Steil von oben, mit Divot", "Mit einem sehr langsamen Schwung", "Leicht aufwärts vom Tee"],
+      richtig: 2,
+      erklaerung: "Leicht aufwärts bringt mit dem Driver mehr Flugweite. Beim Eisen ist es umgekehrt: erst Ball, dann Boden.",
+    },
+    kennzahlen: [],
+    quellen: ["ballflug-und-fehler:TM3", "ballflug-und-fehler:TPI1", "ballflug-und-fehler:TM5", "grundlagen:GD1", "grundlagen:SWT1", "vollschwung:GOLF2", "vollschwung:VC1"],
+    beleg: "messung",
+  },
+
+  // ===== Pfad 3: Ballflug verstehen & Fehler beheben (docs/wissen/ballflug-und-fehler.md) =====
+  {
+    id: "ball-gesetze",
+    pfad: "ballflug",
+    level: "fortgeschritten",
+    titel: "Die Ballfluggesetze",
+    kern: "Die Schlagfläche bestimmt, wo der Ball startet – Fläche und Bahn zusammen, wie er kurvt.",
+    bild: "flaecheBahn",
+    karten: [
+      { text: "Früher hieß es: Der Ball startet in Richtung der Schwungbahn. Radar-Messungen (TrackMan, ab etwa 2006) zeigen: Das stimmt nicht. Die Schlagfläche bestimmt die Startrichtung." },
+      { text: "Anteil der Schlagfläche an der Startrichtung: beim Driver ca. 85 %, beim Eisen ca. 75 %. Den Rest steuert die Schwungbahn." },
+      { text: "Die Kurve entsteht aus dem Unterschied zwischen Fläche und Bahn. Fläche offen zur Bahn: Kurve nach rechts. Fläche geschlossen zur Bahn: Kurve nach links." },
+      { text: "Merkhilfe: Startet der Ball schon falsch, zuerst die Schlagfläche prüfen (Griff, Handgelenk). Kurvt er zu stark, die Bahn prüfen. Passt die Kurve nicht zur Bahn, den Treffpunkt." },
+    ],
+    quiz: {
+      frage: "Was bestimmt vor allem, in welche Richtung der Ball startet?",
+      antworten: ["Die Schlagfläche", "Die Schwungbahn", "Die Standbreite"],
+      richtig: 0,
+      erklaerung: "Beim Driver zu ca. 85 % laut Radar-Messungen. Die Bahn im Verhältnis zur Fläche bestimmt dann die Kurve.",
+    },
+    kennzahlen: [],
+    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:GT1"],
+    beleg: "messung",
+  },
+  {
+    id: "ball-neun",
+    pfad: "ballflug",
+    level: "fortgeschritten",
+    titel: "Die neun Ballflüge",
+    kern: "Drei Startrichtungen mal drei Kurven ergeben neun Ballflüge.",
+    bild: "neunFlugkurven",
+    karten: [
+      { text: "Startet der Ball gerade und kurvt leicht nach links, ist es ein Draw, nach rechts ein Fade. Beides sind gewollte, leichte Kurven. Zu starke Kurven heißen Hook und Slice." },
+      { text: "Startet der Ball links, heißt er Pull, startet er rechts, Push. Mit Kurve: Pull-Hook, Pull-Slice, Push-Draw, Push-Slice." },
+      { text: "Draw und Hook: Die Fläche ist zur Bahn geschlossen, die Bahn kommt meist von innen. Fade und Slice: Die Fläche ist zur Bahn offen, die Bahn kommt meist von außen." },
+    ],
+    quiz: {
+      frage: "Der Ball startet gerade und kurvt leicht nach rechts. Wie heißt das?",
+      antworten: ["Draw", "Pull", "Fade"],
+      richtig: 2,
+      erklaerung: "Ein Fade: gerader Start, leichte Kurve nach rechts. Die Fläche war zur Bahn etwas offen.",
+    },
+    werkzeug: "ballflugHelfer",
+    kennzahlen: [],
+    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:SAND"],
+    beleg: "messung",
+  },
+  {
+    id: "ball-treffpunkt",
+    pfad: "ballflug",
+    level: "fortgeschritten",
+    titel: "Treffpunkt und Gear Effect",
+    kern: "Wo der Ball die Schlagfläche trifft, verändert Kurve, Länge und Spin.",
+    bild: "treffpunktFlaeche",
+    karten: [
+      { text: "Gear Effect beim Driver: Ein Treffer an der Spitze dreht den Kopf auf – der Ball bekommt Draw-Spin. Ein Treffer an der Ferse gibt Fade-Spin. Ein Robotertest bestätigt das." },
+      { text: "Hoch auf der Fläche getroffen, fliegt der Ball höher und mit weniger Spin. Tief getroffen, fliegt er flacher und mit mehr Spin (Robotertest von GOLF.com)." },
+      { text: "Ein Fersentreffer bekommt Fade-Spin und kann wie ein Slice aussehen. Deshalb zuerst den Treffpunkt prüfen, dann erst am Schwung arbeiten." },
+    ],
+    quiz: {
+      frage: "Du triffst mit dem Driver an der Spitze. Welchen Spin bekommt der Ball?",
+      antworten: ["Draw-Spin", "Fade-Spin", "Gar keinen Spin"],
+      richtig: 0,
+      erklaerung: "Bei Spitzentreffern dreht der Kopf auf, der Ball bekommt Draw-Spin. An der Ferse ist es umgekehrt.",
+    },
+    uebung: {
+      name: "Treffpunkt sichtbar machen",
+      wiederholungen: 10,
+      schritte: [
+        "Fußpuder-Spray dünn auf die Schlagfläche sprühen.",
+        "Einen Ball schlagen, dann den Abdruck ansehen.",
+        "Mitte, Spitze oder Ferse? Das Muster merken.",
+        "Abwischen, neu sprühen, weiter üben.",
+      ],
+    },
+    kennzahlen: [],
+    quellen: ["ballflug-und-fehler:AY1", "ballflug-und-fehler:GOLF2", "ballflug-und-fehler:TMG1", "ballflug-und-fehler:CAG1"],
+    beleg: "messung",
+  },
+  {
+    id: "ball-slice",
+    pfad: "ballflug",
+    level: "einsteiger",
+    titel: "Slice beheben",
+    kern: "Beim Slice ist die Schlagfläche offen zur Bahn – und die Bahn kommt oft von außen.",
+    bild: "bahnVonAussen",
+    karten: [
+      { text: "Größter Einzelfaktor laut GOLFTEC (14 Mio. Schwünge): die Schlagfläche. Mittlere Handicaps treffen mit ca. 4–7° offener Fläche zur Bahn. Oft hilft schon ein Griff mit 2–3 sichtbaren Knöcheln." },
+      { text: "Zweiter Faktor: Die Bahn kommt von außen, weil Schultern und Arme den Abschwung starten. Mittlere Handicaps kommen ca. 3–6° von außen, Tourspieler im Schnitt 1–3° von innen." },
+      { text: "Dritter Faktor: Early Extension – die Hüfte schiebt zum Ball, die Arme müssen ausweichen. Hilfe: Der Po bleibt hinten, wie bei der App-Übung „Golftasche hinter dem Po“." },
+      { text: "Gegen die Bahn von außen hilft ein Hindernis außen neben dem Ball, etwas vom Ziel weg. Der Schläger läuft innen daran vorbei zum Ball." },
+    ],
+    quiz: {
+      frage: "Was ist laut GOLFTEC der größte Einzelfaktor beim Slice?",
+      antworten: ["Ein zu hohes Tee", "Eine zur Bahn offene Schlagfläche", "Ein zu weicher Schaft"],
+      richtig: 1,
+      erklaerung: "Die offene Fläche zur Bahn ist der größte Faktor. Dazu kommen oft eine Bahn von außen und Early Extension.",
+    },
+    uebung: {
+      name: "Schachtel außen",
+      wiederholungen: 10,
+      schritte: [
+        "Leere Ballschachtel außen neben den Ball, etwas zum rechten Fuß hin.",
+        "Halbe Schwünge: Der Schläger läuft innen an der Schachtel vorbei.",
+        "Klappt es sicher, zu vollen Schwüngen steigern.",
+      ],
+    },
+    kennzahlen: ["hueftBall", "vorneigungHalten"],
+    quellen: ["ballflug-und-fehler:GT1", "ballflug-und-fehler:GT2", "ballflug-und-fehler:HM5"],
+    beleg: "messung",
+  },
+  {
+    id: "ball-fett-getoppt",
+    pfad: "ballflug",
+    level: "einsteiger",
+    titel: "Fett und getoppt: der tiefste Punkt",
+    kern: "Beim Eisen liegt der tiefste Punkt des Schwungs knapp nach dem Ball.",
+    bild: "tiefsterPunkt",
+    karten: [
+      { text: "Fett: Der Schläger trifft zuerst den Boden, der tiefste Punkt liegt zu früh – auf der Seite weg vom Ziel. Häufige Gründe: Das Gewicht bleibt rechts oder die Hände schaufeln." },
+      { text: "Getoppt: Der Schläger trifft den Ball oben. Der Bogen ist zu hoch, weil du dich aufrichtest oder die Arme kurz werden – oder der Schläger steigt schon wieder." },
+      { text: "Wechseln sich fett und getoppt ab, liegt es oft an der Höhe des Bogens: Aufrichten oder Absacken. Hilfe: Größe und Vorneigung halten." },
+    ],
+    quiz: {
+      frage: "Wo liegt beim Eisen der tiefste Punkt des Schwungs?",
+      antworten: ["Knapp vor dem Ball, weg vom Ziel", "Genau unter dem Kopf", "Knapp nach dem Ball, zum Ziel hin"],
+      richtig: 2,
+      erklaerung: "Knapp nach dem Ball, also zum Ziel hin: erst Ball, dann Boden. Das Divot liegt vor dem Ball.",
+    },
+    uebung: {
+      name: "Linien-Übung",
+      wiederholungen: 10,
+      schritte: [
+        "Linie auf den Boden: Kreide oder Handtuchkante.",
+        "Ohne Ball: Bodenkontakt auf oder kurz nach der Linie.",
+        "Dann den Ball auf die Linie legen.",
+        "Das Divot beginnt am Ball und liegt zum Ziel hin.",
+      ],
+    },
+    kennzahlen: ["gewicht", "kopfhoehe", "vorneigungHalten"],
+    quellen: ["ballflug-und-fehler:AY2", "ballflug-und-fehler:HM1", "ballflug-und-fehler:HM2", "ballflug-und-fehler:GOLF3", "ballflug-und-fehler:TM3"],
+    beleg: "zwei-quellen",
+  },
+  {
+    id: "ball-shank",
+    pfad: "ballflug",
+    level: "fortgeschritten",
+    titel: "Shank",
+    kern: "Beim Shank trifft der Hosel – der Übergang vom Schaft zum Schlägerkopf – den Ball.",
+    bild: "hoselTreffer",
+    karten: [
+      { text: "Der Ball schießt fast rechtwinklig nach rechts. Häufige Gründe: zu nah am Ball stehen, die Hüfte schiebt zum Ball (Early Extension) oder das Gewicht rutscht auf die Zehen." },
+      { text: "Schiebt die Hüfte zum Ball, werden die Hände nach außen gedrückt – der Hosel kommt zuerst an den Ball. Hilfe: Der Po bleibt hinten, das Gewicht auf der Fußmitte." },
+      { text: "Check beim Ansprechen: Zwischen Griffende und linkem Oberschenkel passt eine Faust (App-Übung „Faust-Check“). So stimmt der Abstand zum Ball." },
+    ],
+    quiz: {
+      frage: "Welcher Teil des Schlägers trifft beim Shank den Ball?",
+      antworten: ["Die Spitze", "Der Hosel", "Die Sohle"],
+      richtig: 1,
+      erklaerung: "Der Hosel, der Übergang vom Schaft zum Kopf. Der Ball schießt dann fast rechtwinklig nach rechts.",
+    },
+    uebung: {
+      name: "Zwei Bälle",
+      wiederholungen: 10,
+      schritte: [
+        "Zwei Bälle nebeneinander, eine Schlägerkopfbreite Abstand.",
+        "Den inneren Ball treffen, der näher an deinen Füßen liegt.",
+        "Der äußere Ball bleibt liegen.",
+        "Erst halbe Schwünge mit dem Wedge.",
+      ],
+    },
+    kennzahlen: ["armeAnsprechen", "hueftBall", "vorneigungHalten"],
+    quellen: ["ballflug-und-fehler:HM3", "ballflug-und-fehler:GM1", "ballflug-und-fehler:AY3"],
+    beleg: "zwei-quellen",
+  },
+  {
+    id: "ball-weitere",
+    pfad: "ballflug",
+    level: "fortgeschritten",
+    titel: "Hook, Push, Pull und Sky",
+    kern: "Hook, Push, Pull und Sky: Jeder dieser Fehlschläge hat eine typische Ursache.",
+    bild: "fehlerUebersicht",
+    karten: [
+      { text: "Hook: das Spiegelbild des Slice. Die Fläche ist zur Bahn geschlossen – oft durch einen zu starken Griff oder eine Bahn weit von innen. Hilfe: ein Griff mit 2 sichtbaren Knöcheln." },
+      { text: "Push und Pull: gerader Flug in die falsche Richtung, Fläche und Bahn zeigen beide nach rechts oder links. Zeigen die Schultern nach links, fördert das laut GOLFTEC eine Bahn von außen." },
+      { text: "Sky mit dem Driver: Der Ball steigt fast senkrecht, weil der Schläger zu steil kommt und mit der Oberkante trifft. Hilfe: Ball an die linke Ferse, halber Ball über dem Schlägerkopf." },
+    ],
+    quiz: {
+      frage: "Der Ball fliegt gerade, aber deutlich rechts am Ziel vorbei. Wie heißt das?",
+      antworten: ["Hook", "Sky", "Push"],
+      richtig: 2,
+      erklaerung: "Push: Fläche und Bahn zeigen beide nach rechts, der Ball fliegt ohne Kurve daneben.",
+    },
+    kennzahlen: [],
+    quellen: ["ballflug-und-fehler:GT3", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:TM1", "grundlagen:GT1", "ballflug-und-fehler:HM4", "ballflug-und-fehler:MGS1", "vollschwung:GOLF2", "vollschwung:VC1"],
+    beleg: "zwei-quellen",
+  },
 ];
+
+// ---------------------------------------------------------------
+// Ballflug-Helfer (Lektion „Die neun Ballflüge“): Start und Kurve wählen → Name und Ursache.
+// Grundlage: Ballfluggesetze nach TrackMan – die Fläche bestimmt den Start, das Verhältnis
+// Fläche ↔ Bahn die Kurve (docs/wissen/ballflug-und-fehler.md, Tabelle „Die neun Ballflüge“).
+// ---------------------------------------------------------------
+export const BALLFLUG_AUSWAHL = {
+  start: [{ wert: "links", text: "links" }, { wert: "gerade", text: "zum Ziel" }, { wert: "rechts", text: "rechts" }],
+  kurve: [{ wert: "links", text: "nach links" }, { wert: "gerade", text: "keine" }, { wert: "rechts", text: "nach rechts" }],
+};
+
+export const BALLFLUG_NAMEN = {
+  links: { links: "Pull-Hook", gerade: "Pull", rechts: "Pull-Slice" },
+  gerade: { links: "Draw", gerade: "Gerade", rechts: "Fade" },
+  rechts: { links: "Push-Draw", gerade: "Push", rechts: "Push-Slice" },
+};
+
+const START_SATZ = {
+  links: "Die Schlagfläche zeigte im Treffmoment links vom Ziel.",
+  gerade: "Die Schlagfläche zeigte im Treffmoment etwa zum Ziel.",
+  rechts: "Die Schlagfläche zeigte im Treffmoment rechts vom Ziel.",
+};
+const KURVE_SATZ = {
+  links: "Sie war zur Schwungbahn geschlossen – deshalb die Kurve nach links.",
+  gerade: "Sie passte zur Schwungbahn – deshalb fliegt der Ball ohne Kurve.",
+  rechts: "Sie war zur Schwungbahn offen – deshalb die Kurve nach rechts.",
+};
+// Zusatz je Ballflug: Einordnung und die Lektion, die weiterhilft
+const BALLFLUG_ZUSATZ = {
+  "gerade-gerade": { text: "Fläche und Bahn zeigten zum Ziel – genau so soll es sein." },
+  "gerade-links": { text: "Eine leichte Kurve ist gewollt. Kurvt der Ball stark, heißt es Hook.", lektion: "ball-weitere" },
+  "gerade-rechts": { text: "Eine leichte Kurve ist gewollt. Kurvt der Ball stark, heißt es Slice.", lektion: "ball-slice" },
+  "links-links": { text: "Links gestartet und weiter nach links: ein Hook.", lektion: "ball-weitere" },
+  "links-gerade": { text: "Häufiger Grund: Die Schultern zeigen nach links.", lektion: "ball-weitere" },
+  "links-rechts": { text: "Typischer Slice: Die Bahn kam von außen, noch weiter links als die Fläche.", lektion: "ball-slice" },
+  "rechts-links": { text: "Die Bahn kam von innen, noch weiter rechts als die Fläche." },
+  "rechts-gerade": { lektion: "ball-weitere" },
+  "rechts-rechts": { text: "Rechts gestartet und weiter nach rechts: ein Slice.", lektion: "ball-slice" },
+};
+
+// start, kurve = "links" | "gerade" | "rechts" → { name, saetze, lektion } oder null
+export function ballflugErgebnis(start, kurve) {
+  const name = BALLFLUG_NAMEN[start]?.[kurve];
+  if (!name) return null;
+  const zusatz = BALLFLUG_ZUSATZ[`${start}-${kurve}`];
+  return {
+    name,
+    saetze: [START_SATZ[start], KURVE_SATZ[kurve], zusatz.text].filter(Boolean),
+    lektion: zusatz.lektion || null,
+  };
+}
 
 // ---------------------------------------------------------------
 // Kleine Hilfsfunktionen

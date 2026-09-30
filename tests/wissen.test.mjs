@@ -12,10 +12,11 @@ import fs from "node:fs";
 import { fileURLToPath } from "node:url";
 import {
   PFADE, LEKTIONEN, QUELLEN, BELEGE, lektionenImPfad, pfadeFuerLevel, fortschritt,
-  naechsteLektion, leseFortschritt, setzeErledigt, uebungFuer, quelleText,
+  naechsteLektion, leseFortschritt, setzeErledigt, uebungFuer, quelleText, lektion,
+  BALLFLUG_AUSWAHL, BALLFLUG_NAMEN, ballflugErgebnis,
 } from "../wissen.js";
-import { gibtBild, schaubild, FIGUREN, SCHAUBILD_NAMEN } from "../schaubilder.js";
-import { zeichnung, UEBUNGEN_MIT_BILDERN } from "../uebungsbilder.js";
+import { gibtBild, schaubild, ballflugBild, FIGUREN, SCHAUBILD_NAMEN } from "../schaubilder.js";
+import { zeichnung, gesamtDauer, poseZurZeit, UEBUNGEN_MIT_BILDERN, POSEN } from "../uebungsbilder.js";
 import { LEVEL_OPTIONEN, AB_LEVEL } from "../level.js";
 
 const PROJEKT = fileURLToPath(new URL("..", import.meta.url));
@@ -25,6 +26,17 @@ test("Pfad 1 „Start“ hat alle 8 Lektionen – mit festen IDs (daran hängt d
   assert.deepEqual(lektionenImPfad("start").map((l) => l.id), [
     "start-weg", "start-schlaeger", "start-griff", "start-ausrichtung",
     "start-haltung", "start-putt", "start-chip", "start-regeln",
+  ]);
+});
+
+test("Pfad 2 „Vollschwung“ und Pfad 3 „Ballflug“ haben je 7 Lektionen – mit festen IDs", () => {
+  assert.deepEqual(lektionenImPfad("vollschwung").map((l) => l.id), [
+    "voll-phasen", "voll-stand", "voll-rueckschwung", "voll-abschwung",
+    "voll-treffmoment", "voll-finish", "voll-driver-eisen",
+  ]);
+  assert.deepEqual(lektionenImPfad("ballflug").map((l) => l.id), [
+    "ball-gesetze", "ball-neun", "ball-treffpunkt", "ball-slice",
+    "ball-fett-getoppt", "ball-shank", "ball-weitere",
   ]);
 });
 
@@ -133,8 +145,13 @@ test("Schaubilder: gültige Elemente, Zahlen statt NaN, Farben aus style.css", (
   const arten = new Set(["linie", "kreis", "rechteck", "pfad", "text"]);
   const zahlen = (el) => [el.von, el.bis, el.mitte, el.bei, ...(el.punkte || [])].filter(Boolean).flat()
     .concat([el.x, el.y, el.breite, el.hoehe, el.radius].filter((z) => z !== undefined));
-  for (const name of SCHAUBILD_NAMEN) {
-    const bild = schaubild(name);
+  // Alle Schaubilder plus die hervorgehobene Variante und die Bilder des Ballflug-Helfers
+  const bilder = [
+    ...SCHAUBILD_NAMEN.map((name) => [name, schaubild(name)]),
+    ["neunFlugkurven hervorgehoben", schaubild("neunFlugkurven", { start: "links", kurve: "rechts" })],
+    ...["links", "gerade", "rechts"].map((k) => [`ballflugBild rechts/${k}`, ballflugBild("rechts", k)]),
+  ];
+  for (const [name, bild] of bilder) {
     assert.ok(bild.ausschnitt.breite > 0 && bild.ausschnitt.hoehe > 0, `${name}: Ausschnitt`);
     assert.ok(bild.elemente.length > 0, `${name}: leer`);
     assert.ok(bild.elemente.some((el) => el.art === "text"), `${name}: ohne Beschriftung`);
@@ -163,12 +180,75 @@ test("Figuren der Wissensseite stammen aus uebungsbilder.js und lassen sich zeic
     assert.ok(elemente.length > 5, `${name}: Figur leer`);
     // Von hinten nur Standbilder (Regel aus uebungsbilder.js)
     if (bild.ansicht === "hinten") assert.equal(bild.folge.length, 1, `${name}: von hinten nur ein Standbild`);
+    // Von vorn nur die echten Profi-Posen – keine selbst ausgedachten Posen
+    if (bild.ansicht === "vorne") {
+      for (const f of bild.folge) assert.ok(typeof f.pose === "string" && f.pose in POSEN, `${name}: Pose ${f.pose} ist keine Profi-Pose`);
+    }
   }
+});
+
+test("Animierte Figur P1–P10: Beschriftung nur beim Anhalten in der Position, Zahlen gültig", () => {
+  const bild = FIGUREN.schwungPhasen;
+  // Jede Pause trägt eine P-Nummer, jeder Weg dorthin ist unbeschriftet
+  for (const f of bild.folge) {
+    if (f.halten) assert.match(f.text, /^P\d+ · /, `${f.pose}: Pause ohne P-Nummer`);
+    else assert.equal(f.text, "", `${f.pose}: unterwegs beschriftet`);
+  }
+  const gesamt = gesamtDauer(bild);
+  let beschriftet = 0;
+  for (let ms = 0; ms < gesamt; ms += 97) {
+    const { elemente, text } = zeichnung(bild, ms, true);
+    if (text) beschriftet++;
+    for (const el of elemente) {
+      for (const z of [el.von, el.bis, el.mitte].filter(Boolean).flat()) assert.ok(Number.isFinite(z), `bei ${ms} ms: ungültige Zahl`);
+    }
+  }
+  assert.ok(beschriftet > 0);
+  // Mitten in der Pause bei P6 steht der Schaft wirklich waagerecht (Winkel 180°)
+  let zeit = 0;
+  for (const f of bild.folge) {
+    zeit += f.dauer || 0;
+    if (f.text?.startsWith("P6")) {
+      const mitte = zeit + f.halten / 2;
+      assert.equal(zeichnung(bild, mitte, true).text, "P6 · Schaft waagerecht");
+      assert.equal(poseZurZeit(bild, mitte).pose.w, 180);
+      break;
+    }
+    zeit += f.halten || 0;
+  }
+});
+
+test("Ballflug-Helfer: jede der 9 Kombinationen hat Namen, kurze Erklärung, Bild und gültige Lektion", () => {
+  const namen = new Set();
+  for (const { wert: start } of BALLFLUG_AUSWAHL.start) {
+    for (const { wert: kurve } of BALLFLUG_AUSWAHL.kurve) {
+      const e = ballflugErgebnis(start, kurve);
+      assert.ok(e, `${start}/${kurve}: kein Ergebnis`);
+      namen.add(e.name);
+      assert.equal(e.name, BALLFLUG_NAMEN[start][kurve], "Name wie im Schaubild");
+      assert.ok(e.saetze.length >= 2, `${start}/${kurve}: Erklärung fehlt`);
+      const laenge = woerter(e.saetze.join(" ")).length;
+      assert.ok(laenge <= 40, `${start}/${kurve}: Erklärung hat ${laenge} Wörter`);
+      if (e.lektion) assert.ok(lektion(e.lektion), `${start}/${kurve}: Lektion ${e.lektion} fehlt`);
+      assert.ok(ballflugBild(start, kurve).elemente.length > 3, `${start}/${kurve}: Bild leer`);
+      assert.ok(schaubild("neunFlugkurven", { start, kurve }).elemente.length > 9, "Hervorhebung klappt");
+    }
+  }
+  assert.equal(namen.size, 9, "neun verschiedene Namen");
+  // Unbekannte Werte führen nicht zum Absturz
+  assert.equal(ballflugErgebnis("oben", "links"), null);
+  assert.equal(ballflugErgebnis("__proto__", "links"), null);
+  assert.equal(ballflugBild("oben", "links"), null);
+  // Nur die Lektion mit Werkzeug zeigt den Helfer
+  assert.deepEqual(LEKTIONEN.filter((l) => l.werkzeug).map((l) => [l.id, l.werkzeug]), [["ball-neun", "ballflugHelfer"]]);
 });
 
 test("Pfade: passender Pfad oben, Fortschritt „x von y“, nächste Lektion", () => {
   assert.equal(pfadeFuerLevel("einsteiger")[0].id, "start");
+  assert.deepEqual(pfadeFuerLevel("fortgeschritten").map((p) => p.id), ["vollschwung", "ballflug", "start"]);
   assert.equal(pfadeFuerLevel("koenner").length, PFADE.length);
+  assert.deepEqual(fortschritt("ballflug", ["ball-neun", "start-weg"]), { erledigt: 1, gesamt: 7 });
+  assert.equal(naechsteLektion("voll-driver-eisen"), null, "Pfadende – kein Sprung in den nächsten Pfad");
   assert.deepEqual(fortschritt("start", ["start-weg", "start-griff", "fremd"]), { erledigt: 2, gesamt: 8 });
   assert.equal(naechsteLektion("start-weg").id, "start-schlaeger");
   assert.equal(naechsteLektion("start-regeln"), null);
