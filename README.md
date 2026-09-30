@@ -272,6 +272,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
 | `.nojekyll` | Leere Datei: GitHub Pages zeigt die Dateien unverändert an, statt sie umzubauen |
 | `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
+| `.github/agents/golf-app-sicherheitspruefer.agent.md` | Agent „Golf-App-Sicherheitsprüfer“ für GitHub Copilot (z. B. in VS Code): prüft Änderungen nur lesend auf Sicherheit und Datenschutz – schnelle Einzelprüfung; die Gesamtprüfung bleibt `/golf-app-check` |
 | `docs/` | Pläne und Entscheidungen |
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
