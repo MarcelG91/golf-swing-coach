@@ -34,6 +34,9 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
 - Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
   Sitzung hält zusätzlich fest, welches Level beim Speichern gewählt war.
+- Der Lernfortschritt der Wissensseite liegt unter `localStorage`-Schlüssel `wissenFortschritt`
+  (nur Liste erledigter Lektions-IDs, keine Schwungdaten). „Alles löschen“ lässt ihn stehen wie das
+  Level (Test: `tests/sicherheit.test.mjs`).
 - Hell/Dunkel liegt unter `localStorage`-Schlüssel `darstellung` (`auto`/`hell`/`dunkel`, `darstellung.js`).
   Farben nur über die Variablen oben in `style.css` setzen (beide Farbsätze pflegen).
 - **Keine Videos, keine exportierten Posedaten ins Repo** (`tests/keine-videos.test.mjs`
@@ -62,7 +65,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Jede asynchrone Aktion mit Fehlerbehandlung; gesperrte Knöpfe im `finally` wieder freigeben.
 - Browser-Adressen aus `URL.createObjectURL` wieder freigeben (bei Downloads verzögert).
 - In Commits, Pull Requests und `docs/sicherheit/` keine Details zu noch offenen Lücken.
-- **Löschen fasst nur die Schwung-Datenbank an** – nie `localStorage` (Level, später Coach-Schlüssel)
+- **Löschen fasst nur die Schwung-Datenbank an** – nie `localStorage` (Level, Lernfortschritt, Coach-Schlüssel)
   und nie die Offline-Dateien. Kein `localStorage.clear()`, kein `deleteDatabase`; darüber wacht
   `tests/sicherheit.test.mjs`. Vor „Videos löschen“ und „Alles löschen“ zeigt die App im Dialog, was
   gelöscht wird und was bleibt („Schwung/Sitzung löschen“ fragen weiter kurz per `confirm()`).
@@ -80,6 +83,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
+| `wissen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `style.css` · `darstellung.js` | Aussehen (Design-Variablen, Hell/Dunkel) · Umschalter Hell/Dunkel/Automatisch |
@@ -134,7 +138,8 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
    Seite lädt, „Bereit“, keine Konsolenfehler.
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
    Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
-9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`): vierter Bereich
+9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1
+   `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. Vierter Bereich
    „📖 Wissen“, 6 Lernpfade / 40 Lektionen (Bild, Karten, Quiz, Übung, ✓-Fortschritt) + Nachschlagen mit
    **Ballflug-Helfer**. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet). In 5 Schritten
    (Branches `wissen-geruest` → `wissen-schaubilder` → `wissen-pfade-2-3` → `wissen-pfade-4-6` → `wissen-nachschlagen`).

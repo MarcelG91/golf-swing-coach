@@ -26,6 +26,10 @@
   --auf-farbe: #06140c;      /* Schrift auf den farbigen Abzeichen */
   --rot-text: #ef4444;
   --gelb-text: #facc15;
+  /* Pfahlfarben auf dem Golfplatz (Schaubild in der Wissensseite) */
+  --pfahl-weiss: #ffffff;
+  --pfahl-gelb: #facc15;
+  --pfahl-rot: #dc2626;
 
   /* Kleine farbige Kästen in den Karten */
   --tipp-grund: #1a2b23;
@@ -54,6 +58,7 @@
     --text: #13301f; --text-leise: #6b6a5c; --akzent: #13402a; --akzent-marke: #7a5f26; --auf-akzent: #f6f1e6;
     --gut: #2f6b3f; --achtung: #9a5a1f; --verbessern: #8c3f2e; --info: #0369a1; --auf-farbe: #ffffff;
     --rot-text: #dc2626; --gelb-text: #a16207;
+    --pfahl-weiss: #ffffff; --pfahl-gelb: #eab308; --pfahl-rot: #dc2626;
     --tipp-grund: #efe6d5; --gefuehl-grund: #e7f0fb; --gedanke-verlauf: #f1e6cf;
     --skala-rot: #f4ddd3; --skala-gut: #dcead8; --skala-achtung: #f1e0b8;
     --schatten: 0 1px 2px rgba(19, 48, 31, 0.06), 0 6px 20px rgba(19, 48, 31, 0.08);
@@ -65,6 +70,7 @@
   --text: #13301f; --text-leise: #6b6a5c; --akzent: #13402a; --akzent-marke: #7a5f26; --auf-akzent: #f6f1e6;
   --gut: #2f6b3f; --achtung: #9a5a1f; --verbessern: #8c3f2e; --info: #0369a1; --auf-farbe: #ffffff;
   --rot-text: #dc2626; --gelb-text: #a16207;
+  --pfahl-weiss: #ffffff; --pfahl-gelb: #eab308; --pfahl-rot: #dc2626;
   --tipp-grund: #efe6d5; --gefuehl-grund: #e7f0fb; --gedanke-verlauf: #f1e6cf;
   --skala-rot: #f4ddd3; --skala-gut: #dcead8; --skala-achtung: #f1e0b8;
   --schatten: 0 1px 2px rgba(19, 48, 31, 0.06), 0 6px 20px rgba(19, 48, 31, 0.08);
@@ -870,6 +876,62 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
   cursor: pointer;
 }
 .loesch-dialog button:disabled { cursor: not-allowed; }
+
+/* ---------------------------------------------------------------------
+   Wissen: Lernpfade (Übersicht) und Lektionen (Wisch-Karten wie die Baustellen)
+   --------------------------------------------------------------------- */
+.pfad {
+  background: var(--flaeche);
+  border: 1px solid var(--rand);
+  border-radius: var(--r);
+  padding: 14px 16px 16px;
+  margin-bottom: 14px;
+}
+.pfad h3 { margin: 0 0 4px; font-size: 1.1rem; }
+.pfad .dein-pfad {
+  margin: 0 0 6px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--akzent-marke);
+}
+.pfad-balken { height: 6px; border-radius: 3px; background: var(--rand); overflow: hidden; }
+.pfad-balken i { display: block; height: 100%; background: var(--akzent); transition: width 0.3s; }
+.pfad-stand { margin: 6px 0 0; font-size: 0.85rem; color: var(--text-leise); }
+.lektionen-liste { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; }
+.lektionen-liste button {
+  width: 100%; display: flex; align-items: center; gap: 10px; text-align: left;
+  padding: 11px 12px; border: none; border-radius: var(--r-klein);
+  background: var(--flaeche-innen); color: var(--text); font-size: 0.95rem; cursor: pointer;
+}
+.lektion-nr {
+  width: 26px; height: 26px; flex-shrink: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1.5px solid var(--rand); font-size: 0.8rem; font-weight: 700; color: var(--text-leise);
+}
+.lektionen-liste button.erledigt .lektion-nr { background: var(--gut); border-color: var(--gut); color: var(--auf-farbe); }
+
+/* Lektionskarten: gleiche Karten wie die Baustellen (Klasse "baustelle"), Farbe = Akzent */
+.karte.lektion { --farbe: var(--akzent-marke); }
+.karte.lektion .inhalt { margin-top: 14px; font-size: 1.08rem; line-height: 1.5; }
+.karte.lektion button.breit { width: 100%; margin-top: 10px; }
+.schaubild { background: var(--flaeche-innen); border-radius: var(--r-klein); margin-top: 10px; padding: 6px 4px; }
+.schaubild svg { display: block; width: 100%; height: 170px; font-family: inherit; }
+.quiz-antworten { display: grid; gap: 8px; margin-top: 14px; }
+.quiz-antworten button {
+  text-align: left; padding: 12px 14px; font-size: 1rem; line-height: 1.35;
+  border: 1px solid var(--rand); border-radius: var(--r-klein);
+  background: var(--flaeche-innen); color: var(--text); cursor: pointer;
+}
+/* Nach dem Antworten gesperrt – aber gut lesbar, nicht blass */
+.quiz-antworten button:disabled { opacity: 0.6; cursor: default; }
+.quiz-antworten button.richtig { opacity: 1; border-color: var(--gut); box-shadow: 0 0 0 1px var(--gut); }
+.quiz-antworten button.falsch { opacity: 1; border-color: var(--verbessern); box-shadow: 0 0 0 1px var(--verbessern); }
+/* Richtig/falsch auch ohne Farbe erkennbar (Rot-Grün-Schwäche) */
+.quiz-antworten button.richtig::before { content: "✓ "; font-weight: 700; color: var(--gut); }
+.quiz-antworten button.falsch::before { content: "✗ "; font-weight: 700; color: var(--verbessern); }
+.quiz-erklaerung { min-height: 1.4em; }
+.quiz-erklaerung:focus { outline: none; }
+.quellen { color: var(--text-leise); font-size: 0.82rem; }
+.quellen p { margin-top: 10px; }
+.quellen ul { margin: 4px 0 0; padding-left: 18px; }
 
 /* ---------------------------------------------------------------------
    Übungsmodus: Vollbild, große Schrift und große Knöpfe für die Range

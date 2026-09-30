@@ -53,6 +53,9 @@ import { tipp, gutText, skala, skalaPosition } from "./tipps.js";
 import { strichfigur } from "./strichfigur.js";
 // Strichfiguren zu den Übungen (Übungsmodus)
 import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
+// Wissen: Lernpfade, Lektionen, Quellen (reine Daten) und die Schaubilder dazu
+import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion } from "./wissen.js";
+import { schaubild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
 import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
@@ -105,9 +108,20 @@ const schwungTitel = $("schwungTitel");
 const zuAnalyseBtn = $("zuAnalyse");
 const zuGespeichertBtn = $("zuGespeichert");
 const zuEinstellungenBtn = $("zuEinstellungen");
+const zuWissenBtn = $("zuWissen");
 const analyseBereich = $("analyseBereich");
 const gespeichertBereich = $("gespeichertBereich");
 const einstellungenBereich = $("einstellungenBereich");
+// Wissen: Übersicht der Lernpfade und eine Lektion als Wisch-Karten
+const wissenBereich = $("wissenBereich");
+const wissenUebersicht = $("wissenUebersicht");
+const pfadListe = $("pfadListe");
+const wissenLektion = $("wissenLektion");
+const wissenZurueckBtn = $("wissenZurueck");
+const lektionTitel = $("lektionTitel");
+const lektionZaehler = $("lektionZaehler");
+const lektionKarten = $("lektionKarten");
+const lektionPunkte = $("lektionPunkte");
 const levelAnzeige = $("levelAnzeige");
 const levelAuswahl = $("levelAuswahl");
 const levelVorschlagBox = $("levelVorschlag");
@@ -977,7 +991,7 @@ async function waehleSchwung(s) {
 
 function setzeKnoepfeAktiv(aktiv) {
   // Umschalter auch sperren: Ein Wechsel hält das Video an und würde Analyse/Speichern stören
-  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput, zuAnalyseBtn, zuGespeichertBtn, zuEinstellungenBtn]) {
+  for (const knopf of [playPauseBtn, zurueckBtn, vorBtn, videoInput, zuAnalyseBtn, zuGespeichertBtn, zuWissenBtn, zuEinstellungenBtn]) {
     knopf.disabled = !aktiv;
   }
   analysierenBtn.disabled = !aktiv || poseStatus !== "bereit";
@@ -1315,7 +1329,12 @@ function halteUebungsbildAn() {
 }
 
 // Linien, Kreise, Rechtecke und Texte aus uebungsbilder.js als SVG zeichnen
-function zeichneUebungsbild({ ausschnitt: a, elemente, text }) {
+function zeichneUebungsbild(bild) {
+  uebungBild.replaceChildren(uebungsbildSvg(bild));
+  uebungTakt.textContent = bild.text;
+}
+
+function uebungsbildSvg({ ausschnitt: a, elemente }) {
   const huelle = document.createElement("div");
   huelle.innerHTML = "<svg></svg>"; // fester Text – den Namensraum liefert der Browser
   const svg = huelle.firstChild;
@@ -1341,8 +1360,7 @@ function zeichneUebungsbild({ ausschnitt: a, elemente, text }) {
     }
     svg.append(neuesElement);
   }
-  uebungBild.replaceChildren(svg);
-  uebungTakt.textContent = text;
+  return svg;
 }
 
 // Bildschirm anlassen (Wake Lock). Kann nicht jeder Browser – dann geht es einfach ohne.
@@ -1367,6 +1385,223 @@ async function bildschirmAnlassen() {
 function bildschirmFreigeben() {
   bildschirmSperre?.release().catch((fehler) => console.warn(fehler));
   bildschirmSperre = null;
+}
+
+// ---------------------------------------------------------------
+// Wissen: Lernpfade und Lektionen (Daten in wissen.js, Bilder in schaubilder.js)
+// Fortschritt = Liste erledigter Lektions-IDs im localStorage "wissenFortschritt".
+// Er enthält keine Schwungdaten und bleibt bei "Alles löschen" erhalten (wie das Level).
+// ---------------------------------------------------------------
+const FORTSCHRITT_NAME = "wissenFortschritt";
+let wissenErledigt = leseFortschritt(leseEinstellung(FORTSCHRITT_NAME)); // mit try/catch, siehe leseEinstellung
+const LEVEL_SYMBOL = Object.fromEntries(LEVEL_OPTIONEN.map((o) => [o.wert, o.symbol]));
+
+function merkeErledigt(id, ja) {
+  wissenErledigt = setzeErledigt(wissenErledigt, id, ja);
+  try {
+    localStorage.setItem(FORTSCHRITT_NAME, JSON.stringify(wissenErledigt));
+  } catch (fehler) {
+    // Speicher voll oder gesperrt: Das Häkchen gilt dann nur bis zum Schließen der App
+    console.warn("Lernfortschritt nicht gespeichert:", fehler);
+  }
+}
+
+// Übersicht: alle Pfade, der zum Level passende oben, mit "x von y" und den Lektionen
+function zeigeWissenUebersicht() {
+  wissenLektion.hidden = true;
+  wissenUebersicht.hidden = false;
+  lektionKarten.replaceChildren();
+  pfadListe.replaceChildren();
+  for (const pfad of pfadeFuerLevel(aktuellesLevel)) {
+    const { erledigt, gesamt } = fortschritt(pfad.id, wissenErledigt);
+    const box = neu("section", "pfad");
+    if (pfad.level === aktuellesLevel) box.append(neu("p", "dein-pfad", "Dein Pfad"));
+    box.append(neu("h3", "", `${LEVEL_SYMBOL[pfad.level]} ${pfad.titel}`));
+    box.append(neu("p", "hinweis", pfad.beschreibung));
+    const balken = neu("div", "pfad-balken");
+    const fuellung = neu("i");
+    fuellung.style.width = `${Math.round((erledigt / gesamt) * 100)}%`;
+    balken.append(fuellung);
+    box.append(balken, neu("p", "pfad-stand", `${erledigt} von ${gesamt} erledigt`));
+
+    const liste = neu("ol", "lektionen-liste");
+    lektionenImPfad(pfad.id).forEach((l, i) => {
+      const fertig = wissenErledigt.includes(l.id);
+      const knopf = neu("button", fertig ? "erledigt" : "");
+      knopf.append(neu("span", "lektion-nr", fertig ? "✓" : String(i + 1)), neu("span", "", l.titel));
+      knopf.setAttribute("aria-label", `${l.titel}${fertig ? ", erledigt" : ""}`);
+      knopf.addEventListener("click", () => oeffneLektion(l.id));
+      const eintrag = neu("li");
+      eintrag.append(knopf);
+      liste.append(eintrag);
+    });
+    box.append(liste);
+    pfadListe.append(box);
+  }
+  pfadListe.append(neu("p", "hinweis klein-text", "Weitere Lernpfade folgen: Vollschwung, Ballflug, rund ums Grün, clever spielen, besser üben."));
+}
+
+// Eine Lektion als Wisch-Karten: Bild + Kernsatz · Inhaltskarten · Quiz · Abschluss
+function oeffneLektion(id) {
+  const l = lektion(id);
+  if (!l) return;
+  const imPfad = lektionenImPfad(l.pfad);
+  wissenUebersicht.hidden = true;
+  wissenLektion.hidden = false;
+  lektionTitel.textContent = l.titel;
+
+  const karten = [];
+  // 1. Bildkarte
+  const bildKarte = lektionsKarte(`Lektion ${imPfad.indexOf(l) + 1} von ${imPfad.length} · ${LEVEL_SYMBOL[l.level]}`);
+  bildKarte.append(wissensBild(l.bild), neu("p", "kurz", l.kern));
+  karten.push(bildKarte);
+  // 2. Inhaltskarten
+  l.karten.forEach((k, i) => {
+    const karte = lektionsKarte(`${i + 1} von ${l.karten.length}`);
+    if (k.bild) karte.append(wissensBild(k.bild));
+    karte.append(neu("p", "inhalt", k.text));
+    karten.push(karte);
+  });
+  // 3. Quiz und 4. Abschluss
+  karten.push(quizKarte(l.quiz), abschlussKarte(l));
+
+  lektionKarten.replaceChildren(...karten);
+  lektionKarten.scrollLeft = 0;
+  aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler);
+  wissenBereich.scrollIntoView({ block: "start" });
+  lektionTitel.focus({ preventScroll: true });
+}
+
+// Gleicher Aufbau wie die Baustellen-Karten (Strich, kleine Überschrift)
+function lektionsKarte(ueberschrift) {
+  const karte = neu("article", "karte baustelle lektion");
+  karte.append(neu("div", "baustelle-strich"), neu("p", "abzeichen-text", ueberschrift));
+  return karte;
+}
+
+function quizKarte(quiz) {
+  const karte = lektionsKarte("Quiz");
+  karte.append(neu("p", "kurz", quiz.frage));
+  const antworten = neu("div", "quiz-antworten");
+  const erklaerung = neu("p", "quiz-erklaerung");
+  erklaerung.tabIndex = -1; // bekommt nach der Antwort den Fokus – die Knöpfe sind dann gesperrt
+  const knoepfe = quiz.antworten.map((text, i) => {
+    const knopf = neu("button", "", text);
+    knopf.addEventListener("click", () => {
+      // Nach dem Tippen: richtige Antwort grün, falsch gewählte rot, dann die Erklärung
+      for (const [j, k] of knoepfe.entries()) {
+        k.disabled = true;
+        if (j === quiz.richtig) k.classList.add("richtig");
+        else if (j === i) k.classList.add("falsch");
+      }
+      erklaerung.textContent = `${i === quiz.richtig ? "✓ Richtig! " : "Nicht ganz. "}${quiz.erklaerung}`;
+      // Gesperrte Knöpfe verlieren den Fokus – sonst springt er (Tastatur, VoiceOver) an den Seitenanfang
+      erklaerung.focus({ preventScroll: true });
+    });
+    return knopf;
+  });
+  antworten.append(...knoepfe);
+  karte.append(antworten, erklaerung);
+  return karte;
+}
+
+function abschlussKarte(l) {
+  const karte = lektionsKarte("Geschafft");
+  karte.append(neu("p", "kurz", "Lektion erledigt?"));
+  const erledigtKnopf = neu("button", "haupt breit");
+  const zeigeStand = () => {
+    const fertig = wissenErledigt.includes(l.id);
+    erledigtKnopf.textContent = fertig ? "✓ Erledigt – antippen zum Zurücknehmen" : "✓ Als erledigt markieren";
+    erledigtKnopf.setAttribute("aria-pressed", String(fertig));
+  };
+  erledigtKnopf.addEventListener("click", () => {
+    merkeErledigt(l.id, !wissenErledigt.includes(l.id));
+    zeigeStand();
+  });
+  zeigeStand();
+  karte.append(erledigtKnopf);
+
+  const uebung = uebungFuer(l, true); // Texte der Wissensseite gelten für Rechtshänder
+  if (uebung) {
+    const starten = neu("button", "klein breit", `Übung starten: ${uebung.name} · ${uebung.wiederholungen}×`);
+    starten.addEventListener("click", () => oeffneUebung(uebung, ""));
+    karte.append(starten);
+  }
+  const naechste = naechsteLektion(l.id);
+  const weiter = neu("button", "klein breit", naechste ? `Nächste Lektion: ${naechste.titel} ›` : "Zur Übersicht ›");
+  weiter.addEventListener("click", () => (naechste ? oeffneLektion(naechste.id) : zeigeWissenUebersicht()));
+  karte.append(weiter);
+
+  karte.append(neu("div", "trenner"));
+  const quellen = neu("div", "quellen");
+  quellen.append(neu("p", "", `Belegt durch: ${BELEGE[l.beleg]}`));
+  const liste = neu("ul");
+  for (const kennung of l.quellen) liste.append(neu("li", "", quelleText(kennung)));
+  quellen.append(neu("p", "", "Quellen:"), liste);
+  karte.append(quellen);
+  return karte;
+}
+
+// Bild zur Lektion: Figur aus echten Posen (dunkler Kasten wie bei den Übungen)
+// oder Schaubild in den Farben der Seite (hell/dunkel)
+function wissensBild(name) {
+  if (FIGUREN[name]) {
+    const box = neu("div", "figur");
+    box.setAttribute("aria-hidden", "true");
+    box.append(uebungsbildSvg(zeichnung(FIGUREN[name], 0, true)));
+    return box;
+  }
+  const box = neu("div", "schaubild");
+  box.setAttribute("aria-hidden", "true"); // Der Kernsatz daneben sagt dasselbe in Worten
+  const bild = schaubild(name);
+  if (bild) box.append(schaubildSvg(bild));
+  return box;
+}
+
+// Schaubild als SVG. Farben sind Namen von Variablen aus style.css → var(--name).
+function schaubildSvg({ ausschnitt: a, elemente }) {
+  const huelle = document.createElement("div");
+  huelle.innerHTML = "<svg></svg>"; // fester Text – den Namensraum liefert der Browser
+  const svg = huelle.firstChild;
+  const SVG = svg.namespaceURI;
+  svg.setAttribute("viewBox", `${a.x} ${a.y} ${a.breite} ${a.hoehe}`);
+  const farbe = (name) => (name ? `var(--${name})` : "none");
+  for (const el of elemente) {
+    let neuesElement;
+    const attribute = {};
+    if (el.art === "linie") {
+      neuesElement = document.createElementNS(SVG, "line");
+      Object.assign(attribute, { x1: el.von[0], y1: el.von[1], x2: el.bis[0], y2: el.bis[1] });
+    } else if (el.art === "kreis") {
+      neuesElement = document.createElementNS(SVG, "circle");
+      Object.assign(attribute, { cx: el.mitte[0], cy: el.mitte[1], r: el.radius });
+    } else if (el.art === "rechteck") {
+      neuesElement = document.createElementNS(SVG, "rect");
+      Object.assign(attribute, { x: el.x, y: el.y, width: el.breite, height: el.hoehe, rx: el.rundung });
+    } else if (el.art === "pfad") {
+      // Mit Füllung geschlossen (Polygon), sonst offener Linienzug
+      neuesElement = document.createElementNS(SVG, el.fuellung ? "polygon" : "polyline");
+      attribute.points = el.punkte.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ");
+    } else if (el.art === "text") {
+      neuesElement = document.createElementNS(SVG, "text");
+      Object.assign(attribute, { x: el.bei[0], y: el.bei[1], "font-size": el.groesse, "text-anchor": el.anker, "font-weight": el.fett ? 700 : 400 });
+      neuesElement.textContent = el.inhalt;
+      neuesElement.style.fill = farbe(el.farbe);
+    }
+    for (const [name, wert] of Object.entries(attribute)) neuesElement.setAttribute(name, wert);
+    if (el.art !== "text") {
+      // Farben per style, weil var(--…) in SVG-Attributen nicht überall wirkt
+      neuesElement.style.stroke = farbe(el.farbe);
+      neuesElement.style.fill = farbe(el.fuellung);
+      // Beim Rechteck ist "breite" die Breite – die Strichstärke steht dort in "strich"
+      neuesElement.setAttribute("stroke-width", el.art === "rechteck" ? el.strich : el.breite);
+      neuesElement.setAttribute("stroke-linecap", "round");
+      neuesElement.setAttribute("stroke-linejoin", "round");
+      if (el.gestrichelt) neuesElement.setAttribute("stroke-dasharray", "6 5");
+    }
+    svg.append(neuesElement);
+  }
+  return svg;
 }
 
 // ---------------------------------------------------------------
@@ -1754,21 +1989,26 @@ function baueFigur(k) {
   return box;
 }
 
-// Punkte unter den Wisch-Karten und "1 von 3" passend zur sichtbaren Karte
-function aktualisiereKartenPunkte() {
-  const karten = [...baustellenListe.children];
+// Punkte unter den Wisch-Karten und "1 von 3" passend zur sichtbaren Karte.
+// Gilt für die Baustellen und für die Lektionen im Bereich Wissen.
+function aktualisierePunkte(liste, punkte, zaehler) {
+  const karten = [...liste.children];
   if (karten.length < 2) {
-    kartenPunkte.replaceChildren();
-    kartenZaehler.textContent = "";
+    punkte.replaceChildren();
+    zaehler.textContent = "";
     return;
   }
   const breite = karten[0].offsetWidth + 28; // 28 = Abstand zwischen den Karten (style.css)
-  const nummer = breite > 12 ? Math.min(karten.length - 1, Math.round(baustellenListe.scrollLeft / breite)) : 0;
-  if (kartenPunkte.children.length !== karten.length) {
-    kartenPunkte.replaceChildren(...karten.map(() => neu("i")));
+  const nummer = breite > 12 ? Math.min(karten.length - 1, Math.round(liste.scrollLeft / breite)) : 0;
+  if (punkte.children.length !== karten.length) {
+    punkte.replaceChildren(...karten.map(() => neu("i")));
   }
-  [...kartenPunkte.children].forEach((punkt, i) => punkt.classList.toggle("aktiv", i === nummer));
-  kartenZaehler.textContent = `${nummer + 1} von ${karten.length} · wischen ›`;
+  [...punkte.children].forEach((punkt, i) => punkt.classList.toggle("aktiv", i === nummer));
+  zaehler.textContent = `${nummer + 1} von ${karten.length} · wischen ›`;
+}
+
+function aktualisiereKartenPunkte() {
+  aktualisierePunkte(baustellenListe, kartenPunkte, kartenZaehler);
 }
 
 // Rechts- oder Linkshänder? Für "linker/rechter Arm" in den Tipps.
@@ -2050,10 +2290,16 @@ function zeigeBereich(welcher) {
   if (!aktuellesLevel) welcher = "einstellungen";
   analyseBereich.hidden = welcher !== "analyse";
   gespeichertBereich.hidden = welcher !== "gespeichert";
+  wissenBereich.hidden = welcher !== "wissen";
   einstellungenBereich.hidden = welcher !== "einstellungen";
   zuAnalyseBtn.classList.toggle("aktiv", welcher === "analyse");
   zuGespeichertBtn.classList.toggle("aktiv", welcher === "gespeichert");
+  zuWissenBtn.classList.toggle("aktiv", welcher === "wissen");
   zuEinstellungenBtn.classList.toggle("aktiv", welcher === "einstellungen");
+  if (welcher === "wissen") {
+    video.pause();
+    zeigeWissenUebersicht();
+  }
   if (welcher === "gespeichert") {
     video.pause();
     zeigeMeineSchwuenge().catch((fehler) => {
@@ -2401,7 +2647,7 @@ async function loescheAllesAusEinstellungen() {
       ...bilderZeilen(zaehleBilder(groessen, schwungIds)),
     ],
     bleibt: [
-      "dein Level und dein Coach-Schlüssel",
+      "dein Level, dein Lernfortschritt unter „Wissen“ und dein Coach-Schlüssel",
       "die App selbst und die Offline-Dateien (Pose-Erkennung)",
       "deine Originalvideos in der Fotos-App",
       "Dateien, die du exportiert hast",
@@ -2581,6 +2827,9 @@ document.addEventListener("visibilitychange", () => { if (aktiveUebung && docume
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
+zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
+wissenZurueckBtn.addEventListener("click", zeigeWissenUebersicht);
+lektionKarten.addEventListener("scroll", () => aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler), { passive: true });
 schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
 sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 videosSitzungLoeschenBtn.addEventListener("click", loescheVideosDerSitzung);

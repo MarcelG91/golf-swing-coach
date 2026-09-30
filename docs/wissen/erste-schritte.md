@@ -21,7 +21,14 @@ Schläger ausführlich in `ausruestung.md`.
 
 ## 2. Was man zuerst lernen sollte (🌱)
 
-Reihenfolge, wie sie in vielen Platzreifekursen üblich ist (vom Loch weg):
+**Belegt (mehrere Quellen)**: Am Anfang **viel kurzes Spiel** (Putten, Chippen, Pitchen), dann Vollschwung
+mit Eisen. golf-mag.de rät in den ersten 8 Wochen zu rund **70 % der Übungszeit fürs kurze Spiel**, erst
+danach volle Schwünge an der Range [GM1]; ein Einsteiger-Programm nennt: Griff, Stand und Haltung, dann
+Putten und Chippen, dann Eisen-Schwung [BGL1]. Dazu passt Pelz (viele Schläge nahe am Grün) [PELZ1] und
+Practical Golf (schnellste Erfolge im kurzen Spiel, `kurzes-spiel.md` [PG1]).
+
+Feinere Reihenfolge, wie sie in vielen Platzreifekursen üblich ist (vom Loch weg) – **nur eine Quelle**
+[BGL1], deshalb in der App nicht als feste Regel:
 1. **Putten** – Länge und Ziel.
 2. **Chippen** – kleine Bewegung, sauberer Ballkontakt.
 3. **Pitchen** – Handgelenk kommt dazu.
@@ -33,6 +40,11 @@ viel Umlernen. Die App ersetzt keinen Golflehrer, sondern hilft beim Üben zwisc
 
 ## 3. Die Schläger im Überblick (🌱)
 
+Loft-Bereiche laut zwei Tabellen [VES2][MIT1] (je nach Hersteller verschieden, es gibt keinen Standard [MIT1]):
+Driver 8–12° · 3er-Holz 13–16° · 7er-Eisen 32–37° · Pitching Wedge 42–48° · Sand Wedge 54–58° · Putter
+ca. 2–4°. **In der App** nur Werte, die in beiden Bereichen liegen: Driver ca. 10°, 7er ca. 34°, Sand Wedge
+ca. 56°.
+
 | Schläger | Wofür? | Loft (ca.) |
 |---|---|---|
 | **Driver** (Holz 1) | Abschlag auf langen Löchern | 9–12° |
@@ -43,14 +55,18 @@ viel Umlernen. Die App ersetzt keinen Golflehrer, sondern hilft beim Üben zwisc
 | **Gap/Sand/Lob Wedge** | Kurze hohe Schläge, Bunker | 50–60° |
 | **Putter** | Auf dem Grün | 2–4° |
 
-Mehr Loft = höherer Flug, kürzer, mehr Rückwärtsdrall. Zwischen zwei Eisen liegen oft ca. 10 m
+Mehr Loft = höherer Abflug, mehr Rückwärtsdrall, steilere Landung, weniger Rollen [VES2]; TrackMan:
+der Loft im Treffmoment bestimmt Abflughöhe und Spin (`ballflug-und-fehler.md` [TM4]). Zwischen zwei Eisen liegen oft ca. 10 m
 Unterschied (stark abhängig vom Spieler).
 
 ## 4. Einsteiger-Satz (🌱)
 
 - Erlaubt sind **14 Schläger** – Einsteiger brauchen viel weniger. Ein **halber Satz mit ca. 7
   Schlägern** reicht: z. B. Holz/Hybrid, 7er, 9er, PW, SW, Putter (+ evtl. Driver) [TMM1][LYNX1].
-- **Hybrid statt langer Eisen** (3er–5er): startet höher, verzeiht Fehltreffer mehr [LYNX1].
+- **Hybrid statt langer Eisen** (3er–5er): startet höher, verzeiht Fehltreffer mehr [LYNX1]. Arccos-Daten:
+  Spieler mit Handicap 0–25 treffen mit dem Hybrid öfter das Grün als mit dem gleichwertigen Eisen [ARC2].
+  Test von Plugged In Golf (5 Spieler, je 27° Loft): Hybrid mit höchstem Scheitelpunkt, steilster Landung
+  und kleineren Längen-Streuungen – aber Eisen waren etwas genauer in der Richtung [PIG2].
 - Gebrauchte Schläger sind völlig in Ordnung. Wichtig: **Schaft nicht zu steif**, Länge grob passend
   (Größe und Armlänge).
 
@@ -73,3 +89,8 @@ Unterschied (stark abhängig vom Spieler).
 - [LYNX1] Lynx Golf: Beginner golf clubs – https://lynxgolfusa.com/blogs/lynx-golf-blog-1/beginner-golf-clubs-what-clubs-do-i-need
 - [PELZ1] GolfWRX: Dave Pelz with research on why average golfers need better short games – https://www.golfwrx.com/335934/dave-pelz-with-research-on-why-average-golfers-need-better-short-games/
 - [TM1] TrackMan: Performance of the average male amateur – https://blog.trackmangolf.jp/performance-of-the-average-male-amateur/
+- [BGL1] BookGolfLessons: Golf lessons for beginners – a step-by-step program – https://www.bookgolflessons.com/blog/golf-lessons-for-beginners-a-step-by-step-program-to-build-your-game-from-the-ground-up
+- [VES2] Vessel: Understanding golf club loft – https://vesselgolf.com/blogs/golf/golf-clubs-loft
+- [MIT1] Mitchell Golf: Golf club loft chart – https://www.mitchellgolf.com/golf-club-loft-chart/
+- [ARC2] Arccos: Long irons vs. hybrids – https://www.arccosgolf.com/blogs/community/long-irons-v-hybrids-which-should-you-have-in-your-bag
+- [PIG2] Plugged In Golf: Are hybrids better than irons? – https://pluggedingolf.com/are-hybrids-better-than-irons-golf-myths-unplugged/

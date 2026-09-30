@@ -91,6 +91,7 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
 const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
+  "wissen.js", "schaubilder.js",
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
@@ -180,4 +181,20 @@ test("Coach: Antwort aus allen Textblöcken lesen – auch nach einem Rückfall 
   const frage = APP.slice(APP.indexOf("async function frageCoach"), APP.indexOf("// Die Coach-Antwort als Karte"));
   assert.match(frage, /leseAntwort\(antwort\.content\)/, "app.js nutzt leseAntwort() aus coach.js");
   assert.doesNotMatch(frage, /content\.find\(/, "nicht nur den ersten Textblock nehmen");
+});
+
+test("Lernfortschritt (wissenFortschritt) übersteht „Alles löschen“ und enthält keine Schwungdaten", () => {
+  // Nur app.js fasst den Schlüssel an – und nur zum Lesen und Schreiben, nie zum Entfernen
+  const mitSchluessel = QUELLDATEIEN.filter(({ text }) => text.includes("wissenFortschritt")).map(({ datei }) => datei);
+  assert.deepEqual(mitSchluessel.filter((d) => d !== "wissen.js"), ["app.js"]);
+  const code = ohneKommentare(APP);
+  assert.doesNotMatch(code, /removeItem\(\s*(FORTSCHRITT_NAME|["']wissenFortschritt["'])/, "Fortschritt wird nie entfernt");
+  assert.match(code, /const FORTSCHRITT_NAME = "wissenFortschritt"/);
+  // Gespeichert wird nur die Liste der erledigten Lektions-IDs
+  assert.match(code, /localStorage\.setItem\(FORTSCHRITT_NAME, JSON\.stringify\(wissenErledigt\)\)/);
+  // Löschen über speicher.js kennt den Schlüssel nicht, der Dialog sagt, dass er bleibt
+  assert.ok(!SPEICHER_CODE.includes("wissenFortschritt"));
+  const allesLoeschen = APP.slice(APP.indexOf("async function loescheAllesAusEinstellungen"), APP.indexOf("// Übersicht in den Einstellungen"));
+  assert.match(allesLoeschen, /bleibt: \[[\s\S]*Lernfortschritt/, "Dialog nennt den Lernfortschritt unter „bleibt“");
+  assert.ok(!allesLoeschen.includes("wissen"), "„Alles löschen“ fasst den Fortschritt nicht an");
 });

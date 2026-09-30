@@ -91,10 +91,10 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 ## 4. Haltung (🌱)
 
 - **Aus der Hüfte kippen, nicht den Rücken rund machen**: Po leicht nach hinten, Rücken gerade, Knie
-  leicht gebeugt (kein Sitzen, keine gestreckten Knie) [VES1]. App-Übung: „Schläger am Rücken“.
-- **Arme hängen** locker senkrecht unter den Schultern; **eine Faust** Platz zwischen Griffende und
+  leicht gebeugt (kein Sitzen, keine gestreckten Knie) [VES1][PP1][DRV1]. App-Übung: „Schläger am Rücken“.
+- **Arme hängen** locker senkrecht unter den Schultern [DRV1][GDC1]; **eine Faust** Platz zwischen Griffende und
   linkem Oberschenkel (App: `armeAnsprechen`, Übung „Faust-Check“).
-- **Gewicht**: etwa **Fußmitte**, eher Richtung Ballen, nicht auf den Zehen und nicht auf den Fersen.
+- **Gewicht**: etwa **Fußmitte** [DRV1], eher Richtung Ballen [PP1], nicht auf den Zehen und nicht auf den Fersen.
   (Manche Quellen sagen „auf den Ballen“ – gemeint ist dasselbe: nicht zurück auf die Fersen.)
 - **Seitneigung**: Weil die rechte Hand tiefer greift, steht die rechte Schulter etwas tiefer. Beim
   **Driver** mehr Neigung vom Ziel weg (Aufwärtsschlag), beim **Eisen** weniger [VES1]
@@ -139,3 +139,6 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 - [GM2] Golf Monthly: Pre-shot routine – https://www.golfmonthly.com/tips/golf-pre-shot-routine-everything-you-need-to-know
 - [GPC1] The Golf Performance Center: Pre-shot routine – https://thegolfperformancecenter.com/5-elements-blog/pre-shot-routine/
 - [V54] Vision54 / Think Box – Play Box (Zusammenfassung) – https://teee-box.com/in-the-tee-box-a-vision54-approach/
+- [PP1] Perfect Practice: Perfect golf posture – https://perfectpractice.com/blogs/news/perfect-golf-posture-everything-you-need-to-know
+- [DRV1] DRVN Golf: Golf posture – setup fundamentals – https://drvngolf.com/blog/golf-posture
+- [GDC1] GolfDecode: Complete guide to golf posture – https://golfdecode.com/complete-guide-to-golf-posture/

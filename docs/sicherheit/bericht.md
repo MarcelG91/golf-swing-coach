@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 29.09.2026 · geprüft auf `origin/main` @ `b3b09d3` (Version 0.17.0, live) und Check-Fix `check-2026-09-29` (Version 0.17.1)
+Stand: 30.09.2026 · geprüft auf `origin/main` @ `ab9e582` (Version 0.21.0, live) und Branch `wissen-geruest` (Version 0.22.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
@@ -19,9 +19,9 @@ geschützt, das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etap
 
 | Thema | Ampel | Kurzbewertung |
 |---|---|---|
-| Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). |
+| Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). |
 | Cybersecurity | Gelb | MediaPipe und das Anthropic-SDK (feste Versionen) kommen ohne Echtheitsprüfung von jsDelivr und Google (C1); das SDK sieht den API-Schlüssel. Noch keine CSP (C3). Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). |
-| Test und Deploy | Gelb | 117 Tests grün im Check-Fix (`main` 114). CI auf `main` grün, Live-Stand gleich `main` (0.17.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Test und Deploy | Gelb | 131 Tests grün im Branch `wissen-geruest` (`main` 117). CI auf `main` grün, Live-Stand gleich `main` (0.21.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
 | Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach: nur eine Anfrage zur Zeit (S11); seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell vollständig gelesen (S12). Offen nur S10 (P3). |
 | Geschwindigkeit | Gelb | Live 29.09. (Mac, frisches Profil): „Bereit“ nach 2,0 s, „Offline bereit ✓“; Warmstart 0,3 s ohne Datenübertragung. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
@@ -51,6 +51,8 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 
 **Coach mit Claude (0.15.0, Check-Fix 0.15.1):** Der Coach erscheint nur mit eigenem API-Schlüssel. Vor dem ersten Senden fragt ein Dialog um Einwilligung; unter dem Knopf steht immer, dass Kennzahlen an Anthropic gehen, und „Was wird gesendet?“ zeigt genau die Daten der Anfrage. Das SDK wird erst nach Einwilligung und nur mit Schlüssel geladen. Die Antwort wird geprüft (Fokus nur aus den gemessenen Baustellen, Texte und Listen gekürzt) und nur per `textContent` gezeigt; Schwunggedanke und Übung zum Fokus kommen immer aus `tipps.js`. Seit 0.17.0 schreibt Claude zusätzlich ausführliche Erklärungen und einen Trainingsplan (Leitplanken im Systemtext, Hinweis „fachlich geprüft ist nur die Übung der App“ unter jeder Antwort) und die Antwort kommt als Datenstrom – an Adresse und gesendeten Feldern ändert das nichts. Bei gespeicherten Schwüngen trägt die App nur das Feld `coach` in den vorhandenen Eintrag nach – wurde der Schwung inzwischen gelöscht, passiert nichts. „Videos löschen“ behält Coach-Antworten, „Alles löschen“ entfernt sie; Schlüssel und Level bleiben. Fehlermeldungen sind feste Texte, SDK-Fehlertexte gehen nur in die Entwicklerkonsole. Der Service Worker leitet die Anfragen an Anthropic (POST) nur durch und speichert sie nicht; das SDK selbst (feste Version, dazu drei kleine Hilfsdateien) legt er nach dem ersten Laden wie jede jsDelivr-Datei im Offline-Speicher ab. Check 29.09.: SDK 0.129.0 ist die aktuelle Version, auch die drei Hilfsdateien sind fest versioniert; Anfrage (Modell, Rückfall-Modus mit passender Beta-Kennung, adaptives Denken, strukturierte Antwort, Datenstrom) passt zur aktuellen API. Im Browser mit abgefangener Anfrage geprüft: genau eine Anfrage, gesendete Daten gleich der Vorschau. Seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell mitten im Datenstrom vollständig gelesen (S12).
 
+**Wissensseite (0.22.0):** Neuer Bereich „📖 Wissen“ mit Lernpfaden. Lektionen, Quiz, Quellen und Schaubilder stehen als feste Daten in `wissen.js` und `schaubilder.js` (Rechenlogik ohne Browser-Code, eigene Tests) und kommen nur per `textContent` in die Seite. Die SVG-Schaubilder nutzen nur feste Farbnamen aus `style.css`, einziges `innerHTML` ist fester Text. Quellen erscheinen nur als Name, ohne Link (Test). Es gibt keinen Netzwerkaufruf und keine neue Adresse. Der Lernfortschritt ist eine Liste erledigter Lektions-IDs im `localStorage` (`wissenFortschritt`), gelesen mit Fehlerbehandlung; unbekannte oder kaputte Einträge werden ignoriert. „Alles löschen“ lässt ihn stehen und sagt das im Dialog (Test in `tests/sicherheit.test.mjs`).
+
 ### Cybersecurity (C)
 
 | Nr | Prio | Status | Befund | Maßnahme |
@@ -61,7 +63,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | C4 | P3 | Offen | MediaPipe 0.10.14 ist gepinnt, aktuell ist 1.0.1 (geprüft 29.09.). | Kein Eil-Update. Später gezielt in eigenem Branch mit Tests. |
 | C5 | P3 | Akzeptiert | Schutz gegen Einbetten in fremde Seiten ist auf GitHub Pages nicht setzbar. | Kein Login, keine Zahlungen, daher geringes Risiko. |
 | C6 | P3 | Offen | Kein LICENSE, Lizenzen der Testdaten-Quellen nicht vermerkt. | In `tests/daten/QUELLEN.md` ergänzen oder später eigene Schwünge verwenden. |
-| C7 | P3 | Offen (derzeit kein Risiko) | Alle GitHub-Pages-Seiten eines Kontos teilen sich im Browser einen Speicherbereich (Level, Coach-Schlüssel, Schwung-Datenbank). Derzeit hat das Konto nur diese eine Pages-Seite (per API geprüft 28.09. und 29.09.). | Keine weitere Pages-Seite unter diesem Konto veröffentlichen – oder die App vorher auf eine eigene (Sub-)Domain umziehen. Bei jedem Check prüfen. |
+| C7 | P3 | Offen (derzeit kein Risiko) | Alle GitHub-Pages-Seiten eines Kontos teilen sich im Browser einen Speicherbereich (Level, Lernfortschritt, Coach-Schlüssel, Schwung-Datenbank). Derzeit hat das Konto nur diese eine Pages-Seite (per API geprüft 28.09., 29.09. und 30.09.). | Keine weitere Pages-Seite unter diesem Konto veröffentlichen – oder die App vorher auf eine eigene (Sub-)Domain umziehen. Bei jedem Check prüfen. |
 
 ### Test und Deploy (T)
 
