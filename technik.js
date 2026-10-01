@@ -139,7 +139,7 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
 
   const kennzahlen = [];
   const selbstChecks = [];
-  const neu = (k) => kennzahlen.push({ tipp: null, gefuehl: null, ...k });
+  const neu = (k) => kennzahlen.push({ gefuehl: null, ...k });
 
   if (ansicht === "hinten") {
     // -------------------------------------------------------------
@@ -159,16 +159,10 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Hände vor (+) oder hinter (−) der Schultermitte, in % der Rumpflänge. Gut: −25 bis +15 %",
       bewertung: bw,
     };
-    if (bw === "gut") {
-      k.text = "Deine Arme hängen beim Ansprechen locker unter den Schultern. So haben sie im Schwung Platz, und dein Abstand zum Ball passt.";
-    } else if (armAbstand > 0) {
-      k.text = "Deine Hände sind beim Ansprechen deutlich vor der Schulterlinie – du greifst nach dem Ball. Die Arme sind dann angespannt, der Schwung wird flach, und du kippst leicht nach vorne.";
+    if (bw !== "gut" && armAbstand > 0) {
       k.gefuehl = "Lass die Arme locker senkrecht aus den Schultern hängen und greif den Schläger dort, wo die Hände hängen. Dann stell dich so weit vom Ball weg, wie der Schläger es vorgibt – nicht umgekehrt.";
-      k.tipp = "Arme baumeln lassen: Ansprechhaltung ohne Schläger, Arme 3 Sekunden locker hängen lassen, Hände zusammenführen und erst dann den Schläger hineinlegen. Vor jedem Übungsball, bis es automatisch geht.";
-    } else {
-      k.text = "Deine Hände sind beim Ansprechen sehr nah am Körper. Dann haben die Arme im Abschwung keinen Platz – du musst ausweichen oder dich aufrichten.";
+    } else if (bw !== "gut") {
       k.gefuehl = "Zwischen Griffende und Oberschenkel passt etwa eine Faust. Die Arme hängen senkrecht unter den Schultern.";
-      k.tipp = `Faust-Check: Halte beim Ansprechen die ${s.hen} Hand als Faust zwischen Griffende und deinen ${s.fen} Oberschenkel. Passt sie knapp hinein, stimmt der Abstand.`;
     }
     neu(k);
 
@@ -188,25 +182,17 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Neigung des Oberkörpers nach vorne (Hüfte bis Schultern). Gut: 25–45°",
       bewertung: bv,
     };
-    const stockUebung =
-      "Schläger am Rücken: Leg einen Schläger längs an deinen Rücken, sodass er Hinterkopf, Schulterblätter und Steißbein berührt. Kipp nach vorne, bis du auf den Ball schaust – der Schläger bleibt an allen drei Punkten. 5× vor jedem Training.";
-    if (bv === "gut") {
-      v.text = "Deine Vorneigung ist eine gute Ausgangsposition: Der Oberkörper kann sich frei drehen, und die Arme haben Platz.";
-    } else if (vorneigung < 25) {
-      v.text = "Du stehst beim Ansprechen recht aufrecht. Dann dreht sich der Oberkörper eher waagerecht, der Schwung wird flach, und der Schläger trifft oft den Boden hinter dem Ball.";
+    if (bv !== "gut" && vorneigung < 25) {
       v.gefuehl = "Kipp aus der Hüfte nach vorne, nicht aus dem Rücken: Po nach hinten, Rücken lang, Knie leicht gebeugt. Die Arme hängen dann von allein unter den Schultern.";
-      v.tipp = stockUebung;
-    } else {
-      v.text = "Du beugst dich beim Ansprechen sehr weit vor. Das kostet Gleichgewicht und Drehfreiheit – oft kippst du im Schwung nach vorne oder richtest dich auf.";
+    } else if (bv !== "gut") {
       v.gefuehl = "Etwas aufrichten: Gewicht auf die Fußmitte, Kinn weg von der Brust, Knie nur leicht beugen.";
-      v.tipp = stockUebung;
     }
     neu(v);
 
     selbstChecks.push({
       name: `${s.Her} Ellbogen am Top`,
       phase: "top",
-      text: `Spring zum Top und schau: Zeigt dein ${s.her} Ellbogen Richtung Boden? Zeigt er nach hinten weg („fliegender Ellbogen“), kommt der Schläger oft steil von oben. Gefühl: wie ein Kellner, der ein Tablett trägt.`,
+      text: `Spring zum Top und schau: Zeigt dein ${s.her} Ellbogen eher Richtung Boden oder steht er weit nach hinten ab? Ein abstehender Ellbogen ist kein Fehler an sich – auch Top-Spieler haben ihn. Er kann aber zu einem steilen Abschwung führen. Bei vielen Amateuren liegt es an der Beweglichkeit der Schulter, nicht an der Technik.`,
     });
   } else {
     // -------------------------------------------------------------
@@ -226,12 +212,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: `Winkel am ${s.fen} Ellbogen (180° = ganz gestreckt). Gut: ab 155°`,
       bewertung: ba,
     };
-    if (ba === "gut") {
-      a.text = `Dein ${s.fer} Arm ist im Treffmoment lang. So bleibt der Abstand zum Ball gleich, und du triffst ihn sauber.`;
-    } else {
-      a.text = `Dein ${s.fer} Arm ist im Treffmoment gebeugt. Dadurch wird der Schwungkreis kleiner – der Schläger kommt zu hoch an den Ball (dünne oder getoppte Treffer), und du verlierst Kraft.`;
+    if (ba !== "gut") {
       a.gefuehl = `Der ${s.f} Arm und der Schläger bilden im Treffmoment eine lange Linie. Das klappt, wenn dein Körper weiterdreht – stoppt die Drehung, knicken die Arme ein.`;
-      a.tipp = "Halbe Schwünge „Hüfte bis Hüfte“: Nur bis Hüfthöhe ausholen und bis Hüfthöhe durchschwingen. Beide Arme sind nach dem Ball noch lang. 20 Bälle, dann langsam länger werden.";
     }
     neu(a);
 
@@ -254,12 +236,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: `Schätzung aus der Schulterbreite: am Top noch ${prozent(Math.max(0, verhaeltnis))} der Breite beim Ansprechen. Gut: ab ca. 80°`,
       bewertung: bd,
     };
-    if (bd === "gut") {
-      d.text = "Deine Schultern drehen am Top voll – dein Rücken zeigt zum Ziel. Das ist die Grundlage für Weite.";
-    } else {
-      d.text = "Deine Schultern drehen am Top nicht ganz durch (Ziel: rund 90°, der Rücken zeigt zum Ziel). Ohne volle Drehung müssen die Arme die Arbeit machen – das kostet Weite und führt oft zu einem Abschwung von außen (Slice).";
+    if (bd !== "gut") {
       d.gefuehl = `Dreh den Rücken zum Ziel: Die ${s.f} Schulter wandert unter dein Kinn. Dein ${s.hes} Knie bleibt dabei leicht gebeugt, damit sich die Drehung „aufladen“ kann.`;
-      d.tipp = "Schläger vor der Brust: Halte einen Schläger quer vor der Brust (Hände an den Schultern), Ansprechhaltung einnehmen. Dreh dich, bis das Schlägerende auf den Ball zeigt – das ist eine volle Schulterdrehung. 10× langsam, danach halbe Schwünge mit demselben Gefühl.";
     }
     neu(d);
 
@@ -283,13 +261,7 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       bewertung: bh,
     };
     if (bh !== "gut") {
-      h.text = "Am Top sind deine Hände sehr hoch, deine Schultern aber noch nicht voll gedreht. Die Arme heben den Schläger nach oben, statt dass der Oberkörper ihn nach hinten dreht. Folge: ein steiler Abschwung und wechselnde Treffpunkte.";
       h.gefuehl = `„Drehen statt heben“: Die Hände bleiben im Rückschwung vor der Brust, die Brust nimmt sie mit nach hinten. Am Top sind die Hände etwa über der ${s.hen} Schulter – nicht hoch über dem Kopf.`;
-      h.tipp = "Griffende zum Bauchnabel: Schläger mit langen Armen vor dir halten, das Griffende zeigt auf deinen Bauchnabel. Hol nur durch Drehen der Brust aus, bis die Hände auf Hüfthöhe sind – das Griffende zeigt weiter auf den Bauchnabel. 10× langsam, dann halbe Schwünge mit Ball.";
-    } else if (handHoehe > 0.75) {
-      h.text = "Deine Hände gehen am Top hoch – das passt, weil sich deine Schultern auch voll drehen.";
-    } else {
-      h.text = "Arme und Oberkörper arbeiten am Top gut zusammen: Die Hände sind etwa über der Schulter, nicht hoch über dem Kopf.";
     }
     neu(h);
 
@@ -310,14 +282,9 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Neigung des Oberkörpers vom Ziel weg (+) oder zum Ziel (−). Gut: 0 bis 20°",
       bewertung: bs,
     };
-    if (bs === "gut") {
-      sa.text = "Dein Oberkörper ist beim Ansprechen leicht vom Ziel weg geneigt oder gerade – eine gute Ausgangsposition hinter dem Ball.";
-    } else if (seitAnsprechen < 0) {
-      sa.text = `Dein Oberkörper neigt sich beim Ansprechen zum Ziel. Weil deine ${s.h} Hand am Griff tiefer sitzt, sollte auch die ${s.h} Schulter etwas tiefer sein – sonst stehst du schon „vor dem Ball“, was einen steilen Abschwung und Slices begünstigt.`;
+    if (bs !== "gut" && seitAnsprechen < 0) {
       sa.gefuehl = `Neig den Oberkörper leicht vom Ziel weg: Die ${s.h} Schulter ist etwas tiefer als die ${s.f}, dein Brustbein ist knapp hinter dem Ball.`;
-      sa.tipp = `Knie-Tipp: Tipp in der Ansprechhaltung mit der ${s.hen} Hand kurz seitlich an dein ${s.hes} Knie und führ sie dann zurück an den Griff. So entsteht die leichte Seitneigung von allein. Vor jedem Ball.`;
-    } else {
-      sa.text = "Du neigst dich beim Ansprechen sehr stark vom Ziel weg. Das kann dazu führen, dass du den Boden hinter dem Ball triffst.";
+    } else if (bs !== "gut") {
       sa.gefuehl = "Nur leicht neigen: Beim Eisen reichen wenige Grad, beim Driver etwas mehr.";
     }
     neu(sa);
@@ -335,12 +302,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Neigung vom Ziel weg (+) oder zum Ziel (−). Gut: nicht mehr als 3° zum Ziel",
       bewertung: bt,
     };
-    if (bt === "gut") {
-      st.text = "Am Top bleibt dein Oberkörper hinter dem Ball. Sehr gut!";
-    } else {
-      st.text = `Am Top neigt sich dein Oberkörper zum Ziel („umgekehrter Wirbelsäulenwinkel“). Dein Gewicht bleibt dann auf dem ${s.fen} Fuß, und im Abschwung fällst du nach hinten. Das kostet Kraft, macht die Treffer unsauber und belastet den unteren Rücken.`;
+    if (bt !== "gut") {
       st.gefuehl = `Dreh dich im Rückschwung um deine Wirbelsäule und lass den Oberkörper über dem ${s.hen} Bein. Am Top bleibt dein Brustbein hinter dem Ball.`;
-      st.tipp = "Spiegel-Check: Stell dich frontal vor einen Spiegel, hol langsam zum Top aus und halte an. Deine Wirbelsäule ist senkrecht oder leicht vom Ziel weg geneigt – niemals zum Ziel. 10× langsam.";
     }
     neu(st);
 
@@ -357,12 +320,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Neigung vom Ziel weg (+) oder zum Ziel (−). Gut: ab 8° vom Ziel weg",
       bewertung: bi,
     };
-    if (bi === "gut") {
-      si.text = "Im Treffmoment ist dein Oberkörper vom Ziel weg geneigt – so kommt der Schläger flach von innen an den Ball.";
-    } else {
-      si.text = `Im Treffmoment steht dein Oberkörper fast senkrecht oder neigt sich schon zum Ziel. Gute Spieler sind hier deutlich vom Ziel weg geneigt, die ${s.h} Schulter ist tiefer als die ${s.f}. Ohne diese Neigung kommt der Schläger steil von oben: typisch sind Slice, gezogene Bälle und zu tiefe Divots.`;
+    if (bi !== "gut") {
       si.gefuehl = `Im Abschwung schiebt die Hüfte leicht zum Ziel, der Oberkörper bleibt zurück. Gefühl: Die ${s.h} Schulter geht nach unten zum Ball, nicht nach vorne.`;
-      si.tipp = `Treffposition in Zeitlupe: Aus dem Top langsam in die Treffposition bewegen und dort anhalten. Kontrolle im Spiegel: Gürtelschnalle leicht zum Ziel gedreht, Kopf hinter dem Ball, ${s.h} Schulter tiefer als die ${s.f}. 10× langsam, dann mit Ball.`;
     }
     neu(si);
 
@@ -383,12 +342,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       detail: "Seitliche Verschiebung der Hüfte vom Ziel weg bis zum Top, in % der Rumpflänge. Gut: bis 15 %",
       bewertung: bw,
     };
-    if (bw === "gut") {
-      w.text = "Deine Hüfte dreht im Rückschwung auf der Stelle, statt zur Seite zu schieben. Gut!";
-    } else {
-      w.text = "Im Rückschwung schiebst du die Hüfte zur Seite vom Ziel weg („Sway“), statt sie zu drehen. Dann musst du im Abschwung genauso weit zurück – das gelingt selten gleich, und der Treffpunkt wandert.";
+    if (bw !== "gut") {
       w.gefuehl = `Drehen statt schieben: Dein ${s.hes} Knie bleibt gebeugt und stabil, die Hüfte dreht sich über dem ${s.hen} Fuß wie auf einem Drehteller.`;
-      w.tipp = `Stab-Übung: Steck einen Schläger oder Stab senkrecht direkt außen neben deine ${s.h} Hüfte in den Boden. Im Rückschwung darf die Hüfte ihn nicht berühren. 10 langsame Rückschwünge, dann halbe Schwünge.`;
     }
     neu(w);
 

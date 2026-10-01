@@ -59,6 +59,8 @@ Hinweis: Die Grenzen aus `tests/tipps.test.mjs` (Gedanke ≤ 5 Wörter) gelten w
 
 ### 2b. Alte Langtexte in `technik.js` (Backlog Nr. 4)
 
+**Erledigt mit 0.26.1:** Die alte Stab-Übung ist mit den Langtexten entfernt (`tipps.js` war schon richtig); der Selbst-Check „Ellbogen“ ist entschärft.
+
 - Stab-Übung bei `hueftSway` in `technik.js` sagt noch „Stab **neben die rechte Hüfte**“; richtig
   (Recherche 28.09., HackMotion) ist „direkt außen neben dem **rechten Fuß**“ – `tipps.js` ist schon
   richtig. Beim Aufräumen entfernen oder angleichen.
