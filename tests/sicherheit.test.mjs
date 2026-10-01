@@ -101,14 +101,17 @@ test("Kein dynamischer Code wird ausgeführt", () => {
   assert.doesNotMatch(QUELLTEXT, /\beval\s*\(|\bnew\s+Function\s*\(|setTimeout\(\s*["'`]/);
 });
 
-// Fortschrittsanzeige (0.28.0): nur lesen und zeichnen – kein Netz, kein Speichern, keine Medien laden
+// Fortschrittsanzeige (0.28.0, Vorher/Nachher ab 0.29.0): nur lesen und zeichnen – kein Netz, kein Speichern.
+// Die Clips für den Bildvergleich werden nur gelesen (ladeMedium), nie geschrieben oder gelöscht.
 test("Fortschrittsanzeige liest nur Kennzahlen, sendet nichts und schreibt nichts", () => {
   const app = ohneKommentare(QUELLDATEIEN.find(({ datei }) => datei === "app.js").text);
   const von = app.indexOf("function zeigeGespeichertTeil");
   const bis = app.indexOf("async function zeigeMeineSchwuenge");
   assert.ok(von > 0 && bis > von, "Abschnitt Fortschritt nicht gefunden");
   const abschnitt = app.slice(von, bis);
-  assert.doesNotMatch(abschnitt, /fetch\(|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|indexedDB|ladeMedium|loesche(Schwung|Sitzung|Alles|VideosUndBilder)|speichereSitzung|aktualisiereSchwung/);
+  assert.doesNotMatch(abschnitt, /fetch\(|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|indexedDB|loesche(Schwung|Sitzung|Alles|VideosUndBilder)|speichereSitzung|aktualisiereSchwung/);
+  // Jede Browser-Adresse eines Clips wird wieder freigegeben (Regel aus CLAUDE.md)
+  assert.equal((abschnitt.match(/createObjectURL/g) ?? []).length, (abschnitt.match(/revokeObjectURL/g) ?? []).length);
   // einziges innerHTML: fester Text "<svg></svg>" für den SVG-Namensraum
   const treffer = abschnitt.match(/innerHTML\s*=.*$/gm) ?? [];
   assert.deepEqual(treffer.map((z) => z.replace(/\s*\/\/.*$/, "").trim()), ['innerHTML = "<svg></svg>";']);

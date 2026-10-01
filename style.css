@@ -1126,3 +1126,12 @@ pre.vorschau {
 .verlauf-bild .punkt-achtung { fill: var(--achtung); }
 .verlauf-bild .punkt-verbessern { fill: var(--verbessern); }
 .verlauf-bild .mittellinie { fill: none; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
+
+/* Vorher/Nachher: zwei Bilder nebeneinander (auf dem iPhone je ca. 160 px breit) */
+.vergleich-phasen { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.vergleich-phasen button[aria-pressed="true"] { background: var(--akzent); color: var(--auf-akzent); }
+.vergleich-paar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vergleich-spalte { margin: 0; }
+.vergleich-spalte figcaption { font-size: 0.8rem; color: var(--text-leise); margin-bottom: 4px; }
+.vergleich-bild canvas { width: 100%; height: auto; display: block; border-radius: var(--r-klein); background: #000; }
+.vergleich-zahlen { margin-top: 10px; font-size: 0.9rem; }
