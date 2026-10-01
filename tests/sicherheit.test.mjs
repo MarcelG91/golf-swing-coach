@@ -20,8 +20,9 @@ function dateiliste(text) {
   return [...treffer[1].matchAll(/["']([^"']+)["']/g)].map(([, datei]) => datei);
 }
 
-test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
-  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com", "api.anthropic.com"]);
+test("Nur erlaubte Netzwerk-Hosts sind eingebaut (seit 0.26.0 nur noch der Coach)", () => {
+  // jsDelivr und Google sind mit C1 weggefallen: MediaPipe und Modell liegen in vendor/
+  const erlaubt = new Set(["127.0.0.1", "api.anthropic.com"]);
   const hostsIn = (text) => [...text.matchAll(/https?:\/\/[^\s"'`]+/g)]
     .map(([adresse]) => new URL(adresse.replace(/[),;]+$/, "")).hostname);
   assert.deepEqual([...new Set(hostsIn(QUELLTEXT))].filter((host) => !erlaubt.has(host)), []);
@@ -29,6 +30,18 @@ test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
   const mitAnthropic = QUELLDATEIEN.filter(({ text }) => hostsIn(text).includes("api.anthropic.com")).map(({ datei }) => datei);
   assert.deepEqual(mitAnthropic, ["app.js"]);
   assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
+});
+
+test("Kein Fremdcode wird nachgeladen: nur eigene Module, kein import() (C1)", () => {
+  for (const { datei, text } of QUELLDATEIEN) {
+    const code = ohneKommentare(text);
+    // Statische Importe nur aus eigenen Dateien ("./…"), keine Adressen
+    for (const [, quelle] of code.matchAll(/\bfrom\s+["']([^"']+)["']/g)) {
+      assert.match(quelle, /^\.\//, `${datei} importiert von außen: ${quelle}`);
+    }
+    assert.doesNotMatch(code, /\bimport\s*\(/, `${datei} lädt Code zur Laufzeit nach`);
+    assert.doesNotMatch(code, /<script[^>]+src=["']https?:/, `${datei} bindet ein fremdes Skript ein`);
+  }
 });
 
 test("Alle JavaScript-Appdateien stehen in beiden Offline-Listen", () => {
@@ -113,18 +126,22 @@ test("Check robuste Analyse: keine Umgehung der Längenprüfung, keine Fehlalarm
   assert.match(PWA, /Die App ist nicht vollständig geladen/, "S9: gleicher Text in pwa.js");
 });
 
-test("Coach (V2): Schlüssel nur im localStorage, SDK mit fester Version, nie in Speicher oder Export", () => {
+test("Coach (V2): Schlüssel nur im localStorage und in der Kopfzeile, kein SDK, nie in Speicher oder Export", () => {
   const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
   assert.ok(!speicher.includes("coachSchluessel"), "Der Schlüssel gehört nie in die Schwung-Datenbank");
-  assert.match(APP, /const COACH_SDK_URL = "https:\/\/cdn\.jsdelivr\.net\/npm\/@anthropic-ai\/sdk@\d+\.\d+\.\d+\/\+esm"/, "SDK-Version fest");
-  assert.equal(APP.match(/dangerouslyAllowBrowser/g)?.length, 2, "Browser-Freigabe nur an der einen Stelle (plus Kommentar)");
   const exportTeil = APP.slice(APP.indexOf("function exportiereDaten"), APP.indexOf("function heute"));
   assert.ok(!/localStorage|coach/i.test(exportTeil), "Posedaten-Export enthält nichts vom Coach");
-  // Das SDK steht nicht in der Vorab-Liste des Service Workers (nach dem ersten Laden
-  // speichert er es wie jede jsDelivr-Datei – feste Version, siehe bericht.md C1)
-  assert.ok(!SERVICE_WORKER.includes("@anthropic-ai/sdk"));
-  // Der Client geht ausdrücklich an die erlaubte Adresse
-  assert.match(APP, /new Anthropic\(\{[^}]*baseURL: COACH_API_URL/);
+  // Seit 0.26.0 kein Anthropic-SDK mehr (C1): kein Fremdcode sieht den Schlüssel
+  assert.doesNotMatch(QUELLTEXT, /@anthropic-ai|dangerouslyAllowBrowser/);
+  // Genau ein fetch an die erlaubte Adresse, mit den Kopfzeilen aus coach.js
+  assert.match(APP, /const COACH_API_URL = "https:\/\/api\.anthropic\.com\/v1\/messages";/);
+  const senden = APP.slice(APP.indexOf("async function sendeAnClaude"), APP.indexOf("async function frageCoach"));
+  assert.match(senden, /fetch\(COACH_API_URL, \{\s*method: "POST",\s*headers: coachKopfzeilen\(schluessel\),\s*body: JSON\.stringify\(anfrage\),\s*signal: AbortSignal\.timeout\(COACH_ZEITLIMIT_MS\),?\s*\}\)/);
+  assert.equal(ohneKommentare(APP).match(/\bfetch\(/g)?.length, 1, "app.js hat nur diesen einen fetch()-Aufruf");
+  // Fehlertexte der API nur in die Konsole, angezeigt werden feste Texte
+  assert.match(senden, /coachFehler\(coachFehlerArt\(\{ status: antwort\.status \}\)\)/);
+  // Der Service Worker leitet die Anfrage nur durch (POST) und speichert sie nicht
+  assert.match(SERVICE_WORKER, /if \(anfrage\.method !== "GET"\) return;/);
 });
 
 test("Check 11b: eine Coach-Anfrage zur Zeit, Antwort nur in den eigenen Schwung-Eintrag", () => {

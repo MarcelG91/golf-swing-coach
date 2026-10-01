@@ -60,7 +60,7 @@ import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, 
 import { GLOSSAR, GLOSSAR_GRUPPEN, IRRTUEMER, REGELN, REGEL_QUELLEN, AUSRUESTUNG, suche } from "./nachschlagen.js";
 import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
-import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
+import { coachDaten, baueCoachAnfrage, coachKopfzeilen, neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
 // Die Pfade müssen genau so in sw.js (VENDOR_DATEIEN) stehen – das prüft tests/vendor.test.mjs.
 const MP_MODUL = "./vendor/mediapipe-0.10.14/vision_bundle.mjs";
@@ -1996,16 +1996,16 @@ function schaubildSvg({ ausschnitt: a, elemente }) {
 // ---------------------------------------------------------------
 // Coach mit Claude (Etappe 11b)
 // Was gesendet wird und wie die Antwort geprüft wird, steht in coach.js.
-// Hier: Schlüssel verwalten, Einwilligung, SDK laden, Anfrage senden, Antwort zeigen.
+// Hier: Schlüssel verwalten, Einwilligung, Anfrage senden, Antwort zeigen.
 // ---------------------------------------------------------------
 
-// Offizielles Anthropic-SDK, feste Version, erst beim Tippen auf den Coach-Knopf geladen –
-// so startet die App weiter offline und ohne dieses Paket. Nach dem ersten Laden legt der
-// Service Worker es (wie alle jsDelivr-Dateien) im Offline-Speicher ab; es kommt nicht in die Vorab-Liste.
-const COACH_SDK_URL = "https://cdn.jsdelivr.net/npm/@anthropic-ai/sdk@0.129.0/+esm";
-// Die einzige Adresse, an die der Coach sendet (Regel in CLAUDE.md). Steht hier ausdrücklich,
-// statt sich auf die Voreinstellung des SDK zu verlassen – so prüft sie auch der Host-Test.
-const COACH_API_URL = "https://api.anthropic.com";
+// Die einzige Adresse, an die der Coach sendet (Regel in CLAUDE.md; die CSP in index.html
+// erlaubt auch nur sie). Seit 0.26.0 ohne Anthropic-SDK: ein einfaches fetch() genügt, und
+// kein nachgeladener Fremdcode sieht mehr den Schlüssel (Befund C1).
+const COACH_API_URL = "https://api.anthropic.com/v1/messages";
+// Spätestens dann aufgeben, falls die Verbindung hängt (eine Antwort braucht sonst 30–90 s).
+// Ohne Zeitgrenze bliebe der Knopf bis zum Neuladen gesperrt.
+const COACH_ZEITLIMIT_MS = 5 * 60 * 1000;
 // Läuft gerade eine Anfrage? Dann bleibt der Knopf gesperrt – auch wenn die Ansicht
 // neu gezeichnet wird (Level- oder Schwungwechsel, Internet wieder da). Sonst: doppelte Kosten.
 let coachLaeuft = false;
@@ -2134,19 +2134,49 @@ function frageCoachEinwilligung() {
   });
 }
 
-// Fehler des SDK einer verständlichen Meldung zuordnen (typisierte Fehlerklassen, keine Textsuche)
-function coachFehlerArt(fehler, Anthropic) {
-  if (fehler.coachArt) return fehler.coachArt;
-  if (!Anthropic) return "unbekannt";
-  if (fehler instanceof Anthropic.AuthenticationError || fehler instanceof Anthropic.PermissionDeniedError) return "schluessel";
-  if (fehler instanceof Anthropic.RateLimitError) return "zuViele";
-  if (fehler instanceof Anthropic.InternalServerError) return "ueberlastet";
-  if (fehler instanceof Anthropic.APIConnectionError) return "verbindung"; // vor APIError prüfen (Unterklasse)
-  if (fehler instanceof Anthropic.APIError && fehler.status === 402) return "guthaben";
-  return "unbekannt";
-}
-
+// Ein Fehler, der schon weiß, welche Meldung (COACH_FEHLER in coach.js) die App zeigen soll
 const coachFehler = (art) => Object.assign(new Error(COACH_FEHLER[art]), { coachArt: art });
+
+// Anfrage an Claude senden und den Datenstrom lesen, bis die Antwort vollständig ist.
+// Gibt die fertige Nachricht zurück (model, content, stop_reason, usage).
+async function sendeAnClaude(anfrage, schluessel) {
+  let antwort;
+  try {
+    antwort = await fetch(COACH_API_URL, {
+      method: "POST",
+      headers: coachKopfzeilen(schluessel),
+      body: JSON.stringify(anfrage),
+      signal: AbortSignal.timeout(COACH_ZEITLIMIT_MS),
+    });
+  } catch (fehler) {
+    console.error(fehler); // kein Netz oder Zeitlimit
+    throw coachFehler("verbindung");
+  }
+  if (!antwort.ok) {
+    // Der Fehlertext der API geht nur in die Entwicklerkonsole – angezeigt wird ein fester Text
+    console.error("Coach-Anfrage abgelehnt:", antwort.status, await antwort.text().catch(() => ""));
+    throw coachFehler(coachFehlerArt({ status: antwort.status }));
+  }
+  // Den Datenstrom Stück für Stück lesen (TextDecoderStream macht aus Bytes Text)
+  const strom = neuerDatenstrom();
+  const leser = antwort.body.pipeThrough(new TextDecoderStream()).getReader();
+  try {
+    for (let teil = await leser.read(); !teil.done; teil = await leser.read()) {
+      strom.fuettere(teil.value);
+      // Sobald Text ankommt, ist das Nachdenken vorbei – das zeigt der Hinweis unter dem Knopf
+      if (strom.textBegonnen) coachHinweis.textContent = "Der Coach schreibt seine Antwort …";
+    }
+  } catch (fehler) {
+    console.error(fehler); // Verbindung mitten in der Antwort abgerissen oder Zeitlimit
+    throw coachFehler("verbindung");
+  }
+  if (strom.fehlerTyp) {
+    console.error("Fehler im Datenstrom:", strom.fehlerTyp);
+    throw coachFehler(coachFehlerArt({ typ: strom.fehlerTyp }));
+  }
+  if (!strom.fertig) throw coachFehler("unvollstaendig");
+  return strom.nachricht;
+}
 
 async function frageCoach() {
   if (coachLaeuft) return; // schon unterwegs – keine zweite (bezahlte) Anfrage
@@ -2160,28 +2190,13 @@ async function frageCoach() {
   coachLaeuft = true;
   zeigeCoachKnopf(); // Knopf gesperrt
   const level = aktuellesLevel; // Stand beim Tippen – falls du währenddessen das Level wechselst
-  let Anthropic = null;
   try {
     if (!(await frageCoachEinwilligung())) return; // "Abbrechen": finally gibt den Knopf wieder frei
     const { wichtigste, sichtbar } = coachGrundlage();
     const anfrage = baueCoachAnfrage(await coachDatenJetzt());
-    try {
-      ({ default: Anthropic } = await import(COACH_SDK_URL));
-    } catch (fehler) {
-      console.error(fehler);
-      throw coachFehler("laden");
-    }
-    // dangerouslyAllowBrowser: Das SDK verlangt die ausdrückliche Erlaubnis, im Browser zu laufen,
-    // weil der Schlüssel dann im Browser liegt. Genau das ist hier gewollt (eigener Schlüssel mit Limit).
-    const client = new Anthropic({ apiKey: schluessel, baseURL: COACH_API_URL, dangerouslyAllowBrowser: true, maxRetries: 1 });
     // Als Datenstrom empfangen: Die ausführliche Antwort braucht bis zu 1–2 Minuten, und ein
-    // Datenstrom stößt dabei an kein Zeitlimit. finalMessage() wartet, bis alles da ist.
-    const strom = client.beta.messages.stream(anfrage);
-    // Sobald Text ankommt, ist das Nachdenken vorbei – das zeigt der Hinweis unter dem Knopf
-    strom.on("text", () => {
-      coachHinweis.textContent = "Der Coach schreibt seine Antwort …";
-    });
-    const antwort = await strom.finalMessage();
+    // Datenstrom stößt dabei an kein Zeitlimit. sendeAnClaude() wartet, bis alles da ist.
+    const antwort = await sendeAnClaude(anfrage, schluessel);
     if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
     if (antwort.stop_reason === "max_tokens") throw coachFehler("unvollstaendig");
     // Alle Textblöcke zusammen lesen – nach einem Rückfall auf ein anderes Modell steht die
@@ -2206,7 +2221,7 @@ async function frageCoach() {
     }
   } catch (fehler) {
     console.error(fehler);
-    const art = coachFehlerArt(fehler, Anthropic);
+    const art = fehler.coachArt || "unbekannt";
     // Nur beim Schwung zeigen, für den gefragt wurde (nicht bei einem inzwischen gewählten anderen)
     if (aktuellerSchwung === schwung) coachAntwort.replaceChildren(neu("p", "karte unsicher", COACH_FEHLER[art]));
   } finally {
