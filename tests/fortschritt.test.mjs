@@ -138,3 +138,14 @@ test("Wochenrückblick: Grenze von 7 Tagen und ohne Vergleichsdaten", () => {
   assert.equal(r.anzahl, 1);
   assert.equal(r.besserung, null);
 });
+
+test("Diagramm: gut liegt oben, verbessern unten, alles im Zeichenfeld", async () => {
+  const { diagramm } = await import("../fortschritt.js");
+  const d = diagramm(verlauf(reihe(["verbessern", "achtung", "gut"]), "tempo"), { breite: 300, hoehe: 120, rand: 10 });
+  assert.equal(d.punkte.length, 3);
+  assert.ok(d.punkte[2].y < d.punkte[1].y && d.punkte[1].y < d.punkte[0].y);
+  for (const p of d.punkte) assert.ok(p.x >= 10 && p.x <= 290 && p.y >= 10 && p.y <= 110);
+  assert.equal(d.linie.length, 3);
+  // ein einzelner Punkt steht in der Mitte (keine Division durch 0)
+  assert.equal(diagramm(verlauf(reihe(["gut"]), "tempo")).punkte[0].x, 150);
+});

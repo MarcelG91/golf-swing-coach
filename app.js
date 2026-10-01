@@ -47,6 +47,9 @@ import {
   sitzungenAelterAls,
 } from "./speicher.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
+import {
+  sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, schlaegerGruppe, GRUPPEN_NAME,
+} from "./fortschritt.js";
 import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
 // Kurze Tipps (Kurzzeile, Warum, Schwunggedanke, Übung) und die Skala auf den Karten
 import { tipp, gutText, skala, skalaPosition } from "./tipps.js";
@@ -114,6 +117,13 @@ const zuEinstellungenBtn = $("zuEinstellungen");
 const zuWissenBtn = $("zuWissen");
 const analyseBereich = $("analyseBereich");
 const gespeichertBereich = $("gespeichertBereich");
+const zuSitzungenBtn = $("zuSitzungen");
+const zuFortschrittBtn = $("zuFortschritt");
+const sitzungenTeil = $("sitzungenTeil");
+const fortschrittTeil = $("fortschrittTeil");
+const fortschrittAnsicht = $("fortschrittAnsicht");
+const fortschrittGruppe = $("fortschrittGruppe");
+const fortschrittInhalt = $("fortschrittInhalt");
 const einstellungenBereich = $("einstellungenBereich");
 // Wissen: Übersicht der Lernpfade, Nachschlagen (Suche, Listen) und Wisch-Karten
 const wissenBereich = $("wissenBereich");
@@ -2723,6 +2733,7 @@ function zeigeBereich(welcher) {
   }
   if (welcher === "gespeichert") {
     video.pause();
+    zeigeGespeichertTeil("sitzungen");
     zeigeMeineSchwuenge().catch((fehler) => {
       console.error(fehler);
       belegungText.textContent = `Die gespeicherten Schwünge ließen sich nicht laden (${fehler.message || fehler.name}).`;
@@ -2732,6 +2743,154 @@ function zeigeBereich(welcher) {
     datenMeldung.textContent = "";
     zeigeDatenUebersicht();
   }
+}
+
+// ---------------------------------------------------------------
+// Fortschritt (Meine Schwünge → 📈 Fortschritt). Gerechnet wird in fortschritt.js,
+// hier wird nur gezeichnet. Alle Texte per textContent.
+// ---------------------------------------------------------------
+function zeigeGespeichertTeil(teil) {
+  const fortschritt = teil === "fortschritt";
+  sitzungenTeil.hidden = fortschritt;
+  fortschrittTeil.hidden = !fortschritt;
+  zuSitzungenBtn.setAttribute("aria-pressed", String(!fortschritt));
+  zuFortschrittBtn.setAttribute("aria-pressed", String(fortschritt));
+  if (fortschritt) {
+    zeigeFortschritt(true).catch((fehler) => {
+      console.error(fehler);
+      fortschrittInhalt.replaceChildren(neu("p", "hinweis", `Der Fortschritt ließ sich nicht laden (${fehler.message || fehler.name}).`));
+    });
+  }
+}
+
+const TREND_TEXT = {
+  verbessert: ["↗ besser geworden", "trend-besser"],
+  stabil: ["→ gleich geblieben", ""],
+  verschlechtert: ["↘ schwächer geworden", "trend-schlechter"],
+};
+
+function fortschrittKasten(titel) {
+  const kasten = neu("section", "fortschritt-kasten");
+  kasten.append(neu("h3", "", titel));
+  return kasten;
+}
+
+// Ein kleines Diagramm: Punkte je Schwung (Farbe = Bewertung) und gleitender Mittelwert
+function verlaufSvg(punkte) {
+  const breite = 300, hoehe = 90;
+  const d = diagramm(punkte, { breite, hoehe, rand: 12 });
+  const huelle = document.createElement("div");
+  huelle.innerHTML = "<svg></svg>"; // fester Text – den Namensraum liefert der Browser
+  const svg = huelle.firstChild;
+  const SVG = svg.namespaceURI;
+  svg.setAttribute("viewBox", `0 0 ${breite} ${hoehe}`);
+  svg.setAttribute("class", "verlauf-bild");
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", `Verlauf über ${punkte.length} Schwünge`);
+  const setze = (element, werte) => { for (const [name, wert] of Object.entries(werte)) element.setAttribute(name, wert); };
+  // Drei Streifen: oben gut, Mitte achtung, unten verbessern
+  const streifen = (hoehe - 24) / 2;
+  for (const band of d.baender) {
+    const rechteck = document.createElementNS(SVG, "rect");
+    setze(rechteck, { x: 0, y: band.y - streifen / 2, width: breite, height: streifen, class: `band-${band.bewertung}` });
+    svg.append(rechteck);
+  }
+  if (d.linie.length > 1) {
+    const linie = document.createElementNS(SVG, "polyline");
+    setze(linie, { points: d.linie.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" "), class: "mittellinie" });
+    svg.append(linie);
+  }
+  for (const p of d.punkte) {
+    const kreis = document.createElementNS(SVG, "circle");
+    setze(kreis, { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: 3.5, class: `punkt-${p.bewertung}` });
+    svg.append(kreis);
+  }
+  return svg;
+}
+
+async function zeigeFortschritt(ersterAufruf = false) {
+  const sitzungen = await ladeSitzungen();
+  const alle = (await Promise.all(sitzungen.map(ladeSchwuengeDerSitzung))).flat().filter(Boolean);
+
+  // Beim Öffnen die Auswahl auf den zuletzt gespeicherten Schwung stellen
+  if (ersterAufruf) {
+    const letzter = sichereSchwuenge(alle).at(-1);
+    if (letzter?.ansicht) fortschrittAnsicht.value = letzter.ansicht;
+    const gruppe = letzter ? schlaegerGruppe(letzter.schlaeger) : null;
+    if (gruppe) fortschrittGruppe.value = gruppe;
+  }
+  const filter = { ansicht: fortschrittAnsicht.value, gruppe: fortschrittGruppe.value };
+  const sichere = sichereSchwuenge(alle, filter);
+  const teile = [];
+
+  if (sichere.length === 0) {
+    fortschrittInhalt.replaceChildren(neu("p", "hinweis",
+      `Für „${fortschrittAnsicht.selectedOptions[0].text} · ${GRUPPEN_NAME[filter.gruppe]}“ sind noch keine sicheren Schwünge gespeichert. ` +
+      "Analysiere einen Schwung und speichere ihn unter „Analyse“."));
+    return;
+  }
+
+  // Wochenrückblick
+  const woche = wochenRueckblick(alle, heute(), filter);
+  const wocheKasten = fortschrittKasten("Diese Woche");
+  wocheKasten.append(neu("p", "",
+    woche.anzahl === 0
+      ? "In den letzten 7 Tagen hast du keinen Schwung gespeichert."
+      : `${woche.anzahl} ${woche.anzahl === 1 ? "Schwung" : "Schwünge"} in ${woche.sitzungen} ${woche.sitzungen === 1 ? "Sitzung" : "Sitzungen"}.`));
+
+  // Namen und Level-Filter: nur Kennzahlen deines Levels bekommen ein Diagramm
+  const namen = {};
+  for (const schwung of sichere) for (const k of schwung.kennzahlen) if (k.name) namen[k.id] = k.name;
+  const nameVon = (id) => namen[id] || id;
+  if (woche.besserung) wocheKasten.append(neu("p", "", `Größte Verbesserung: ${nameVon(woche.besserung.id)}.`));
+  teile.push(wocheKasten);
+
+  // Fokus mit passender Übung aus tipps.js (die Texte sind dort fachlich geprüft)
+  const f = fokus(alle, aktuellesLevel, filter);
+  const fokusKasten = fortschrittKasten("Dein Fokus");
+  if (!f) {
+    fokusKasten.append(neu("p", "", "Noch zu wenig Daten – für eine Empfehlung braucht eine Kennzahl mindestens 3 Messungen."));
+  } else if (f.erreicht) {
+    fokusKasten.append(neu("p", "", `Alle Kennzahlen deines Levels sind stabil im Zielbereich (schwächste: ${nameVon(f.id)}, ${f.gruen} von ${f.anzahl} grün). Stark! Vielleicht ist ein höheres Level dran – siehe ⚙️ Einstellungen.`));
+  } else {
+    fokusKasten.append(neu("p", "", `${nameVon(f.id)}: nur ${f.gruen} von ${f.anzahl} Schwüngen im Zielbereich.`));
+    // Passende Übung: aus dem letzten Schwung, in dem diese Kennzahl nicht grün war
+    const letzteSchwaeche = [...sichere].reverse().map((s) => s.kennzahlen.find((k) => k.id === f.id && k.bewertung !== "gut" && k.bewertung !== "unsicher")).find(Boolean);
+    const hilfe = letzteSchwaeche ? tipp(letzteSchwaeche, haendigkeit()) : null;
+    if (hilfe?.uebung) fokusKasten.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke, warum: hilfe.warum }));
+  }
+  teile.push(fokusKasten);
+
+  // Meilensteine
+  const meilen = meilensteine(alle, filter);
+  if (meilen.length) {
+    const kasten = fortschrittKasten("Meilensteine 🏆");
+    const liste = neu("ul");
+    for (const m of meilen) {
+      liste.append(neu("li", "", `${nameVon(m.id)}: ${m.laengste} Schwünge in Folge im Zielbereich` + (m.aktuell > 0 ? ` (aktuell ${m.aktuell})` : "")));
+    }
+    kasten.append(liste);
+    teile.push(kasten);
+  }
+
+  // Verläufe je Kennzahl deines Levels
+  const idsDesLevels = fuerLevel(Object.keys(namen).map((id) => ({ id })), aktuellesLevel).sichtbar.map((k) => k.id);
+  const verlaufTitel = neu("h3", "", "Verlauf je Kennzahl");
+  const verlaufHinweis = neu("p", "hinweis", "Jeder Punkt ist ein Schwung (links alt, rechts neu). Oben = im Zielbereich, unten = zum Verbessern. Die Linie ist der Durchschnitt über 5 Schwünge.");
+  teile.push(verlaufTitel, verlaufHinweis);
+  for (const id of idsDesLevels) {
+    const punkte = verlauf(alle, id, filter);
+    if (punkte.length < 2) continue;
+    const kasten = fortschrittKasten(nameVon(id));
+    const t = trend(punkte);
+    const stand = TREND_TEXT[t.urteil];
+    kasten.append(stand
+      ? neu("p", stand[1], `${stand[0]} (letzte ${t.anzahlNeu} gegen ${t.anzahlAlt} davor)`)
+      : neu("p", "hinweis", `Trend noch offen – dafür braucht es je mindestens 5 Schwünge (bisher ${punkte.length}).`));
+    kasten.append(verlaufSvg(punkte));
+    teile.push(kasten);
+  }
+  fortschrittInhalt.replaceChildren(...teile);
 }
 
 async function zeigeMeineSchwuenge() {
@@ -3247,6 +3406,11 @@ window.addEventListener("offline", () => { if (!coachBox.hidden) zeigeCoachKnopf
 document.addEventListener("visibilitychange", () => { if (aktiveUebung && document.visibilityState === "visible") bildschirmAnlassen(); });
 zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
+zuSitzungenBtn.addEventListener("click", () => zeigeGespeichertTeil("sitzungen"));
+zuFortschrittBtn.addEventListener("click", () => zeigeGespeichertTeil("fortschritt"));
+for (const auswahl of [fortschrittAnsicht, fortschrittGruppe]) {
+  auswahl.addEventListener("change", () => zeigeFortschritt().catch((fehler) => console.error(fehler)));
+}
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
 // Nach „Zurück“ den Fokus auf den Umschalter oben setzen – sonst landet er auf der ganzen

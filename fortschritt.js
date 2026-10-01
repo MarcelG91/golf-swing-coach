@@ -199,3 +199,22 @@ export function wochenRueckblick(schwuenge, heute, filter = {}) {
     besserung,
   };
 }
+
+// ---------------------------------------------------------------
+// 6. Diagramm: Zeichenpunkte für ein SVG (die Zeichnung selbst macht app.js)
+// ---------------------------------------------------------------
+// Senkrecht: die Bewertung (oben gut, unten verbessern) – jede Kennzahl hat ein anderes
+// Ziel, die Bewertung ist aber überall gleich zu lesen. Waagerecht: ein Schwung neben
+// dem anderen, gleich verteilt (Abstände in Tagen würden bei Pausen alles zusammenschieben).
+// Die Linie ist der gleitende Mittelwert über 5 Schwünge.
+export function diagramm(punkte, { breite = 300, hoehe = 120, rand = 14 } = {}) {
+  const werte = punkte.map((p) => PUNKTE[p.bewertung]);
+  const mittel5 = gleitenderMittelwert(werte, 5);
+  const x = (i) => (punkte.length === 1 ? breite / 2 : rand + (i * (breite - 2 * rand)) / (punkte.length - 1));
+  const y = (wert) => rand + ((2 - wert) * (hoehe - 2 * rand)) / 2; // 2 = oben
+  return {
+    punkte: punkte.map((p, i) => ({ x: x(i), y: y(werte[i]), bewertung: p.bewertung })),
+    linie: mittel5.map((m, i) => [x(i), y(m)]),
+    baender: [0, 1, 2].map((wert) => ({ bewertung: ["verbessern", "achtung", "gut"][wert], y: y(wert) })),
+  };
+}

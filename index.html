@@ -266,9 +266,28 @@
   <!-- Meine Schwünge: alle gespeicherten Sitzungen (Etappe 8) -->
   <main id="gespeichertBereich" hidden>
     <h2>📚 Meine Schwünge</h2>
-    <section id="levelVorschlag" class="level-vorschlag" hidden aria-live="polite"></section>
-    <p id="belegung" class="hinweis"></p>
-    <div id="sitzungsListe" class="sitzungen"></div>
+    <!-- Umschalter: Liste der Sitzungen oder Fortschritt (fortschritt.js). Inhalte setzt app.js per textContent. -->
+    <div class="segmente zwei" role="group" aria-label="Ansicht in Meine Schwünge">
+      <button id="zuSitzungen" type="button" aria-pressed="true">Sitzungen</button>
+      <button id="zuFortschritt" type="button" aria-pressed="false">📈 Fortschritt</button>
+    </div>
+    <div id="sitzungenTeil">
+      <section id="levelVorschlag" class="level-vorschlag" hidden aria-live="polite"></section>
+      <p id="belegung" class="hinweis"></p>
+      <div id="sitzungsListe" class="sitzungen"></div>
+    </div>
+    <section id="fortschrittTeil" hidden>
+      <div class="fortschritt-filter">
+        <label>Ansicht
+          <select id="fortschrittAnsicht"><option value="frontal">Von vorne</option><option value="hinten">Von hinten</option></select>
+        </label>
+        <label>Schläger
+          <select id="fortschrittGruppe"><option value="hoelzer">Hölzer</option><option value="eisen">Eisen</option><option value="wedges">Wedges</option></select>
+        </label>
+      </div>
+      <p class="hinweis">Verglichen wird nur, was zusammenpasst: gleiche Ansicht, gleiche Schlägergruppe, nur sichere Schwünge. Filme möglichst immer gleich (Stativ auf Hüfthöhe, ca. 3 m Abstand).</p>
+      <div id="fortschrittInhalt"></div>
+    </section>
   </main>
 
   <!-- Wissen: Lernpfade aus kurzen Lektionen (wissen.js, Bilder aus schaubilder.js).

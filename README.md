@@ -262,7 +262,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
-| `fortschritt.js` | Rechnet Verläufe, Trend, Fokus, Meilensteine und Wochenrückblick aus den gespeicherten Schwüngen |
+| `fortschritt.js` | Rechnet Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick und Diagrammpunkte aus den gespeicherten Schwüngen (Anzeige: Meine Schwünge → Fortschritt) |
 | `tipps.js` | Alle kurzen Tipp-Texte an einer Stelle: Kurzzeile, Warum, Schwunggedanke, Übung, Lob; dazu die Skala mit Zielbereich |
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
 | `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |

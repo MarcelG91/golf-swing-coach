@@ -1104,3 +1104,25 @@ pre.vorschau {
   * { transition: none !important; animation: none !important; }
   button:active:not(:disabled), .upload span:active, .zaehlknopf:active { transform: none; }
 }
+
+/* Fortschritt (Meine Schwünge → 📈 Fortschritt): Filter, Kästen, Diagramme.
+   Farben nur über die Variablen oben, damit Hell und Dunkel stimmen. */
+.fortschritt-filter { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+.fortschritt-filter label { display: grid; gap: 4px; font-size: 0.85rem; color: var(--text-leise); }
+.fortschritt-kasten {
+  margin: 0 0 12px; padding: 12px; background: var(--flaeche);
+  border: 1px solid var(--rand); border-radius: var(--r); box-shadow: var(--schatten);
+}
+.fortschritt-kasten h3 { margin: 0 0 6px; font-size: 1rem; }
+.fortschritt-kasten p { margin: 0 0 6px; }
+.fortschritt-kasten ul { margin: 0; padding-left: 20px; }
+.trend-besser { color: var(--gut); font-weight: 700; }
+.trend-schlechter { color: var(--verbessern); font-weight: 700; }
+.verlauf-bild { width: 100%; height: auto; display: block; margin-top: 4px; }
+.verlauf-bild .band-gut { fill: var(--gut); fill-opacity: 0.15; }
+.verlauf-bild .band-achtung { fill: var(--achtung); fill-opacity: 0.15; }
+.verlauf-bild .band-verbessern { fill: var(--verbessern); fill-opacity: 0.15; }
+.verlauf-bild .punkt-gut { fill: var(--gut); }
+.verlauf-bild .punkt-achtung { fill: var(--achtung); }
+.verlauf-bild .punkt-verbessern { fill: var(--verbessern); }
+.verlauf-bild .mittellinie { fill: none; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
