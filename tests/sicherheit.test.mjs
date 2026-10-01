@@ -91,7 +91,7 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
 const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
-  "wissen.js", "schaubilder.js",
+  "wissen.js", "nachschlagen.js", "schaubilder.js",
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {

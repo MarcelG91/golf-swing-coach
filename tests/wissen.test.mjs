@@ -66,7 +66,7 @@ test("Jede Lektion hat alle Felder, eindeutige ID, bekannten Pfad und Level", ()
     assert.ok(PFADE.some((p) => p.id === l.pfad), `${l.id}: Pfad unbekannt`);
     assert.ok(level.includes(l.level), `${l.id}: Level unbekannt`);
     assert.ok(Array.isArray(l.kennzahlen), `${l.id}: kennzahlen ist keine Liste`);
-    // Für die spätere Verknüpfung Baustellen-Karte → Lektion: nur Kennzahlen, die die App kennt
+    // Für die Verknüpfung Baustellen-Karte → Lektion: nur Kennzahlen, die die App kennt
     for (const k of l.kennzahlen) assert.ok(k in AB_LEVEL, `${l.id}: Kennzahl ${k} unbekannt`);
   }
 });

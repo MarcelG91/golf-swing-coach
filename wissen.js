@@ -194,6 +194,38 @@ export const QUELLEN = {
   "richtig-ueben:FB1": "Meta-Analyse (2022): Seltenere Rückmeldung beim Lernen",
   "richtig-ueben:FB2": "Studie: Selbst bestimmte Rückmeldung beim Lernen",
   "richtig-ueben:FB3": "McKay u. a. (2022): Meta-Analyse zum selbst gesteuerten Üben",
+  // Nachschlagen (nachschlagen.js): Glossar, Irrtümer, Regeln, Ausrüstung
+  "glossar:WIKI1": "Wikipedia: Glossary of golf",
+  "glossar:DMP1": "Deutschland macht Platzreife: Golfglossar",
+  "irrtuemer:AY1": "Adam Young: Top myths in golf",
+  "irrtuemer:GOLF1": "GOLF.com: Mythos „Kopf still halten“ (Jonathan Yarwood)",
+  "irrtuemer:LR1": "The Left Rough: The truth about head movement",
+  "irrtuemer:KU1": "Keiser University College of Golf: Debunking golf swing myths",
+  "irrtuemer:LR2": "The Left Rough: Short backswing in golf",
+  "irrtuemer:GD1": "Golf Distillery: Lift left heel from the ground",
+  "irrtuemer:GTM1": "Golf Tips Magazine (Tim Cooke): Lift the heel",
+  "irrtuemer:GSA1": "Golf Smart Academy (Tyler Ferrell): Across the line or laid off",
+  "irrtuemer:MGS1": "MyGolfSpy Labs: Horizontal impact location study",
+  "kurzes-spiel:BRO1": "Mark Broadie: Every Shot Counts (Zusammenfassung The DIY Golfer)",
+  "platzstrategie:SS1": "Shot Scope: Driver or 3 wood off the tee (Messdaten)",
+  "regeln-etikette:RA3": "The R&A: Rules of Golf, Regeltext",
+  "regeln-etikette:USGA2": "USGA: Starting the hole – Teeing area",
+  "regeln-etikette:DGV2": "golf.de (DGV): Handicap-Regeln kurz erklärt",
+  "ausruestung:MGS1": "MyGolfSpy: Driver shaft flex chart",
+  "ausruestung:GOLF1": "GOLF.com: Shaft flex based on swing speed",
+  "ausruestung:LR1": "The Left Rough: Signs you need a stiffer shaft",
+  "ausruestung:FJ1": "Fairway Jockey: What happens if a golf shaft is too stiff",
+  "ausruestung:GIUK1": "Golf Insider UK: What loft driver should I use",
+  "ausruestung:GOLF2": "GOLF.com: 5 reasons to consider a mallet putter",
+  "ausruestung:MGS4": "MyGolfSpy: Blade versus mallet putters (über 43.000 Putts)",
+  "ausruestung:MGS2": "MyGolfSpy: Golf ball performance by cover type (Balltest 2025)",
+  "ausruestung:NCG1": "National Club Golfer: Should you always use the same golf ball",
+  "ausruestung:G360A": "Golf 360 (Scott Pickett, PGA): Same golf ball every round",
+  "ausruestung:GL1": "Golflens: Golf fitting guide",
+  "ausruestung:GOLF3": "GOLF.com: The biggest misconception about club fitting",
+  "ausruestung:G360B": "Golf 360 (Scott Pickett, PGA): Is club fitting worth it",
+  "ausruestung:EXG1": "ExactGolf: Lie comparison (Messung am GCQuad)",
+  "ausruestung:GSK1": "Golf Sidekick: Upright vs. flat lie angle",
 };
 
 // ---------------------------------------------------------------
@@ -268,7 +300,7 @@ const LEITER = {
 //   uebung (optional): { tipp: {id, messwert} } = vorhandene Übung aus tipps.js (mit Figuren)
 //                      oder { name, wiederholungen, schritte } = neue Übung nur als Text,
 //   werkzeug (optional): "ballflugHelfer" = zusätzliche Karte zum Ausprobieren nach dem Quiz,
-//   kennzahlen: passende Kennzahl-IDs der App (für die spätere Verknüpfung Karte → Lektion),
+//   kennzahlen: passende Kennzahl-IDs der App (Baustellen-Karte → Lektion, siehe lektionZurKennzahl),
 //   quellen: Kennungen aus QUELLEN, beleg: Schlüssel aus BELEGE.
 // ---------------------------------------------------------------
 // IDs nie umbenennen oder wiederverwenden – daran hängt der gespeicherte Fortschritt (Test).
@@ -1377,6 +1409,22 @@ export function ballflugErgebnis(start, kurve) {
 // ---------------------------------------------------------------
 export function lektion(id) {
   return LEKTIONEN.find((l) => l.id === id) || null;
+}
+
+// Baustellen-Karte → „📖 Lektion dazu“. Gehört eine Kennzahl zu mehreren Lektionen,
+// gilt die hier gewählte (Entscheidung Marcel, 01.10.); sonst die eine passende Lektion.
+const LEKTION_FUER_KENNZAHL = {
+  armeAnsprechen: "start-haltung",
+  gewicht: "voll-finish",
+  vorneigungHalten: "voll-treffmoment",
+  hueftBall: "voll-treffmoment",
+};
+
+// Kennzahl-ID (z. B. "tempo") → Lektion oder null (für 4 Kennzahlen gibt es noch keine)
+export function lektionZurKennzahl(kennzahlId) {
+  if (Object.hasOwn(LEKTION_FUER_KENNZAHL, kennzahlId)) return lektion(LEKTION_FUER_KENNZAHL[kennzahlId]);
+  const passend = LEKTIONEN.filter((l) => l.kennzahlen.includes(kennzahlId));
+  return passend.length === 1 ? passend[0] : null;
 }
 
 export function lektionenImPfad(pfadId) {
