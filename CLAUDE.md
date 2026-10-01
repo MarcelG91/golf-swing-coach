@@ -114,7 +114,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **(1 + 2 bei Marcel) → 5 → 7 → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
+Reihenfolge: **(1 + 2 bei Marcel) → 7 → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -139,7 +139,10 @@ Reihenfolge: **(1 + 2 bei Marcel) → 5 → 7 → 8** (4, 6 und 9 erledigt). Neu
 
 ### 🟡 Priorität 2 – Nächste Etappen
 
-5. **Etappe 10: Fortschritt** (Plan in `docs/plan-speichern-und-fortschritt.md`). Größter Nutzen fürs Golf-Lernen.
+5. ~~Etappe 10: Fortschritt~~ – **erledigt mit 0.27.0 (`fortschritt.js`) und 0.28.0 (Anzeige)**: Meine Schwünge → „📈 Fortschritt“
+   mit Wochenrückblick, Fokus + Übung, Meilensteinen, Verlauf und Trend je Kennzahl (nach Ansicht und Schlägergruppe).
+   **Offen: Vorher/Nachher** (ältester und neuester Schwung nebeneinander, braucht Bilder aus den Clips) – eigener Branch.
+   Offen bleibt der iPhone-Test mit echten Schwüngen über mehrere Tage.
 6. ~~Sicherheits-Etappe C1 + C3~~ – **erledigt mit 0.26.0** (Branch `sicherheit-c1-c3`): MediaPipe und Modell in
    `vendor/` mit Prüfsummen, Coach mit eigenem `fetch` statt SDK, CSP, Datenschutzhinweis (V4). Offen nur der
    iPhone-Test dazu (siehe Nr. 1 und `docs/iphone-testliste.md`).
