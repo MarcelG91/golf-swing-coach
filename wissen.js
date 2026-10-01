@@ -193,6 +193,7 @@ export const QUELLEN = {
   "richtig-ueben:AY2": "Adam Young: Variability practice for golf",
   "richtig-ueben:FB1": "Meta-Analyse (2022): Seltenere Rückmeldung beim Lernen",
   "richtig-ueben:FB2": "Studie: Selbst bestimmte Rückmeldung beim Lernen",
+  "richtig-ueben:FB3": "McKay u. a. (2022): Meta-Analyse zum selbst gesteuerten Üben",
 };
 
 // ---------------------------------------------------------------
@@ -935,7 +936,7 @@ export const LEKTIONEN = [
       { text: "Schlagfläche zuerst öffnen, dann greifen – so bleibt sie offen. Die rundliche Sohle gleitet dann durch den Sand, statt sich einzugraben." },
       { text: "Breiter Stand, die Füße leicht in den Sand drehen. Ball links der Mitte, Gewicht links – und dort lassen." },
       { text: "Der Schläger tritt ca. 2–5 cm hinter dem Ball in den Sand ein. Eine Linie im Sand hilft beim Üben, genau diese Stelle zu treffen." },
-      { text: "Regel 12.2: Im Bunker berührst du den Sand vor dem Schlag nicht mit dem Schläger – weder beim Probeschwung noch beim Aufsetzen. Sonst gibt es zwei Strafschläge." },
+      { text: "Regel 12.2: Im Bunker berührst du den Sand vor dem Schlag nicht mit dem Schläger – weder beim Probeschwung noch beim Aufsetzen oder im Rückschwung. Im Zählspiel kostet das zwei Strafschläge." },
     ],
     quiz: {
       frage: "Wo tritt der Schläger beim Bunkerschlag in den Sand ein?",
@@ -1067,7 +1068,7 @@ export const LEKTIONEN = [
     kern: "Plane jedes Loch mit einem Schlag mehr als Par – das nimmt Druck raus.",
     bild: "bogeyPlan",
     karten: [
-      { text: "Par 4 mit Bogey-Plan: zwei Schläge bis vor das Grün, ein Chip, zwei Putts. Par 3: Richtung Grün und zwei Putts. Par 5: drei sichere Schläge, Chip, zwei Putts." },
+      { text: "Par 4 mit Bogey-Plan: zwei Schläge bis vor das Grün, ein Chip, zwei Putts. Par 3: Abschlag Richtung Grün, Chip, zwei Putts. Par 5: drei sichere Schläge, Chip, zwei Putts." },
       { text: "Bogey an jedem Loch ergibt auf einem Par-72-Platz 90 Schläge – ein Ziel, das viele Clubspieler nicht erreichen." },
       { text: "Große Zahlen vermeiden spart die meisten Schläge: Aus Bäumen oder tiefem Rough zuerst sicher zurück aufs Fairway statt durch eine enge Lücke." },
     ],
@@ -1113,8 +1114,8 @@ export const LEKTIONEN = [
     bild: "wind",
     karten: [
       { text: "Faustregel: Pro 1,6 km/h Gegenwind ca. 1 % länger spielen, pro 1,6 km/h Rückenwind nur ca. 0,5 % kürzer. Bei starkem Wind wächst der Unterschied." },
-      { text: "Der Grund: Gegenwind verstärkt den Rückwärtsdrall, der Ball steigt und verliert Länge. Rückenwind macht den Flug flacher." },
-      { text: "Rough: Gras zwischen Schlagfläche und Ball nimmt Drall weg. Der Ball fliegt und rollt dann oft weiter als erwartet – ein „Flyer“." },
+      { text: "Der Grund: Gegenwind verstärkt die Wirkung des Rückwärtsdralls, der Ball steigt und verliert Länge. Rückenwind macht den Flug flacher." },
+      { text: "Leichtes bis mittleres Rough: Gras zwischen Schlagfläche und Ball nimmt Drall weg. Der Ball fliegt und rollt dann oft weiter als erwartet – ein „Flyer“." },
       { text: "Kälte und Nässe: Ein kalter Ball fliegt kürzer, und auf nassem, weichem Boden rollt er kaum. Plane dann mit der reinen Fluglänge." },
     ],
     quiz: {
@@ -1132,19 +1133,19 @@ export const LEKTIONEN = [
     pfad: "strategie",
     level: "fortgeschritten",
     titel: "Routine und Nervosität",
-    kern: "Eine feste Routine vor dem Schlag hilft am besten gegen Nervosität.",
+    kern: "Eine feste Routine vor dem Schlag hilft nachweislich gegen Nervosität.",
     bild: "zonen",
     karten: [
-      { text: "Nervosität ist normal: Am ersten Abschlag steigt der Puls, die Feinmotorik leidet. Eine Übersichtsarbeit (2019) fand: Am besten hilft eine feste Routine vor dem Schlag." },
+      { text: "Nervosität ist normal: Am ersten Abschlag steigt der Puls, die Feinmotorik leidet. Eine Übersichtsarbeit (2019) nennt die feste Routine als eine der wirksamsten Hilfen – neben Quiet Eye und Üben unter Druck." },
       { text: "Denk-Zone hinter dem Ball: Ziel, Schläger und Schlagidee festlegen. Dann bewusst einen Schritt nach vorn – in der Spiel-Zone zählen nur noch Gefühl und Ziel." },
       { text: "Auf der European Tour spielten Spieler mit gleich langer Routine über die Saison konstanter. Ausgewertet wurden über 22.000 Schläge." },
       { text: "Quiet Eye beim Putten: Blick ruhig auf die Rückseite des Balls, auch während des Putts. In einer Studie puttete die trainierte Gruppe unter Druck genauer." },
     ],
     quiz: {
-      frage: "Was hilft laut Übersichtsarbeit am besten gegen Versagen unter Druck?",
+      frage: "Welche Hilfe gegen Versagen unter Druck nennt die Übersichtsarbeit?",
       antworten: ["Eine feste Routine vor dem Schlag", "Vor dem Schlag die Technik durchgehen", "Schneller schlagen, um nicht zu grübeln"],
       richtig: 0,
-      erklaerung: "Eine feste Routine lenkt vom Grübeln ab. Sie wirkte in der Übersichtsarbeit am stärksten.",
+      erklaerung: "Eine feste Routine lenkt vom Grübeln ab. Auch Quiet Eye und Üben unter leichtem Druck halfen.",
     },
     uebung: {
       name: "Atmung 4 – 6",
@@ -1194,11 +1195,11 @@ export const LEKTIONEN = [
     karten: [
       { text: "Ein Bild wie „schwing wie ein Pendel“ ersetzt viele Einzelanweisungen. Wer mit Bildern lernt, bleibt laut Studien unter Druck stabiler." },
       { text: "In einer Studie sollten Spieler einen Putt „nicht zu lang“ spielen. Unter Ablenkung passierte genau das häufiger." },
-      { text: "Deshalb positiv formulieren: „Ball ans Loch sterben lassen“ statt „nicht zu lang“, „Größe halten“ statt „nicht in die Knie gehen“." },
+      { text: "Deshalb positiv formulieren: „Ball knapp hinter das Loch rollen lassen“ statt „nicht zu lang“, „Größe halten“ statt „nicht in die Knie gehen“." },
     ],
     quiz: {
       frage: "Welcher Gedanke hilft unter Druck eher?",
-      antworten: ["„Bloß nicht zu lang!“", "„Ball ans Loch sterben lassen“", "„Nicht verziehen!“"],
+      antworten: ["„Bloß nicht zu lang!“", "„Ball knapp hinter das Loch rollen lassen“", "„Nicht verziehen!“"],
       richtig: 1,
       erklaerung: "In der Studie passierte das Verbotene unter Ablenkung häufiger. Ein positives Bild sagt, was passieren soll.",
     },
@@ -1305,16 +1306,16 @@ export const LEKTIONEN = [
     karten: [
       { text: "Filmen: frontal oder von hinten, Handy auf Hüfthöhe, der ganze Körper im Bild. Dann eine Baustelle wählen – die erste Karte, nicht alle gleichzeitig." },
       { text: "Üben: die Übung der Karte im Übungsmodus, danach den Schwunggedanken auf der Range. Nach ein bis zwei Wochen neu filmen und vergleichen." },
-      { text: "Nicht jeden Schlag filmen: Studien zeigen, dass es beim Lernen hilft, selbst zu bestimmen, wann man eine Rückmeldung bekommt." },
+      { text: "Wie oft Rückmeldung (etwa ein Video) beim Lernen hilft, ist nicht eindeutig: Neuere Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil." },
     ],
     quiz: {
-      frage: "Was hilft laut Studien beim Lernen mit Video?",
-      antworten: ["Jeden Schlag filmen", "Selbst bestimmen, wann du filmst", "Nie wieder filmen"],
-      richtig: 1,
-      erklaerung: "Wer selbst bestimmt, wann er Rückmeldung bekommt, lernt besser. Dazwischen übst du ohne Video.",
+      frage: "Was sagt die Forschung, wie oft man Rückmeldung bekommen sollte?",
+      antworten: ["Nach jedem Schlag ist am besten", "Möglichst nie", "Das ist nicht eindeutig geklärt"],
+      richtig: 2,
+      erklaerung: "Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil. Du entscheidest, wann du filmst.",
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:FB1", "richtig-ueben:FB2"],
+    quellen: ["richtig-ueben:FB1", "richtig-ueben:FB3"],
     beleg: "studie",
   },
 ];

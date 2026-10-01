@@ -774,7 +774,8 @@ const SCHAUBILDER = {
     b.text([eintritt, sand + 26], "Eintritt", { anker: "end", groesse: 10 });
     b.text([300, sand + 26], "Sand trägt den Ball heraus", { anker: "end", groesse: 10 });
     b.text([160, 168], "Seitenansicht · Ziel rechts", { farbe: "text-leise", groesse: 10 });
-    return { ausschnitt: { x: 0, y: 30, breite: 320, hoehe: 146 }, elemente: b.elemente };
+    // Ausschnitt ab y 14: Die Flugbahn des Balls reicht bis y 24
+    return { ausschnitt: { x: 0, y: 14, breite: 320, hoehe: 162 }, elemente: b.elemente };
   },
 
   // Lektion „Putten: Länge vor Linie“: zu kurz fällt nie – ideal ca. 40 cm hinter dem Loch (Pelz)
@@ -902,7 +903,8 @@ const SCHAUBILDER = {
     const b = baukasten();
     b.rechteck(118, 56, 74, 118, "gut", "skala-gut", 30, 1); // Fairway
     b.pfad(ellipse([155, 34], 36, 16), "gut", 1, false, "skala-gut"); // Grün
-    b.rechteck(136, 54, 38, 8, "achtung", "skala-achtung", 4, 1); // Bunker vor dem Grün
+    // Bunker seitlich am Grün: Von Punkt 2 ist der Weg aufs Grün frei – passt zum Chip (Pfad 4)
+    b.pfad(ellipse([108, 34], 10, 8), "achtung", 1, false, "skala-achtung");
     b.rechteck(146, 178, 18, 8, "text-leise", "text-leise", 2); // Abschlag
     const schlaege = [[155, 182], [148, 126], [160, 78], [150, 32]];
     b.pfad(schlaege, "text", 1.5, true);
@@ -1033,9 +1035,9 @@ const SCHAUBILDER = {
     b.text([86, 46], "Ein Bild statt vieler Regeln:", { anker: "start", fett: true });
     b.text([86, 62], "„schwing wie ein Pendel“", { anker: "start", farbe: "akzent" });
     b.text([18, 116], "✗", { fett: true, farbe: "verbessern", groesse: 14 });
-    b.text([34, 116], "„Nicht zu lang!“ – unter Druck oft zu lang", { anker: "start" });
+    b.text([34, 116], "„Nicht zu lang!“ – abgelenkt häufiger zu lang", { anker: "start" });
     b.text([18, 146], "✓", { fett: true, farbe: "gut", groesse: 14 });
-    b.text([34, 146], "„Ball ans Loch sterben lassen“", { anker: "start", fett: true, farbe: "gut" });
+    b.text([34, 146], "„Ball knapp hinter das Loch rollen lassen“", { anker: "start", fett: true, farbe: "gut" });
     b.text([160, 172], "nach Studien zu Bildern und Verboten beim Putten", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 10, breite: 320, hoehe: 170 }, elemente: b.elemente };
   },
@@ -1143,7 +1145,7 @@ const SCHAUBILDER = {
     pfeilspitze(b, zurueck[2], zurueck[3], "text-leise", 6);
     b.text([160, 132], "wieder von vorn", { farbe: "text-leise", groesse: 10 });
     b.text([160, 26], "Üben mit der App", { fett: true });
-    b.text([160, 156], "Du bestimmst, wann du filmst – das hilft beim Lernen", { farbe: "text-leise", groesse: 10 });
+    b.text([160, 156], "Du bestimmst, wann du filmst – dazwischen ohne Video üben", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 10, breite: 320, hoehe: 154 }, elemente: b.elemente };
   },
 };

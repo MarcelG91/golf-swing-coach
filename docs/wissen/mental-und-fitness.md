@@ -8,7 +8,8 @@ Physiotherapie verweisen.
 ## Kernsatz für die App
 
 > **Aufwärmen mit Bewegung, nicht mit Dehnen im Stehen.** Und: Nervosität ist normal – eine feste
-> Routine hilft am meisten. [WU1][CH1]
+> Routine hilft nachweislich – laut Übersichtsarbeit eine von vier wirksamen Hilfen (Routine, Quiet Eye,
+> Druck der linken Hand, Üben unter Druck). [WU1][CH1]
 
 ## 1. Nervosität und Druck (🌿)
 

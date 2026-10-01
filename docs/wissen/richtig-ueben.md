@@ -37,7 +37,9 @@ Schwunggedanken und Rückmeldungen formuliert und getaktet sein sollten (siehe `
   im Kopf hat (Liao & Masters 2001; auch in einer Putt-Studie) [AN1][AN2].
 - **Keine Verbote**: In der Studie „The putt and the pendulum“ (Wegner et al. 1998) sollten Spieler
   einen Putt **nicht** zu lang spielen. Unter Ablenkung passierte genau das **häufiger** [IR1]. Deshalb:
-  „Ball ans Loch sterben lassen“ statt „nicht zu lang“; „Größe halten“ statt „nicht in die Knie“.
+  „Ball knapp hinter das Loch rollen lassen“ statt „nicht zu lang“; „Größe halten“ statt „nicht in die Knie“.
+  (Früher stand hier „Ball ans Loch sterben lassen“ – das widerspricht Pelz' Messung, nach der ein verfehlter
+  Putt ideal ca. 40 cm hinter dem Loch liegen bliebe, siehe `putten.md`.)
 
 ## 2. Verteilt üben statt am Stück (🌱)
 
@@ -75,8 +77,10 @@ Adam Young („The Practice Manual“) empfiehlt, **dasselbe Ziel auf verschiede
 - Die „Guidance-Hypothese“ sagt: Wer nach **jedem** Versuch Rückmeldung bekommt, verlässt sich darauf
   und lernt das eigene Körpergefühl schlechter. Die Forschung dazu ist **gemischt** – eine Meta-Analyse
   fand keinen verlässlichen Effekt [FB1].
-- Gut belegt ist dagegen: **Selbst bestimmen**, wann man Rückmeldung bekommt, verbessert das Lernen
-  [FB1][FB2].
+- **Selbst bestimmen**, wann man Rückmeldung bekommt, galt lange als gut belegt [FB2]. Eine Meta-Analyse
+  von 2022 (52 Studien) fand jedoch: Nach Korrektur für Veröffentlichungsverzerrung ist der Nutzen klein und
+  „derzeit nicht von null zu unterscheiden“ (g = 0,44 → ca. 0,11) [FB3]. **Für die App**: nicht als
+  bewiesenen Vorteil darstellen, nur als „nicht eindeutig“ (Korrektur 01.10.2026 nach dem Golf-App-Check).
 - **Für die App**: Nicht jeden Schlag filmen. Vorschlag: 3–5 Schwünge filmen, eine Baustelle wählen,
   dann **ohne** Video üben und erst später wieder prüfen. Der Nutzer entscheidet, wann er filmt.
 - **Vor der Rückmeldung selbst schätzen**: „Was glaube ich, war der Fehler?“ – dann in der App
@@ -122,3 +126,4 @@ Beispiel für 60 Minuten / ca. 50 Bälle (angepasst aus den Prinzipien oben):
 - [AN2] Analogy vs. technical learning in a golf putting task – https://www.researchgate.net/publication/272261002_Analogy_vs_Technical_Learning_in_a_Golf_Putting_Task_An_Analysis_of_Performance_Outcomes_and_Attentional_Processes_Under_Pressure
 - [IR1] Wegner, Ansfield & Pilloff (1998): The putt and the pendulum – https://scholar.harvard.edu/dwegner/publications/putt-and-pendulum-ironic-effects-mental-control-action
 - [FB2] Optimizing feedback frequency in motor learning: self-controlled and moderate frequency – https://www.researchgate.net/publication/353639538_Optimizing_Feedback_Frequency_in_Motor_Learning_Self-Controlled_and_Moderate_Frequency_KR_Enhance_Skill_Acquisition
+- [FB3] McKay, Yantha, Hussien, Carter & Ste-Marie (2022): Meta-analytic findings of the self-controlled motor learning literature. Meta-Psychology 6 – https://open.lnu.se/index.php/metapsychology/article/view/2803

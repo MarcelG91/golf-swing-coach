@@ -40,7 +40,7 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 
 - Für Einsteiger: Jedes Loch **mit einem Schlag mehr als Par** planen („Bogey-Golf“) [STIX1][SWM1]; z. B.
   lange Löcher mit Vorlage auf die Lieblingsdistanz, dann Pitch zur Grünmitte und zwei Putts [H19].
-  - Par 3: Richtung Grün, 2 Putts.
+  - Par 3: Abschlag Richtung Grün, Chip, 2 Putts.
   - Par 4: in 2 Schlägen **vor** das Grün, Chip, 2 Putts.
   - Par 5: 3 sichere Schläge vor das Grün, Chip, 2 Putts.
 - Nimmt Druck raus und vermeidet riskante Schläge. Bogey auf allen Löchern ist ein Ergebnis von 90 –
@@ -72,11 +72,11 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 
 - **Gegenwind schadet mehr als Rückenwind hilft**. Faustregel: pro 1 mph (1,6 km/h) Gegenwind **ca. 1 %
   länger** spielen, pro 1 mph Rückenwind **ca. 0,5 % kürzer**. Bei starkem Wind wird der Unterschied
-  noch größer [PF1][DA1]. Ebenso Arccos und Blue Tees (Gegenwind verstärkt den Rückwärtsdrall, der Ball
+  noch größer [PF1][DA1]. Ebenso Arccos und Blue Tees (Gegenwind verstärkt die Wirkung des Rückwärtsdralls, der Ball
   steigt; Faustregel ca. 1 Schläger mehr pro 16 km/h Gegenwind, ½ Schläger weniger bei Rückenwind) [ARC1][BTW1].
 - Bei Gegenwind **ruhiger schwingen** („Swing easy when it's breezy“) – harte Schläge erzeugen mehr Spin
   und steigen. (Nur Lehrmeinung, nicht in der App.)
-- **Rough („Flyer“)**: Gras zwischen Schlagfläche und Ball → weniger Rückwärtsdrall, der Ball fliegt und
+- **Leichtes bis mittleres Rough („Flyer“)**: Gras zwischen Schlagfläche und Ball → weniger Rückwärtsdrall, der Ball fliegt und
   rollt oft weiter als erwartet [GTM1][SR1]; aus tiefem Rough mehr Loft nehmen und nur rausspielen.
 - **Kälte**: Der Ball fliegt kürzer (Blue Tees: ca. 1–2 Yards weniger Carry pro Eisen je 10 °F unter 70 °F,
   also je ca. 5–6 °C unter 21 °C) [BTW1][ARC1]. **Nässe**: Wasser zwischen Fläche und Ball, weicher Boden –

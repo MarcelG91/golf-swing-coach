@@ -214,6 +214,19 @@ test("Figuren der Wissensseite stammen aus uebungsbilder.js und lassen sich zeic
   }
 });
 
+test("Bewegte Figuren laufen nur vorwärts (Ansprechen → … → Finish), Neuanfang nur als Sprung", () => {
+  // Rückwärts animiert wäre keine echte Bewegung – das darf eine Figur nie zeigen
+  const reihenfolge = ["ansprechen", "halbRueck", "top", "abschwung", "treff", "halbDurch", "finish"];
+  for (const [name, bild] of Object.entries(FIGUREN)) {
+    if (bild.ansicht !== "vorne" || bild.folge.length < 2) continue;
+    bild.folge.forEach((f, i) => {
+      if (i === 0 || !(f.dauer > 0)) return; // Sprung (dauer 0) oder erste Pose
+      const vorher = bild.folge[i - 1].pose;
+      assert.ok(reihenfolge.indexOf(f.pose) > reihenfolge.indexOf(vorher), `${name}: ${vorher} → ${f.pose} läuft rückwärts`);
+    });
+  }
+});
+
 test("Animierte Figur P1–P10: Beschriftung nur beim Anhalten in der Position, Zahlen gültig", () => {
   const bild = FIGUREN.schwungPhasen;
   // Jede Pause trägt eine P-Nummer, jeder Weg dorthin ist unbeschriftet

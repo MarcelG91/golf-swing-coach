@@ -222,6 +222,10 @@ Variablen in `style.css` (hell und dunkel).
   „Linie im Sand“, „Füße fühlen“, „Atmung 4 – 6“, „Range-Runde“, „Aufwärmen 10 Minuten“.
 - Pfad-Level: „Rund ums Grün“ und „Clever spielen“ 🌿, „Besser üben“ 🌱 (wie im Plan). „Wind, Rough und Nässe“ ist
   🌳 (wie in `platzstrategie.md`).
+- **Korrekturen nach dem Golf-App-Check (01.10.)**: „Selbst bestimmte Rückmeldung hilft“ ist laut Meta-Analyse
+  2022 nicht belegt → Lektion „Üben mit dieser App“ sagt jetzt „nicht eindeutig“. „Routine hilft am besten“ → „eine
+  der wirksamsten Hilfen“. „Ball ans Loch sterben lassen“ widersprach Pelz → „Ball knapp hinter das Loch rollen
+  lassen“. Par 3 im Bogey-Plan mit Chip. Neuer Test: bewegte Figuren laufen nur vorwärts.
 
 ## Umsetzung in Schritten (je 1 Branch = 1 PR)
 
