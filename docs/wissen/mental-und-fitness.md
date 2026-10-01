@@ -25,6 +25,9 @@ Physiotherapie verweisen.
      Freunden).
 - **Atmung**: Langsam ausatmen, z. B. 4 Sekunden ein, 2 halten, 6 aus – längeres Ausatmen beruhigt
   [GSM1]. (Gut als Teil der Routine, weniger gut belegt als die Routine selbst.)
+  Studie (nicht im Golf): 5 Minuten langsames Atmen, zuletzt **4 s ein, 6 s aus**, stärkte bei 47 jungen
+  und älteren Erwachsenen den beruhigenden Teil des Nervensystems (Vagus, HF-Power) und senkte die
+  empfundene Angst [ATM1]. In der App deshalb „4 ein – 6 aus“ statt 4-2-6.
 - **„Quiet Eye“ beim Putten**: Vor dem Putt den Blick ruhig auf die Rückseite des Balls richten und
   während des Putts dort lassen. In einer Studie mit 22 guten Golfern (Vine, Moore & Wilson 2011) puttete
   die trainierte Gruppe unter Druck genauer; ihr ruhiger Blick dauerte ca. 2,8 s statt 1,4 s, und sie
@@ -95,6 +98,7 @@ Physiotherapie verweisen.
 - [QE2] The effect of quiet eye training on golf putting performance in pressure situation (Scientific Reports 2024) – https://www.nature.com/articles/s41598-024-55716-z
 - [BG1] Better Game Golf: Golf and anxiety – https://www.bettergamegolf.com/learn/golf-anxiety-pressure-mnl4gy7e
 - [GSM1] Golf State of Mind: Breathing techniques – https://golfstateofmind.com/mastering-golf-breathing-techniques-the-mental-anchor-for-peak-performance/
+- [ATM1] Magnon, Dutheil & Vallet (2021): Benefits from one session of deep and slow breathing on vagal tone and anxiety in young and older adults. Scientific Reports 11 – https://pmc.ncbi.nlm.nih.gov/articles/PMC8481564/
 - [WU1] Acute effects of passive static stretching during warm-up on driver clubhead speed … (Gergley 2009) – https://www.researchgate.net/publication/24350715
 - [WU2] Fradkin et al.: Improving golf performance with a warm up conditioning programme – https://www.researchgate.net/publication/8165547_Improving_golf_performance_with_a_warm_up_conditioning_programme
 - [WU3] The effect of dynamic and static stretching on golf driving performance – https://www.researchgate.net/publication/313334577_The_Effect_of_Dynamic_and_Static_Stretching_on_Golf_Driving_Performance

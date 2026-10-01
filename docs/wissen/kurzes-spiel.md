@@ -36,12 +36,16 @@ schiefgehen [PIG1][FOY1].
   (nicht „festhalten“), damit die **Sohle (Bounce)** über den Boden gleitet – verzeiht fette Treffer
   [SIE1][AGD1].
 
-**Schlägerwahl: die „Regel der 12“** (Faustregel für flache Grüns und gute Lage) [LR2]
-- Zahl des Eisens + Verhältnis Rollen = 12. Beispiele:
-  - Pitching Wedge ≈ 1 : 1 (halb fliegen, halb rollen)
-  - 8er-Eisen ≈ 1 : 2
-  - 6er-Eisen ≈ 1 : 3
-- Bergauf: Landepunkt weiter Richtung Loch (ca. 60 %), bergab näher am Ball (ca. 40 %).
+**Schlägerwahl: die „Regel der 12“** (Faustregel für flache Grüns und gute Lage) – **Quellen uneins**
+(Prüfung 01.10.2026):
+- Verbreitete Fassung: 12 minus Schlägernummer = Teile Rollen je Teil Flug, also Pitching Wedge (10)
+  ≈ 1 : 2, 8er-Eisen ≈ 1 : 4 [GAU1][SWS1].
+- The Left Rough nennt dagegen Pitching Wedge ≈ 1 : 1, 8er ≈ 1 : 2, 6er ≈ 1 : 3 [LR2] – das passt nicht
+  zur Formel. Don Trahan hält die Regel insgesamt für zu grob (Wind, Gras, Gefälle fehlen) und rät, das
+  Rollen der eigenen Schläger durch Üben zu lernen [SWS1].
+- **Für die App**: keine festen Verhältnisse, nur „Trainer sind uneins“ und der belegte Grundsatz:
+  weniger Loft → weniger Flug, mehr Rollen (siehe Loft in `erste-schritte.md`).
+- Bergauf: Landepunkt weiter Richtung Loch (ca. 60 %), bergab näher am Ball (ca. 40 %) [LR2].
 - Grenzen: gilt für flache, normale Grüns; Rough, harte oder sehr schnelle Grüns verändern das Rollen.
 - **Alternative** (Einsteiger oft einfacher): **Ein Schläger** für alle Chips (z. B. 9er oder PW) und die
   Länge über die Schwunglänge steuern.
@@ -60,6 +64,9 @@ viele im Umkreis von einer Schlägerlänge ums Loch liegen bleiben.
   - **Rhythmus und Durchschwung bleiben gleich**, nur die **Länge des Rückschwungs** ändert sich.
   - Mit 3 Längen × 3–4 Wedges hat man 9–12 feste Entfernungen („3×4-System“).
   - Vorteil: verhindert das Abbremsen – nach Pelz der größte Fehler im kurzen Spiel.
+  - Unabhängig ebenso beschrieben: Golfwell (Cordie Walker) mit 7:30 / 9:00 / 10:30 und festen
+    Längen je Wedge [GW1]; Foy Golf Academy mit leicht anderen Uhrzeiten (8 / 9 / 10 Uhr) und einer
+    Tabelle „Wedge × Schwunglänge“ [FOY2].
 - **Eigene Tabelle anlegen**: Auf der Range mit jedem Wedge die drei Längen je 10× schlagen, mittlere
   Carry-Länge notieren. (Idee für die App: kleine „Meine Wedge-Längen“-Tabelle.)
 - **Lob-Schlag** (🌳): Stand deutlich links ausgerichtet, Schlagfläche weit offen, Ball mittig, **nicht
@@ -119,3 +126,7 @@ Schläger soll **auf** der Linie eintreten. Dann einen Ball knapp **vor** die Li
 - [PG1] Practical Golf: Pros vs. Joes – https://practical-golf.com/pros-vs-joes
 - [GTS1] GOLFTEC Scramble: Get up and down more with this drill – https://scramble.golftec.com/blog/2018/12/get-up-and-down-more-with-this-drill/
 - [BB1] Bruce Bolt: Golf chipping drills for beginners – https://brucebolt.us/blogs/news/golf-chipping-drills
+- [GAU1] Golfers Authority: The rule of 12 in golf – https://golfersauthority.com/what-is-the-rule-of-12-in-golf-chipping/
+- [SWS1] Swing Surgeon (Don Trahan): Formula for pitches and chips (Regel der 12, Kritik) – https://www.swingsurgeon.com/daily-video-tips/formula-pitches-and-chips
+- [GW1] Golfwell (Cordie Walker): Ultimate guide to hitting wedges from 30–100 yards – https://golfwell.co/wedge-distance-control-guide/
+- [FOY2] Foy Golf Academy: The 3 wedge system – https://foygolfacademy.com/the-3-wedge-system-how-to-dial-in-distances-from-20-to-60-yards/
