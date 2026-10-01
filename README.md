@@ -282,6 +282,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 
 | Datei | Aufgabe |
 |---|---|
+| `tests/browser-rauchtest.mjs` | Startet die App in Chrome ohne Fenster: „Bereit“, Fortschritt zeigt Diagramme, keine Konsolenfehler, keine Fremdanfragen (`node tests/browser-rauchtest.mjs`, läuft auch in der CI) |
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |

@@ -83,7 +83,7 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 |---|---|---|---|---|
 | T1 | P1 | Erledigt 28.09. (Ruleset „main schützen“) | `main` war ohne Regel gegen direkte Pushes. | Ruleset aktiv, ohne Ausnahmen: nur per Pull Request (0 Approvals), Pflicht-Check „Tests“, kein Force-Push, kein Löschen. Geprüft per GitHub-API. |
 | T2 | P1 | Erledigt 27.09. (PR #6) | Tests liefen nur von Hand. | Workflow `.github/workflows/pruefen.yml` bei jedem Pull Request. |
-| T3 | P2 | Offen | Kein Test im echten Browser. | Playwright-Rauchtest: Seite lädt, „Bereit“ erscheint, keine Konsolenfehler. Alternative ohne Zusatzbibliothek: Chrome ohne Fenster über das DevTools-Protokoll (bei den Checks am 28.09. und 29.09. lokal genutzt, noch nicht in der CI). |
+| T3 | P2 | Erledigt 01.10. | Kein Test im echten Browser. | `tests/browser-rauchtest.mjs`: Chrome ohne Fenster über das DevTools-Protokoll, in der CI als eigener Schritt. Prüft Start („Bereit“), Fortschrittsanzeige, Konsolenfehler, CSP-Verstöße und Anfragen an fremde Adressen. |
 | T4 | P2 | Erledigt 27.09. (PR #9, CLAUDE.md) | Versionsmix nach Updates, Versionsnummer blieb stehen. | Versionsnummer wird bei jeder App-Änderung erhöht, Regel steht in `CLAUDE.md`. |
 | T5 | P3 | Erledigt 27.09. (PR #4) | Branch `technik-tipps` lag hinter `main`. | Gemergt. |
 | T6 | P3 | Erledigt 27.09. (PR #6) | Kein beschriebener Rückweg bei Problemen. | Abschnitt „Rückweg“ im README. |

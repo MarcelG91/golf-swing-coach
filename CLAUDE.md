@@ -114,7 +114,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **(1 + 2 bei Marcel) → 7 → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
+Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -146,8 +146,9 @@ Reihenfolge: **(1 + 2 bei Marcel) → 7 → 8** (4, 6 und 9 erledigt). Neue Idee
 6. ~~Sicherheits-Etappe C1 + C3~~ – **erledigt mit 0.26.0** (Branch `sicherheit-c1-c3`): MediaPipe und Modell in
    `vendor/` mit Prüfsummen, Coach mit eigenem `fetch` statt SDK, CSP, Datenschutzhinweis (V4). Offen nur der
    iPhone-Test dazu (siehe Nr. 1 und `docs/iphone-testliste.md`).
-7. **Automatischer Browser-Test (T3):** Chrome ohne Fenster über das DevTools-Protokoll (ohne neue Bibliothek) –
-   Seite lädt, „Bereit“, keine Konsolenfehler.
+7. ~~Automatischer Browser-Test (T3)~~ – **erledigt** (Branch `browser-test`): `node tests/browser-rauchtest.mjs`
+   (Chrome ohne Fenster über das DevTools-Protokoll, ohne neue Bibliothek, läuft auch in der CI). Nach Änderungen an
+   der Oberfläche einmal lokal laufen lassen.
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
    Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
 9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1

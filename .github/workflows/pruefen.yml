@@ -50,3 +50,8 @@ jobs:
 
       - name: Tests und Video-Wächter
         run: node --test
+
+      - name: Browser-Rauchtest (Chrome ohne Fenster)
+        # Startet die App in einem echten Chrome (auf dem GitHub-Server schon vorinstalliert):
+        # Seite lädt, "Bereit", Fortschritt zeigt Diagramme, keine Konsolenfehler, kein Fremdzugriff.
+        run: node tests/browser-rauchtest.mjs
