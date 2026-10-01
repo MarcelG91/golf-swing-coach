@@ -1,7 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 01.10.2026 · geprüft auf `origin/main` @ `9773ca2` (Version 0.24.0, live) und Branch `wissen-nachschlagen` (Version 0.25.0);
-Sicherheits-Etappe C1 + C3 + V4 im Branch `sicherheit-c1-c3` (Version 0.26.0) eingetragen
+Stand: 01.10.2026 · geprüft auf `origin/main` @ `38cca52` (Version 0.26.1, live; enthält die Sicherheits-Etappe C1 + C3 + V4 aus 0.26.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
@@ -25,9 +24,10 @@ abgesichert und die E-Mail-Adresse privat (Etappe S0 erledigt).
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). „Nachschlagen“ (0.25.0) speichert nichts Neues: Suche und gewählte Ansicht leben nur bis zum Neuladen (`localStorage` vorher = nachher gemessen). |
 | Cybersecurity | Grün (ab 0.26.0, iPhone-Test steht aus) | Kein nachgeladener Fremdcode mehr: MediaPipe und Modell selbst ausgeliefert, Prüfsumme je Datei im Test, Herkunft aus npm-Registry (Prüfsumme und Signatur) bzw. Google-Speicher geprüft (C1). Coach ohne SDK, also sieht nur App-Code den Schlüssel. CSP als `<meta>` (C3), im Browser ohne Verstöße. Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). Offen P3: C4, C6. |
-| Test und Deploy | Gelb | 158 Tests grün im Branch `sicherheit-c1-c3` (`main` 146). CI auf `main` grün, Live-Stand gleich `main` (0.25.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Test und Deploy | Gelb | 158 Tests grün auf `main`. CI auf `main` grün, Live-Stand gleich `main` (0.26.1, Dateien bitgleich geprüft). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
 | Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach: nur eine Anfrage zur Zeit (S11); seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell vollständig gelesen (S12). Offen nur S10 (P3). |
 | Geschwindigkeit | Gelb | Live 01.10. (Mac, frisches Profil): „Bereit“ nach 0,7 s, „Offline bereit ✓“ nach 0,8 s; Warmstart 0,5 s ohne Datenübertragung. Bewegte Figuren (Übungsmodus, Wissensseite) laufen mit ca. 30 Bildern pro Sekunde und nur, solange sie zu sehen sind. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
+| Zugriffe und Freigaben | Gelb | Seit 01.10. prüft jeder Check, was Claude Code ohne Rückfrage darf, mit einer Sperrliste für gefährliche Befehle. Kritische und veraltete Freigaben sind bereinigt. Offen: die Rechte des GitHub-Zugangs weiter verkleinern (P3). |
 
 ## Befunde
 
@@ -104,6 +104,14 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 | S13 | P2 | Erledigt 01.10. (Branch `sicherheit-c1-c3`, 0.26.0) | Seit 0.26.0 liegt MediaPipe nur in der SIMD-Variante in `vendor/`. Auf Geräten ohne WebAssembly-SIMD (iOS unter 16.4) hätte die Pose-Erkennung nie gestartet, und die Meldung hätte fälschlich auf fehlende Offline-Dateien verwiesen (unabhängiger Prüfer, in Chrome nachgestellt). | `app.js` erkennt den Fall vor dem Laden und meldet „Dieses Gerät ist zu alt … iOS bzw. iPadOS 16.4 oder neuer“; Mindestversion und Hilfe im README; Test. Alternative (nicht gebaut, zur Entscheidung): „nosimd“-Dateien zusätzlich ausliefern (+9,5 MB, hilft nur iOS 16.0–16.3; iOS 15 scheitert ohnehin an der CSP). |
 | S14 | P3 | Erledigt 01.10. (Branch `sicherheit-c1-c3`, 0.26.0) | Die neue Zeitgrenze des Coachs (zuerst 5 Minuten) galt auch für das Lesen der Antwort – eine langsame, schon bezahlte Antwort wäre abgebrochen worden. | Zeitgrenze 10 Minuten (üblich sind 30–90 s); bei Abbruch wird der Rest des Datenstroms nicht weitergelesen; ein kaputtes Ereignis im Strom meldet „nicht geklappt“ statt „keine Verbindung“. |
 | S12 | P3 | Erledigt 29.09. (Check-Fix 0.17.1, Branch `check-2026-09-29`) | Coach: Lehnt Claude mitten in der Antwort ab, schreibt laut API ein anderes Modell im selben Datenstrom weiter (Anfang, Markierung, Fortsetzung in getrennten Textblöcken). Die App las nur den ersten Textblock und meldete „unvollständig“, obwohl die Antwort vollständig angekommen und bezahlt war. Selten (nur bei einer Ablehnung), im Browser mit nachgebauter Antwort gezeigt. | `leseAntwort()` in `coach.js` setzt alle Textblöcke zusammen; beginnt das zweite Modell von vorn, gilt der letzte Textblock. Tests in `tests/coach.test.mjs` und `tests/sicherheit.test.mjs`, im Browser für Normalfall, Rückfall und Neubeginn geprüft. Bei Gelegenheit: Die Kostenanzeige zählt nach einem Rückfall nur den letzten Versuch. |
+
+### Zugriffe und Freigaben (Z)
+
+| Nr | Prio | Status | Befund | Maßnahme |
+|---|---|---|---|---|
+| Z1 | P1 | Erledigt 01.10., manuell | Die Freigabeliste von Claude Code war weit gefasst und enthielt viele veraltete Einträge (44). Einzelne Freigaben ließen sich als Hintertür für beliebige Befehle nutzen. | Liste auf 25 enge Freigaben verkleinert, dazu eine Sperrliste (`deny`) für Force-Push, Löschen, Änderungen an Zugang, Hooks und Zieladresse. Die Datei liegt nur lokal (per `.gitignore` ausgeschlossen). |
+| Z2 | P2 | Erledigt 01.10. | Zugriffe wurden bisher nicht regelmäßig geprüft. | `/golf-app-check` enthält den Block Z: Freigaben, Sperrliste, Rechte des GitHub-Zugangs, Erweiterungen in VS Code. Er läuft bei jedem Check, mindestens einmal im Monat. Er darf Freigaben nur enger machen, und nur nach Rückfrage. |
+| Z3 | P3 | Offen | Der GitHub-Zugang hat mehr Rechte, als die App braucht. | Rechte auf das Nötige verkleinern und beim nächsten Check erneut prüfen. |
 
 ### Geschwindigkeit (Messwerte vom 27.09., Mac, schnelles Netz)
 
