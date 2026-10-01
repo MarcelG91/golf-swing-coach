@@ -15,6 +15,9 @@ von derselben Adresse wie die App (GitHub Pages). Warum?
 - Dateien in `vendor/` **nie von Hand ändern**. Eine neue Version kommt in einen **neuen Ordner**
   (z. B. `mediapipe-1.0.1/`). Der Service Worker speichert diese Dateien dauerhaft und fragt nicht
   nach Updates – ein neuer Ordnername ist deshalb der einzige Weg, wie eine neue Version ankommt.
+- Bei einer neuen Version außerdem `CACHE_VENDOR` in `sw.js` **und** `pwa.js` hochzählen (z. B. `vendor-v2`,
+  Test in `tests/vendor.test.mjs` anpassen) und den alten Ordner löschen. Sonst blieben die alten ca. 19 MB
+  auf jedem Gerät liegen – der Service Worker räumt nur ganze Speicher nach ihrem Namen auf.
 - Jede Datei hier muss in `tests/vendor.test.mjs` stehen (auch die Lizenz). Nur diese README ist ausgenommen.
 - Update auf MediaPipe 1.x ist Befund C4 und kommt in einen eigenen Branch.
 
@@ -35,7 +38,8 @@ Zum Vergleich: Die Dateien, die die App bis 0.25.0 von jsDelivr geladen hat, sin
 (jsDelivr setzt vor das Modul nur einen Kommentar).
 
 Nicht übernommen: die Variante ohne SIMD (`vision_wasm_nosimd_internal.*`, nur für sehr alte
-Browser; Safari kann SIMD ab iOS 16.4), die CommonJS-Fassung und die Source-Maps.
+Browser; Safari kann SIMD ab iOS 16.4 – ältere Geräte bekommen in der App eine klare Meldung, Befund S13),
+die CommonJS-Fassung und die Source-Maps.
 
 ## Lizenz
 

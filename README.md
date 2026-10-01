@@ -37,6 +37,8 @@ Mehr unter [Datenschutz](#datenschutz).
 👉 **https://marcelg91.github.io/golf-swing-coach/**
 
 - Auf dem iPhone in Safari öffnen → Teilen → „Zum Home-Bildschirm“: dann startet die App wie eine normale App.
+- **Voraussetzung:** iPhone/iPad ab iOS bzw. iPadOS 16.4, am Computer ein aktueller Browser (Chrome, Safari, Edge, Firefox).
+  Ältere Geräte können die Pose-Erkennung nicht ausführen – die App sagt das dann ausdrücklich.
 - **Offline:** Nach dem ersten Öffnen mit Internet (lädt einmalig ca. 20 MB Pose-Erkennung)
   funktioniert die App auch ohne Netz – z. B. auf der Range. **Erst losgehen, wenn unten
   „Offline bereit ✓“ steht.**
@@ -217,9 +219,9 @@ der App unter ⚙️ Einstellungen → „Datenschutz – kurz erklärt“.
 
 | Was | Wohin |
 |---|---|
-| Videos, Einzelbilder, Posedaten, Kennzahlen, Notizen, Level, Lernfortschritt, API-Schlüssel | Bleiben auf dem Gerät (Browser-Speicher). Kein Konto, keine Werbung, kein Tracking, keine Cookies. |
+| Videos, Einzelbilder, Posedaten, Kennzahlen, Notizen, Level, Lernfortschritt, API-Schlüssel | Bleiben auf dem Gerät (Browser-Speicher); der Schlüssel geht nur bei Coach-Anfragen zur Anmeldung an Anthropic. Kein Konto, keine Werbung, kein Tracking, keine Cookies. |
 | App-Dateien (auch die Pose-Erkennung, ca. 20 MB) | Kommen von GitHub Pages. GitHub sieht dabei wie bei jeder Webseite IP-Adresse und Zeitpunkt. Danach läuft die App offline. |
-| Coach (freiwillig, nach Einwilligung) | Kennzahlen, Level, Ansicht und kurzer Verlauf an Anthropic (Claude) – nie Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch die IP-Adresse. |
+| Coach (freiwillig, nach Einwilligung) | Kennzahlen, Level, Ansicht und kurzer Verlauf an Anthropic (Claude) – nie Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch die IP-Adresse und die Browserkennung. |
 
 Abgesichert wird das zusätzlich durch eine **Content Security Policy** (CSP) in `index.html`: Der Browser
 lässt die App nur ihre eigenen Dateien laden und nur mit der eigenen Adresse und `api.anthropic.com`
@@ -230,6 +232,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 
 | Problem | Lösung |
 |---|---|
+| „Dieses Gerät ist zu alt für die Pose-Erkennung“ | iOS/iPadOS 16.4 oder neuer installieren (Einstellungen → Allgemein → Softwareupdate). Ältere Geräte können die Pose-Erkennung nicht ausführen. |
 | Offline fehlt etwas | Die Statuszeile nennt die fehlende Datei. App **vom Home-Bildschirm aus** mit Internet öffnen und warten, bis unten „Offline bereit ✓“ steht. |
 | Update kommt nicht an | Versionsnummer ganz unten prüfen. App mit Internet komplett schließen (nach oben wischen) und neu öffnen. Nach einem Merge 1–2 Minuten warten. |
 | Analyse ist langsam | Die Zeile „Analyse fertig (…)“ notieren – sie enthält auch, wie lange das Video zum Laden brauchte (siehe [unten](#so-geht-die-app-das-video-durch)). 1080p statt 4K filmen, Video vorher kürzen. |

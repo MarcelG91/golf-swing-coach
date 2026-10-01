@@ -16,7 +16,8 @@ Bildschirmfoto festhalten und an Claude geben – daraus werden die nächsten Ei
 Seit 0.26.0 kommt die Pose-Erkennung von GitHub Pages statt von jsDelivr/Google, der Coach läuft ohne
 SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthropic.
 
-- [ ] **Erster Start mit Internet** (WLAN): App vom Home-Bildschirm öffnen. Das Update lädt einmal ca. 20 MB –
+- [ ] **Erster Start mit Internet** (WLAN, nicht auf der Range): App vom Home-Bildschirm öffnen. Das Update lädt einmalig
+      bis ca. 40 MB (die Pose-Erkennung kommt beim Umstieg kurz doppelt) –
       warten, bis unten **„Version 0.26.0 · online · Offline bereit ✓“** steht (Bildschirmfoto). Dauer schätzen: ___ s
 - [ ] App ganz schließen (nach oben wischen), **Flugmodus an**, App neu öffnen: „Bereit“ erscheint, unten
       „offline · Offline bereit ✓“.

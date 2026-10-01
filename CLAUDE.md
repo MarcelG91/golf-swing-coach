@@ -33,6 +33,7 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 - **`vendor/` nie von Hand ändern** (MediaPipe + Pose-Modell, seit 0.26.0, C1). Neue Version = neuer Ordner,
   Herkunft prüfen wie in `vendor/README.md`, Prüfsummen in `tests/vendor.test.mjs`, Pfade in `app.js` und
   `sw.js` (`VENDOR_DATEIEN`). Der Service Worker liefert `vendor/` „Speicher zuerst“ – ohne neuen Ordner käme ein Update nie an.
+  Dazu `CACHE_VENDOR` in `sw.js` und `pwa.js` hochzählen (`vendor-v2` …), sonst bleiben die alten ~19 MB auf jedem Gerät.
 - **Jede Änderung an der App:** `APP_VERSION` in `pwa.js` erhöhen (steht unten in der App –
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
 - Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
@@ -105,6 +106,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 - Service-Worker-Cache immer mit `ignoreVary: true` abfragen (Antworten mit `Vary`-Kopfzeile findet Safari sonst
   nicht wieder; aufgefallen beim früheren Modell von Google mit `Vary: Origin`).
 - CSP mit `'wasm-unsafe-eval'` braucht Safari 16, WebAssembly-SIMD (MediaPipe ohne „nosimd“-Variante) iOS 16.4.
+  Ältere Geräte bekommen die Meldung „Dieses Gerät ist zu alt …“ (S13). Mindestversion steht im README.
 - Bild-für-Bild-Springen in iPhone-Videos (HEVC/4K) ist sehr langsam → `videoanalyse.js` spielt ab.
 - Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
   diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.

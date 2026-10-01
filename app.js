@@ -269,6 +269,17 @@ async function ladePoseErkennung() {
   // Welche Dateien MediaPipe auf diesem Gerät braucht (mit/ohne SIMD) –
   // das wird lokal entschieden, dafür ist kein Internet nötig.
   const vision = await FilesetResolver.forVisionTasks(WASM_URL);
+  // Befund S13: Ohne WebAssembly-SIMD (iPhone unter iOS 16.4, sehr alte Browser) bräuchte
+  // MediaPipe die "nosimd"-Dateien. Die liegen bewusst nicht in vendor/ (siehe vendor/README.md) –
+  // dann sofort klar sagen, woran es liegt, statt fälschlich "nicht gespeichert" zu melden.
+  if (vision.wasmBinaryPath.includes("nosimd")) {
+    poseFehlerText =
+      "Dieses Gerät ist zu alt für die Pose-Erkennung: Nötig ist iOS bzw. iPadOS 16.4 oder neuer " +
+      "(oder ein aktueller Browser). Bitte unter Einstellungen → Allgemein → Softwareupdate aktualisieren.";
+    setzePoseStatus("fehler");
+    setStatus(poseFehlerText);
+    return;
+  }
   const benoetigt = [MP_MODUL, vision.wasmLoaderPath, vision.wasmBinaryPath, MODELL_URL];
 
   let letzterFehler = null;
@@ -2003,9 +2014,10 @@ function schaubildSvg({ ausschnitt: a, elemente }) {
 // erlaubt auch nur sie). Seit 0.26.0 ohne Anthropic-SDK: ein einfaches fetch() genügt, und
 // kein nachgeladener Fremdcode sieht mehr den Schlüssel (Befund C1).
 const COACH_API_URL = "https://api.anthropic.com/v1/messages";
-// Spätestens dann aufgeben, falls die Verbindung hängt (eine Antwort braucht sonst 30–90 s).
-// Ohne Zeitgrenze bliebe der Knopf bis zum Neuladen gesperrt.
-const COACH_ZEITLIMIT_MS = 5 * 60 * 1000;
+// Spätestens dann aufgeben, falls die Verbindung hängt. Ohne Zeitgrenze bliebe der Knopf bis zum
+// Neuladen gesperrt. Gilt für Anfrage UND Lesen der ganzen Antwort (üblich sind 30–90 s) – deshalb
+// großzügig, damit keine schon bezahlte, nur langsame Antwort abgebrochen wird (Befund S14).
+const COACH_ZEITLIMIT_MS = 10 * 60 * 1000;
 // Läuft gerade eine Anfrage? Dann bleibt der Knopf gesperrt – auch wenn die Ansicht
 // neu gezeichnet wird (Level- oder Schwungwechsel, Internet wieder da). Sonst: doppelte Kosten.
 let coachLaeuft = false;
@@ -2167,8 +2179,10 @@ async function sendeAnClaude(anfrage, schluessel) {
       if (strom.textBegonnen) coachHinweis.textContent = "Der Coach schreibt seine Antwort …";
     }
   } catch (fehler) {
-    console.error(fehler); // Verbindung mitten in der Antwort abgerissen oder Zeitlimit
-    throw coachFehler("verbindung");
+    console.error(fehler);
+    leser.cancel().catch(() => {}); // Rest der Antwort nicht im Hintergrund weiterlesen
+    // SyntaxError: ein kaputtes Ereignis im Datenstrom – sonst Verbindung abgerissen oder Zeitlimit
+    throw coachFehler(fehler instanceof SyntaxError ? "unbekannt" : "verbindung");
   }
   if (strom.fehlerTyp) {
     console.error("Fehler im Datenstrom:", strom.fehlerTyp);

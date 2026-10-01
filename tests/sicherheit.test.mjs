@@ -67,6 +67,15 @@ test("CSP (C3): nur eigene Dateien, WebAssembly, Verbindungen nur zu sich selbst
   assert.doesNotMatch(ohneKommentare(INDEX), /<script(?![^>]*\bsrc=)[^>]*>|\son[a-z]+=|\sstyle=/i);
 });
 
+test("Gerät ohne WebAssembly-SIMD bekommt eine klare Meldung mit Mindestversion (S13)", () => {
+  // vendor/ enthält bewusst nur die SIMD-Variante von MediaPipe
+  const laden = APP.slice(APP.indexOf("async function ladePoseErkennung"), APP.indexOf("let letzterFehler"));
+  assert.match(laden, /if \(vision\.wasmBinaryPath\.includes\("nosimd"\)\)/);
+  assert.match(laden, /16\.4/);
+  assert.match(laden, /setzePoseStatus\("fehler"\);[\s\S]*?return;/, "danach nicht weiter laden");
+  assert.ok(!SERVICE_WORKER.includes("nosimd"), "nosimd-Dateien sind bewusst nicht dabei");
+});
+
 test("Datenschutzhinweis (V4) nennt beide Empfänger und was nie gesendet wird", () => {
   const start = INDEX.indexOf('<section id="datenschutz"');
   assert.ok(start > 0, "Abschnitt Datenschutz fehlt in den Einstellungen");
