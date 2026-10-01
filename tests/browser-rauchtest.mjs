@@ -80,7 +80,10 @@ const profil = fs.mkdtempSync(path.join(os.tmpdir(), "golf-rauchtest-"));
 const chrome = spawn(chromePfad, [
   "--headless=new", "--no-sandbox", "--disable-gpu", `--remote-debugging-port=${debugPort}`,
   `--user-data-dir=${profil}`, "--window-size=420,1400", "about:blank",
-], { stdio: "ignore" });
+], { stdio: ["ignore", "ignore", "pipe"] });
+let chromeMeldungen = ""; // Fehlerausgabe von Chrome, hilft wenn er nicht startet
+chrome.stderr.on("data", (teil) => { chromeMeldungen = (chromeMeldungen + teil).slice(-2000); });
+chrome.on("error", (fehler) => { chromeMeldungen += `\nStartfehler: ${fehler.message}`; });
 
 async function aufraeumen() {
   const beendet = new Promise((ok) => chrome.once("exit", ok));
@@ -96,7 +99,7 @@ try {
   for (let versuch = 0; versuch < 40 && !seiten; versuch++) {
     try { seiten = await (await fetch(`http://127.0.0.1:${debugPort}/json`)).json(); } catch { await warte(250); }
   }
-  if (!seiten) throw new Error("Chrome ließ sich nicht starten");
+  if (!seiten) throw new Error(`Chrome ließ sich nicht starten (${chromePfad})\n${chromeMeldungen}`);
   const ws = new WebSocket(seiten.find((s) => s.type === "page").webSocketDebuggerUrl);
   await new Promise((ok) => { ws.onopen = ok; });
 
