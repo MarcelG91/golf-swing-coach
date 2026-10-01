@@ -1,7 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 01.10.2026 · geprüft auf `origin/main` @ `9773ca2` (Version 0.24.0, live) und Branch `wissen-nachschlagen` (Version 0.25.0);
-Sicherheits-Etappe C1 + C3 + V4 im Branch `sicherheit-c1-c3` (Version 0.26.0) eingetragen
+Stand: 01.10.2026 · geprüft auf `origin/main` @ `38cca52` (Version 0.26.1, live; enthält die Sicherheits-Etappe C1 + C3 + V4 aus 0.26.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
@@ -25,7 +24,7 @@ abgesichert und die E-Mail-Adresse privat (Etappe S0 erledigt).
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). „Nachschlagen“ (0.25.0) speichert nichts Neues: Suche und gewählte Ansicht leben nur bis zum Neuladen (`localStorage` vorher = nachher gemessen). |
 | Cybersecurity | Grün (ab 0.26.0, iPhone-Test steht aus) | Kein nachgeladener Fremdcode mehr: MediaPipe und Modell selbst ausgeliefert, Prüfsumme je Datei im Test, Herkunft aus npm-Registry (Prüfsumme und Signatur) bzw. Google-Speicher geprüft (C1). Coach ohne SDK, also sieht nur App-Code den Schlüssel. CSP als `<meta>` (C3), im Browser ohne Verstöße. Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). Offen P3: C4, C6. |
-| Test und Deploy | Gelb | 158 Tests grün im Branch `sicherheit-c1-c3` (`main` 146). CI auf `main` grün, Live-Stand gleich `main` (0.25.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Test und Deploy | Gelb | 158 Tests grün auf `main`. CI auf `main` grün, Live-Stand gleich `main` (0.26.1, Dateien bitgleich geprüft). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
 | Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach: nur eine Anfrage zur Zeit (S11); seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell vollständig gelesen (S12). Offen nur S10 (P3). |
 | Geschwindigkeit | Gelb | Live 01.10. (Mac, frisches Profil): „Bereit“ nach 0,7 s, „Offline bereit ✓“ nach 0,8 s; Warmstart 0,5 s ohne Datenübertragung. Bewegte Figuren (Übungsmodus, Wissensseite) laufen mit ca. 30 Bildern pro Sekunde und nur, solange sie zu sehen sind. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
