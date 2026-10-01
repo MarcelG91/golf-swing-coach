@@ -227,6 +227,40 @@ Variablen in `style.css` (hell und dunkel).
   der wirksamsten Hilfen“. „Ball ans Loch sterben lassen“ widersprach Pelz → „Ball knapp hinter das Loch rollen
   lassen“. Par 3 im Bogey-Plan mit Chip. Neuer Test: bewegte Figuren laufen nur vorwärts.
 
+## Stand Schritt 5 (`wissen-nachschlagen`, 0.25.0, 01.10.)
+
+- **Aufbau** (Entscheidung Marcel, 01.10.): Oben im Bereich Wissen ein Umschalter **„Lernpfade | Nachschlagen“**
+  (die App merkt sich die zuletzt gewählte Ansicht). Nachschlagen = Suchfeld + fünf Kacheln: 🔤 Glossar (60 Begriffe,
+  Liste in vier Gruppen) · 💡 Irrtümer (13 Wisch-Karten „Irrtum → Was stimmt“) · ⚖️ Regeln (17 Situationen als Liste,
+  mit Pfahlfarben-Bild) · 🏌️ Ausrüstung (6 Wisch-Karten, Flex-Tabelle in km/h) · 🎯 Ballflug-Helfer (dieselbe Karte
+  wie in der Lektion). Neue Datei `nachschlagen.js` (reine Daten + Suche), Tests `tests/nachschlagen.test.mjs`.
+- **Suche** (Entscheidung Marcel, 01.10.): über Lektionstitel, Glossar (Deutsch und Englisch), Irrtümer, Regel-Situationen
+  und Ausrüstung. Groß/klein und Umlaute egal („ruckschwung“ = „rueckschwung“ = „Rückschwung“), ab 2 Zeichen, Treffer
+  sofort beim Tippen. Begriffe und Regeln stehen direkt in den Treffern, Lektionen/Irrtümer/Ausrüstung als Knopf.
+- **Zurück** führt immer dorthin, wo man herkam (Lernpfade, Glossar, Suche, Irrtum, Ballflug-Helfer, Analyse), und an
+  dieselbe Stelle der Seite.
+- **Baustellen-Karte → „📖 Lektion: …“** für 11 von 15 Kennzahlen (`lektionZurKennzahl` in `wissen.js`). Bei mehreren
+  passenden Lektionen hat Marcel gewählt (01.10.): Hände vor der Schulter → „Haltung beim Ansprechen“, Gewicht vorne →
+  „Finish und Rhythmus“, Aufgerichtet und Hüfte zum Ball → „Treffmoment“. Ohne Lektion (kein Knopf): Seitneigung beim
+  Ansprechen, Armwinkel im Treffmoment, Kopf seitlich, Oberkörper-Neigung im Treffmoment. Der Zurück-Knopf heißt dann
+  „‹ Zurück zur Analyse“ und bleibt es auch über „Nächste Lektion“.
+- **Glossar-Regel**: Jeder Begriff ist mit einer Lektion verknüpft, die ihn erklärt, **oder** steht in zwei Quellen
+  (Wikipedia-Glossar + Golfglossar „Deutschland macht Platzreife“, bei Regeln/Handicap R&A bzw. DGV). Weggelassen:
+  Übergang, Seitneigung, Lag, frühes Auflösen, Schwungebene (weder Lektion noch zwei Quellen).
+- **Quellen nachgelesen und zweite Quellen gesucht** (Entscheidung Marcel, 01.10.). Gefunden und korrigiert:
+  „Ralph Mann: Kopf ca. 5 cm zurück“ stand nicht in der Quelle (gestrichen); „1–2 cm neben der Mitte“ ohne Beleg →
+  ersetzt durch zwei Messungen (Fersentreffer ca. 17 m kürzer, MyGolfSpy und GOLF.com-Robotertest); „gebraucht ist in
+  Ordnung“ widersprach Lynx (gestrichen); Flex X „105–110 mph“ → „ab 105 mph“; „zu steifer Schaft bis 10–15 Yards“ nicht
+  nachprüfbar (gestrichen); Broadie „6 Schläge / 2 Schläge“ stand weder in BRO1 noch ARC1 (in `kurzes-spiel.md`
+  korrigiert); Regel 15.1: auch auf dem Abschlag straflos; Abschlag-Strafe steht in 6.1b. Neue zweite Quellen:
+  Überschwingen (The Left Rough), Ferse heben (Golf Distillery, Golf Tips Magazine), Top-Position (Golf Smart Academy),
+  Driver-Loft (Golf Insider UK), Mallet (GOLF.com, MyGolfSpy), zu steifer Schaft (The Left Rough, Fairway Jockey),
+  dasselbe Ballmodell (National Club Golfer, Golf 360), Lie-Winkel (ExactGolf-Messung, Golf Sidekick).
+- **Trainer sind uneins**: Fitting für Einsteiger früh (GOLF.com, Golf 360) oder erst bei wiederholbarem Schwung (Golflens).
+- **Bewusst weggelassen**: Irrtum „weiche Bälle für langsame Schwünge“ (nur MyGolfSpy, Ergebnis je Schläger
+  unterschiedlich), „Kopf schaut bei Toppern nicht früher hoch“, „steifer Arm macht eckig“, „im Treffmoment meist
+  gestreckt“.
+
 ## Umsetzung in Schritten (je 1 Branch = 1 PR)
 
 | Schritt | Branch | Inhalt |
@@ -234,7 +268,7 @@ Variablen in `style.css` (hell und dunkel).
 | 1 | `wissen-geruest` | `wissen.js` mit Datenaufbau + Tests, Bereich „📖 Wissen“, Pfad-Übersicht, Lektionsansicht (Karten, Quiz, ✓), Fortschritt, **Pfad 1 komplett** mit vorhandenen Figuren und ersten Schaubildern |
 | 2 + 3 | `wissen-pfade-2-3` | ✓ 0.23.0: Schaubilder für Pfad 2 + 3, Vollschwung, Ballflug + **Ballflug-Helfer** (zusammengelegt) |
 | 4 | `wissen-pfade-4-6` | ✓ 0.24.0: Rund ums Grün, Clever spielen, Besser üben – mit den Schaubildern dafür |
-| 5 | `wissen-nachschlagen` | Glossar, Irrtümer, Regeln, Ausrüstung, Suche, Verknüpfung Karte → Lektion, „Übung starten“ |
+| 5 | `wissen-nachschlagen` | ✓ 0.25.0: Glossar, Irrtümer, Regeln, Ausrüstung, Suche, Verknüpfung Karte → Lektion („Übung starten“ schon in Schritt 1) |
 
 Bei jedem Schritt: neue JS-Dateien in `sw.js` und `pwa.js` (`APP_DATEIEN`), `APP_VERSION` erhöhen,
 `node --test`, im Browser ansehen, danach `/golf-app-check`, README-Dateiliste.

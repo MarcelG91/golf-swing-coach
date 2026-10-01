@@ -182,6 +182,11 @@ Der zum Level passende Pfad steht oben. Der Fortschritt bleibt nur auf dem Gerä
 Sechs Pfade mit 40 Lektionen (seit 0.24.0): „Start“, „Der Vollschwung“ (mit bewegter Profi-Figur P1–P10, die nur
 läuft, solange ihre Karte zu sehen ist), „Ballflug verstehen & Fehler beheben“ mit dem **Ballflug-Helfer** (Start
 und Kurve antippen → Name des Ballflugs, Bild und Ursache), „Rund ums Grün“, „Clever spielen“ und „Besser üben“.
+**Nachschlagen** (seit 0.25.0, oben umschalten „Lernpfade | Nachschlagen“): Suchfeld über Lektionen, Glossar,
+Regeln, Irrtümer und Ausrüstung (Groß/klein und Umlaute egal) · Glossar mit 60 Begriffen (Deutsch/Englisch) ·
+13 Irrtümer als Karten „Irrtum → Was stimmt“ · 17 Regel-Situationen (Golfregeln 2023, ohne Gewähr) · Ausrüstung
+(Schläger, Flex-Tabelle, Ball, Fitting, Lie-Winkel) · Ballflug-Helfer. Auf den Baustellen-Karten führt
+„📖 Lektion: …“ zur passenden Lektion, „‹ Zurück zur Analyse“ wieder genau dorthin.
 
 ## Ausprobieren ohne eigenes Video
 
@@ -236,7 +241,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
 | `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |
 | `uebungsbilder.js` | Figuren und Animationen für den Übungsmodus (Profi-Posen, Schläger, Stab, Wand, Takt) |
-| `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen, Ballflug-Helfer (Start + Kurve → Name und Ursache) |
+| `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen, Ballflug-Helfer (Start + Kurve → Name und Ursache), welche Lektion zu welcher Baustelle gehört |
+| `nachschlagen.js` | Bereich „📖 Wissen“ → Nachschlagen: Glossar, Irrtümer, Regeln, Ausrüstung (jeweils mit Quellen) und die Suche |
 | `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
@@ -260,6 +266,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden, die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/wissen.test.mjs` | Prüft die Lektionen: feste IDs, Textlängen, Quiz mit genau einer richtigen Antwort, Quellen mit Link in `docs/wissen/`, Bilder vorhanden, Farben aus `style.css`, Figuren nur aus Profi-Posen, Beschriftung der P1–P10-Animation, alle 9 Ballflüge im Helfer, Fortschritt robust |
+| `tests/nachschlagen.test.mjs` | Prüft Nachschlagen: Textlängen, jede Aussage mit bekannter Quelle, Glossar mit Lektion oder zwei Quellen, „Trainer sind uneins“ beim Fitting, Suche (Umlaute, Englisch, seltsame Eingaben) und welche Lektion zu welcher Kennzahl gehört |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
@@ -280,7 +287,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
 | `docs/iphone-testliste.md` | Checkliste für den Praxistest auf dem iPhone (Analyse, mehrere Schwünge, Speichern, Aufräumen, Übungsmodus) |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
-| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (umgesetzt: alle 6 Lernpfade mit 40 Lektionen und Ballflug-Helfer; offen: Nachschlagen) |
+| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (komplett umgesetzt: 6 Lernpfade mit 40 Lektionen, Ballflug-Helfer, Nachschlagen) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches
@@ -487,15 +494,13 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
 - [x] 8. Schwünge speichern (mit gekürztem Video) – und aufräumen (Videos löschen, Kennzahlen behalten)
 - [x] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
+- [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
+  Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
   (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 
 - [ ] 10. Fortschritt messen und Langzeit-Feedback
-- [ ] 12. Wissensseite mit Lernpfaden (Schritt 1 seit 0.22.0: Pfad „Start“ mit 8 Lektionen; Schritte 2 + 3
-  seit 0.23.0: Schaubilder, „Der Vollschwung“ und „Ballflug verstehen & Fehler beheben“ mit je 7 Lektionen und
-  Ballflug-Helfer; Schritt 4 seit 0.24.0: „Rund ums Grün“, „Clever spielen“, „Besser üben“ mit je 6 Lektionen;
-  offen: Nachschlagen. Plan: `docs/plan-wissensseite.md`)
 - [ ] 9. Sicherung exportieren / einspielen
 
 Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und
