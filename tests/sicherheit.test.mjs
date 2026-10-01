@@ -13,6 +13,7 @@ const QUELLTEXT = QUELLDATEIEN.map(({ text }) => text).join("\n");
 const APP = QUELLDATEIEN.find(({ datei }) => datei === "app.js").text;
 const PWA = QUELLDATEIEN.find(({ datei }) => datei === "pwa.js").text;
 const SERVICE_WORKER = QUELLDATEIEN.find(({ datei }) => datei === "sw.js").text;
+const INDEX = QUELLDATEIEN.find(({ datei }) => datei === "index.html").text;
 
 function dateiliste(text) {
   const treffer = text.match(/APP_DATEIEN\s*=\s*\[([\s\S]*?)\]/);
@@ -20,25 +21,69 @@ function dateiliste(text) {
   return [...treffer[1].matchAll(/["']([^"']+)["']/g)].map(([, datei]) => datei);
 }
 
-test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
-  const erlaubt = new Set(["127.0.0.1", "cdn.jsdelivr.net", "storage.googleapis.com", "api.anthropic.com"]);
+test("Nur erlaubte Netzwerk-Hosts sind eingebaut (seit 0.26.0 nur noch der Coach)", () => {
+  // jsDelivr und Google sind mit C1 weggefallen: MediaPipe und Modell liegen in vendor/
+  const erlaubt = new Set(["127.0.0.1", "api.anthropic.com"]);
   const hostsIn = (text) => [...text.matchAll(/https?:\/\/[^\s"'`]+/g)]
     .map(([adresse]) => new URL(adresse.replace(/[),;]+$/, "")).hostname);
   assert.deepEqual([...new Set(hostsIn(QUELLTEXT))].filter((host) => !erlaubt.has(host)), []);
-  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js – nirgends sonst
+  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js und in der CSP – nirgends sonst
   const mitAnthropic = QUELLDATEIEN.filter(({ text }) => hostsIn(text).includes("api.anthropic.com")).map(({ datei }) => datei);
-  assert.deepEqual(mitAnthropic, ["app.js"]);
+  assert.deepEqual(mitAnthropic.sort(), ["app.js", "index.html"]);
   assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
+  assert.equal(INDEX.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
 });
 
-test("MediaPipe-Version und Modell stimmen in App und Service Worker überein", () => {
-  const appVersion = APP.match(/tasks-vision@(\d+\.\d+\.\d+)/)?.[1];
-  const workerVersion = SERVICE_WORKER.match(/tasks-vision@(\d+\.\d+\.\d+)/)?.[1];
-  const modell = APP.match(/const MODELL_URL\s*=\s*\n?\s*["']([^"']+)["']/)?.[1];
-  assert.ok(appVersion, "MediaPipe-Version muss in app.js stehen");
-  assert.equal(workerVersion, appVersion);
-  assert.ok(modell, "Modell-Adresse muss in app.js stehen");
-  assert.ok(SERVICE_WORKER.includes(modell));
+test("Kein Fremdcode wird nachgeladen: nur eigene Module, kein import() (C1)", () => {
+  for (const { datei, text } of QUELLDATEIEN) {
+    const code = ohneKommentare(text);
+    // Statische Importe nur aus eigenen Dateien ("./…"), keine Adressen
+    for (const [, quelle] of code.matchAll(/\bfrom\s+["']([^"']+)["']/g)) {
+      assert.match(quelle, /^\.\//, `${datei} importiert von außen: ${quelle}`);
+    }
+    assert.doesNotMatch(code, /\bimport\s*\(/, `${datei} lädt Code zur Laufzeit nach`);
+    assert.doesNotMatch(code, /<script[^>]+src=["']https?:/, `${datei} bindet ein fremdes Skript ein`);
+  }
+});
+
+test("CSP (C3): nur eigene Dateien, WebAssembly, Verbindungen nur zu sich selbst und zum Coach", () => {
+  const csp = INDEX.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)?.[1];
+  assert.ok(csp, "CSP-Meta-Tag fehlt");
+  // Muss vor dem ersten Skript stehen, sonst gilt sie für dieses Skript nicht
+  const html = ohneKommentare(INDEX);
+  assert.ok(html.indexOf("Content-Security-Policy") < html.indexOf("<script"), "CSP steht nach einem Skript");
+  const regeln = Object.fromEntries(csp.split(";").map((r) => r.trim().split(/\s+/)).map(([name, ...werte]) => [name, werte]));
+  assert.deepEqual(regeln, {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'wasm-unsafe-eval'"],
+    "style-src": ["'self'"],
+    "img-src": ["'self'", "blob:"],
+    "media-src": ["'self'", "blob:"],
+    "connect-src": ["'self'", "https://api.anthropic.com"],
+    "object-src": ["'none'"],
+    "base-uri": ["'none'"],
+  });
+  // Inline-Skripte und Inline-Styles würde die CSP blockieren – also gibt es keine
+  assert.doesNotMatch(ohneKommentare(INDEX), /<script(?![^>]*\bsrc=)[^>]*>|\son[a-z]+=|\sstyle=/i);
+});
+
+test("Gerät ohne WebAssembly-SIMD bekommt eine klare Meldung mit Mindestversion (S13)", () => {
+  // vendor/ enthält bewusst nur die SIMD-Variante von MediaPipe
+  const laden = APP.slice(APP.indexOf("async function ladePoseErkennung"), APP.indexOf("let letzterFehler"));
+  assert.match(laden, /if \(vision\.wasmBinaryPath\.includes\("nosimd"\)\)/);
+  assert.match(laden, /16\.4/);
+  assert.match(laden, /setzePoseStatus\("fehler"\);[\s\S]*?return;/, "danach nicht weiter laden");
+  assert.ok(!SERVICE_WORKER.includes("nosimd"), "nosimd-Dateien sind bewusst nicht dabei");
+});
+
+test("Datenschutzhinweis (V4) nennt beide Empfänger und was nie gesendet wird", () => {
+  const start = INDEX.indexOf('<section id="datenschutz"');
+  assert.ok(start > 0, "Abschnitt Datenschutz fehlt in den Einstellungen");
+  const abschnitt = INDEX.slice(start, INDEX.indexOf("</section>", start));
+  // Die CSP erlaubt genau zwei Ziele: die eigene Adresse (GitHub Pages) und den Coach (Anthropic)
+  for (const wort of ["GitHub", "Anthropic", "IP-Adresse", "Einwilligung", "Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum", "kein Tracking"]) {
+    assert.ok(abschnitt.includes(wort), `Datenschutzhinweis nennt „${wort}“ nicht`);
+  }
 });
 
 test("Alle JavaScript-Appdateien stehen in beiden Offline-Listen", () => {
@@ -123,18 +168,22 @@ test("Check robuste Analyse: keine Umgehung der Längenprüfung, keine Fehlalarm
   assert.match(PWA, /Die App ist nicht vollständig geladen/, "S9: gleicher Text in pwa.js");
 });
 
-test("Coach (V2): Schlüssel nur im localStorage, SDK mit fester Version, nie in Speicher oder Export", () => {
+test("Coach (V2): Schlüssel nur im localStorage und in der Kopfzeile, kein SDK, nie in Speicher oder Export", () => {
   const speicher = QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text;
   assert.ok(!speicher.includes("coachSchluessel"), "Der Schlüssel gehört nie in die Schwung-Datenbank");
-  assert.match(APP, /const COACH_SDK_URL = "https:\/\/cdn\.jsdelivr\.net\/npm\/@anthropic-ai\/sdk@\d+\.\d+\.\d+\/\+esm"/, "SDK-Version fest");
-  assert.equal(APP.match(/dangerouslyAllowBrowser/g)?.length, 2, "Browser-Freigabe nur an der einen Stelle (plus Kommentar)");
   const exportTeil = APP.slice(APP.indexOf("function exportiereDaten"), APP.indexOf("function heute"));
   assert.ok(!/localStorage|coach/i.test(exportTeil), "Posedaten-Export enthält nichts vom Coach");
-  // Das SDK steht nicht in der Vorab-Liste des Service Workers (nach dem ersten Laden
-  // speichert er es wie jede jsDelivr-Datei – feste Version, siehe bericht.md C1)
-  assert.ok(!SERVICE_WORKER.includes("@anthropic-ai/sdk"));
-  // Der Client geht ausdrücklich an die erlaubte Adresse
-  assert.match(APP, /new Anthropic\(\{[^}]*baseURL: COACH_API_URL/);
+  // Seit 0.26.0 kein Anthropic-SDK mehr (C1): kein Fremdcode sieht den Schlüssel
+  assert.doesNotMatch(QUELLTEXT, /@anthropic-ai|dangerouslyAllowBrowser/);
+  // Genau ein fetch an die erlaubte Adresse, mit den Kopfzeilen aus coach.js
+  assert.match(APP, /const COACH_API_URL = "https:\/\/api\.anthropic\.com\/v1\/messages";/);
+  const senden = APP.slice(APP.indexOf("async function sendeAnClaude"), APP.indexOf("async function frageCoach"));
+  assert.match(senden, /fetch\(COACH_API_URL, \{\s*method: "POST",\s*headers: coachKopfzeilen\(schluessel\),\s*body: JSON\.stringify\(anfrage\),\s*signal: AbortSignal\.timeout\(COACH_ZEITLIMIT_MS\),?\s*\}\)/);
+  assert.equal(ohneKommentare(APP).match(/\bfetch\(/g)?.length, 1, "app.js hat nur diesen einen fetch()-Aufruf");
+  // Fehlertexte der API nur in die Konsole, angezeigt werden feste Texte
+  assert.match(senden, /coachFehler\(coachFehlerArt\(\{ status: antwort\.status \}\)\)/);
+  // Der Service Worker leitet die Anfrage nur durch (POST) und speichert sie nicht
+  assert.match(SERVICE_WORKER, /if \(anfrage\.method !== "GET"\) return;/);
 });
 
 test("Check 11b: eine Coach-Anfrage zur Zeit, Antwort nur in den eigenen Schwung-Eintrag", () => {

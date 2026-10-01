@@ -1,10 +1,11 @@
 // ===============================================================
 // Coach-Feedback mit Claude (Etappe 11b, ausführlich seit 0.17.0) – reine Rechenlogik
 //
-// Hier steht, WAS an Claude gesendet wird und wie die Antwort geprüft wird.
-// Das eigentliche Senden (SDK laden, Anfrage) steht in app.js – so bleibt diese
+// Hier steht, WAS an Claude gesendet wird, wie der Datenstrom der Antwort gelesen und wie
+// die Antwort geprüft wird. Das eigentliche Senden (fetch) steht in app.js – so bleibt diese
 // Datei ohne Browser-Code und ist mit node --test prüfbar, ohne echte (kostenpflichtige)
-// Anfrage.
+// Anfrage. Seit 0.26.0 ohne Anthropic-SDK (Befund C1): kein nachgeladener Fremdcode sieht
+// mehr den API-Schlüssel.
 //
 // Wichtige Regeln (Plan: docs/plan-etappe-11-level-und-coach.md, Sicherheit: V2):
 //   - Gesendet werden NUR Kennzahlen (Name, Wert, Bewertung, Zielbereich), Level,
@@ -202,14 +203,31 @@ export function coachDaten({ kennzahlen, hintergrund = [], level, ansicht, recht
   };
 }
 
+// Bei einer (sehr unwahrscheinlichen) Ablehnung springt automatisch ein anderes Modell ein
+// (fallbacks: "default" unten). Die API verlangt dafür diese Beta-Kennung als Kopfzeile.
+export const COACH_BETA = "server-side-fallback-2026-07-01";
+
+// Die Kopfzeilen der Anfrage. Der Schlüssel steht nur hier – nie in den gesendeten Daten.
+export function coachKopfzeilen(schluessel) {
+  return {
+    "content-type": "application/json",
+    "x-api-key": schluessel,
+    "anthropic-version": "2023-06-01",
+    "anthropic-beta": COACH_BETA,
+    // Die API verlangt diese ausdrückliche Erlaubnis für Anfragen direkt aus dem Browser,
+    // weil der Schlüssel dann im Browser liegt. Genau das ist hier gewollt (eigener Schlüssel
+    // mit Ausgabenlimit, Entscheidung 27.09., V2).
+    "anthropic-dangerous-direct-browser-access": "true",
+  };
+}
+
 export function baueCoachAnfrage(daten) {
   return {
     model: COACH_MODELL,
-    // Genug Platz für Nachdenken plus eine lange Antwort. app.js empfängt sie als Datenstrom,
+    // Genug Platz für Nachdenken plus eine lange Antwort. Sie kommt als Datenstrom (stream),
     // damit die längere Wartezeit an kein Zeitlimit stößt.
     max_tokens: 16000,
-    // Bei einer (sehr unwahrscheinlichen) Ablehnung springt automatisch ein anderes Modell ein
-    betas: ["server-side-fallback-2026-07-01"],
+    stream: true,
     fallbacks: "default",
     thinking: { type: "adaptive" },
     // "high": gründlicher beim Verknüpfen der Kennzahlen (Entscheidung 29.09., ca. 15–25 Cent)
@@ -284,6 +302,92 @@ export function leseAntwort(inhalt) {
   return leseAntwortText(texte.join("")) ?? leseAntwortText(texte.at(-1));
 }
 
+// ---------------------------------------------------------------
+// Datenstrom lesen (seit 0.26.0 selbst statt mit dem SDK)
+// Die Antwort kommt Stück für Stück als "Server-Sent Events": Jedes Ereignis besteht aus
+// Zeilen wie
+//   event: content_block_delta
+//   data: {"type":"content_block_delta","index":1,"delta":{"type":"text_delta","text":"Dein"}}
+// und endet mit einer Leerzeile. Die Reihenfolge ist immer: message_start → je Block
+// content_block_start, content_block_delta …, content_block_stop → message_delta (Grund fürs
+// Ende, Token-Zahlen) → message_stop. Dazwischen kommen "ping" (nur ein Lebenszeichen) und bei
+// Problemen "error". app.js gibt jedes empfangene Textstück an fuettere(); daraus entsteht
+// dieselbe Nachricht, die vorher das SDK geliefert hat (model, content, stop_reason, usage).
+// Ein Rückfall auf ein anderes Modell ist kein eigenes Ereignis: Er kommt als Block vom Typ
+// "fallback", danach schreibt das andere Modell im selben Strom weiter (siehe leseAntwort).
+// ---------------------------------------------------------------
+export function neuerDatenstrom() {
+  let puffer = ""; // angefangenes Ereignis, dessen Rest noch unterwegs ist
+  const strom = {
+    nachricht: null,
+    fertig: false, // erst mit "message_stop" ist die Antwort vollständig angekommen
+    fehlerTyp: "", // Fehler mitten im Strom, z. B. "overloaded_error"
+    textBegonnen: false, // das Nachdenken ist vorbei, Claude schreibt die Antwort
+    fuettere(stueck) {
+      // Zeilenenden vereinheitlichen; ein Ereignis endet mit einer Leerzeile
+      const bloecke = (puffer + stueck).replace(/\r\n/g, "\n").split("\n\n");
+      puffer = bloecke.pop(); // der letzte Teil ist noch nicht vollständig
+      for (const block of bloecke) {
+        const daten = block.split("\n").filter((zeile) => zeile.startsWith("data:")).map((zeile) => zeile.slice(5)).join("\n");
+        if (daten.trim()) verarbeite(JSON.parse(daten));
+      }
+    },
+  };
+
+  function verarbeite(ereignis) {
+    const nachricht = strom.nachricht;
+    switch (ereignis.type) {
+      case "message_start":
+        strom.nachricht = { ...ereignis.message, content: [], usage: { ...ereignis.message.usage } };
+        break;
+      case "content_block_start": {
+        const block = { ...ereignis.content_block };
+        nachricht.content[ereignis.index] = block;
+        // Ab hier schreibt ein anderes Modell weiter – gespeichert wird (wie früher beim SDK)
+        // das Modell, das die Antwort fertig geschrieben hat
+        if (block.type === "fallback" && block.to?.model) nachricht.model = block.to.model;
+        break;
+      }
+      case "content_block_delta": {
+        const block = nachricht.content[ereignis.index];
+        const { delta } = ereignis;
+        if (delta.type === "text_delta") {
+          block.text += delta.text;
+          strom.textBegonnen = true;
+        } else if (delta.type === "thinking_delta") block.thinking += delta.thinking;
+        else if (delta.type === "signature_delta") block.signature = delta.signature;
+        break;
+      }
+      case "message_delta":
+        // Grund fürs Ende (stop_reason) und die endgültigen Token-Zahlen; leere Werte nicht übernehmen
+        Object.assign(nachricht, ereignis.delta);
+        for (const [feld, wert] of Object.entries(ereignis.usage ?? {})) {
+          if (wert !== null && wert !== undefined) nachricht.usage[feld] = wert;
+        }
+        break;
+      case "message_stop":
+        strom.fertig = true;
+        break;
+      case "error":
+        strom.fehlerTyp = ereignis.error?.type || "unbekannt";
+        break;
+      // "ping" und "content_block_stop" ändern nichts an der Nachricht
+    }
+  }
+  return strom;
+}
+
+// Welche verständliche Meldung passt zu einem Fehler? Aus dem HTTP-Status der Antwort –
+// oder bei einem Fehler mitten im Datenstrom aus dem Fehlertyp der API.
+// (Codes laut API-Dokumentation: 401/403 Schlüssel, 402 Abrechnung, 429 zu viele, 500/529 Last.)
+export function coachFehlerArt({ status = 0, typ = "" } = {}) {
+  if (status === 401 || status === 403 || typ === "authentication_error" || typ === "permission_error") return "schluessel";
+  if (status === 402 || typ === "billing_error") return "guthaben";
+  if (status === 429 || typ === "rate_limit_error") return "zuViele";
+  if (status >= 500 || typ === "api_error" || typ === "overloaded_error") return "ueberlastet";
+  return "unbekannt";
+}
+
 // Kosten einer Anfrage in US-Cent (aus den Token-Zahlen der Antwort)
 export function kostenCent(usage) {
   if (!usage) return null;
@@ -292,14 +396,13 @@ export function kostenCent(usage) {
   return Math.round(dollar * 1000) / 10; // auf 0,1 Cent
 }
 
-// Verständliche Meldungen je Fehlerart (die Art bestimmt app.js aus den Fehlerklassen des SDK)
+// Verständliche Meldungen je Fehlerart (die Art bestimmt coachFehlerArt() oben bzw. app.js)
 export const COACH_FEHLER = {
   schluessel: "Der API-Schlüssel ist ungültig oder gesperrt – bitte unter ⚙️ Einstellungen prüfen.",
   guthaben: "Kein Guthaben mehr oder Ausgabenlimit erreicht – bitte in der Anthropic Console prüfen.",
   zuViele: "Zu viele Anfragen – bitte kurz warten und noch einmal versuchen.",
   ueberlastet: "Claude ist gerade ausgelastet – bitte in einer Minute noch einmal versuchen.",
   verbindung: "Keine Verbindung zu Claude – bitte das Internet prüfen.",
-  laden: "Der Coach konnte nicht geladen werden – bitte das Internet prüfen.",
   abgelehnt: "Claude hat diese Anfrage abgelehnt. Die Tipps der App gelten weiter.",
   unvollstaendig: "Die Antwort von Claude war unvollständig – bitte noch einmal versuchen.",
   unbekannt: "Coach-Feedback hat nicht geklappt – bitte später noch einmal versuchen.",

@@ -7,8 +7,10 @@
 
 // Wenn sich hier etwas Grundlegendes ändert, die Nummer erhöhen –
 // dann werden alte Zwischenspeicher beim nächsten Start aufgeräumt.
-const CACHE_APP = "app-v1";
-const CACHE_CDN = "cdn-v1";
+// 0.26.0: "cdn-v1" (MediaPipe von jsDelivr und Google) fällt weg, die Pose-Erkennung
+// liegt jetzt in vendor/ (Befund C1). Neue Namen = der alte CDN-Speicher wird gelöscht.
+const CACHE_APP = "app-v2";
+const CACHE_VENDOR = "vendor-v1";
 
 // Unsere eigenen Dateien
 const APP_DATEIEN = [
@@ -41,15 +43,17 @@ const APP_DATEIEN = [
   "./icons/apple-touch-icon.png",
 ];
 
-// Pose-Erkennung von Google (ca. 19 MB): Programm, WebAssembly, Modell
-const MP = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
-const CDN_DATEIEN = [
-  MP,
-  `${MP}/wasm/vision_wasm_internal.js`,
-  `${MP}/wasm/vision_wasm_internal.wasm`,
-  "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task",
+// Pose-Erkennung von Google (ca. 19 MB): Programm, WebAssembly, Modell.
+// Liegt geprüft im Ordner vendor/ (siehe vendor/README.md). Diese Dateien ändern sich nie –
+// eine neue Version bekommt einen neuen Ordner. Deshalb: Speicher zuerst, kein Nachfragen.
+const VENDOR_DATEIEN = [
+  "./vendor/mediapipe-0.10.14/vision_bundle.mjs",
+  "./vendor/mediapipe-0.10.14/wasm/vision_wasm_internal.js",
+  "./vendor/mediapipe-0.10.14/wasm/vision_wasm_internal.wasm",
+  "./vendor/pose-landmarker-full-float16-v1/pose_landmarker_full.task",
 ];
-const CDN_HOSTS = ["cdn.jsdelivr.net", "storage.googleapis.com"];
+// Der Ordner als Adresspfad, z. B. "/golf-swing-coach/vendor/" auf GitHub Pages
+const VENDOR_PFAD = new URL("./vendor/", self.location).pathname;
 
 // Wie lange wir auf das Netz warten, bevor wir die gespeicherte Version nehmen.
 // Wichtig bei schlechtem Empfang auf der Range.
@@ -62,11 +66,12 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const app = await caches.open(CACHE_APP);
-      const cdn = await caches.open(CACHE_CDN);
+      const vendor = await caches.open(CACHE_VENDOR);
       // Einzeln speichern: Klappt eine Datei nicht, läuft der Rest trotzdem
+      // (fehlende Dateien lädt pwa.js beim nächsten Start mit Internet nach)
       await Promise.all([
         ...APP_DATEIEN.map((url) => app.add(url).catch((f) => console.warn("Nicht gespeichert:", url, f))),
-        ...CDN_DATEIEN.map((url) => cdn.add(url).catch((f) => console.warn("Nicht gespeichert:", url, f))),
+        ...VENDOR_DATEIEN.map((url) => vendor.add(url).catch((f) => console.warn("Nicht gespeichert:", url, f))),
       ]);
       await self.skipWaiting(); // neue Version sofort aktivieren
     })()
@@ -80,7 +85,7 @@ self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
       for (const name of await caches.keys()) {
-        if (![CACHE_APP, CACHE_CDN].includes(name)) await caches.delete(name);
+        if (![CACHE_APP, CACHE_VENDOR].includes(name)) await caches.delete(name);
       }
       await self.clients.claim(); // offene Seiten sofort übernehmen
     })()
@@ -95,14 +100,15 @@ self.addEventListener("fetch", (event) => {
   if (anfrage.method !== "GET") return;
   const url = new URL(anfrage.url);
 
-  if (url.origin === self.location.origin) {
+  if (url.origin !== self.location.origin) return; // fremde Adressen: normal ins Netz
+
+  if (url.pathname.startsWith(VENDOR_PFAD)) {
+    // Pose-Erkennung: ändert sich nie (fester Ordner je Version) → Speicher zuerst
+    event.respondWith(speicherZuerst(anfrage));
+  } else {
     // Eigene Dateien: erst Netz (damit Updates sofort ankommen), sonst Speicher
     event.respondWith(netzZuerst(anfrage));
-  } else if (CDN_HOSTS.includes(url.hostname)) {
-    // Pose-Erkennung: ändert sich nie (feste Version) → Speicher zuerst
-    event.respondWith(speicherZuerst(anfrage));
   }
-  // Alles andere geht normal ins Netz
 });
 
 async function netzZuerst(anfrage) {
@@ -147,18 +153,14 @@ function ohneBrowserZwischenspeicher(antwort) {
 }
 
 async function speicherZuerst(anfrage) {
-  const cache = await caches.open(CACHE_CDN);
-  // ignoreVary: Das Modell kommt von Google mit "Vary: Origin". Safari findet solche
-  // Einträge sonst unter Umständen nicht wieder – dann fehlt es offline.
+  const cache = await caches.open(CACHE_VENDOR);
+  // ignoreVary: Antworten mit "Vary"-Kopfzeile findet Safari sonst unter Umständen
+  // nicht wieder – dann fehlt die Pose-Erkennung offline.
   const gespeichert = await cache.match(anfrage.url, { ignoreVary: true });
   if (gespeichert) return gespeichert;
-  // Mit CORS laden, damit die Antwort lesbar ist und gespeichert werden kann
-  let antwort;
-  try {
-    antwort = await fetch(anfrage.url, { mode: "cors", credentials: "omit" });
-  } catch {
-    return fetch(anfrage); // Rückfall: so, wie die Seite gefragt hat
-  }
+  // Noch nicht gespeichert (z. B. Installieren war unterbrochen): laden und aufheben.
+  // Ohne Netz scheitert das – app.js zeigt dann, welche Datei fehlt.
+  const antwort = await fetch(anfrage.url);
   if (antwort.status === 200) cache.put(anfrage.url, antwort.clone());
   return antwort;
 }

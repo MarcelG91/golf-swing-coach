@@ -20,6 +20,10 @@ const VIDEO = /\.(mp4|mov|m4v|webm|mkv|avi|3gp|hevc|mts|m2ts|wmv|mpe?g)$/i;
 const POSEDATEN_EXPORT = /(^|\/)posedaten-[^/]*\.json$/i;
 // Keine Datei im Repo sollte größer sein. Bei Bedarf bewusst anheben.
 const GRENZE_MB = 5;
+// Ausnahme: die Pose-Erkennung in vendor/ (Befund C1, je ca. 9,4 MB). Jede Datei dort ist mit
+// ihrer Prüfsumme in tests/vendor.test.mjs festgeschrieben – Unbemerktes kann also nicht
+// hineingeraten. Auch dort gilt eine Obergrenze.
+const GRENZE_VENDOR_MB = 15;
 
 function git(...argumente) {
   return execFileSync("git", argumente, { cwd: PROJEKT, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
@@ -52,7 +56,7 @@ test(`Keine Datei größer als ${GRENZE_MB} MB`, { skip: ohneGit }, () => {
     .map((datei) => ({ datei, pfad: path.join(PROJEKT, datei) }))
     .filter(({ pfad }) => fs.existsSync(pfad))
     .map(({ datei, pfad }) => ({ datei, mb: fs.statSync(pfad).size / 1e6 }))
-    .filter(({ mb }) => mb > GRENZE_MB)
+    .filter(({ datei, mb }) => mb > (datei.startsWith("vendor/") ? GRENZE_VENDOR_MB : GRENZE_MB))
     .map(({ datei, mb }) => `${datei} (${mb.toFixed(1)} MB)`);
   assert.deepEqual(zuGross, [], `Zu große Dateien: ${zuGross.join(", ")}`);
 });

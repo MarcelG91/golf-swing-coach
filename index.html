@@ -3,6 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- Hausordnung für den Browser (Content Security Policy, Befund C3). Muss vor allen Skripten stehen.
+       Erlaubt sind nur eigene Dateien ('self'). Ausnahmen:
+       - 'wasm-unsafe-eval': die Pose-Erkennung ist WebAssembly – nur dafür, JavaScript-eval bleibt verboten
+       - blob: für Bilder und Videos: so zeigt der Browser deine Videos und Vorschaubilder (nur lokal)
+       - api.anthropic.com: der freiwillige Coach (V2) – die einzige fremde Adresse
+       Alles andere (fremde Skripte, eingeschleuster Code im HTML, Verbindungen woandershin)
+       blockiert der Browser. form-action fehlt bewusst: die Dialoge nutzen method="dialog". -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self' blob:; media-src 'self' blob:; connect-src 'self' https://api.anthropic.com; object-src 'none'; base-uri 'none'">
   <title>Golf Swing Coach</title>
   <link rel="stylesheet" href="style.css">
 
@@ -387,6 +395,32 @@
         den Offline-Dateien und deine Originalvideos in der Fotos-App.
       </p>
       <p id="datenMeldung" class="status" aria-live="polite"></p>
+    </section>
+
+    <!-- Datenschutz für die ganze App (Befund V4) – fester Text. Ändert sich, was die App
+         sendet oder wohin, muss dieser Text mit (siehe auch README „Datenschutz“). -->
+    <section id="datenschutz" class="einstellung">
+      <h3>Datenschutz – kurz erklärt</h3>
+      <p class="hinweis">
+        <strong>Bleibt auf diesem Gerät:</strong> deine Videos, Einzelbilder, Körperpunkte (Posedaten),
+        Kennzahlen, Notizen, dein Level, dein Lernfortschritt und – falls eingetragen – dein API-Schlüssel
+        (er geht nur bei Coach-Anfragen zur Anmeldung an Anthropic). Die Analyse läuft komplett hier im Browser. Es gibt kein Konto, keine Werbung, kein Tracking und keine Cookies.
+      </p>
+      <p class="hinweis">
+        <strong>Beim Öffnen und bei Updates</strong> lädt die App ihre eigenen Dateien von GitHub Pages
+        (auch die Pose-Erkennung). GitHub sieht dabei wie bei jeder Webseite deine IP-Adresse und den
+        Zeitpunkt. Danach funktioniert die App auch ohne Internet.
+      </p>
+      <p class="hinweis">
+        <strong>Nur wenn du den Coach nutzt</strong> – und erst nach deiner Einwilligung – gehen die
+        Kennzahlen des Schwungs mit Level, Ansicht und kurzem Verlauf an Anthropic (Claude). Nie gesendet
+        werden Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch deine
+        IP-Adresse und die Browserkennung.
+      </p>
+      <p class="hinweis">
+        Weitere Adressen kann die App nicht erreichen: Eine Sicherheitsregel im Browser (CSP) erlaubt
+        nur diese beiden.
+      </p>
     </section>
   </main>
 

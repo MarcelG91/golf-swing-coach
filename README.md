@@ -2,7 +2,9 @@
 
 Eine Web-App, die Golfschwung-Videos analysiert und Verbesserungstipps gibt.
 Die Pose-Erkennung (MediaPipe) läuft komplett im Browser – Videos, Bilder und Posedaten verlassen das Gerät nie.
+Sie liegt geprüft im Repo (`vendor/`), die App lädt also keinen Code von fremden Servern.
 Nur der freiwillige **Coach mit Claude** sendet – nach deiner Einwilligung – Kennzahlen an Anthropic.
+Mehr unter [Datenschutz](#datenschutz).
 
 **Was die App kann:**
 
@@ -22,6 +24,7 @@ Nur der freiwillige **Coach mit Claude** sendet – nach deiner Einwilligung –
 [Lokal starten](#starten-lokal-auf-dem-mac) ·
 [Tipps für gute Videos](#tipps-für-gute-videos) ·
 [Schwünge speichern](#schwünge-speichern) ·
+[Datenschutz](#datenschutz) ·
 [Wenn etwas nicht klappt](#wenn-etwas-nicht-klappt) ·
 [Dateien](#dateien) ·
 [Arbeitsweise](#arbeitsweise-mit-branches) ·
@@ -34,6 +37,8 @@ Nur der freiwillige **Coach mit Claude** sendet – nach deiner Einwilligung –
 👉 **https://marcelg91.github.io/golf-swing-coach/**
 
 - Auf dem iPhone in Safari öffnen → Teilen → „Zum Home-Bildschirm“: dann startet die App wie eine normale App.
+- **Voraussetzung:** iPhone/iPad ab iOS bzw. iPadOS 16.4, am Computer ein aktueller Browser (Chrome, Safari, Edge, Firefox).
+  Ältere Geräte können die Pose-Erkennung nicht ausführen – die App sagt das dann ausdrücklich.
 - **Offline:** Nach dem ersten Öffnen mit Internet (lädt einmalig ca. 20 MB Pose-Erkennung)
   funktioniert die App auch ohne Netz – z. B. auf der Range. **Erst losgehen, wenn unten
   „Offline bereit ✓“ steht.**
@@ -47,7 +52,7 @@ Nur der freiwillige **Coach mit Claude** sendet – nach deiner Einwilligung –
   nicht automatisch zu löschen (klappt in der Regel nur als Home-Bildschirm-App).
 - „Video auswählen oder aufnehmen“ tippen → direkt filmen oder Videos aus den Fotos wählen
   (mehrere markieren geht auch), dann „🔍 Analysieren“.
-- Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die Pose-Erkennung.
+- Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die App selbst (mit der Pose-Erkennung) von GitHub Pages.
 - Die Online-Version ist immer der Stand von `main`. Nach einem Merge dauert es 1–2 Minuten, bis sie aktualisiert ist.
 
 ## Starten (lokal auf dem Mac)
@@ -154,6 +159,9 @@ App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
   wird mit dem Schwung gespeichert.
 - Der Schlüssel liegt nur im Browser dieses Geräts. Am besten einen eigenen Workspace mit
   Ausgabenlimit anlegen (Anleitung in den Einstellungen). „Alles löschen“ lässt den Schlüssel stehen.
+- Seit 0.26.0 ohne Anthropic-SDK: Die App schickt die Anfrage mit einem einfachen `fetch()` direkt an
+  `api.anthropic.com` und liest die Antwort als Datenstrom selbst (`coach.js`). So sieht kein
+  nachgeladener Fremdcode den Schlüssel. Gesendet wird genau dasselbe wie vorher.
 
 ### So sehen die Tipps aus
 
@@ -204,10 +212,27 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 > `.gitignore` und der Video-Wächter-Test verhindern das. Nur bewusst ausgewählte, fremde
 > Beispielschwünge liegen – umbenannt – in `tests/daten/`.
 
+## Datenschutz
+
+Kurz gesagt: **Alles bleibt auf deinem Gerät – außer du nutzt den Coach.** Dieselbe Erklärung steht in
+der App unter ⚙️ Einstellungen → „Datenschutz – kurz erklärt“.
+
+| Was | Wohin |
+|---|---|
+| Videos, Einzelbilder, Posedaten, Kennzahlen, Notizen, Level, Lernfortschritt, API-Schlüssel | Bleiben auf dem Gerät (Browser-Speicher); der Schlüssel geht nur bei Coach-Anfragen zur Anmeldung an Anthropic. Kein Konto, keine Werbung, kein Tracking, keine Cookies. |
+| App-Dateien (auch die Pose-Erkennung, ca. 20 MB) | Kommen von GitHub Pages. GitHub sieht dabei wie bei jeder Webseite IP-Adresse und Zeitpunkt. Danach läuft die App offline. |
+| Coach (freiwillig, nach Einwilligung) | Kennzahlen, Level, Ansicht und kurzer Verlauf an Anthropic (Claude) – nie Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch die IP-Adresse und die Browserkennung. |
+
+Abgesichert wird das zusätzlich durch eine **Content Security Policy** (CSP) in `index.html`: Der Browser
+lässt die App nur ihre eigenen Dateien laden und nur mit der eigenen Adresse und `api.anthropic.com`
+sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Modell in `vendor/` liegen
+(Sicherheitsbefunde C1, C3 und V4, siehe `docs/sicherheit/bericht.md`).
+
 ## Wenn etwas nicht klappt
 
 | Problem | Lösung |
 |---|---|
+| „Dieses Gerät ist zu alt für die Pose-Erkennung“ | iOS/iPadOS 16.4 oder neuer installieren (Einstellungen → Allgemein → Softwareupdate). Ältere Geräte können die Pose-Erkennung nicht ausführen. |
 | Offline fehlt etwas | Die Statuszeile nennt die fehlende Datei. App **vom Home-Bildschirm aus** mit Internet öffnen und warten, bis unten „Offline bereit ✓“ steht. |
 | Update kommt nicht an | Versionsnummer ganz unten prüfen. App mit Internet komplett schließen (nach oben wischen) und neu öffnen. Nach einem Merge 1–2 Minuten warten. |
 | Analyse ist langsam | Die Zeile „Analyse fertig (…)“ notieren – sie enthält auch, wie lange das Video zum Laden brauchte (siehe [unten](#so-geht-die-app-das-video-durch)). 1080p statt 4K filmen, Video vorher kürzen. |
@@ -247,7 +272,8 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
-| `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb |
+| `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb (eigene Dateien „erst Netz“, `vendor/` „Speicher zuerst“) |
+| `vendor/` | Pose-Erkennung, selbst ausgeliefert: MediaPipe 0.10.14 (Modul, WASM-Lader und Rechenkern) und das Pose-Modell „full“, mit Lizenz. Herkunft und Prüfung in `vendor/README.md`. Nie von Hand ändern – neue Version = neuer Ordner |
 | `manifest.webmanifest` | Name, Farben und Symbol der App für den Home-Bildschirm |
 | `icons/` | App-Symbole |
 
@@ -263,14 +289,15 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
-| `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet, Claude kann keinen Fokus erfinden, die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen |
+| `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet (feste Felder der Anfrage), Kopfzeilen, Claude kann keinen Fokus erfinden, der Datenstrom wird auch in kleinen Stücken und nach einem Rückfall auf ein anderes Modell vollständig gelesen, Fehlerarten aus HTTP-Status und Datenstrom |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/wissen.test.mjs` | Prüft die Lektionen: feste IDs, Textlängen, Quiz mit genau einer richtigen Antwort, Quellen mit Link in `docs/wissen/`, Bilder vorhanden, Farben aus `style.css`, Figuren nur aus Profi-Posen, Beschriftung der P1–P10-Animation, alle 9 Ballflüge im Helfer, Fortschritt robust |
 | `tests/nachschlagen.test.mjs` | Prüft Nachschlagen: Textlängen, jede Aussage mit bekannter Quelle, Glossar mit Lektion oder zwei Quellen, „Trainer sind uneins“ beim Fitting, Suche (Umlaute, Englisch, seltsame Eingaben) und welche Lektion zu welcher Kennzahl gehört |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
-| `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo |
-| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts, MediaPipe-Version, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Lernfortschritt, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
+| `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo (über 5 MB nur die geprüften Dateien in `vendor/`) |
+| `tests/vendor.test.mjs` | Prüfsumme (SHA-256) jeder Datei in `vendor/`, keine ungeprüfte Datei dort, App und Service Worker laden die Pose-Erkennung nur von dort, Speicher-Namen in `sw.js` und `pwa.js` gleich |
+| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts (nur noch `api.anthropic.com`), dass kein Fremdcode nachgeladen wird, die CSP, den Datenschutzhinweis, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Lernfortschritt, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
 
@@ -280,6 +307,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 |---|---|
 | `package.json` | Sagt Node.js, dass die Dateien moderne JavaScript-Module sind; `npm test` = `node --test` |
 | `.gitignore` | Sorgt dafür, dass Videos und Posedaten nicht auf GitHub landen |
+| `.gitattributes` | Git lässt die Dateien in `vendor/` unverändert (sonst stimmt die Prüfsumme nicht) und zeigt sie in Pull Requests nicht als Riesen-Diff |
 | `.nojekyll` | Leere Datei: GitHub Pages zeigt die Dateien unverändert an, statt sie umzubauen |
 | `.github/workflows/pruefen.yml` | Automatische Prüfung bei jedem Pull Request (siehe unten) |
 | `.github/agents/golf-app-sicherheitspruefer.agent.md` | Agent „Golf-App-Sicherheitsprüfer“ für GitHub Copilot (z. B. in VS Code): prüft Änderungen nur lesend auf Sicherheit und Datenschutz – schnelle Einzelprüfung; die Gesamtprüfung bleibt `/golf-app-check` |
@@ -310,6 +338,8 @@ git checkout main && git pull                 # zurück auf main
 
 - [ ] `APP_VERSION` in `pwa.js` erhöht? (So siehst du auf dem iPhone, ob das Update da ist.)
 - [ ] Neue JS-Datei? → in `sw.js` **und** `pwa.js` bei `APP_DATEIEN` eintragen, sonst fehlt sie offline.
+- [ ] Neue Internetadresse? → nur nach Rückfrage; dann auch die CSP in `index.html` und den Datenschutzhinweis anpassen.
+- [ ] Dateien in `vendor/` nie von Hand ändern (neue Version = neuer Ordner, Prüfsummen in `tests/vendor.test.mjs`).
 - [ ] Rechenlogik ohne Browser-Code (kein `document`, kein `window`), damit `node --test` sie prüfen kann.
 - [ ] `node --test` grün und im Browser angesehen?
 - [ ] Keine Videos oder Posedaten-Exporte im Commit?
@@ -329,7 +359,8 @@ Bei jedem Pull Request prüft GitHub automatisch (`.github/workflows/pruefen.yml
 
 1. ob alle JavaScript-Dateien fehlerfrei lesbar sind,
 2. alle Tests,
-3. den Video-Wächter: keine Videos, keine Posedaten-Exporte, keine Datei über 5 MB im Repo.
+3. den Video-Wächter: keine Videos, keine Posedaten-Exporte, keine Datei über 5 MB im Repo
+   (Ausnahme: die Pose-Erkennung in `vendor/`, deren Prüfsummen fest im Test stehen).
 
 Das Ergebnis steht im Pull Request unter „Checks“. **Nur mergen, wenn der Haken grün ist.**
 
@@ -497,6 +528,8 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
   (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 - [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
   Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
+- [x] Sicherheits-Etappe (0.26.0): Pose-Erkennung selbst ausgeliefert mit Prüfsummen, Coach ohne SDK, CSP,
+  Datenschutzhinweis – Voraussetzung, um die App mit Freunden zu teilen (Befunde C1, C3, V4)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 
