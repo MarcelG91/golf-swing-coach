@@ -13,6 +13,7 @@ const QUELLTEXT = QUELLDATEIEN.map(({ text }) => text).join("\n");
 const APP = QUELLDATEIEN.find(({ datei }) => datei === "app.js").text;
 const PWA = QUELLDATEIEN.find(({ datei }) => datei === "pwa.js").text;
 const SERVICE_WORKER = QUELLDATEIEN.find(({ datei }) => datei === "sw.js").text;
+const INDEX = QUELLDATEIEN.find(({ datei }) => datei === "index.html").text;
 
 function dateiliste(text) {
   const treffer = text.match(/APP_DATEIEN\s*=\s*\[([\s\S]*?)\]/);
@@ -26,10 +27,11 @@ test("Nur erlaubte Netzwerk-Hosts sind eingebaut (seit 0.26.0 nur noch der Coach
   const hostsIn = (text) => [...text.matchAll(/https?:\/\/[^\s"'`]+/g)]
     .map(([adresse]) => new URL(adresse.replace(/[),;]+$/, "")).hostname);
   assert.deepEqual([...new Set(hostsIn(QUELLTEXT))].filter((host) => !erlaubt.has(host)), []);
-  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js – nirgends sonst
+  // api.anthropic.com (Coach, V2) nur an der einen Stelle in app.js und in der CSP – nirgends sonst
   const mitAnthropic = QUELLDATEIEN.filter(({ text }) => hostsIn(text).includes("api.anthropic.com")).map(({ datei }) => datei);
-  assert.deepEqual(mitAnthropic, ["app.js"]);
+  assert.deepEqual(mitAnthropic.sort(), ["app.js", "index.html"]);
   assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
+  assert.equal(INDEX.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
 });
 
 test("Kein Fremdcode wird nachgeladen: nur eigene Module, kein import() (C1)", () => {
@@ -41,6 +43,37 @@ test("Kein Fremdcode wird nachgeladen: nur eigene Module, kein import() (C1)", (
     }
     assert.doesNotMatch(code, /\bimport\s*\(/, `${datei} lädt Code zur Laufzeit nach`);
     assert.doesNotMatch(code, /<script[^>]+src=["']https?:/, `${datei} bindet ein fremdes Skript ein`);
+  }
+});
+
+test("CSP (C3): nur eigene Dateien, WebAssembly, Verbindungen nur zu sich selbst und zum Coach", () => {
+  const csp = INDEX.match(/<meta http-equiv="Content-Security-Policy" content="([^"]+)">/)?.[1];
+  assert.ok(csp, "CSP-Meta-Tag fehlt");
+  // Muss vor dem ersten Skript stehen, sonst gilt sie für dieses Skript nicht
+  const html = ohneKommentare(INDEX);
+  assert.ok(html.indexOf("Content-Security-Policy") < html.indexOf("<script"), "CSP steht nach einem Skript");
+  const regeln = Object.fromEntries(csp.split(";").map((r) => r.trim().split(/\s+/)).map(([name, ...werte]) => [name, werte]));
+  assert.deepEqual(regeln, {
+    "default-src": ["'self'"],
+    "script-src": ["'self'", "'wasm-unsafe-eval'"],
+    "style-src": ["'self'"],
+    "img-src": ["'self'", "blob:"],
+    "media-src": ["'self'", "blob:"],
+    "connect-src": ["'self'", "https://api.anthropic.com"],
+    "object-src": ["'none'"],
+    "base-uri": ["'none'"],
+  });
+  // Inline-Skripte und Inline-Styles würde die CSP blockieren – also gibt es keine
+  assert.doesNotMatch(ohneKommentare(INDEX), /<script(?![^>]*\bsrc=)[^>]*>|\son[a-z]+=|\sstyle=/i);
+});
+
+test("Datenschutzhinweis (V4) nennt beide Empfänger und was nie gesendet wird", () => {
+  const start = INDEX.indexOf('<section id="datenschutz"');
+  assert.ok(start > 0, "Abschnitt Datenschutz fehlt in den Einstellungen");
+  const abschnitt = INDEX.slice(start, INDEX.indexOf("</section>", start));
+  // Die CSP erlaubt genau zwei Ziele: die eigene Adresse (GitHub Pages) und den Coach (Anthropic)
+  for (const wort of ["GitHub", "Anthropic", "IP-Adresse", "Einwilligung", "Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum", "kein Tracking"]) {
+    assert.ok(abschnitt.includes(wort), `Datenschutzhinweis nennt „${wort}“ nicht`);
   }
 });
 
