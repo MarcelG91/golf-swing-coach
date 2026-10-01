@@ -101,6 +101,19 @@ test("Kein dynamischer Code wird ausgeführt", () => {
   assert.doesNotMatch(QUELLTEXT, /\beval\s*\(|\bnew\s+Function\s*\(|setTimeout\(\s*["'`]/);
 });
 
+// Fortschrittsanzeige (0.28.0): nur lesen und zeichnen – kein Netz, kein Speichern, keine Medien laden
+test("Fortschrittsanzeige liest nur Kennzahlen, sendet nichts und schreibt nichts", () => {
+  const app = ohneKommentare(QUELLDATEIEN.find(({ datei }) => datei === "app.js").text);
+  const von = app.indexOf("function zeigeGespeichertTeil");
+  const bis = app.indexOf("async function zeigeMeineSchwuenge");
+  assert.ok(von > 0 && bis > von, "Abschnitt Fortschritt nicht gefunden");
+  const abschnitt = app.slice(von, bis);
+  assert.doesNotMatch(abschnitt, /fetch\(|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|indexedDB|ladeMedium|loesche(Schwung|Sitzung|Alles|VideosUndBilder)|speichereSitzung|aktualisiereSchwung/);
+  // einziges innerHTML: fester Text "<svg></svg>" für den SVG-Namensraum
+  const treffer = abschnitt.match(/innerHTML\s*=.*$/gm) ?? [];
+  assert.deepEqual(treffer.map((z) => z.replace(/\s*\/\/.*$/, "").trim()), ['innerHTML = "<svg></svg>";']);
+});
+
 // ---------------------------------------------------------------
 // Speichern und Löschen bleiben lokal und fassen nur die Schwung-Datenbank an
 // ---------------------------------------------------------------
