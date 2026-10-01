@@ -267,10 +267,32 @@
        Die Inhalte setzt app.js – Texte immer per textContent. -->
   <main id="wissenBereich" hidden>
     <h2>📖 Wissen</h2>
-    <div id="wissenUebersicht">
+    <!-- Startseite: oben umschalten zwischen Lernpfaden und Nachschlagen (nachschlagen.js) -->
+    <div id="wissenStart">
       <p class="hinweis">Allgemeines Golfwissen mit Quellen – ersetzt keinen Unterricht. Links und rechts gelten für Rechtshänder.</p>
-      <div id="pfadListe" class="pfade"></div>
+      <div class="segmente zwei" role="group" aria-label="Ansicht im Bereich Wissen">
+        <button id="zuLernpfade" type="button" aria-pressed="true">Lernpfade</button>
+        <button id="zuNachschlagen" type="button" aria-pressed="false">Nachschlagen</button>
+      </div>
+      <div id="wissenUebersicht">
+        <div id="pfadListe" class="pfade"></div>
+      </div>
+      <section id="wissenNachschlagen" hidden>
+        <!-- Schrift 16 px: Sonst vergrößert Safari auf dem iPhone die Seite beim Antippen -->
+        <input id="wissenSuche" class="suchfeld" type="search" placeholder="Suchen, z. B. Slice, Loft, Bunker"
+               aria-label="Lektionen, Begriffe, Regeln und Irrtümer durchsuchen" autocomplete="off" enterkeyhint="search">
+        <p id="suchStatus" class="hinweis such-status" aria-live="polite"></p>
+        <div id="nachschlagenKacheln" class="kacheln"></div>
+        <div id="suchErgebnis"></div>
+      </section>
     </div>
+    <!-- Glossar und Regeln als Liste -->
+    <section id="wissenListe" hidden>
+      <button id="listeZurueck" class="zeigen">‹ Nachschlagen</button>
+      <h3 id="listeTitel" class="liste-titel" tabindex="-1"></h3>
+      <div id="listeInhalt"></div>
+    </section>
+    <!-- Wisch-Karten: eine Lektion oder ein Stapel aus „Nachschlagen“ (Irrtümer, Ausrüstung, Ballflug-Helfer) -->
     <section id="wissenLektion" hidden>
       <button id="wissenZurueck" class="zeigen">‹ Alle Lektionen</button>
       <div class="karten-kopf">

@@ -54,7 +54,9 @@ import { strichfigur } from "./strichfigur.js";
 // Strichfiguren zu den Übungen (Übungsmodus)
 import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
 // Wissen: Lernpfade, Lektionen, Quellen (reine Daten) und die Schaubilder dazu
-import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion, BALLFLUG_AUSWAHL, ballflugErgebnis } from "./wissen.js";
+import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion, lektionZurKennzahl, BALLFLUG_AUSWAHL, ballflugErgebnis } from "./wissen.js";
+// Nachschlagen: Glossar, Irrtümer, Regeln, Ausrüstung und die Suche (reine Daten)
+import { GLOSSAR, GLOSSAR_GRUPPEN, IRRTUEMER, REGELN, REGEL_QUELLEN, AUSRUESTUNG, suche } from "./nachschlagen.js";
 import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
 import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
@@ -112,10 +114,22 @@ const zuWissenBtn = $("zuWissen");
 const analyseBereich = $("analyseBereich");
 const gespeichertBereich = $("gespeichertBereich");
 const einstellungenBereich = $("einstellungenBereich");
-// Wissen: Übersicht der Lernpfade und eine Lektion als Wisch-Karten
+// Wissen: Übersicht der Lernpfade, Nachschlagen (Suche, Listen) und Wisch-Karten
 const wissenBereich = $("wissenBereich");
+const wissenStart = $("wissenStart");
+const zuLernpfadeBtn = $("zuLernpfade");
+const zuNachschlagenBtn = $("zuNachschlagen");
 const wissenUebersicht = $("wissenUebersicht");
 const pfadListe = $("pfadListe");
+const wissenNachschlagen = $("wissenNachschlagen");
+const wissenSuche = $("wissenSuche");
+const suchStatus = $("suchStatus");
+const nachschlagenKacheln = $("nachschlagenKacheln");
+const suchErgebnis = $("suchErgebnis");
+const wissenListe = $("wissenListe");
+const listeZurueckBtn = $("listeZurueck");
+const listeTitel = $("listeTitel");
+const listeInhalt = $("listeInhalt");
 const wissenLektion = $("wissenLektion");
 const wissenZurueckBtn = $("wissenZurueck");
 const lektionTitel = $("lektionTitel");
@@ -1194,6 +1208,17 @@ function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
     karte.append(gefuehl);
   }
   if (k.phase) karte.append(zeigenKnopf(k));
+  // Passende Lektion im Bereich Wissen; ihr Zurück-Knopf führt wieder genau hierher
+  const dazu = lektionZurKennzahl(k.id);
+  if (dazu) {
+    const knopf = neu("button", "zeigen zur-lektion", `📖 Lektion: ${dazu.titel} ›`);
+    knopf.addEventListener("click", () => {
+      const zurueck = zurueckZu("‹ Zurück zur Analyse", () => zeigeBereich("analyse"));
+      zeigeBereich("wissen");
+      oeffneLektion(dazu.id, zurueck);
+    });
+    karte.append(knopf);
+  }
   return karte;
 }
 
@@ -1406,12 +1431,52 @@ function merkeErledigt(id, ja) {
   }
 }
 
+// ---------------------------------------------------------------
+// Aufbau im Bereich Wissen: drei Teile, von denen immer genau einer zu sehen ist –
+//   Startseite (oben umschalten: Lernpfade | Nachschlagen), Liste (Glossar, Regeln)
+//   und Wisch-Karten (eine Lektion oder ein Stapel aus Nachschlagen).
+// Der Zurück-Knopf über den Wisch-Karten führt dorthin, wo man herkam
+// (Lernpfade, Glossar, Suche, Analyse …).
+// ---------------------------------------------------------------
+let wissenAnsicht = "pfade"; // zuletzt gewählt oben: "pfade" oder "nachschlagen"
+const ZURUECK_PFADE = { text: "‹ Alle Lektionen", aktion: () => zeigeWissenUebersicht() };
+const ZURUECK_NACHSCHLAGEN = { text: "‹ Nachschlagen", aktion: () => zeigeNachschlagen() };
+let lektionZurueck = ZURUECK_PFADE; // { text, aktion } für den Zurück-Knopf über den Wisch-Karten
+
+// Zurück-Knopf, der eine Ansicht neu zeigt und wieder an dieselbe Stelle scrollt.
+// Die Stelle wird beim Aufruf gemerkt – also im Moment des Antippens.
+function zurueckZu(text, zeige) {
+  const y = window.scrollY;
+  return { text, aktion: () => { zeige(); window.scrollTo(0, y); } };
+}
+
+// Genau einen der drei Teile zeigen: "start", "liste" oder "karten"
+function zeigeWissenTeil(teil) {
+  halteLektionFigurAn();
+  wissenStart.hidden = teil !== "start";
+  wissenListe.hidden = teil !== "liste";
+  wissenLektion.hidden = teil !== "karten";
+  if (teil !== "karten") lektionKarten.replaceChildren();
+}
+
+// Beim Antippen von „📖 Wissen“ unten: die zuletzt gewählte Ansicht
+function zeigeWissenStart() {
+  if (wissenAnsicht === "nachschlagen") zeigeNachschlagen();
+  else zeigeWissenUebersicht();
+}
+
+function setzeWissenAnsicht(ansicht) {
+  wissenAnsicht = ansicht;
+  zuLernpfadeBtn.setAttribute("aria-pressed", String(ansicht === "pfade"));
+  zuNachschlagenBtn.setAttribute("aria-pressed", String(ansicht === "nachschlagen"));
+  wissenUebersicht.hidden = ansicht !== "pfade";
+  wissenNachschlagen.hidden = ansicht !== "nachschlagen";
+}
+
 // Übersicht: alle Pfade, der zum Level passende oben, mit "x von y" und den Lektionen
 function zeigeWissenUebersicht() {
-  halteLektionFigurAn();
-  wissenLektion.hidden = true;
-  wissenUebersicht.hidden = false;
-  lektionKarten.replaceChildren();
+  zeigeWissenTeil("start");
+  setzeWissenAnsicht("pfade");
   pfadListe.replaceChildren();
   for (const pfad of pfadeFuerLevel(aktuellesLevel)) {
     const { erledigt, gesamt } = fortschritt(pfad.id, wissenErledigt);
@@ -1427,30 +1492,38 @@ function zeigeWissenUebersicht() {
 
     const liste = neu("ol", "lektionen-liste");
     lektionenImPfad(pfad.id).forEach((l, i) => {
-      const fertig = wissenErledigt.includes(l.id);
-      const knopf = neu("button", fertig ? "erledigt" : "");
-      knopf.append(neu("span", "lektion-nr", fertig ? "✓" : String(i + 1)), neu("span", "", l.titel));
-      knopf.setAttribute("aria-label", `${l.titel}${fertig ? ", erledigt" : ""}`);
-      knopf.addEventListener("click", () => oeffneLektion(l.id));
       const eintrag = neu("li");
-      eintrag.append(knopf);
+      eintrag.append(lektionsKnopf(l, String(i + 1), () => zurueckZu("‹ Alle Lektionen", zeigeWissenUebersicht)));
       liste.append(eintrag);
     });
     box.append(liste);
     pfadListe.append(box);
   }
-  pfadListe.append(neu("p", "hinweis klein-text", "Bald dazu: Nachschlagen mit Glossar, Irrtümern, Regeln und Ballflug-Helfer."));
+}
+
+// Knopf zu einer Lektion wie in der Pfad-Übersicht: Nummer (oder ✓, wenn erledigt) und Titel.
+// zurueck = Funktion, die beim Antippen den Zurück-Knopf der Lektion liefert.
+function lektionsKnopf(l, nummer, zurueck) {
+  const fertig = wissenErledigt.includes(l.id);
+  const knopf = neu("button", fertig ? "erledigt" : "");
+  knopf.append(neu("span", "lektion-nr", fertig ? "✓" : nummer), neu("span", "", l.titel));
+  knopf.setAttribute("aria-label", `${l.titel}${fertig ? ", erledigt" : ""}`);
+  knopf.addEventListener("click", () => oeffneLektion(l.id, zurueck()));
+  return knopf;
+}
+
+// Kleiner Text-Knopf „📖 Lektion: … ›“ (Glossar, Irrtümer, Ausrüstung, Regeln)
+function zurLektionKnopf(l, zurueck) {
+  const knopf = neu("button", "zeigen", `📖 Lektion: ${l.titel} ›`);
+  knopf.addEventListener("click", () => oeffneLektion(l.id, zurueck()));
+  return knopf;
 }
 
 // Eine Lektion als Wisch-Karten: Bild + Kernsatz · Inhaltskarten · Quiz · Abschluss
-function oeffneLektion(id) {
+function oeffneLektion(id, zurueck = ZURUECK_PFADE) {
   const l = lektion(id);
   if (!l) return;
-  halteLektionFigurAn();
   const imPfad = lektionenImPfad(l.pfad);
-  wissenUebersicht.hidden = true;
-  wissenLektion.hidden = false;
-  lektionTitel.textContent = l.titel;
 
   const karten = [];
   // 1. Bildkarte
@@ -1466,14 +1539,222 @@ function oeffneLektion(id) {
   });
   // 3. Quiz, danach (falls vorhanden) ein Werkzeug zum Ausprobieren, 4. Abschluss
   karten.push(quizKarte(l.quiz));
-  if (l.werkzeug === "ballflugHelfer") karten.push(ballflugHelferKarte());
-  karten.push(abschlussKarte(l));
+  if (l.werkzeug === "ballflugHelfer") karten.push(ballflugHelferKarte(zurueck));
+  karten.push(abschlussKarte(l, zurueck));
+  zeigeKarten(l.titel, karten, zurueck);
+}
 
+// Wisch-Karten zeigen: eine Lektion oder einen Stapel aus Nachschlagen.
+// start = Nummer der Karte, die zuerst zu sehen ist (z. B. ein Irrtum aus der Suche).
+function zeigeKarten(titel, karten, zurueck, start = 0) {
+  zeigeWissenTeil("karten");
+  lektionZurueck = zurueck;
+  wissenZurueckBtn.textContent = zurueck.text;
+  lektionTitel.textContent = titel;
+  lektionKarten.setAttribute("aria-label", `${titel}, zur Seite wischen`);
   lektionKarten.replaceChildren(...karten);
-  lektionKarten.scrollLeft = 0;
+  // Kartenbreite + 28 px Abstand (wie in aktualisierePunkte und style.css)
+  lektionKarten.scrollLeft = start * (karten[0].offsetWidth + 28);
   steuereLektionFigur(aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler));
   wissenBereich.scrollIntoView({ block: "start" });
   lektionTitel.focus({ preventScroll: true });
+}
+
+// Glossar und Regeln: eine Liste unter einer Überschrift, Zurück führt zu Nachschlagen
+function zeigeListe(titel, teile) {
+  zeigeWissenTeil("liste");
+  listeTitel.textContent = titel;
+  listeInhalt.replaceChildren(...teile);
+  wissenBereich.scrollIntoView({ block: "start" });
+  listeTitel.focus({ preventScroll: true });
+}
+
+// ---------------------------------------------------------------
+// Nachschlagen: Suche, Kacheln, Glossar, Irrtümer, Regeln, Ausrüstung, Ballflug-Helfer
+// (Daten in nachschlagen.js). Alle Texte per textContent, Quellen nur als Text.
+// ---------------------------------------------------------------
+function zeigeNachschlagen() {
+  zeigeWissenTeil("start");
+  setzeWissenAnsicht("nachschlagen");
+  zeigeSuchergebnis(); // das Suchfeld behält seinen Text – Zurück landet wieder bei den Treffern
+}
+
+// Die fünf Kacheln (sichtbar, solange nichts gesucht wird). Werden einmal beim Start gebaut.
+function baueKacheln() {
+  const kachel = (symbol, titel, unterzeile, oeffnen) => {
+    const knopf = neu("button", "kachel");
+    const bild = neu("span", "kachel-symbol", symbol);
+    bild.setAttribute("aria-hidden", "true");
+    knopf.append(bild, neu("span", "kachel-titel", titel), neu("span", "kachel-text", unterzeile));
+    knopf.addEventListener("click", oeffnen);
+    return knopf;
+  };
+  nachschlagenKacheln.replaceChildren(
+    kachel("🔤", "Glossar", `${GLOSSAR.length} Begriffe`, zeigeGlossar),
+    kachel("💡", "Irrtümer", `${IRRTUEMER.length} Karten`, () => zeigeIrrtuemer()),
+    kachel("⚖️", "Regeln", `${REGELN.length} Situationen`, zeigeRegeln),
+    kachel("🏌️", "Ausrüstung", "Schläger, Schaft, Ball", () => zeigeAusruestung()),
+    kachel("🎯", "Ballflug-Helfer", "Wie flog dein Ball? → Ursache", zeigeBallflugHelfer),
+  );
+}
+
+// Suche: Treffer erscheinen sofort beim Tippen (ab 2 Zeichen). Leeres Feld → wieder die Kacheln.
+function zeigeSuchergebnis() {
+  const treffer = suche(wissenSuche.value);
+  nachschlagenKacheln.hidden = treffer !== null;
+  suchErgebnis.replaceChildren();
+  suchStatus.textContent = "";
+  if (!treffer) return;
+  const anzahl = Object.values(treffer).reduce((summe, liste) => summe + liste.length, 0);
+  suchStatus.textContent = anzahl
+    ? `${anzahl} Treffer für „${wissenSuche.value.trim()}“`
+    : "Keine Treffer – versuch ein anderes Wort, z. B. Slice, Loft oder Bunker.";
+  const zurueck = () => zurueckZu("‹ Nachschlagen", zeigeNachschlagen);
+  const gruppe = (titel, inhalt) => {
+    const box = neu("section", "such-gruppe");
+    box.append(neu("h3", "", titel), ...inhalt);
+    suchErgebnis.append(box);
+  };
+  if (treffer.begriffe.length) gruppe(`Begriffe (${treffer.begriffe.length})`, treffer.begriffe.map((g) => glossarEintrag(g, zurueck)));
+  if (treffer.lektionen.length) {
+    const liste = neu("ul", "lektionen-liste");
+    for (const l of treffer.lektionen) {
+      const eintrag = neu("li");
+      eintrag.append(lektionsKnopf(l, LEVEL_SYMBOL[l.level], zurueck));
+      liste.append(eintrag);
+    }
+    gruppe(`Lektionen (${treffer.lektionen.length})`, [liste]);
+  }
+  if (treffer.regeln.length) gruppe(`Regeln (${treffer.regeln.length})`, treffer.regeln.map(regelEintrag));
+  if (treffer.irrtuemer.length) {
+    gruppe(`Irrtümer (${treffer.irrtuemer.length})`, treffer.irrtuemer.map((i) =>
+      sprungKnopf(`💡 ${i.irrtum}`, () => zeigeIrrtuemer(IRRTUEMER.indexOf(i), zurueck()))));
+  }
+  if (treffer.ausruestung.length) {
+    gruppe(`Ausrüstung (${treffer.ausruestung.length})`, treffer.ausruestung.map((a) =>
+      sprungKnopf(`🏌️ ${a.titel}`, () => zeigeAusruestung(AUSRUESTUNG.indexOf(a), zurueck()))));
+  }
+}
+
+// Knopf, der direkt zu einer Karte in einem Stapel springt (Irrtum, Ausrüstung)
+function sprungKnopf(text, oeffnen) {
+  const knopf = neu("button", "sprung", `${text} ›`);
+  knopf.addEventListener("click", oeffnen);
+  return knopf;
+}
+
+// Ein Glossar-Eintrag: Begriff · Englisch, Erklärung und (falls vorhanden) der Knopf zur Lektion
+function glossarEintrag(g, zurueck) {
+  const box = neu("div", "begriff");
+  const kopf = neu("p", "begriff-kopf");
+  kopf.append(neu("b", "", g.begriff));
+  if (g.englisch && g.englisch !== g.begriff) {
+    const englisch = neu("span", "begriff-englisch", ` · ${g.englisch}`);
+    englisch.lang = "en";
+    kopf.append(englisch);
+  }
+  box.append(kopf, neu("p", "begriff-text", g.text));
+  const l = g.lektion && lektion(g.lektion);
+  if (l) box.append(zurLektionKnopf(l, zurueck));
+  return box;
+}
+
+function zeigeGlossar() {
+  const zurueck = () => zurueckZu("‹ Glossar", zeigeGlossar);
+  const teile = [neu("p", "hinweis", "Golfbegriffe auf Deutsch und Englisch. Mehr steht jeweils in der Lektion.")];
+  for (const gruppe of GLOSSAR_GRUPPEN) {
+    teile.push(neu("h4", "liste-gruppe", gruppe.titel));
+    for (const g of GLOSSAR.filter((x) => x.gruppe === gruppe.id)) teile.push(glossarEintrag(g, zurueck));
+  }
+  const quellen = [...new Set(GLOSSAR.flatMap((g) => g.quellen))];
+  teile.push(quellenBlock(null, quellen, "Dazu kommen die Quellen der verlinkten Lektionen."));
+  zeigeListe("🔤 Glossar", teile);
+}
+
+// Eine Regel: Situation und Regelnummer, was zu tun ist, die Strafe
+function regelEintrag(r) {
+  const box = neu("div", "regel");
+  const kopf = neu("p", "regel-kopf");
+  kopf.append(neu("b", "", r.situation), neu("span", "regel-nr", `Regel ${r.regel}`));
+  box.append(kopf, neu("p", "regel-text", r.tun));
+  if (r.strafe !== "–") box.append(neu("p", "regel-strafe", `Strafe: ${r.strafe}`));
+  return box;
+}
+
+function zeigeRegeln() {
+  const teile = [
+    neu("p", "hinweis", "Golfregeln 2023 (R&A, USGA) – kurz und ohne Gewähr. Es gilt das offizielle Regelbuch, Platzregeln des Clubs gehen vor."),
+    wissensBild("pfahlfarben"),
+    ...REGELN.map(regelEintrag),
+    zurLektionKnopf(lektion("start-regeln"), () => zurueckZu("‹ Regeln", zeigeRegeln)),
+    quellenBlock("regel", REGEL_QUELLEN),
+  ];
+  zeigeListe("⚖️ Regeln", teile);
+}
+
+// Irrtümer als Wisch-Karten: Irrtum → Was stimmt → Quellen
+function zeigeIrrtuemer(start = 0, zurueck = ZURUECK_NACHSCHLAGEN) {
+  const karten = IRRTUEMER.map((i, nr) => {
+    const karte = lektionsKarte(`Irrtum ${nr + 1} von ${IRRTUEMER.length}`);
+    karte.append(neu("p", "irrtum", i.irrtum), neu("p", "stimmt-titel", "Was stimmt"), neu("p", "inhalt", i.stimmt));
+    const l = i.lektion && lektion(i.lektion);
+    if (l) karte.append(zurLektionKnopf(l, () => zurueckZu("‹ Irrtümer", () => zeigeIrrtuemer(nr, zurueck))));
+    karte.append(neu("div", "trenner"), quellenBlock(i.beleg, i.quellen));
+    return karte;
+  });
+  zeigeKarten("💡 Irrtümer", karten, zurueck, start);
+}
+
+// Ausrüstung als Wisch-Karten: ein Thema pro Karte, beim Schaft mit kleiner Tabelle
+function zeigeAusruestung(start = 0, zurueck = ZURUECK_NACHSCHLAGEN) {
+  const karten = AUSRUESTUNG.map((a, nr) => {
+    const karte = lektionsKarte(`Ausrüstung · ${nr + 1} von ${AUSRUESTUNG.length}`);
+    karte.append(neu("p", "kurz", a.titel), neu("p", "inhalt", a.text));
+    if (a.tabelle) karte.append(baueTabelle(a.tabelle));
+    const l = a.lektion && lektion(a.lektion);
+    if (l) karte.append(zurLektionKnopf(l, () => zurueckZu("‹ Ausrüstung", () => zeigeAusruestung(nr, zurueck))));
+    karte.append(neu("div", "trenner"), quellenBlock(a.beleg, a.quellen));
+    return karte;
+  });
+  zeigeKarten("🏌️ Ausrüstung", karten, zurueck, start);
+}
+
+// Kleine Tabelle mit Kopfzeile, z. B. Flex ↔ Schlägerkopftempo
+function baueTabelle({ kopf, zeilen }) {
+  const tabelle = neu("table", "wissen-tabelle");
+  const kopfZeile = neu("tr");
+  for (const text of kopf) {
+    const zelle = neu("th", "", text);
+    zelle.scope = "col";
+    kopfZeile.append(zelle);
+  }
+  const koerper = neu("tbody");
+  for (const zeile of zeilen) {
+    const tr = neu("tr");
+    for (const text of zeile) tr.append(neu("td", "", text));
+    koerper.append(tr);
+  }
+  const thead = neu("thead");
+  thead.append(kopfZeile);
+  tabelle.append(thead, koerper);
+  return tabelle;
+}
+
+// Ballflug-Helfer als eigene Karte – dieselbe Karte wie in der Lektion „Die neun Ballflüge“
+function zeigeBallflugHelfer() {
+  const zurueckZumHelfer = { text: "‹ Ballflug-Helfer", aktion: zeigeBallflugHelfer };
+  zeigeKarten("🎯 Ballflug-Helfer", [ballflugHelferKarte(zurueckZumHelfer)], ZURUECK_NACHSCHLAGEN);
+}
+
+// Kleiner Quellen-Block: „Belegt durch: …“ und die Quellen als Text (keine Links)
+function quellenBlock(beleg, kennungen, zusatz = "") {
+  const box = neu("div", "quellen");
+  if (beleg) box.append(neu("p", "", `Belegt durch: ${BELEGE[beleg]}`));
+  const liste = neu("ul");
+  for (const kennung of kennungen) liste.append(neu("li", "", quelleText(kennung)));
+  box.append(neu("p", "", "Quellen:"), liste);
+  if (zusatz) box.append(neu("p", "", zusatz));
+  return box;
 }
 
 // ---------------------------------------------------------------
@@ -1519,9 +1800,10 @@ function zeichneWissenFigur(box, bild, ms) {
 }
 
 // ---------------------------------------------------------------
-// Ballflug-Helfer: Start und Kurve antippen → Name, Bild und Ursache (Daten in wissen.js)
+// Ballflug-Helfer: Start und Kurve antippen → Name, Bild und Ursache (Daten in wissen.js).
+// zurueck = Zurück-Knopf für die Lektion, die „Mehr dazu“ öffnet.
 // ---------------------------------------------------------------
-function ballflugHelferKarte() {
+function ballflugHelferKarte(zurueck) {
   const karte = lektionsKarte("Ballflug-Helfer");
   karte.append(neu("p", "kurz", "Wie ist dein Ball geflogen? Tippe Start und Kurve an."));
   const gewaehlt = { start: null, kurve: null };
@@ -1541,7 +1823,7 @@ function ballflugHelferKarte() {
     const passend = e.lektion && lektion(e.lektion);
     if (passend) {
       const knopf = neu("button", "klein breit", `Mehr dazu: ${passend.titel} ›`);
-      knopf.addEventListener("click", () => oeffneLektion(passend.id));
+      knopf.addEventListener("click", () => oeffneLektion(passend.id, zurueck));
       ergebnis.append(knopf);
     }
   };
@@ -1604,7 +1886,7 @@ function quizKarte(quiz) {
   return karte;
 }
 
-function abschlussKarte(l) {
+function abschlussKarte(l, zurueck) {
   const karte = lektionsKarte("Geschafft");
   karte.append(neu("p", "kurz", "Lektion erledigt?"));
   const erledigtKnopf = neu("button", "haupt breit");
@@ -1628,16 +1910,11 @@ function abschlussKarte(l) {
   }
   const naechste = naechsteLektion(l.id);
   const weiter = neu("button", "klein breit", naechste ? `Nächste Lektion: ${naechste.titel} ›` : "Zur Übersicht ›");
-  weiter.addEventListener("click", () => (naechste ? oeffneLektion(naechste.id) : zeigeWissenUebersicht()));
+  // Die nächste Lektion behält den Zurück-Knopf (z. B. „Zurück zur Analyse“)
+  weiter.addEventListener("click", () => (naechste ? oeffneLektion(naechste.id, zurueck) : zeigeWissenUebersicht()));
   karte.append(weiter);
 
-  karte.append(neu("div", "trenner"));
-  const quellen = neu("div", "quellen");
-  quellen.append(neu("p", "", `Belegt durch: ${BELEGE[l.beleg]}`));
-  const liste = neu("ul");
-  for (const kennung of l.quellen) liste.append(neu("li", "", quelleText(kennung)));
-  quellen.append(neu("p", "", "Quellen:"), liste);
-  karte.append(quellen);
+  karte.append(neu("div", "trenner"), quellenBlock(l.beleg, l.quellen));
   return karte;
 }
 
@@ -2409,7 +2686,7 @@ function zeigeBereich(welcher) {
   if (welcher !== "wissen") halteLektionFigurAn(); // bewegte Figur einer offenen Lektion anhalten
   if (welcher === "wissen") {
     video.pause();
-    zeigeWissenUebersicht();
+    zeigeWissenStart();
   }
   if (welcher === "gespeichert") {
     video.pause();
@@ -2939,7 +3216,16 @@ zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
-wissenZurueckBtn.addEventListener("click", zeigeWissenUebersicht);
+wissenZurueckBtn.addEventListener("click", () => lektionZurueck.aktion());
+zuLernpfadeBtn.addEventListener("click", zeigeWissenUebersicht);
+zuNachschlagenBtn.addEventListener("click", zeigeNachschlagen);
+listeZurueckBtn.addEventListener("click", zeigeNachschlagen);
+wissenSuche.addEventListener("input", zeigeSuchergebnis);
+// Enter schließt nur die Tastatur – die Treffer stehen schon da
+wissenSuche.addEventListener("keydown", (ereignis) => {
+  if (ereignis.key === "Enter") wissenSuche.blur();
+});
+baueKacheln();
 lektionKarten.addEventListener("scroll", () => steuereLektionFigur(aktualisierePunkte(lektionKarten, lektionPunkte, lektionZaehler)), { passive: true });
 schwungLoeschenBtn.addEventListener("click", loescheAktuellenSchwung);
 sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
