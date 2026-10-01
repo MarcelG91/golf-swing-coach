@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 30.09.2026 · geprüft auf `origin/main` @ `a40af7f` (Version 0.22.0, live) und Branch `wissen-pfade-2-3` (Version 0.23.0)
+Stand: 01.10.2026 · geprüft auf `origin/main` @ `2ecee09` (Version 0.23.0, live) und Branch `wissen-pfade-4-6` (Version 0.24.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
@@ -21,7 +21,7 @@ geschützt, das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etap
 |---|---|---|
 | Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). |
 | Cybersecurity | Gelb | MediaPipe und das Anthropic-SDK (feste Versionen) kommen ohne Echtheitsprüfung von jsDelivr und Google (C1); das SDK sieht den API-Schlüssel. Noch keine CSP (C3). Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). |
-| Test und Deploy | Gelb | 135 Tests grün im Branch `wissen-pfade-2-3` (`main` 131). CI auf `main` grün, Live-Stand gleich `main` (0.22.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Test und Deploy | Gelb | 137 Tests grün im Branch `wissen-pfade-4-6` (`main` 135). CI auf `main` grün, Live-Stand gleich `main` (0.23.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
 | Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach: nur eine Anfrage zur Zeit (S11); seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell vollständig gelesen (S12). Offen nur S10 (P3). |
 | Geschwindigkeit | Gelb | Live 30.09. (Mac, frisches Profil): „Bereit“ nach 1,5 s, „Offline bereit ✓“; Warmstart 0,2 s ohne Datenübertragung. Bewegte Figuren (Übungsmodus, Wissensseite) laufen mit ca. 30 Bildern pro Sekunde und nur, solange sie zu sehen sind. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
@@ -54,6 +54,8 @@ Status: **Offen**, **Teilweise**, **Erledigt** (mit Datum/PR), **Akzeptiert** (b
 **Wissensseite (0.22.0):** Neuer Bereich „📖 Wissen“ mit Lernpfaden. Lektionen, Quiz, Quellen und Schaubilder stehen als feste Daten in `wissen.js` und `schaubilder.js` (Rechenlogik ohne Browser-Code, eigene Tests) und kommen nur per `textContent` in die Seite. Die SVG-Schaubilder nutzen nur feste Farbnamen aus `style.css`, einziges `innerHTML` ist fester Text. Quellen erscheinen nur als Name, ohne Link (Test). Es gibt keinen Netzwerkaufruf und keine neue Adresse. Der Lernfortschritt ist eine Liste erledigter Lektions-IDs im `localStorage` (`wissenFortschritt`), gelesen mit Fehlerbehandlung; unbekannte oder kaputte Einträge werden ignoriert. „Alles löschen“ lässt ihn stehen und sagt das im Dialog (Test in `tests/sicherheit.test.mjs`).
 
 **Wissensseite Pfade 2 + 3 (0.23.0):** Zwei weitere Lernpfade, zwölf Schaubilder, eine bewegte Figur (P1–P10) und die Karte „Ballflug-Helfer“. Alles sind feste Daten in `wissen.js` und `schaubilder.js`; es gibt keine neue Datei, keinen Netzwerkaufruf, keine neue Adresse und kein neues `innerHTML` (im Browser gemessen: 0 Anfragen). Die Knöpfe des Helfers liefern nur feste Werte, unbekannte Werte ergeben „kein Ergebnis“ (Test). Die Animation läuft nur, solange ihre Karte zu sehen ist, und stoppt beim Wegwischen, „Alle Lektionen“ und Bereichswechsel; bei „Bewegung reduzieren“ gibt es nur das Endbild (im Browser gemessen). Es wird nichts Neues gespeichert.
+
+**Wissensseite Pfade 4–6 (0.24.0):** Drei weitere Lernpfade (18 Lektionen), 19 Schaubilder und eine bewegte Figur „Probeschwung“. Wieder nur feste Daten, keine neue Datei, kein Netzwerkaufruf, keine neue Adresse, kein neues `innerHTML`, nichts Neues gespeichert (im Browser gemessen: 0 Anfragen). Ein Test stellt sicher, dass bewegte Figuren nie rückwärts laufen. Gesundheitliches nur allgemein (Aufwärmen), Selbsttests ausdrücklich „keine Diagnose“ mit Arzt-Hinweis.
 
 ### Cybersecurity (C)
 

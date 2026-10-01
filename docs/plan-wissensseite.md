@@ -200,13 +200,40 @@ Variablen in `style.css` (hell und dunkel).
 - Neue Übungen nur als Text: „Treffpunkt sichtbar machen“, „Schachtel außen“, „Linien-Übung“, „Zwei Bälle“.
   Vorhandene mit Figuren: „Schläger vor der Brust“, „Hüfte bis Hüfte“, „Po an die Wand“, „Mitzählen“.
 
+## Stand Schritt 4 (`wissen-pfade-4-6`, 0.24.0, 01.10.)
+
+- Umgesetzt: Pfad 4 „Rund ums Grün“, Pfad 5 „Clever spielen“, Pfad 6 „Besser üben“ mit je 6 Lektionen
+  (insgesamt jetzt 40 Lektionen wie geplant), 19 neue Schaubilder und eine bewegte Figur „Probeschwung“ (halb,
+  dann voll – echte Profi-Posen; der Wechsel springt zurück ins Ansprechen statt rückwärts zu schwingen).
+- **Regel der 12 nur als „Trainer sind uneins“**: Die Fassungen widersprechen sich (12 minus Schlägernummer =
+  PW 1 : 2, 8er 1 : 4 gegenüber The Left Rough PW 1 : 1, 8er 1 : 2), Don Trahan hält sie für zu grob. Die Zahlen in
+  `docs/wissen/kurzes-spiel.md` waren falsch übernommen und sind korrigiert. Lektion heißt deshalb
+  „Chippen: Flug und Rollen“ (ID `gruen-chip` unverändert) und lehrt den belegten Grundsatz „mehr Loft → mehr Flug,
+  weniger Rollen“ und den Landepunkt.
+- **Atmung „4 – 6“ statt 4-2-6**: belegt durch eine Studie (Magnon u. a. 2021: 4 s ein, 6 s aus); 4-2-6 hatte nur
+  eine Blog-Quelle.
+- **Zweite Quellen nachgetragen** (Entscheidung Marcel, 01.10.): Uhren-System (Golfwell, Foy), Grünlesen bergab
+  und letztes Drittel (Foy, Frankly Golf), Falllinie (Golf Smart Academy), Bogey-Plan und „sicher heraus“ (Hole19,
+  Swingminder), Rough/Flyer (Golf Tips Magazine, SportsRec), Kälte und Nässe (Arccos, Blue Tees), Denk-/Spiel-Zone
+  (The Golf Swing Company).
+- **Bewusst weggelassen**: welcher Fuß beim Grünlesen „schwerer“ ist, 2-m-Kreis bei langen Putts, „Swing easy when
+  breezy“, „Doppel-Bogeys vermeiden“, 3–7 von 10 (Adam Young), Sekunden in der Spiel-Zone, ca. 45° beim Drehtest.
+- Übungen: „Landezone“ und „Leiter“ nutzen Pfad 1 und Pfad 4 gemeinsam. Neu nur als Text: „Wedge-Längen“,
+  „Linie im Sand“, „Füße fühlen“, „Atmung 4 – 6“, „Range-Runde“, „Aufwärmen 10 Minuten“.
+- Pfad-Level: „Rund ums Grün“ und „Clever spielen“ 🌿, „Besser üben“ 🌱 (wie im Plan). „Wind, Rough und Nässe“ ist
+  🌳 (wie in `platzstrategie.md`).
+- **Korrekturen nach dem Golf-App-Check (01.10.)**: „Selbst bestimmte Rückmeldung hilft“ ist laut Meta-Analyse
+  2022 nicht belegt → Lektion „Üben mit dieser App“ sagt jetzt „nicht eindeutig“. „Routine hilft am besten“ → „eine
+  der wirksamsten Hilfen“. „Ball ans Loch sterben lassen“ widersprach Pelz → „Ball knapp hinter das Loch rollen
+  lassen“. Par 3 im Bogey-Plan mit Chip. Neuer Test: bewegte Figuren laufen nur vorwärts.
+
 ## Umsetzung in Schritten (je 1 Branch = 1 PR)
 
 | Schritt | Branch | Inhalt |
 |---|---|---|
 | 1 | `wissen-geruest` | `wissen.js` mit Datenaufbau + Tests, Bereich „📖 Wissen“, Pfad-Übersicht, Lektionsansicht (Karten, Quiz, ✓), Fortschritt, **Pfad 1 komplett** mit vorhandenen Figuren und ersten Schaubildern |
 | 2 + 3 | `wissen-pfade-2-3` | ✓ 0.23.0: Schaubilder für Pfad 2 + 3, Vollschwung, Ballflug + **Ballflug-Helfer** (zusammengelegt) |
-| 4 | `wissen-pfade-4-6` | Rund ums Grün, Clever spielen, Besser üben – mit den Schaubildern dafür |
+| 4 | `wissen-pfade-4-6` | ✓ 0.24.0: Rund ums Grün, Clever spielen, Besser üben – mit den Schaubildern dafür |
 | 5 | `wissen-nachschlagen` | Glossar, Irrtümer, Regeln, Ausrüstung, Suche, Verknüpfung Karte → Lektion, „Übung starten“ |
 
 Bei jedem Schritt: neue JS-Dateien in `sw.js` und `pwa.js` (`APP_DATEIEN`), `APP_VERSION` erhöhen,

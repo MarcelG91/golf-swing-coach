@@ -110,7 +110,7 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 - **Warum?** Eine gleichbleibende Routine macht Schläge unter Druck gleichmäßiger. Eine Auswertung von
   über 22.000 Schlägen auf der European Tour fand: Spieler mit **gleichbleibender Routine-Dauer**
   spielten über die Saison konstanter [GM2][GPC1].
-- **Denk-Zone und Spiel-Zone** (Vision54, Pia Nilsson & Lynn Marriott) [V54]:
+- **Denk-Zone und Spiel-Zone** (Vision54, Pia Nilsson & Lynn Marriott) [V54][GSC1]:
   1. **Denk-Zone** (hinter dem Ball): Lage, Entfernung, Wind, Ziel, Schlägerwahl, Schlagidee festlegen.
   2. **Entscheidungslinie**: bewusst einen Schritt nach vorn – ab hier wird nicht mehr überlegt.
   3. **Spiel-Zone** (am Ball): nur noch Gefühl und Ziel, **ca. 4–8 Sekunden** über dem Ball.
@@ -140,6 +140,7 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 - [GM2] Golf Monthly: Pre-shot routine – https://www.golfmonthly.com/tips/golf-pre-shot-routine-everything-you-need-to-know
 - [GPC1] The Golf Performance Center: Pre-shot routine – https://thegolfperformancecenter.com/5-elements-blog/pre-shot-routine/
 - [V54] Vision54 / Think Box – Play Box (Zusammenfassung) – https://teee-box.com/in-the-tee-box-a-vision54-approach/
+- [GSC1] The Golf Swing Company: Be a player (Vision54: Bewertung hinter dem Ball, Schwelle, Play Box) – https://www.thegolfswingcompany.com/blog-26-be-a-player-part-i/
 - [PP1] Perfect Practice: Perfect golf posture – https://perfectpractice.com/blogs/news/perfect-golf-posture-everything-you-need-to-know
 - [DRV1] DRVN Golf: Golf posture – setup fundamentals – https://drvngolf.com/blog/golf-posture
 - [GDC1] GolfDecode: Complete guide to golf posture – https://golfdecode.com/complete-guide-to-golf-posture/

@@ -34,16 +34,17 @@ Kapitel 6 der Wissensseite. Formulierungen für Rechtshänder.
 ## 3. Grüns lesen (🌿)
 
 - **Die Falllinie**: Die Richtung, in die Wasser vom Loch wegfließen würde. Putts **auf** der Falllinie
-  laufen gerade (bergauf oder bergab), alle anderen brechen [BT1].
-- **Bergauf** bricht weniger (Ball schneller), **bergab** mehr (Ball langsamer) [BT1].
+  laufen gerade (bergauf oder bergab), alle anderen brechen [BT1][GSA1].
+- **Bergauf** bricht weniger (Ball schneller), **bergab** mehr (Ball langsamer, die Neigung wirkt
+  länger) [BT1][FOY1][FG1].
 - **Mit den Füßen fühlen** (Grundidee von AimPoint, Mark Sweeney): Auf halber Strecke mit gespreizten
-  Beinen über der Puttlinie stehen – welcher Fuß fühlt sich schwerer an? Dorthin fällt das Grün
-  [GOLF2][DIY1].
+  Beinen über der Puttlinie stehen und spüren, wohin das Grün fällt [GOLF2][DIY1]. (Welcher Fuß sich
+  „schwerer“ anfühlt, steht in keiner zweiten Quelle – in der App nur die Grundidee.)
 - **AimPoint Express** (vereinfachte Fassung): Neigung als Zahl 1–3 schätzen, so viele Finger mit
   ausgestrecktem Arm vors Loch halten und an der Außenkante des letzten Fingers zielen [GOLF2][DIY1].
   (Für genaue Anwendung braucht es einen Kurs – in der App nur als Idee nennen.)
 - Bei langen Putts vor allem das **letzte Drittel** lesen – dort ist der Ball am langsamsten und bricht
-  am meisten [BT1].
+  am meisten [BT1][FOY1][FG1].
 - Beim Lesen **von tief nach hoch** schauen (vom tieferen Punkt aus sieht man Neigung besser).
 
 ## 4. Wie oft fallen Putts? (🌱) – Erwartungen richtig setzen
@@ -90,3 +91,6 @@ ein Viertel für **kurze Putts** (Uhr), ein Viertel **Linie/Startrichtung** (Tor
 - [HM1] HackMotion: Gate putting drill – https://hackmotion.com/gate-putting-drill/
 - [HM2] HackMotion: Putting drills for distance control – https://hackmotion.com/putting-drills-for-distance-control/
 - [HM3] HackMotion: 6 putting drills for speed – https://hackmotion.com/putting-drills-for-speed/
+- [GSA1] Golf Smart Academy: What is the fall line in putting? – https://www.golfsmartacademy.com/golf-tips/assessing-a-fall-line/
+- [FOY1] Foy Golf Academy: How to putt uphill and downhill – https://foygolfacademy.com/how-to-putt-uphill-and-downhill-control-speed-break-and-three-putts/
+- [FG1] Frankly Golf: Reading greens – uphill and downhill breaking putts – https://franklygolf.com/reading-greens-uphill-and-downhill-breaking-putts/

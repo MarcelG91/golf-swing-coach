@@ -40,6 +40,20 @@ test("Pfad 2 „Vollschwung“ und Pfad 3 „Ballflug“ haben je 7 Lektionen �
   ]);
 });
 
+test("Pfade 4–6 haben je 6 Lektionen – mit festen IDs; insgesamt 40 Lektionen wie im Plan", () => {
+  assert.deepEqual(lektionenImPfad("gruen").map((l) => l.id), [
+    "gruen-auswahl", "gruen-chip", "gruen-pitch", "gruen-bunker", "gruen-putt-laenge", "gruen-lesen",
+  ]);
+  assert.deepEqual(lektionenImPfad("strategie").map((l) => l.id), [
+    "platz-streuung", "platz-annaeherung", "platz-par", "platz-hang", "platz-wind", "platz-routine",
+  ]);
+  assert.deepEqual(lektionenImPfad("ueben").map((l) => l.id), [
+    "ueben-fokus", "ueben-bilder", "ueben-verteilt", "ueben-range", "ueben-aufwaermen", "ueben-app",
+  ]);
+  assert.equal(PFADE.length, 6);
+  assert.equal(LEKTIONEN.length, 40);
+});
+
 test("Jede Lektion hat alle Felder, eindeutige ID, bekannten Pfad und Level", () => {
   const level = LEVEL_OPTIONEN.map((o) => o.wert);
   const ids = LEKTIONEN.map((l) => l.id);
@@ -200,6 +214,19 @@ test("Figuren der Wissensseite stammen aus uebungsbilder.js und lassen sich zeic
   }
 });
 
+test("Bewegte Figuren laufen nur vorwärts (Ansprechen → … → Finish), Neuanfang nur als Sprung", () => {
+  // Rückwärts animiert wäre keine echte Bewegung – das darf eine Figur nie zeigen
+  const reihenfolge = ["ansprechen", "halbRueck", "top", "abschwung", "treff", "halbDurch", "finish"];
+  for (const [name, bild] of Object.entries(FIGUREN)) {
+    if (bild.ansicht !== "vorne" || bild.folge.length < 2) continue;
+    bild.folge.forEach((f, i) => {
+      if (i === 0 || !(f.dauer > 0)) return; // Sprung (dauer 0) oder erste Pose
+      const vorher = bild.folge[i - 1].pose;
+      assert.ok(reihenfolge.indexOf(f.pose) > reihenfolge.indexOf(vorher), `${name}: ${vorher} → ${f.pose} läuft rückwärts`);
+    });
+  }
+});
+
 test("Animierte Figur P1–P10: Beschriftung nur beim Anhalten in der Position, Zahlen gültig", () => {
   const bild = FIGUREN.schwungPhasen;
   // Jede Pause trägt eine P-Nummer, jeder Weg dorthin ist unbeschriftet
@@ -261,7 +288,8 @@ test("Ballflug-Helfer: jede der 9 Kombinationen hat Namen, kurze Erklärung, Bil
 
 test("Pfade: passender Pfad oben, Fortschritt „x von y“, nächste Lektion", () => {
   assert.equal(pfadeFuerLevel("einsteiger")[0].id, "start");
-  assert.deepEqual(pfadeFuerLevel("fortgeschritten").map((p) => p.id), ["vollschwung", "ballflug", "start"]);
+  assert.deepEqual(pfadeFuerLevel("fortgeschritten").map((p) => p.id), ["vollschwung", "ballflug", "gruen", "strategie", "start", "ueben"]);
+  assert.deepEqual(pfadeFuerLevel("einsteiger").map((p) => p.id), ["start", "ueben", "vollschwung", "ballflug", "gruen", "strategie"]);
   assert.equal(pfadeFuerLevel("koenner").length, PFADE.length);
   assert.deepEqual(fortschritt("ballflug", ["ball-neun", "start-weg"]), { erledigt: 1, gesamt: 7 });
   assert.equal(naechsteLektion("voll-driver-eisen"), null, "Pfadende – kein Sprung in den nächsten Pfad");

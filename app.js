@@ -1439,7 +1439,7 @@ function zeigeWissenUebersicht() {
     box.append(liste);
     pfadListe.append(box);
   }
-  pfadListe.append(neu("p", "hinweis klein-text", "Weitere Lernpfade folgen: rund ums Grün, clever spielen, besser üben."));
+  pfadListe.append(neu("p", "hinweis klein-text", "Bald dazu: Nachschlagen mit Glossar, Irrtümern, Regeln und Ballflug-Helfer."));
 }
 
 // Eine Lektion als Wisch-Karten: Bild + Kernsatz · Inhaltskarten · Quiz · Abschluss

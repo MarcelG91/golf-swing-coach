@@ -38,13 +38,16 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 
 ## 4. Persönliches Par (🌱)
 
-- Für Einsteiger: Jedes Loch **mit einem Schlag mehr als Par** planen („Bogey-Golf“) [STIX1].
-  - Par 3: Richtung Grün, 2 Putts.
+- Für Einsteiger: Jedes Loch **mit einem Schlag mehr als Par** planen („Bogey-Golf“) [STIX1][SWM1]; z. B.
+  lange Löcher mit Vorlage auf die Lieblingsdistanz, dann Pitch zur Grünmitte und zwei Putts [H19].
+  - Par 3: Abschlag Richtung Grün, Chip, 2 Putts.
   - Par 4: in 2 Schlägen **vor** das Grün, Chip, 2 Putts.
   - Par 5: 3 sichere Schläge vor das Grün, Chip, 2 Putts.
 - Nimmt Druck raus und vermeidet riskante Schläge. Bogey auf allen Löchern ist ein Ergebnis von 90 –
   ein Ziel, das viele Clubspieler nie erreichen.
 - **Aus Schwierigkeiten zuerst heraus**: Aus Bäumen/Rough seitlich aufs Fairway, nicht durch die Lücke.
+  Große Zahlen (Triple-Bogey und mehr) vermeiden spart mehr Schläge als jede Schwungänderung [H19];
+  sichere Schläge statt „Wunderschläge“ [SWM1].
 
 ## 5. Schlägerwahl und eigene Längen (🌱)
 
@@ -69,12 +72,15 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 
 - **Gegenwind schadet mehr als Rückenwind hilft**. Faustregel: pro 1 mph (1,6 km/h) Gegenwind **ca. 1 %
   länger** spielen, pro 1 mph Rückenwind **ca. 0,5 % kürzer**. Bei starkem Wind wird der Unterschied
-  noch größer [PF1][DA1].
+  noch größer [PF1][DA1]. Ebenso Arccos und Blue Tees (Gegenwind verstärkt die Wirkung des Rückwärtsdralls, der Ball
+  steigt; Faustregel ca. 1 Schläger mehr pro 16 km/h Gegenwind, ½ Schläger weniger bei Rückenwind) [ARC1][BTW1].
 - Bei Gegenwind **ruhiger schwingen** („Swing easy when it's breezy“) – harte Schläge erzeugen mehr Spin
-  und steigen.
-- **Rough**: Gras zwischen Schlagfläche und Ball → weniger Spin, Ball „springt“ und rollt mehr; aus
-  tiefem Rough mehr Loft nehmen und nur rausspielen.
-- **Nässe / kalt**: Ball fliegt kürzer, rollt weniger.
+  und steigen. (Nur Lehrmeinung, nicht in der App.)
+- **Leichtes bis mittleres Rough („Flyer“)**: Gras zwischen Schlagfläche und Ball → weniger Rückwärtsdrall, der Ball fliegt und
+  rollt oft weiter als erwartet [GTM1][SR1]; aus tiefem Rough mehr Loft nehmen und nur rausspielen.
+- **Kälte**: Der Ball fliegt kürzer (Blue Tees: ca. 1–2 Yards weniger Carry pro Eisen je 10 °F unter 70 °F,
+  also je ca. 5–6 °C unter 21 °C) [BTW1][ARC1]. **Nässe**: Wasser zwischen Fläche und Ball, weicher Boden –
+  kürzer und kaum Rollen [ARC1][BTW1].
 
 ## Quellen
 
@@ -93,3 +99,9 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 - [LR1] The Left Rough: Uneven lies – https://theleftrough.com/uneven-lies-golf/
 - [PF1] Peter Field Golf: Wind, temperature and elevation – https://peterfieldgolf.co.uk/what-effect-does-wind-temperature-and-elevation-have-on-my-approach-shot/
 - [DA1] Dale Abraham: Headwind vs. tailwind – https://www.daleabraham.com/single-post/2016/04/12/playing-in-the-wind-headwind-vs-tailwind
+- [H19] Hole19: How to break 90 in golf – 7 strategies – https://www.hole19golf.com/the-19th-hole/how-to-break-90-in-golf
+- [SWM1] Swingminder: How to break 90 – the bogey golf strategy – https://swingminder.com/blogs/below90/how-to-break-90-bogey-golf
+- [ARC1] Arccos: How weather conditions affect your golf shot distances – https://eu.arccosgolf.com/blogs/community/weather-or-not-prepare-for-course-conditions
+- [BTW1] Blue Tees Golf: How weather affects golf ball distance – https://blueteesgolf.com/blogs/news/how-weather-affects-golf-ball-distance
+- [GTM1] Golf Tips Magazine (Zachary Allen, PGA): Bad lies – Flyer – https://golftipsmag.com/instruction/strategy-troubleshooting/bad-lies/
+- [SR1] SportsRec: What is a flyer lie in golf? – https://www.sportsrec.com/13733070/flyer-lie-golf-20575.html

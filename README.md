@@ -179,9 +179,9 @@ Die App ersetzt trotzdem keine Trainerstunde.
 **📖 Wissen (seit 0.22.0):** Kurze Lektionen in Lernpfaden – wischen wie bei den Baustellen: Bild und
 Kernsatz, 2–4 Karten, eine Quizfrage, zum Schluss „✓ erledigt“, „Übung starten“ und die Quellen als Text.
 Der zum Level passende Pfad steht oben. Der Fortschritt bleibt nur auf dem Gerät (`wissenFortschritt`).
-Drei Pfade (seit 0.23.0): „Start“, „Der Vollschwung“ (mit bewegter Profi-Figur P1–P10, die nur läuft, solange
-ihre Karte zu sehen ist) und „Ballflug verstehen & Fehler beheben“ mit dem **Ballflug-Helfer**: Start und Kurve
-antippen → Name des Ballflugs, Bild und Ursache.
+Sechs Pfade mit 40 Lektionen (seit 0.24.0): „Start“, „Der Vollschwung“ (mit bewegter Profi-Figur P1–P10, die nur
+läuft, solange ihre Karte zu sehen ist), „Ballflug verstehen & Fehler beheben“ mit dem **Ballflug-Helfer** (Start
+und Kurve antippen → Name des Ballflugs, Bild und Ursache), „Rund ums Grün“, „Clever spielen“ und „Besser üben“.
 
 ## Ausprobieren ohne eigenes Video
 
@@ -237,7 +237,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |
 | `uebungsbilder.js` | Figuren und Animationen für den Übungsmodus (Profi-Posen, Schläger, Stab, Wand, Takt) |
 | `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen, Ballflug-Helfer (Start + Kurve → Name und Ursache) |
-| `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Schienen, Ballposition, Messwerte, kinematische Kette, 3 : 1, neun Flugkurven, tiefster Punkt) und Figuren aus den Profi-Posen (P1–P10 bewegt) |
+| `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
@@ -280,7 +280,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
 | `docs/iphone-testliste.md` | Checkliste für den Praxistest auf dem iPhone (Analyse, mehrere Schwünge, Speichern, Aufräumen, Übungsmodus) |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
-| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (umgesetzt: Gerüst + Pfad 1, Schaubilder + Pfade 2 und 3 mit Ballflug-Helfer) |
+| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (umgesetzt: alle 6 Lernpfade mit 40 Lektionen und Ballflug-Helfer; offen: Nachschlagen) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches
@@ -494,7 +494,8 @@ Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise s
 - [ ] 10. Fortschritt messen und Langzeit-Feedback
 - [ ] 12. Wissensseite mit Lernpfaden (Schritt 1 seit 0.22.0: Pfad „Start“ mit 8 Lektionen; Schritte 2 + 3
   seit 0.23.0: Schaubilder, „Der Vollschwung“ und „Ballflug verstehen & Fehler beheben“ mit je 7 Lektionen und
-  Ballflug-Helfer; offen: Pfade 4–6, Nachschlagen. Plan: `docs/plan-wissensseite.md`)
+  Ballflug-Helfer; Schritt 4 seit 0.24.0: „Rund ums Grün“, „Clever spielen“, „Besser üben“ mit je 6 Lektionen;
+  offen: Nachschlagen. Plan: `docs/plan-wissensseite.md`)
 - [ ] 9. Sicherung exportieren / einspielen
 
 Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und

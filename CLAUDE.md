@@ -141,7 +141,8 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
 9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1
    `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. **Schritte 2 + 3
    `wissen-pfade-2-3` erledigt (0.23.0)**: Pfade „Vollschwung“ und „Ballflug“ (je 7 Lektionen), 12 Schaubilder, P1–P10
-   animiert, Ballflug-Helfer als Karte in „Die neun Ballflüge“. Offen: `wissen-pfade-4-6` → `wissen-nachschlagen`
+   animiert, Ballflug-Helfer als Karte in „Die neun Ballflüge“. **Schritt 4 `wissen-pfade-4-6` erledigt (0.24.0)**:
+   Pfade „Rund ums Grün“, „Clever spielen“, „Besser üben“ (je 6 Lektionen, 19 Schaubilder). Offen: `wissen-nachschlagen`
    (dort den Ballflug-Helfer ein zweites Mal verlinken). Vierter Bereich „📖 Wissen“, 6 Lernpfade / 40 Lektionen +
    Nachschlagen. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
 
