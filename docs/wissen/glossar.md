@@ -71,8 +71,19 @@ Teil von Kapitel 12 der Wissensseite. Viele Golfbegriffe sind auch im Deutschen 
 | Strokes Gained | Strokes Gained | Messgröße: Schläge gewonnen/verloren ggü. Vergleichsgruppe (Broadie) | 5, 7 |
 | Routine | Pre-shot routine | Gleicher Ablauf vor jedem Schlag | 2, 8 |
 
+## In der App (Nachschlagen → Glossar, seit 0.25.0)
+
+Jeder Begriff in der App ist **entweder** mit einer Lektion verknüpft, die ihn erklärt (dort mit Quellen),
+**oder** steht in mindestens zwei unabhängigen Quellen (Test in `tests/nachschlagen.test.mjs`). Deshalb
+fehlen dort bewusst: Übergang, Seitneigung, Winkel halten (Lag), Frühes Auflösen und Schwungebene –
+dafür gibt es noch keine Lektion und keine zweite Quelle mit gleicher Erklärung. Neu dazu, jeweils mit
+Lektion: P-Positionen, Hosel, Sky, Quiet Eye, Uhren-System, Hybrid, Wedge; mit zwei Quellen aus
+`ausruestung.md`: Flex, Lie-Winkel, Fitting, Mallet; aus `regeln-etikette.md`: Provisorischer Ball, Droppen.
+
 ## Quellen
 
 Begriffe aus den Kapitel-Dateien (dort mit Quellen). Deutsche Fachbegriffe Eintreffwinkel/Low Point
-nach der Lernunterlage der PGA of Germany (O. Neumann, 2019). Weitere: Wikipedia „Glossary of golf“ –
-https://en.wikipedia.org/wiki/Glossary_of_golf
+nach der Lernunterlage der PGA of Germany (O. Neumann, 2019).
+
+- [WIKI1] Wikipedia: Glossary of golf – https://en.wikipedia.org/wiki/Glossary_of_golf
+- [DMP1] Deutschland macht Platzreife: Golfglossar – https://www.deutschland-macht-platzreife.de/golfglossar
