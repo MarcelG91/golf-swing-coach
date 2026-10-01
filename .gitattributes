@@ -1,0 +1,5 @@
+# Fremdcode in vendor/ (Befund C1): Git soll dort nie Zeilenenden umwandeln – sonst stimmt
+# die Prüfsumme in tests/vendor.test.mjs nicht mehr. "-diff": Pull Requests zeigen die
+# riesigen, verkleinerten Dateien nicht als Text-Unterschied an.
+vendor/** -text -diff
+vendor/README.md diff

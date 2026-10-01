@@ -31,16 +31,6 @@ test("Nur erlaubte Netzwerk-Hosts sind eingebaut", () => {
   assert.equal(APP.match(/https:\/\/api\.anthropic\.com/g)?.length, 1);
 });
 
-test("MediaPipe-Version und Modell stimmen in App und Service Worker überein", () => {
-  const appVersion = APP.match(/tasks-vision@(\d+\.\d+\.\d+)/)?.[1];
-  const workerVersion = SERVICE_WORKER.match(/tasks-vision@(\d+\.\d+\.\d+)/)?.[1];
-  const modell = APP.match(/const MODELL_URL\s*=\s*\n?\s*["']([^"']+)["']/)?.[1];
-  assert.ok(appVersion, "MediaPipe-Version muss in app.js stehen");
-  assert.equal(workerVersion, appVersion);
-  assert.ok(modell, "Modell-Adresse muss in app.js stehen");
-  assert.ok(SERVICE_WORKER.includes(modell));
-});
-
 test("Alle JavaScript-Appdateien stehen in beiden Offline-Listen", () => {
   const serviceWorkerDateien = dateiliste(SERVICE_WORKER);
   const pwaDateien = dateiliste(PWA);

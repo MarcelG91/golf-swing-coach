@@ -7,12 +7,13 @@
 // ===============================================================
 
 // MediaPipe (von Google) erkennt 33 Körperpunkte in einem Bild.
-// Wir laden es direkt aus dem Internet (CDN), installieren müssen wir nichts.
+// Seit 0.26.0 liegt es im Ordner vendor/ (Befund C1): einmal geprüft, Prüfsumme im Test
+// festgeschrieben – es kommt also von derselben Adresse wie die App, nicht mehr von einem CDN.
 import {
   PoseLandmarker,
   FilesetResolver,
   DrawingUtils,
-} from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+} from "./vendor/mediapipe-0.10.14/vision_bundle.mjs";
 
 // Alle Schwünge in einem Video finden und einzeln auswerten – Phasen, Kennzahlen,
 // Technik (siehe schwuenge.js, nutzt phasen.js, kennzahlen.js und technik.js)
@@ -61,11 +62,11 @@ import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
 import { coachDaten, baueCoachAnfrage, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
-const MP_MODUL = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
-const WASM_URL = `${MP_MODUL}/wasm`;
+// Die Pfade müssen genau so in sw.js (VENDOR_DATEIEN) stehen – das prüft tests/vendor.test.mjs.
+const MP_MODUL = "./vendor/mediapipe-0.10.14/vision_bundle.mjs";
+const WASM_URL = "./vendor/mediapipe-0.10.14/wasm";
 // "full" ist genauer als "lite" und für Videoanalyse schnell genug.
-const MODELL_URL =
-  "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/1/pose_landmarker_full.task";
+const MODELL_URL = "./vendor/pose-landmarker-full-float16-v1/pose_landmarker_full.task";
 
 const BILD_DAUER = 1 / 30; // ein Einzelbild bei 30 Bildern pro Sekunde
 

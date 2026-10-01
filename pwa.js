@@ -4,11 +4,11 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.25.0";
+export const APP_VERSION = "0.26.0";
 
-// Muss zu den Namen in sw.js passen
-const CACHE_APP = "app-v1";
-const CACHE_CDN = "cdn-v1";
+// Muss zu den Namen in sw.js passen (prüft tests/vendor.test.mjs)
+const CACHE_APP = "app-v2";
+const CACHE_VENDOR = "vendor-v1";
 
 // Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
 const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./level.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./wissen.js", "./nachschlagen.js", "./schaubilder.js", "./coach.js", "./pwa.js"];
@@ -46,19 +46,22 @@ function zeigeNetz() {
 // Offline-Bereitschaft: Sind alle nötigen Dateien gespeichert?
 // Fehlt etwas und wir sind online, wird es direkt nachgeladen.
 // ---------------------------------------------------------------
-export async function pruefeOfflineDateien(cdnDateien, { reparieren = false } = {}) {
-  if (!("caches" in window)) return { bereit: false, fehlend: [...cdnDateien] };
+// vendorDateien: die Dateien der Pose-Erkennung aus vendor/ (app.js weiß, welche dieses Gerät braucht)
+export async function pruefeOfflineDateien(vendorDateien, { reparieren = false } = {}) {
+  if (!("caches" in window)) return { bereit: false, fehlend: [...vendorDateien] };
   const fehlend = [];
+  // Volle Adressen bilden – so stehen die Einträge im Speicher des Service Workers
+  const adresse = (pfad) => new URL(pfad, location.href).href;
   const liste = [
-    ...APP_DATEIEN.map((pfad) => ({ cache: CACHE_APP, url: new URL(pfad, location.href).href })),
-    ...cdnDateien.map((url) => ({ cache: CACHE_CDN, url })),
+    ...APP_DATEIEN.map((pfad) => ({ cache: CACHE_APP, url: adresse(pfad) })),
+    ...vendorDateien.map((pfad) => ({ cache: CACHE_VENDOR, url: adresse(pfad) })),
   ];
   for (const { cache: name, url } of liste) {
     const cache = await caches.open(name);
     let vorhanden = !!(await cache.match(url, { ignoreVary: true, ignoreSearch: name === CACHE_APP }));
     if (!vorhanden && reparieren && navigator.onLine) {
       try {
-        await cache.add(new Request(url, { mode: "cors", credentials: "omit" }));
+        await cache.add(url);
         vorhanden = true;
       } catch (fehler) {
         console.warn("Konnte nicht nachladen:", url, fehler);
@@ -70,10 +73,10 @@ export async function pruefeOfflineDateien(cdnDateien, { reparieren = false } = 
 }
 
 // Wird von app.js aufgerufen, sobald die Pose-Erkennung erfolgreich geladen ist
-export async function meldeOfflineBereitschaft(cdnDateien) {
+export async function meldeOfflineBereitschaft(vendorDateien) {
   const anzeige = $("offlineStatus");
   anzeige.textContent = "Offline-Prüfung …";
-  const { bereit, fehlend } = await pruefeOfflineDateien(cdnDateien, { reparieren: true });
+  const { bereit, fehlend } = await pruefeOfflineDateien(vendorDateien, { reparieren: true });
   anzeige.textContent = bereit
     ? "Offline bereit ✓"
     : `Offline noch nicht bereit (${fehlend.length} Datei${fehlend.length === 1 ? "" : "en"} fehlt)`;
