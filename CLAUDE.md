@@ -141,7 +141,8 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
 
 5. ~~Etappe 10: Fortschritt~~ – **erledigt mit 0.27.0 (`fortschritt.js`) und 0.28.0 (Anzeige)**: Meine Schwünge → „📈 Fortschritt“
    mit Wochenrückblick, Fokus + Übung, Meilensteinen, Verlauf und Trend je Kennzahl (nach Ansicht und Schlägergruppe).
-   **Offen: Vorher/Nachher** (ältester und neuester Schwung nebeneinander, braucht Bilder aus den Clips) – eigener Branch.
+   **Vorher/Nachher erledigt mit 0.29.0** (Branch `vorher-nachher`): ältester gegen neuester Schwung, je Phase ein Bild aus dem
+   Clip mit Skelett (fehlt der Clip: Hinweis). **Offen: Phasen-Abspieler** (beide Clips synchron, an den Phasen ausgerichtet).
    Offen bleibt der iPhone-Test mit echten Schwüngen über mehrere Tage.
 6. ~~Sicherheits-Etappe C1 + C3~~ – **erledigt mit 0.26.0** (Branch `sicherheit-c1-c3`): MediaPipe und Modell in
    `vendor/` mit Prüfsummen, Coach mit eigenem `fetch` statt SDK, CSP, Datenschutzhinweis (V4). Offen nur der

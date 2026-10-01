@@ -48,7 +48,7 @@ import {
 } from "./speicher.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import {
-  sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, schlaegerGruppe, GRUPPEN_NAME,
+  sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, vorherNachher, schlaegerGruppe, GRUPPEN_NAME,
 } from "./fortschritt.js";
 import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
 // Kurze Tipps (Kurzzeile, Warum, Schwunggedanke, Übung) und die Skala auf den Karten
@@ -2808,6 +2808,112 @@ function verlaufSvg(punkte) {
   return svg;
 }
 
+// ---------------------------------------------------------------
+// Vorher/Nachher: je Phase ein Bild aus dem gespeicherten Clip, mit Skelett.
+// Alles bleibt im Browser. Die Browser-Adresse des Clips wird gleich wieder freigegeben.
+// ---------------------------------------------------------------
+const VERGLEICH_PHASEN = [["ansprechen", "Ansprechen"], ["top", "Top"], ["treffmoment", "Treffmoment"], ["finish", "Finish"]];
+const BEWERTUNG_PUNKT = { gut: "🟢", achtung: "🟡", verbessern: "🔴" };
+
+// Holt für einen Schwung je Phase ein Bild (Canvas) mit Skelett. null = Clip fehlt oder nicht lesbar.
+async function holeVergleichsbilder(schwung) {
+  const clip = await ladeMedium(`${schwung.id}/video`);
+  const posedaten = await ladeMedium(`${schwung.id}/posedaten`);
+  if (!clip) return null;
+  const adresse = URL.createObjectURL(clip);
+  try {
+    const kleinesVideo = document.createElement("video");
+    kleinesVideo.muted = true;
+    kleinesVideo.playsInline = true;
+    kleinesVideo.preload = "auto";
+    kleinesVideo.src = adresse;
+    // Warten, bis das erste Bild da ist (höchstens 10 s)
+    await new Promise((ok, fehler) => {
+      const frist = setTimeout(() => fehler(new Error("Clip lädt zu langsam")), 10000);
+      kleinesVideo.addEventListener("loadeddata", () => { clearTimeout(frist); ok(); }, { once: true });
+      kleinesVideo.addEventListener("error", () => { clearTimeout(frist); fehler(new Error("Clip nicht lesbar")); }, { once: true });
+    });
+    const skala = Math.min(1, 480 / Math.max(kleinesVideo.videoWidth, kleinesVideo.videoHeight));
+    const bilder = {};
+    for (const [phase] of VERGLEICH_PHASEN) {
+      const zeit = schwung.phasen?.[phase]?.zeit;
+      if (!Number.isFinite(zeit)) continue;
+      await springe(kleinesVideo, zeit, 5000);
+      const leinwand = document.createElement("canvas");
+      leinwand.width = Math.round(kleinesVideo.videoWidth * skala);
+      leinwand.height = Math.round(kleinesVideo.videoHeight * skala);
+      const leinwandCtx = leinwand.getContext("2d");
+      leinwandCtx.drawImage(kleinesVideo, 0, 0, leinwand.width, leinwand.height);
+      const punkte = posedaten?.[Math.round(zeit / BILD_DAUER)]?.punkte;
+      if (punkte) {
+        new DrawingUtils(leinwandCtx).drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, {
+          color: GRUEN,
+          lineWidth: Math.max(2, leinwand.width / 120),
+        });
+      }
+      leinwand.setAttribute("role", "img");
+      bilder[phase] = leinwand;
+    }
+    return bilder;
+  } finally {
+    URL.revokeObjectURL(adresse);
+  }
+}
+
+async function baueVergleich(kasten, { vorher, nachher }, namen) {
+  const hinweis = neu("p", "hinweis", "Lade Bilder aus den gespeicherten Clips …");
+  kasten.append(hinweis);
+  const [bilderVorher, bilderNachher] = [await holeVergleichsbilder(vorher), await holeVergleichsbilder(nachher)];
+  if (!kasten.isConnected) return; // Filter wurde inzwischen gewechselt
+
+  const spalte = (titel, schwung, bilder) => {
+    const teil = neu("figure", "vergleich-spalte");
+    teil.append(neu("figcaption", "", `${titel} · ${deutschesDatum(schwung.datum)} · ${schwung.schlaeger}`));
+    const bildPlatz = neu("div", "vergleich-bild");
+    teil.append(bildPlatz);
+    return { teil, bildPlatz, bilder };
+  };
+  const links = spalte("Vorher", vorher, bilderVorher);
+  const rechts = spalte("Nachher", nachher, bilderNachher);
+
+  const knoepfe = neu("div", "vergleich-phasen");
+  const zeigePhase = (phase) => {
+    for (const s of [links, rechts]) {
+      const bild = s.bilder?.[phase];
+      s.bildPlatz.replaceChildren(bild ? bild : neu("p", "hinweis", s.bilder ? "Für diese Phase gibt es kein Bild." : "Das Video wurde gelöscht."));
+      if (bild) bild.setAttribute("aria-label", `${s.teil.firstChild.textContent}, ${phase}`);
+    }
+    for (const knopf of knoepfe.children) knopf.setAttribute("aria-pressed", String(knopf.dataset.phase === phase));
+  };
+  for (const [phase, name] of VERGLEICH_PHASEN) {
+    const knopf = neu("button", "klein", name);
+    knopf.type = "button";
+    knopf.dataset.phase = phase;
+    knopf.addEventListener("click", () => zeigePhase(phase));
+    knoepfe.append(knopf);
+  }
+
+  const paarBilder = neu("div", "vergleich-paar");
+  paarBilder.append(links.teil, rechts.teil);
+  hinweis.replaceWith(knoepfe, paarBilder);
+  if (!bilderVorher && !bilderNachher) {
+    kasten.append(neu("p", "hinweis", "Die Videos dieser Schwünge wurden gelöscht – ein Bildvergleich ist nicht möglich. Die Kennzahlen siehst du unten."));
+  }
+  zeigePhase("top");
+
+  // Kennzahlen deines Levels nebeneinander
+  const liste = neu("ul", "vergleich-zahlen");
+  const imVergleich = fuerLevel(vorher.kennzahlen.concat(nachher.kennzahlen).filter((k, i, alle) => alle.findIndex((x) => x.id === k.id) === i), aktuellesLevel).sichtbar;
+  for (const { id } of imVergleich) {
+    const v = vorher.kennzahlen.find((k) => k.id === id);
+    const n = nachher.kennzahlen.find((k) => k.id === id);
+    if (!v || !n) continue;
+    const zeile = (k) => `${k.wert ?? "–"} ${BEWERTUNG_PUNKT[k.bewertung] ?? "⚪"}`;
+    liste.append(neu("li", "", `${namen[id] || id}: ${zeile(v)} → ${zeile(n)}`));
+  }
+  if (liste.children.length) kasten.append(liste);
+}
+
 async function zeigeFortschritt(ersterAufruf = false) {
   const sitzungen = await ladeSitzungen();
   const alle = (await Promise.all(sitzungen.map(ladeSchwuengeDerSitzung))).flat().filter(Boolean);
@@ -2844,6 +2950,17 @@ async function zeigeFortschritt(ersterAufruf = false) {
   const nameVon = (id) => namen[id] || id;
   if (woche.besserung) wocheKasten.append(neu("p", "", `Größte Verbesserung: ${nameVon(woche.besserung.id)}.`));
   teile.push(wocheKasten);
+
+  // Vorher/Nachher: Kasten sofort einsetzen, die Bilder kommen danach (Clips laden dauert einen Moment)
+  const paar = vorherNachher(alle, filter);
+  if (paar) {
+    const vergleich = fortschrittKasten("Vorher / Nachher");
+    teile.push(vergleich);
+    baueVergleich(vergleich, paar, namen).catch((fehler) => {
+      console.error(fehler);
+      vergleich.append(neu("p", "hinweis", `Der Bildvergleich ließ sich nicht laden (${fehler.message || fehler.name}).`));
+    });
+  }
 
   // Fokus mit passender Übung aus tipps.js (die Texte sind dort fachlich geprüft)
   const f = fokus(alle, aktuellesLevel, filter);

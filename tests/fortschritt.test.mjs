@@ -149,3 +149,17 @@ test("Diagramm: gut liegt oben, verbessern unten, alles im Zeichenfeld", async (
   // ein einzelner Punkt steht in der Mitte (keine Division durch 0)
   assert.equal(diagramm(verlauf(reihe(["gut"]), "tempo")).punkte[0].x, 150);
 });
+
+test("Vorher/Nachher: ältester und neuester Schwung, nie aus derselben Sitzung", async () => {
+  const { vorherNachher } = await import("../fortschritt.js");
+  const alle = [schwung(3, { tempo: "gut" }), schwung(1, { tempo: "gut" }), schwung(2, { tempo: "gut" })];
+  const v = vorherNachher(alle);
+  assert.equal(v.vorher.sitzungId, 1);
+  assert.equal(v.nachher.sitzungId, 3);
+  assert.equal(vorherNachher([schwung(1, { tempo: "gut" })]), null);
+  // zwei Schwünge, aber gleiche Sitzung → kein Vergleich
+  const gleiche = [schwung(1, { tempo: "gut" }), { ...schwung(1, { tempo: "gut" }), id: "1-2", nummer: 2 }];
+  assert.equal(vorherNachher(gleiche), null);
+  // Filter: anderer Schläger zählt nicht mit
+  assert.equal(vorherNachher([schwung(1, { tempo: "gut" }), schwung(2, { tempo: "gut" }, { schlaeger: "Driver" })], { gruppe: "eisen" }), null);
+});

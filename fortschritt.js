@@ -218,3 +218,16 @@ export function diagramm(punkte, { breite = 300, hoehe = 120, rand = 14 } = {}) 
     baender: [0, 1, 2].map((wert) => ({ bewertung: ["verbessern", "achtung", "gut"][wert], y: y(wert) })),
   };
 }
+
+// ---------------------------------------------------------------
+// 7. Vorher/Nachher: ältester und neuester sicherer Schwung
+// ---------------------------------------------------------------
+// Gibt es nur eine Sitzung, wäre es kein Vergleich über die Zeit → null.
+export function vorherNachher(schwuenge, filter = {}) {
+  const sichere = sichereSchwuenge(schwuenge, filter);
+  if (sichere.length < 2) return null;
+  const vorher = sichere[0];
+  const nachher = sichere.at(-1);
+  if (vorher.sitzungId === nachher.sitzungId) return null;
+  return { vorher, nachher };
+}

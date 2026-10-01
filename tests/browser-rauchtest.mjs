@@ -173,10 +173,45 @@ try {
       await speicher.speichereSitzung({ id: sid, datum, schlaeger: "Eisen 7", notiz: "", schwungIds: ids, appVersion: "test" }, eintraege);
     }
   })()`);
+  // Vorher/Nachher: zwei Sitzungen mit einem echten, im Browser aufgenommenen Mini-Clip (1 s, 160x120)
+  // und einer Pose (33 Punkte), damit Bild holen, Skelett zeichnen und Anzeige wirklich laufen.
+  await auswerten(`(async () => {
+    const speicher = await import("./speicher.js");
+    const leinwand = document.createElement("canvas");
+    leinwand.width = 160; leinwand.height = 120;
+    const c = leinwand.getContext("2d");
+    const rekorder = new MediaRecorder(leinwand.captureStream(30));
+    const teile = [];
+    rekorder.ondataavailable = (e) => teile.push(e.data);
+    const fertig = new Promise((ok) => { rekorder.onstop = ok; });
+    rekorder.start();
+    for (let i = 0; i < 30; i++) { c.fillStyle = "hsl(" + i * 8 + ",60%,40%)"; c.fillRect(0, 0, 160, 120); await new Promise((ok) => setTimeout(ok, 33)); }
+    rekorder.stop();
+    await fertig;
+    const clip = new Blob(teile, { type: rekorder.mimeType });
+    const tag = 86400000;
+    for (const [n, alter] of [[0, 20], [1, 1]]) {
+      const sid = Date.now() - alter * tag + n;
+      const datum = new Date(sid).toISOString().slice(0, 10);
+      const id = sid + "-1";
+      const posedaten = Array.from({ length: 30 }, (_, i) => ({ zeit: i / 30, punkte: Array.from({ length: 33 }, (_, k) => ({ x: 0.3 + (k % 5) * 0.1, y: 0.2 + Math.floor(k / 5) * 0.08, z: 0, visibility: 1 })) }));
+      const phasen = { ansprechen: { zeit: 0.1 }, top: { zeit: 0.4 }, treffmoment: { zeit: 0.7 }, finish: { zeit: 0.9 } };
+      await speicher.speichereSitzung({ id: sid, datum, schlaeger: "Eisen 6", notiz: "", schwungIds: [id], appVersion: "test" }, [{
+        posedaten, video: clip,
+        schwung: { id, sitzungId: sid, nummer: 1, datum, schlaeger: "Eisen 6", ansicht: "frontal", sicher: true, phasen, appVersion: "test",
+          kennzahlen: [{ id: "tempo", name: "Tempo", messwert: 3, wert: "3:1", bewertung: n ? "gut" : "verbessern" }] },
+      }]);
+    }
+  })()`);
   await auswerten(`document.getElementById("zuGespeichert").click()`);
   await auswerten(`document.getElementById("zuFortschritt").click()`);
   const diagramme = await wartenBis(`document.querySelectorAll("#fortschrittInhalt svg.verlauf-bild").length >= 1`, 10);
   pruefe(diagramme, "Fortschritt zeigt ein Verlaufsdiagramm");
+  // Eisen 6 ist der zuletzt gespeicherte Schläger → die Auswahl steht schon richtig
+  const bilder = await wartenBis(`document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas").length === 2`, 20);
+  pruefe(bilder, "Vorher/Nachher zeigt zwei Bilder aus den Clips");
+  // Skelett wurde gezeichnet: grüne Pixel im Bild (GRUEN = #4ade80)
+  pruefe(await auswerten(`[...document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas")].every((l) => { const d = l.getContext("2d").getImageData(0, 0, l.width, l.height).data; for (let i = 0; i < d.length; i += 4) if (d[i] === 74 && d[i + 1] === 222 && d[i + 2] === 128) return true; return false; })`), "Skelett ist in beiden Bildern eingezeichnet");
   pruefe(await auswerten(`/Dein Fokus/.test(document.getElementById("fortschrittInhalt").innerText)`), "Fortschritt zeigt „Dein Fokus“");
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
