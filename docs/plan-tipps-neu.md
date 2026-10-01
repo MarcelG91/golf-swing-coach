@@ -156,7 +156,7 @@ gut: Oberkörper bleibt am Top hinter dem Ball
 
 - **kurz:** Oberkörper im Treffmoment zu gerade
 - **warum:** Nur wenn die rechte Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.
-- **gedanke:** Rechte Schulter runter, nicht raus
+- **gedanke:** Rechte Schulter geht nach unten
 - **Übung: Treffposition in Zeitlupe** · 10×
   1. Langsam vom Top in die Treffposition.
   2. Anhalten und im Spiegel prüfen.
@@ -216,10 +216,10 @@ gut: Rhythmus wie gute Spieler (3 : 1)
 
 - **kurz:** Du sackst ab
 - **warum:** Sackst du ab, kommt der Schläger zu tief. Er trifft zuerst den Boden, dann den Ball – ein fetter Schlag.
-- **gedanke:** Nicht in die Knie gehen
+- **gedanke:** Größe halten
 - **Übung: Höhe halten** · 10×
   1. Ansprechhaltung, Knie leicht gebeugt.
-  2. Halbe Schwünge, ohne tiefer in die Knie zu gehen.
+  2. Halbe Schwünge, die Körpergröße bleibt gleich.
 
 gut: Kopfhöhe bleibt stabil
 

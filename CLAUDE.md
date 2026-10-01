@@ -113,7 +113,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 7 → 8** (6 und 9 erledigt). Neue Ideen hier passend einsortieren.
+Reihenfolge: **(1 + 2 bei Marcel) → 5 → 7 → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -131,15 +131,10 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 7 → 8** (6 und 9 er
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
 3. ~~Golflehrer-Durchsicht~~ – **entfällt** (Entscheidung 30.09.). Fachliche Absicherung stattdessen über die
    strengen Quellenregeln (siehe „Dauerhafte Regeln“ und `docs/plan-wissensseite.md`).
-4. **Aufräum-Runde** (Claude, ein PR, 1–2 h) – Level-Karten erledigt mit 0.16.0 (Design):
-   - Alte Langtexte (`text`/`tipp` in `technik.js`, `kennzahlen.js`) zeigt die App nicht mehr – entfernen oder an
-     `tipps.js` angleichen (z. B. Tempo „oben kurz ankommen“, Kopfhöhe „Knie gebeugt“ sind überholt).
-   - Sichere Umformulierungen in `tipps.js` (Verbot → positiv, gleicher Inhalt): `kopfhoehe` tief „Größe halten“,
-     `oberkoerperTreff` „Rechte Schulter geht nach unten“; danach `docs/plan-tipps-neu.md` neu erzeugen.
-   - Aus `docs/wissen/abgleich-app.md` 2b: Stab-Übung in `technik.js` („neben die Hüfte“ → „neben den Fuß“),
-     Selbst-Check „fliegender Ellbogen“ entschärfen.
-   - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen
-     und als erlaubte Hosts nur noch `api.anthropic.com` nennen (seit 0.26.0 keine jsDelivr/Google mehr; CSP prüfen).
+4. ~~Aufräum-Runde~~ – **erledigt mit 0.26.1** (Branch `aufraeumen`): alte Langtexte `tipp` (kein Leser mehr) und `text`
+   (nur noch Tempo „nicht bewertbar“) aus `technik.js`/`kennzahlen.js` entfernt, `gefuehl` bleibt; Selbst-Check
+   „Ellbogen am Top“ entschärft (kein Fehler an sich); `tipps.js`: `kopfhoehe` tief „Größe halten“, `oberkoerperTreff`
+   „Rechte Schulter geht nach unten“; Golf-App-Check-Skill an 0.26.0 und Coach-Entscheidung angepasst.
 
 ### 🟡 Priorität 2 – Nächste Etappen
 

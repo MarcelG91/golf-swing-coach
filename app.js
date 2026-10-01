@@ -1174,7 +1174,7 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
   const hilfe = ausserhalb(k) ? tipp(k, rechtshaender) : null;
   if (hilfe) karte.append(neu("p", "kurz", hilfe.kurz));
   else if (k.bewertung === "gut") karte.append(neu("p", "kurz", gutText(k, rechtshaender)));
-  else karte.append(neu("p", "text", k.text)); // nicht bewertbar: der Grund steht im Text
+  else karte.append(neu("p", "text", k.text || k.detail)); // nicht bewertbar: der Grund steht im Text (nur Tempo)
 
   const mehr = neu("details");
   mehr.open = offen;
@@ -1213,7 +1213,7 @@ function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
 
   karte.append(neu("div", "trenner"));
   if (hilfe?.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke, warum: hilfe.warum }));
-  else karte.append(neu("p", "warum", hilfe ? hilfe.warum : k.text));
+  else karte.append(neu("p", "warum", hilfe ? hilfe.warum : k.detail));
   if (k.gefuehl) {
     const gefuehl = neu("details");
     gefuehl.append(neu("summary", "", "So fühlt es sich richtig an"), neu("p", "", k.gefuehl));

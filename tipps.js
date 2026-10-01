@@ -161,7 +161,7 @@ const TIPPS = {
     "": (s) => ({
       kurz: "Oberkörper im Treffmoment zu gerade",
       warum: `Nur wenn die ${s.h} Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.`,
-      gedanke: `${gross(s.h)} Schulter runter, nicht raus`,
+      gedanke: `${gross(s.h)} Schulter geht nach unten`,
       uebung: { name: "Treffposition in Zeitlupe", wiederholungen: 10, schritte: [
         "Langsam vom Top in die Treffposition.",
         "Anhalten und im Spiegel prüfen.",
@@ -223,10 +223,10 @@ const TIPPS = {
     tief: () => ({
       kurz: "Du sackst ab",
       warum: "Sackst du ab, kommt der Schläger zu tief. Er trifft zuerst den Boden, dann den Ball – ein fetter Schlag.",
-      gedanke: "Nicht in die Knie gehen",
+      gedanke: "Größe halten",
       uebung: { name: "Höhe halten", wiederholungen: 10, schritte: [
         "Ansprechhaltung, Knie leicht gebeugt.",
-        "Halbe Schwünge, ohne tiefer in die Knie zu gehen.",
+        "Halbe Schwünge, die Körpergröße bleibt gleich.",
       ] },
     }),
     gut: "Kopfhöhe bleibt stabil",

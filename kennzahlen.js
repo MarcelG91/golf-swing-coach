@@ -82,7 +82,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
   // ---------------------------------------------------------------
   const { verhaeltnis, rueckschwung, abschwung, plausibel } = phasen.tempo;
   if (verhaeltnis) {
-    let bewertung = "gut", text, tipp = null;
+    let bewertung = "gut", text = null; // text nur für "unsicher": die App zeigt dort den Grund
     // Gute Spieler liegen um 3 : 1. Das Band ist bewusst breit, weil bei 30 Bildern
     // pro Sekunde ein einziges Bild beim kurzen Abschwung ca. ±15 % ausmacht.
     if (verhaeltnis < 2.0 || verhaeltnis > 4.6) bewertung = "verbessern";
@@ -91,21 +91,13 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     if (!plausibel) {
       bewertung = "unsicher";
       text = "Die Zeiten passen nicht zu einem Schwung in normaler Geschwindigkeit (Zeitlupe?). Das Tempo wird deshalb nicht bewertet.";
-    } else if (verhaeltnis < 2.4) {
-      text = "Dein Rückschwung ist im Verhältnis zum Abschwung zu schnell. Das kostet Rhythmus und Treffsicherheit.";
-      tipp = "Zähle beim Üben im Rückschwung langsam „eins – zwei – drei“ und schwinge auf „vier“ durch. Oben kurz ankommen lassen, dann erst runter.";
-    } else if (verhaeltnis > 4.0) {
-      text = "Dein Rückschwung ist im Verhältnis sehr langsam. Oft wird der Abschwung dann hektisch oder zögerlich.";
-      tipp = "Schwinge flüssig zurück, ohne oben zu verharren. Denke an ein Pendel: gleichmäßiger Rhythmus statt Pause.";
-    } else {
-      text = "Dein Rhythmus liegt im Bereich guter Spieler (etwa 3 : 1). Weiter so!";
     }
     kennzahlen.push({
       name: "Tempo",
       wert: `${zahl(verhaeltnis, 1)} : 1`,
       detail: `Rückschwung ${zahl(rueckschwung)} s · Abschwung ${zahl(abschwung)} s`,
       messwert: rund(verhaeltnis), // Zahl für Gesamtauswertung und Fortschritt
-      bewertung, text, tipp,
+      bewertung, text,
     });
   }
 
@@ -115,25 +107,20 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
   // ---------------------------------------------------------------
   const kopfHoch = (kopf(A).y - kopf(I).y) / rumpf; // positiv = Kopf höher als beim Ansprechen
   {
-    let bewertung, text, tipp = null;
+    let bewertung;
     if (kopfHoch > 0.08) {
       bewertung = kopfHoch > 0.15 ? "verbessern" : "achtung";
-      text = "Dein Kopf ist im Treffmoment höher als beim Ansprechen. Du richtest dich auf – das führt oft zu getoppten oder dünnen Schlägen.";
-      tipp = "Lass die Knie bis nach dem Treffmoment leicht gebeugt und halte den Blick auf der Rückseite des Balls. Gut dafür: halbe Schwünge, bei denen du erst nach dem Treffen hochschaust.";
     } else if (kopfHoch < -0.4) {
       bewertung = "achtung";
-      text = "Dein Kopf sinkt bis zum Treffmoment deutlich ab. Etwas Absinken ist normal, zu viel führt zu fetten Schlägen (Boden vor dem Ball).";
-      tipp = "Achte darauf, deine Kniebeugung vom Ansprechen zu halten, statt im Abschwung in die Knie zu gehen.";
     } else {
       bewertung = "gut";
-      text = "Deine Kopfhöhe bleibt bis zum Treffmoment stabil.";
     }
     kennzahlen.push({
       name: "Kopfhöhe",
       wert: `${kopfHoch >= 0 ? "+" : "−"}${zahl(Math.abs(kopfHoch) * 100, 0)} %`,
       detail: "Veränderung bis zum Treffmoment, in % deiner Rumpflänge (+ = höher)",
       messwert: rund(kopfHoch),
-      bewertung, text, tipp,
+      bewertung,
     });
   }
 
@@ -143,24 +130,18 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     // -------------------------------------------------------------
     const kopfTop = ((kopf(T).x - kopf(A).x) * ziel) / rumpf; // negativ = weg vom Ziel
     const kopfTreff = ((kopf(I).x - kopf(A).x) * ziel) / rumpf; // positiv = Richtung Ziel
-    let bewertung = "gut", text, tipp = null;
+    let bewertung = "gut";
     if (kopfTreff > 0.08) {
       bewertung = kopfTreff > 0.15 ? "verbessern" : "achtung";
-      text = "Dein Kopf wandert bis zum Treffmoment Richtung Ziel, also vor den Ball. Gute Spieler halten den Kopf im Treffmoment hinter dem Ball.";
-      tipp = "Stecke ein Tee ein paar Zentimeter hinter den Ball und schau beim Schwung darauf. Der Kopf bleibt dort, bis der Ball weg ist.";
     } else if (kopfTop < -0.35) {
       bewertung = "achtung";
-      text = "Im Rückschwung schiebst du Kopf und Oberkörper stark zur Seite (Sway), statt dich zu drehen.";
-      tipp = "Drehe dich im Rückschwung um deine Wirbelsäule. Übung: Stell dir vor, du stehst in einem engen Fass – drehen ja, seitlich schieben nein.";
-    } else {
-      text = "Dein Kopf bleibt im Treffmoment hinter dem Ball. Sehr gut!";
     }
     kennzahlen.push({
       name: "Kopf seitlich",
       wert: `${kopfTreff >= 0 ? "+" : "−"}${zahl(Math.abs(kopfTreff) * 100, 0)} %`,
       detail: "Verschiebung bis zum Treffmoment, in % der Rumpflänge (+ = Richtung Ziel)",
       messwert: rund(kopfTreff),
-      bewertung, text, tipp,
+      bewertung,
     });
 
     // -------------------------------------------------------------
@@ -173,21 +154,13 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     const standbreite = vordererFuss.x - hintererFuss.x;
     if (Math.abs(standbreite) / rumpf > 0.3) {
       const anteil = (hueftMitte(F).x - hintererFuss.x) / standbreite;
-      let bw, txt, tp = null;
-      if (anteil >= 0.85) {
-        bw = "gut";
-        txt = "Im Finish ist dein Gewicht auf dem vorderen Fuß. Genau so soll es sein.";
-      } else {
-        bw = anteil >= 0.65 ? "achtung" : "verbessern";
-        txt = "Im Finish bleibt zu viel Gewicht auf dem hinteren Fuß. Dadurch fehlt Kraft, und der Ball fliegt oft zu hoch oder zur Seite weg.";
-        tp = "Halte nach jedem Schlag dein Finish 3 Sekunden: Gewicht fast komplett auf dem vorderen Fuß, hinterer Fuß nur noch auf der Spitze, Gürtelschnalle zeigt zum Ziel.";
-      }
+      const bw = anteil >= 0.85 ? "gut" : anteil >= 0.65 ? "achtung" : "verbessern";
       kennzahlen.push({
         name: "Gewichtsverlagerung",
         wert: `${zahl(Math.max(0, Math.min(1.2, anteil)) * 100, 0)} %`,
         detail: "Hüftposition im Finish: 0 % = hinterer Fuß, 100 % = vorderer Fuß",
         messwert: rund(anteil),
-        bewertung: bw, text: txt, tipp: tp,
+        bewertung: bw,
       });
     }
   } else {
@@ -202,12 +175,6 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       detail: `Ansprechen ${zahl(vorneigung(A), 0)}° → Treffmoment ${zahl(vorneigung(I), 0)}°`,
       messwert: rund(verlust), // positiv = aufgerichtet
       bewertung,
-      text: bewertung === "gut"
-        ? "Du hältst deine Vorneigung bis zum Treffmoment gut. Ein paar Grad Aufrichten sind normal."
-        : "Du richtest den Oberkörper bis zum Treffmoment deutlich auf. Dadurch ändert sich der Abstand zum Ball – typische Folgen sind Toppen oder Shanks.",
-      tipp: bewertung === "gut"
-        ? null
-        : "Übung: Stell dich beim Ansprechen mit dem Po leicht an eine Wand (oder eine Golftasche). Halte den Kontakt im Rückschwung und bis nach dem Treffmoment.",
     });
 
     // -------------------------------------------------------------
@@ -222,12 +189,6 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       detail: "Wie weit die Hüfte bis zum Treffmoment zum Ball schiebt, in % der Rumpflänge",
       messwert: rund(hueftVor),
       bewertung: bw,
-      text: bw === "gut"
-        ? "Deine Hüfte bleibt im Abschwung auf Abstand zum Ball. Sehr gut!"
-        : "Deine Hüfte schiebt im Abschwung Richtung Ball („Early Extension“). Die Arme haben dann keinen Platz mehr.",
-      tipp: bw === "gut"
-        ? null
-        : "Stell eine Golftasche oder einen Stuhl direkt hinter deinen Po. Im Abschwung soll die Gesäßseite des vorderen Beins die Tasche berühren – nicht wegschieben.",
     });
   }
 
