@@ -2821,8 +2821,8 @@ async function holeVergleichsbilder(schwung) {
   const posedaten = await ladeMedium(`${schwung.id}/posedaten`);
   if (!clip) return null;
   const adresse = URL.createObjectURL(clip);
+  const kleinesVideo = document.createElement("video");
   try {
-    const kleinesVideo = document.createElement("video");
     kleinesVideo.muted = true;
     kleinesVideo.playsInline = true;
     kleinesVideo.preload = "auto";
@@ -2856,6 +2856,9 @@ async function holeVergleichsbilder(schwung) {
     }
     return bilder;
   } finally {
+    // Adresse freigeben und das unsichtbare Video loslassen (iPhone-Safari hat nur wenige Video-Decoder)
+    kleinesVideo.removeAttribute("src");
+    kleinesVideo.load();
     URL.revokeObjectURL(adresse);
   }
 }

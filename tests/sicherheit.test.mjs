@@ -112,6 +112,8 @@ test("Fortschrittsanzeige liest nur Kennzahlen, sendet nichts und schreibt nicht
   assert.doesNotMatch(abschnitt, /fetch\(|sendBeacon|XMLHttpRequest|localStorage|sessionStorage|indexedDB|loesche(Schwung|Sitzung|Alles|VideosUndBilder)|speichereSitzung|aktualisiereSchwung/);
   // Jede Browser-Adresse eines Clips wird wieder freigegeben (Regel aus CLAUDE.md)
   assert.equal((abschnitt.match(/createObjectURL/g) ?? []).length, (abschnitt.match(/revokeObjectURL/g) ?? []).length);
+  // ... und zwar im finally, damit auch bei Fehler oder Zeitüberschreitung (Clip lädt nie) nichts hängen bleibt
+  assert.match(abschnitt, /finally\s*\{[^}]*URL\.revokeObjectURL\(adresse\)/);
   // einziges innerHTML: fester Text "<svg></svg>" für den SVG-Namensraum
   const treffer = abschnitt.match(/innerHTML\s*=.*$/gm) ?? [];
   assert.deepEqual(treffer.map((z) => z.replace(/\s*\/\/.*$/, "").trim()), ['innerHTML = "<svg></svg>";']);
