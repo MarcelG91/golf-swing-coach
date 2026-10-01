@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 01.10.2026 · geprüft auf `origin/main` @ `2ecee09` (Version 0.23.0, live) und Branch `wissen-pfade-4-6` (Version 0.24.0)
+Stand: 01.10.2026 · geprüft auf `origin/main` @ `9773ca2` (Version 0.24.0, live) und Branch `wissen-nachschlagen` (Version 0.25.0)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
@@ -19,11 +19,11 @@ geschützt, das GitHub-Konto ist abgesichert und die E-Mail-Adresse privat (Etap
 
 | Thema | Ampel | Kurzbewertung |
 |---|---|---|
-| Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). |
+| Videos und Datenschutz | Grün | Videos, Bilder und Posedaten bleiben auf dem Handy. Kennzahlen verlassen das Gerät nur über den freiwilligen Coach: eigener Schlüssel, Einwilligung, feste Auswahl der Felder (Test), Vorschau „Was wird gesendet?“. Im Code und im Browser (abgefangene Anfrage) geprüft: kein Dateiname, keine Notiz, kein Datum, keine Posedaten in der Anfrage; Antworten nur per `textContent`. Seit dem Check-Fix 0.17.1 nennt die Einwilligung jedes gesendete Feld (Test, V8). Der Lernfortschritt der Wissensseite (0.22.0) ist nur eine Liste von Lektions-IDs im `localStorage`, verlässt das Gerät nie und bleibt bei „Alles löschen“ erhalten (Test). „Nachschlagen“ (0.25.0) speichert nichts Neues: Suche und gewählte Ansicht leben nur bis zum Neuladen (`localStorage` vorher = nachher gemessen). |
 | Cybersecurity | Gelb | MediaPipe und das Anthropic-SDK (feste Versionen) kommen ohne Echtheitsprüfung von jsDelivr und Google (C1); das SDK sieht den API-Schlüssel. Noch keine CSP (C3). Der Schlüssel liegt im Browser (bewusst, mit Ausgabenlimit). |
-| Test und Deploy | Gelb | 137 Tests grün im Branch `wissen-pfade-4-6` (`main` 135). CI auf `main` grün, Live-Stand gleich `main` (0.23.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
+| Test und Deploy | Gelb | 146 Tests grün im Branch `wissen-nachschlagen` (`main` 137). CI auf `main` grün, Live-Stand gleich `main` (0.24.0). `main` ist per Regel geschützt (T1). Offen: kein automatisierter Browser-Test in der CI (T3), echter Coach-Test mit Marcels Schlüssel. |
 | Stabilität | Grün | Analyse, Speichern, Löschen und Coach geben die Knöpfe immer wieder frei, unerwartete Fehler stehen in der Statuszeile, Videos ohne bekannte Länge werden abgelehnt. Coach: nur eine Anfrage zur Zeit (S11); seit dem Check-Fix 0.17.1 wird die Antwort auch nach einem Rückfall auf ein anderes Modell vollständig gelesen (S12). Offen nur S10 (P3). |
-| Geschwindigkeit | Gelb | Live 30.09. (Mac, frisches Profil): „Bereit“ nach 1,5 s, „Offline bereit ✓“; Warmstart 0,2 s ohne Datenübertragung. Bewegte Figuren (Übungsmodus, Wissensseite) laufen mit ca. 30 Bildern pro Sekunde und nur, solange sie zu sehen sind. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
+| Geschwindigkeit | Gelb | Live 01.10. (Mac, frisches Profil): „Bereit“ nach 0,7 s, „Offline bereit ✓“ nach 0,8 s; Warmstart 0,5 s ohne Datenübertragung. Bewegte Figuren (Übungsmodus, Wissensseite) laufen mit ca. 30 Bildern pro Sekunde und nur, solange sie zu sehen sind. Analyse spielt das Video ab statt Bild für Bild zu springen. Die Statuszeile zeigt seit 0.14.0 auch die Ladezeit des Videos; iPhone-Messung steht noch aus (S8). |
 
 ## Befunde
 

@@ -230,11 +230,11 @@ Variablen in `style.css` (hell und dunkel).
 ## Stand Schritt 5 (`wissen-nachschlagen`, 0.25.0, 01.10.)
 
 - **Aufbau** (Entscheidung Marcel, 01.10.): Oben im Bereich Wissen ein Umschalter **„Lernpfade | Nachschlagen“**
-  (die App merkt sich die zuletzt gewählte Ansicht). Nachschlagen = Suchfeld + fünf Kacheln: 🔤 Glossar (60 Begriffe,
+  (die App merkt sich die zuletzt gewählte Ansicht, bis sie neu geladen wird – ohne neuen Speicher-Schlüssel). Nachschlagen = Suchfeld + fünf Kacheln: 🔤 Glossar (60 Begriffe,
   Liste in vier Gruppen) · 💡 Irrtümer (13 Wisch-Karten „Irrtum → Was stimmt“) · ⚖️ Regeln (17 Situationen als Liste,
   mit Pfahlfarben-Bild) · 🏌️ Ausrüstung (6 Wisch-Karten, Flex-Tabelle in km/h) · 🎯 Ballflug-Helfer (dieselbe Karte
   wie in der Lektion). Neue Datei `nachschlagen.js` (reine Daten + Suche), Tests `tests/nachschlagen.test.mjs`.
-- **Suche** (Entscheidung Marcel, 01.10.): über Lektionstitel, Glossar (Deutsch und Englisch), Irrtümer, Regel-Situationen
+- **Suche** (Entscheidung Marcel, 01.10.): über Lektionstitel, Glossar (Deutsch, Englisch, Zusatzwörter), Irrtümer, Regel-Situationen
   und Ausrüstung. Groß/klein und Umlaute egal („ruckschwung“ = „rueckschwung“ = „Rückschwung“), ab 2 Zeichen, Treffer
   sofort beim Tippen. Begriffe und Regeln stehen direkt in den Treffern, Lektionen/Irrtümer/Ausrüstung als Knopf.
 - **Zurück** führt immer dorthin, wo man herkam (Lernpfade, Glossar, Suche, Irrtum, Ballflug-Helfer, Analyse), und an
@@ -257,6 +257,10 @@ Variablen in `style.css` (hell und dunkel).
   Driver-Loft (Golf Insider UK), Mallet (GOLF.com, MyGolfSpy), zu steifer Schaft (The Left Rough, Fairway Jockey),
   dasselbe Ballmodell (National Club Golfer, Golf 360), Lie-Winkel (ExactGolf-Messung, Golf Sidekick).
 - **Trainer sind uneins**: Fitting für Einsteiger früh (GOLF.com, Golf 360) oder erst bei wiederholbarem Schwung (Golflens).
+- **Korrekturen nach dem Golf-App-Check (01.10.)**: Regel 16.3 (eingebetteter Ball) und 16.1 gelten nur „im Gelände“
+  (nicht in der Penalty Area); Holz 3 gegen Driver: Gesamtschnitt ca. 20 m (22 Yards), die 28 Yards galten nur für Hcp 8;
+  Fokus nach „Zurück“ auf dem Umschalter bzw. dem Lektions-Knopf; Suche mit **festen Zusatzwörtern** je Glossarbegriff
+  (Entscheidung Marcel, 01.10.: z. B. „Wasser“ → Penalty Area); Eintreffwinkel und Bounce genauer formuliert.
 - **Bewusst weggelassen**: Irrtum „weiche Bälle für langsame Schwünge“ (nur MyGolfSpy, Ergebnis je Schläger
   unterschiedlich), „Kopf schaut bei Toppern nicht früher hoch“, „steifer Arm macht eckig“, „im Treffmoment meist
   gestreckt“.

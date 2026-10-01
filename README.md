@@ -494,9 +494,9 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 7. App auf den Home-Bildschirm, offline nutzbar
 - [x] 8. Schwünge speichern (mit gekürztem Video) – und aufräumen (Videos löschen, Kennzahlen behalten)
 - [x] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
+  (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 - [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
   Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
-  (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 

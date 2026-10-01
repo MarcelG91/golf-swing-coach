@@ -25,7 +25,7 @@ Quelle hat, steht unten unter „Bewusst weggelassen“.
 | **„Vor dem Spiel ausgiebig dehnen“** | **Statisches** Dehnen vor dem Spiel senkt das Tempo (in einer Studie ca. 4 %); **dynamisch** aufwärmen. | `mental-und-fitness.md` [WU1][WU3] |
 | **„Kleines Ziel, kleiner Fehler“** | Beim Driver trafen Spieler mit dem ganzen Fairway als Ziel öfter und weiter (Studie, 32 Golfer). | `platzstrategie.md` [LS1] |
 | **„Putten ist das Wichtigste“** | Putten ist wichtig, aber rund **zwei Drittel** des Unterschieds zwischen Profis und Freizeitspielern entstehen bei **Abschlägen und Annäherungen** (Broadie, Strokes Gained). | `kurzes-spiel.md` [PG1][BRO1] |
-| **„Holz 3 statt Driver ist genauer“** | Shot-Scope-Daten: Amateure treffen mit beiden etwa gleich oft das Fairway (Driver 46,6 %, Holz 3 47,4 %), der Driver fliegt im Schnitt 28 Yards (ca. 25 m) weiter. | `platzstrategie.md` [SS1] |
+| **„Holz 3 statt Driver ist genauer“** | Shot-Scope-Daten: Amateure treffen mit beiden etwa gleich oft das Fairway (Driver 46,6 %, Holz 3 47,4 %), der Driver fliegt im Gesamtschnitt 225 statt 203 Yards, also 22 Yards (ca. 20 m) weiter (die 28 Yards im Artikel gelten nur für das Beispiel Handicap 8; korrigiert nach dem Golf-App-Check 01.10.). | `platzstrategie.md` [SS1] |
 | **„Mehr Kraft bringt automatisch mehr Länge“** | Länge braucht Tempo **und** einen mittigen Treffer. Fersentreffer mit dem Driver flogen in zwei Tests rund 18–19 Yards (ca. 17 m) kürzer als mittige: MyGolfSpy (Ferse −18,1 Yards), Robotertest GOLF.com (tief an der Ferse 203 statt 222 Yards). | [MGS1], `ballflug-und-fehler.md` [GOLF2] |
 
 ## Bewusst weggelassen (01.10.)

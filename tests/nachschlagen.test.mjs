@@ -27,6 +27,7 @@ test("Glossar: kurze Erklärung, bekannte Gruppe, eindeutige Begriffe", () => {
     assert.equal(typeof g.englisch, "string", `${g.begriff}: englisch fehlt`);
     const laenge = woerter(g.text).length;
     assert.ok(laenge >= 3 && laenge <= 20, `${g.begriff}: Erklärung hat ${laenge} Wörter`);
+    if (g.auch) assert.ok(Array.isArray(g.auch) && g.auch.every((w) => typeof w === "string" && w.length >= 2), `${g.begriff}: Zusatzwörter`);
   }
   // Jede Gruppe hat Einträge
   for (const id of gruppen) assert.ok(GLOSSAR.some((g) => g.gruppe === id), `Gruppe ${id} leer`);
@@ -70,6 +71,8 @@ test("Regeln: kurze Texte, Regelnummer, Quellen", () => {
   // Weiße Pfähle = Aus, 14 Schläger: die wichtigsten Grundregeln sind dabei
   assert.ok(REGELN.some((r) => r.regel === "18.2" && r.situation.includes("weiße Pfähle")));
   assert.ok(REGELN.some((r) => r.regel === "4.1" && r.tun.includes("14")));
+  // Regel 16.1 und 16.3: Erleichterung nur im Gelände – nicht in der Penalty Area (R&A-Regeltext)
+  for (const regel of ["16.1", "16.3"]) assert.match(REGELN.find((r) => r.regel === regel).tun, /im Gelände/i, regel);
 });
 
 test("Ausrüstung: Karten ≤ 40 Wörter, Tabelle mit zwei Spalten, Quellen und Beleg", () => {
@@ -110,6 +113,9 @@ test("Suche: Groß/klein und Umlaute egal, Deutsch und Englisch", () => {
   assert.ok(suche("Kopf").irrtuemer.some((i) => i.id === "kopf"));
   assert.ok(suche("flex").ausruestung.some((a) => a.id === "schaft"));
   assert.ok(suche("Slice").lektionen.some((l) => l.id === "ball-slice"));
+  // Zusatzwörter (Entscheidung Marcel 01.10.): „Wasser“ findet die Penalty Area
+  assert.ok(suche("wasser").begriffe.some((g) => g.begriff === "Penalty Area"));
+  assert.ok(suche("weisse Pfahle").begriffe.some((g) => g.begriff === "Aus"));
 });
 
 test("Suche: zu kurze, leere und seltsame Eingaben führen nicht zum Absturz", () => {

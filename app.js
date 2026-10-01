@@ -1213,7 +1213,10 @@ function baueBaustellenKarte(k, { rechtshaender, einsteiger }) {
   if (dazu) {
     const knopf = neu("button", "zeigen zur-lektion", `📖 Lektion: ${dazu.titel} ›`);
     knopf.addEventListener("click", () => {
-      const zurueck = zurueckZu("‹ Zurück zur Analyse", () => zeigeBereich("analyse"));
+      const zurueck = zurueckZu("‹ Zurück zur Analyse", () => {
+        zeigeBereich("analyse");
+        knopf.focus({ preventScroll: true }); // Fokus wieder auf diesen Knopf (Bildschirmleser)
+      });
       zeigeBereich("wissen");
       oeffneLektion(dazu.id, zurueck);
     });
@@ -3216,10 +3219,22 @@ zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
-wissenZurueckBtn.addEventListener("click", () => lektionZurueck.aktion());
+// Nach „Zurück“ den Fokus auf den Umschalter oben setzen – sonst landet er auf der ganzen
+// Seite und VoiceOver beginnt wieder ganz oben. (Listen und Wisch-Karten setzen ihn selbst
+// auf ihre Überschrift; das Suchfeld bekommt ihn nicht, sonst öffnet sich die Tastatur.)
+function fokusNachZurueck() {
+  if (!wissenStart.hidden) (wissenAnsicht === "nachschlagen" ? zuNachschlagenBtn : zuLernpfadeBtn).focus({ preventScroll: true });
+}
+wissenZurueckBtn.addEventListener("click", () => {
+  lektionZurueck.aktion();
+  fokusNachZurueck();
+});
 zuLernpfadeBtn.addEventListener("click", zeigeWissenUebersicht);
 zuNachschlagenBtn.addEventListener("click", zeigeNachschlagen);
-listeZurueckBtn.addEventListener("click", zeigeNachschlagen);
+listeZurueckBtn.addEventListener("click", () => {
+  zeigeNachschlagen();
+  fokusNachZurueck();
+});
 wissenSuche.addEventListener("input", zeigeSuchergebnis);
 // Enter schließt nur die Tastatur – die Treffer stehen schon da
 wissenSuche.addEventListener("keydown", (ereignis) => {
