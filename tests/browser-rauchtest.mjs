@@ -96,7 +96,7 @@ async function aufraeumen() {
 try {
   // Warten, bis Chrome erreichbar ist
   let seiten = null;
-  for (let versuch = 0; versuch < 40 && !seiten; versuch++) {
+  for (let versuch = 0; versuch < 120 && !seiten; versuch++) {
     try { seiten = await (await fetch(`http://127.0.0.1:${debugPort}/json`)).json(); } catch { await warte(250); }
   }
   if (!seiten) throw new Error(`Chrome ließ sich nicht starten (${chromePfad})\n${chromeMeldungen}`);
