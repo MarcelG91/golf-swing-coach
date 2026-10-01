@@ -529,12 +529,13 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
   (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 - [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
   Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
+- [x] 10. Fortschritt messen: Meine Schwünge → „📈 Fortschritt“ mit Verlauf, Trend, Fokus, Meilensteinen und Wochenrückblick
+  (0.27.0 Rechnen, 0.28.0 Anzeige; Langzeit-Feedback durch den Coach bleibt offen)
 - [x] Sicherheits-Etappe (0.26.0): Pose-Erkennung selbst ausgeliefert mit Prüfsummen, Coach ohne SDK, CSP,
   Datenschutzhinweis – Voraussetzung, um die App mit Freunden zu teilen (Befunde C1, C3, V4)
 
 Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
 
-- [ ] 10. Fortschritt messen und Langzeit-Feedback
 - [ ] 9. Sicherung exportieren / einspielen
 
 Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und
