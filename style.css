@@ -951,6 +951,74 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
 .quellen { color: var(--text-leise); font-size: 0.82rem; }
 .quellen p { margin-top: 10px; }
 .quellen ul { margin: 4px 0 0; padding-left: 18px; }
+/* Nur eine Karte im Stapel (Ballflug-Helfer): volle Breite */
+.karten > .karte:only-child { flex-basis: 100%; }
+
+/* Umschalter „Lernpfade | Nachschlagen“: wie die Segmente in den Einstellungen, mit zwei Knöpfen */
+.segmente.zwei { grid-template-columns: repeat(2, 1fr); margin: 4px 0 16px; }
+.segmente button {
+  padding: 9px 4px; border: none; border-radius: 7px; background: none;
+  font-size: 0.95rem; font-weight: 600; color: var(--text-leise); cursor: pointer;
+}
+.segmente button[aria-pressed="true"] { background: var(--flaeche); color: var(--text); box-shadow: var(--schatten); }
+
+/* Nachschlagen: Suchfeld (16 px Schrift, sonst zoomt Safari beim Antippen), Kacheln, Treffer */
+.suchfeld {
+  width: 100%; box-sizing: border-box; padding: 12px 14px;
+  font: inherit; font-size: 1rem; color: var(--text);
+  background: var(--flaeche); border: 1px solid var(--rand); border-radius: var(--r-klein);
+}
+.suchfeld::placeholder { color: var(--text-leise); }
+.suchfeld:focus { outline: 2px solid var(--akzent); outline-offset: 1px; }
+.such-status { margin: 8px 0 0; min-height: 1.2em; }
+.kacheln { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 4px; }
+.kachel {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 2px; text-align: left;
+  padding: 14px; background: var(--flaeche); border: 1px solid var(--rand); border-radius: var(--r);
+  color: var(--text); cursor: pointer;
+}
+.kachel:last-child { grid-column: 1 / -1; } /* Ballflug-Helfer über die ganze Breite */
+.kachel-symbol { font-size: 1.5rem; line-height: 1; margin-bottom: 6px; }
+.kachel-titel { font-weight: 700; font-size: 1rem; }
+.kachel-text { font-size: 0.82rem; color: var(--text-leise); }
+.such-gruppe h3 { margin: 18px 0 4px; font-size: 0.95rem; color: var(--text-leise); }
+.such-gruppe .lektionen-liste { margin-top: 8px; }
+button.sprung {
+  display: block; width: 100%; margin-top: 8px; padding: 11px 12px; text-align: left;
+  background: var(--flaeche-innen); color: var(--text); border: none; border-radius: var(--r-klein);
+  font-size: 0.95rem; cursor: pointer;
+}
+
+/* Glossar und Regeln als Liste */
+.liste-titel { margin: 12px 0 8px; }
+.liste-gruppe {
+  margin: 22px 0 2px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--akzent-marke);
+}
+.begriff, .regel { padding: 12px 0; border-bottom: 1px solid var(--rand); }
+.begriff p, .regel p { margin: 0; }
+.begriff .begriff-englisch { color: var(--text-leise); font-style: italic; font-weight: 400; }
+.begriff .begriff-text, .regel .regel-text { margin-top: 4px; line-height: 1.45; }
+/* Links zur Lektion: eigene Zeile, bei langem Titel linksbündig umbrechen */
+.begriff .zeigen, .regel + .zeigen, .karte.lektion .zeigen, .karte.baustelle .zeigen.zur-lektion { display: flex; text-align: left; }
+.regel .regel-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.regel .regel-nr { flex-shrink: 0; font-size: 0.8rem; color: var(--text-leise); }
+.regel .regel-strafe { margin-top: 6px; font-size: 0.88rem; font-weight: 600; color: var(--akzent-marke); }
+
+/* Irrtum-Karte: der Irrtum leise und kursiv, darunter „Was stimmt“ */
+.karte.lektion .irrtum {
+  margin-top: 14px; font-family: ui-serif, "New York", Georgia, serif;
+  font-size: 1.3rem; font-style: italic; line-height: 1.3; color: var(--text-leise);
+}
+.karte.lektion .stimmt-titel {
+  margin: 16px 0 0; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;
+  text-transform: uppercase; color: var(--gut);
+}
+.karte.lektion .stimmt-titel + .inhalt { margin-top: 4px; }
+/* Kleine Tabelle in einer Karte (Flex ↔ Tempo) */
+.wissen-tabelle { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.92rem; }
+.wissen-tabelle th, .wissen-tabelle td { text-align: left; padding: 6px 4px; border-bottom: 1px solid var(--rand); }
+.wissen-tabelle th { font-size: 0.78rem; font-weight: 600; color: var(--text-leise); }
 
 /* ---------------------------------------------------------------------
    Übungsmodus: Vollbild, große Schrift und große Knöpfe für die Range

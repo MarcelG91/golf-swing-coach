@@ -83,7 +83,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
-| `wissen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
+| `wissen.js` · `nachschlagen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `style.css` · `darstellung.js` | Aussehen (Design-Variablen, Hell/Dunkel) · Umschalter Hell/Dunkel/Automatisch |
@@ -142,9 +142,10 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
    `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. **Schritte 2 + 3
    `wissen-pfade-2-3` erledigt (0.23.0)**: Pfade „Vollschwung“ und „Ballflug“ (je 7 Lektionen), 12 Schaubilder, P1–P10
    animiert, Ballflug-Helfer als Karte in „Die neun Ballflüge“. **Schritt 4 `wissen-pfade-4-6` erledigt (0.24.0)**:
-   Pfade „Rund ums Grün“, „Clever spielen“, „Besser üben“ (je 6 Lektionen, 19 Schaubilder). Offen: `wissen-nachschlagen`
-   (dort den Ballflug-Helfer ein zweites Mal verlinken). Vierter Bereich „📖 Wissen“, 6 Lernpfade / 40 Lektionen +
-   Nachschlagen. Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
+   Pfade „Rund ums Grün“, „Clever spielen“, „Besser üben“ (je 6 Lektionen, 19 Schaubilder). **Schritt 5
+   `wissen-nachschlagen` erledigt (0.25.0)**: Umschalter „Lernpfade | Nachschlagen“, Suche, Glossar (60), Irrtümer (13),
+   Regeln (17), Ausrüstung (6), Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“. **Wissensseite damit komplett.**
+   Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 

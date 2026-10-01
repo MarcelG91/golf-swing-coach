@@ -3,27 +3,47 @@
 Teil von Kapitel 12 der Wissensseite. Viele Ratschläge von Mitspielern („Kopf unten!“) sind gut gemeint,
 aber übertrieben oder falsch. Hier steht, was die Messdaten sagen.
 
-## Kernsatz für die App
+Stand 01.10.2026 (Branch `wissen-nachschlagen`): Jede Zeile in den Quellen selbst nachgelesen. Was nur eine
+Quelle hat, steht unten unter „Bewusst weggelassen“.
 
-> **Es gibt nicht *den* richtigen Schwung. Entscheidend ist, was im Treffmoment passiert.** [AY1]
+## Kernsatz
+
+> **Es gibt nicht *den* richtigen Schwung. Entscheidend ist, was im Treffmoment passiert.** [AY1][GSA1]
+
+## In der App (Nachschlagen → Irrtümer)
 
 | Irrtum | Was stimmt | Quelle |
 |---|---|---|
-| **„Kopf unten lassen!“** | Der Kopf darf und soll sich mitbewegen. Dr. Ralph Mann untersuchte über 150 Tourspieler: Der Kopf wandert im Rückschwung **ca. 5 cm nach hinten**, weil Hüfte und Schultern sich auch bewegen. Wer den Kopf festhält, dreht weniger und muss mit den Armen „nach dem Ball fischen“ – eher mehr getoppte Bälle. Adam Young: In Videos schauen Spieler bei getoppten Bällen **nicht früher hoch** als bei guten. Im Durchschwung dreht der Kopf mit dem Körper zum Ziel. | [GOLF1][LR1][AY1] |
-| **„Kopf muss still bleiben“** | Ein **ruhiger**, nicht starrer Kopf ist sinnvoll. Leichte Bewegung nach rechts im Rückschwung ist normal. (App: `kopfSeitlich`, `kopfhoehe` erlauben bewusst Spielraum.) | [LR1] |
-| **„Linker Arm muss völlig gerade sein“** | Leicht gebeugt am Top ist bei vielen Top-Spielern normal; der Abschwung streckt ihn von selbst. Ein **steif durchgedrückter** Arm macht die Bewegung eckig. Im Treffmoment ist er meist gestreckt, aber nicht verkrampft. | [AY1][KU1] |
-| **„Der Ball muss hochgeschaufelt werden“** | Das Gegenteil: Beim Eisen **abwärts** treffen, der **Loft** bringt den Ball hoch. „Schaufeln“ (Hände hinter dem Ball) macht fett oder dünn. | [TM1 in `ballflug-und-fehler.md`] |
-| **„Der Ball startet in Richtung der Schwungbahn“** | Er startet vor allem in Richtung der **Schlagfläche** (Driver ca. 85 %). Die Bahn bestimmt die Kurve. | `ballflug-und-fehler.md` |
-| **„Langsam schwingen = besser treffen“** | Wichtig ist der **gleichmäßige Rhythmus** (ca. 3 : 1), nicht die Langsamkeit. Gute Spieler schwingen unterschiedlich schnell. | `vollschwung.md` |
-| **„Überschwingen ist immer falsch“** | Viele gute Spieler schwingen über die Waagerechte hinaus. Problematisch ist es nur, wenn dabei Arm oder Handgelenk „einknicken“ und der Treffpunkt leidet. | [AY1] |
-| **„Die Füße müssen stillstehen“** | Einige Top-Spieler heben die linke Ferse im Rückschwung oder bewegen die Füße deutlich. Für Einsteiger ist ein ruhiger Stand trotzdem einfacher. | [AY1] |
-| **„Es gibt eine richtige Top-Position“** | Flach/steil, „laid off“/„across the line“: Top-Spieler zeigen alle Varianten. Entscheidend ist, dass Schlagfläche und Bahn im **Treffmoment** zusammenpassen. | [AY1] |
-| **„Weiche Bälle sind für langsame Schwünge besser“** | In MyGolfSpy-Tests waren die weichsten Bälle bei mittlerem Tempo eher langsamer und flacher. | `ausruestung.md` |
-| **„Zum Aufwärmen dehnen“** | **Statisches** Dehnen vor dem Spiel senkt Tempo und Genauigkeit; **dynamisch** aufwärmen. | `mental-und-fitness.md` |
-| **„Kleines Ziel, kleiner Fehler“** | Beim Driver trafen Spieler mit dem ganzen Fairway als Ziel öfter und weiter. | `platzstrategie.md` |
-| **„Putten ist das Wichtigste“** | Putten ist wichtig, aber zwischen Spielern entstehen die größten Unterschiede bei **Annäherungen und Abschlägen** (Broadie). | `kurzes-spiel.md` |
-| **„Holz 3 statt Driver ist genauer“** | Amateure treffen mit beiden etwa gleich oft das Fairway – der Driver ist länger. | `platzstrategie.md` |
-| **„Mehr Kraft = mehr Länge“** | Länge kommt aus **Tempo und mittigem Treffen**. Ein Treffer 1–2 cm neben der Mitte kostet mehr als ein paar km/h. | [AY2] |
+| **„Kopf unten lassen und ganz still halten!“** | Ein **ruhiger** Kopf hilft, ein **festgehaltener** nicht. Im Rückschwung bewegt er sich etwas vom Ziel weg mit, im Durchschwung dreht er mit dem Körper zum Ziel. GOLF.com (Jonathan Yarwood): Wer den Kopf festhält, blockiert die Drehung. Keiser University: Hogan, Nicklaus und Woods drehten den Kopf oder bewegten ihn hinter den Ball. The Left Rough: Bewegung ja, aber nicht viel. | [GOLF1][LR1][KU1][AY1] |
+| **„Der linke Arm muss am Top ganz gerade sein“** | Bei vielen sehr guten Spielern ist er am Top leicht gebeugt; viele Trainer erlauben das ausdrücklich. | [AY1][KU1] |
+| **„Der Ball muss hochgeschaufelt werden“** | Beim Eisen **abwärts** treffen (erst Ball, dann Boden), der **Loft** bringt den Ball hoch. „Schaufeln“ mit den Händen macht oft fett oder getoppt. | `ballflug-und-fehler.md` [TM3][AY2][HM1] |
+| **„Der Ball startet in Richtung der Schwungbahn“** | Er startet vor allem in Richtung der **Schlagfläche** (Driver ca. 85 %). Die Bahn bestimmt zusammen mit der Fläche die Kurve. | `ballflug-und-fehler.md` [TM1][TM2] |
+| **„Langsam schwingen = besser treffen“** | Wichtig ist der **gleichmäßige Rhythmus** (ca. 3 : 1), nicht die Langsamkeit. | `vollschwung.md` [TT1][GROB1] |
+| **„Über die Waagerechte ausholen ist immer falsch“** | Gute Spieler holen verschieden weit aus: manche über die Waagerechte, andere deutlich kürzer. Eine einzige richtige Länge gibt es nicht. | [AY1][LR2] |
+| **„Die Füße müssen fest am Boden bleiben“** | Einige große Spieler heben im Rückschwung die linke Ferse (Nicklaus, Hogan; heute z. B. Bubba Watson). Manche Trainer empfehlen das sogar, z. B. bei wenig Beweglichkeit. | [AY1][GD1][GTM1] |
+| **„Am Top gibt es nur eine richtige Position“** | Flach/steil, „laid off“/„across the line“: Sehr gute Spieler zeigen alle Varianten. Entscheidend ist, wie der Schläger danach zum Ball kommt. | [AY1][GSA1] |
+| **„Vor dem Spiel ausgiebig dehnen“** | **Statisches** Dehnen vor dem Spiel senkt das Tempo (in einer Studie ca. 4 %); **dynamisch** aufwärmen. | `mental-und-fitness.md` [WU1][WU3] |
+| **„Kleines Ziel, kleiner Fehler“** | Beim Driver trafen Spieler mit dem ganzen Fairway als Ziel öfter und weiter (Studie, 32 Golfer). | `platzstrategie.md` [LS1] |
+| **„Putten ist das Wichtigste“** | Putten ist wichtig, aber rund **zwei Drittel** des Unterschieds zwischen Profis und Freizeitspielern entstehen bei **Abschlägen und Annäherungen** (Broadie, Strokes Gained). | `kurzes-spiel.md` [PG1][BRO1] |
+| **„Holz 3 statt Driver ist genauer“** | Shot-Scope-Daten: Amateure treffen mit beiden etwa gleich oft das Fairway (Driver 46,6 %, Holz 3 47,4 %), der Driver fliegt im Gesamtschnitt 225 statt 203 Yards, also 22 Yards (ca. 20 m) weiter (die 28 Yards im Artikel gelten nur für das Beispiel Handicap 8; korrigiert nach dem Golf-App-Check 01.10.). | `platzstrategie.md` [SS1] |
+| **„Mehr Kraft bringt automatisch mehr Länge“** | Länge braucht Tempo **und** einen mittigen Treffer. Fersentreffer mit dem Driver flogen in zwei Tests rund 18–19 Yards (ca. 17 m) kürzer als mittige: MyGolfSpy (Ferse −18,1 Yards), Robotertest GOLF.com (tief an der Ferse 203 statt 222 Yards). | [MGS1], `ballflug-und-fehler.md` [GOLF2] |
+
+## Bewusst weggelassen (01.10.)
+
+- **„Ralph Mann: Kopf wandert ca. 5 cm nach hinten (über 150 Tourspieler)“** – stand hier mit [GOLF1], dort steht
+  es aber nicht (weder Ralph Mann noch eine Zahl). Nicht gefunden → gestrichen. Die Aussage „Kopf darf sich
+  bewegen“ ist ohne Zahl durch vier Quellen belegt (siehe Tabelle).
+- **„Bei getoppten Bällen schauen Spieler nicht früher hoch“** – nur Adam Youngs Beobachtung [AY1].
+- **„Ein steif durchgedrückter linker Arm macht die Bewegung eckig“**, **„Im Treffmoment ist er meist gestreckt“** –
+  so in keiner Quelle; Adam Young zeigt sogar gute Spieler mit gebeugtem Arm im Treffmoment [AY1].
+- **„Überschwingen ist nur problematisch, wenn Arm oder Handgelenk einknicken“** – Quelle nicht gefunden.
+- **„Weiche Bälle sind für langsame Schwünge besser“** – MyGolfSpy-Tests: die zehn weichsten Bälle im Schnitt ca.
+  3,5 mph langsamer als die zehn härtesten; Robotertest 2026: beim Driver kein Vorteil für weiche Bälle bei
+  langsamen Schwüngen, beim 7er-Eisen aber ein kleiner. Nur eine Quelle (MyGolfSpy) und nicht eindeutig → nicht
+  in der App ([MGS3] in `ausruestung.md`).
+- **„Ein Treffer 1–2 cm neben der Mitte kostet mehr als ein paar km/h“** – stand hier mit [AY2] (Gear Effect), dort
+  steht keine Zahl. Ersetzt durch die zwei Messungen oben.
+- **„Kopf muss still bleiben“** als eigener Irrtum – mit „Kopf unten lassen“ zusammengelegt.
 
 ## Was heißt das für die App?
 
@@ -38,6 +58,11 @@ aber übertrieben oder falsch. Hier steht, was die Messdaten sagen.
 
 - [AY1] Adam Young: Top myths in golf – https://www.adamyounggolf.com/top-myths-in-golf/
 - [AY2] Adam Young: Gear effect / Treffpunkt – https://www.adamyounggolf.com/gear-effect/
-- [GOLF1] GOLF.com: Why this common piece of swing advice is a huge myth (J. Yarwood, Ralph Mann) – https://golf.com/instruction/common-piece-swing-advice-myth/
+- [GOLF1] GOLF.com: Why this common piece of swing advice is a huge myth (J. Yarwood) – https://golf.com/instruction/common-piece-swing-advice-myth/
 - [LR1] The Left Rough: The truth about head movement – https://theleftrough.com/head-movement-in-golf-swing/
 - [KU1] Keiser University College of Golf: Debunking golf swing myths – https://collegeofgolf.keiseruniversity.edu/debunking-golf-swing-myths/
+- [LR2] The Left Rough: Better contact – how to shorten your backswing (keine allgemeingültige Länge) – https://theleftrough.com/short-backswing-in-golf/
+- [GD1] Golf Distillery: Lift left heel from the ground (Hogan, Nicklaus; hilft bei wenig Beweglichkeit) – https://www.golfdistillery.com/swing-thoughts/backswing/lift-left-heel-from-the-ground/
+- [GTM1] Golf Tips Magazine (Tim Cooke): Lift the heel for better golf shots – https://golftipsmag.com/instruction/faults-and-fixes/lift-the-heel-better-golf-shots/
+- [GSA1] Golf Smart Academy (Tyler Ferrell): Across the line or laid off – https://www.golfsmartacademy.com/golf-tips/across-line-or-laid/
+- [MGS1] MyGolfSpy Labs: The horizontal impact location study (Ferse −18,1 Yards, Spitze ca. −5 Yards) – https://mygolfspy.com/labs/mgs-labs-horizontal-impact-study/

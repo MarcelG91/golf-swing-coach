@@ -100,10 +100,11 @@ Schläger soll **auf** der Linie eintreten. Dann einen Ball knapp **vor** die Li
 
 ## 4. Wie wichtig ist das kurze Spiel? (🌿)
 
-- Mark Broadie (Columbia University, Erfinder von „Strokes Gained“): Ein typischer **90er-Spieler** verliert
-  gegen einen Scratch-Golfer den größten Teil bei **Annäherungen und dem kurzen Spiel (ca. 6 Schläge)**,
-  beim **Putten nur ca. 2 Schläge** [BRO1][ARC1].
-- Das lange Spiel (Abschlag + Annäherung) macht rund **zwei Drittel** des Unterschieds aus [PG1].
+- Mark Broadie (Columbia University, Erfinder von „Strokes Gained“): Der größte Unterschied zwischen
+  Profis und Freizeitspielern liegt im **langen Spiel** [BRO1]. Das lange Spiel (Abschlag + Annäherung) macht
+  rund **zwei Drittel** des Unterschieds aus, Putten nur ca. 15 % [PG1].
+  (Korrigiert 01.10.: Hier stand „90er-Spieler verliert ca. 6 Schläge bei Annäherung/kurzem Spiel, ca. 2 beim
+  Putten“ – das steht weder in [BRO1] noch in [ARC1].)
 - Für Einsteiger bleibt das kurze Spiel trotzdem der **schnellste Hebel**: Hier gibt es viele leichte
   Schläge rund ums Grün, die man mit wenig Übung sicherer macht („Quick Wins“) [PG1].
 

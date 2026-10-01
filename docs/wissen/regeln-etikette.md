@@ -25,15 +25,16 @@ Klammern, damit man im offiziellen Regelbuch nachschlagen kann.
 | **Droppen** (14.3) | Aus **Kniehöhe** fallen lassen, im Erleichterungsbereich (1 oder 2 Schlägerlängen). Rollt der Ball zweimal heraus: dort hinlegen, wo er beim 2. Drop aufkam | – |
 | **Ungewöhnliche Platzverhältnisse** (Boden in Ausbesserung „GUR“, Pfützen, Wege) (16.1) | Nächstgelegener Punkt vollständiger Erleichterung + 1 Schlägerlänge, nicht näher zur Fahne | straflos |
 | **Eingebetteter Ball** (im eigenen Einschlagloch im „Gelände“) (16.3) | Innerhalb 1 Schlägerlänge von der Stelle direkt hinter dem Ball droppen, nicht näher zur Fahne | straflos |
-| **Lose hinderliche Naturstoffe** (Blätter, Äste, Steine) (15.1) | Dürfen überall entfernt werden – auch im Bunker. Bewegt sich dabei der Ball: Strafe (außer auf dem Grün) | 1 Schlag, falls Ball bewegt |
+| **Lose hinderliche Naturstoffe** (Blätter, Äste, Steine) (15.1) | Dürfen überall entfernt werden – auch im Bunker. Bewegt sich dabei der Ball: zurücklegen und Strafe (außer auf dem Grün und auf dem Abschlag) | 1 Schlag, falls Ball bewegt |
 | **Bunker** (12.2) | Sand vor oder hinter dem Ball nicht mit dem Schläger berühren – nicht beim Probeschwung, nicht beim Aufsetzen, nicht im Rückschwung | 2 Schläge (Zählspiel) |
 | **Grün** (13) | Ball markieren, aufnehmen, reinigen erlaubt · Pitchmarken **und** Spikespuren ausbessern erlaubt · Fahne darf im Loch bleiben · Ball versehentlich bewegt: zurücklegen, straflos | – |
 | **Doppeltreffer** (10.1a) | Zählt als ein Schlag | straflos |
 | **Eigenen Ball bei der Suche bewegt** (7.4) | Zurücklegen | straflos |
 | **Schläger** (4.1) | Höchstens **14** Schläger in der Tasche | 2 Schläge pro Loch, max. 4 |
-| **Abschlag** (6.2) | Innerhalb der Abschlagsfläche: zwischen den Markierungen, bis 2 Schlägerlängen dahinter | 2 Schläge (Zählspiel), nochmal abschlagen |
+| **Abschlag** (6.1b, Definition „Abschlag“) | Innerhalb der Abschlagsfläche: zwischen den Markierungen, bis 2 Schlägerlängen dahinter | 2 Schläge (Zählspiel), nochmal abschlagen |
 
-Quellen: [SIEK1][PAR1][RA2][USGA1]. **Platzregeln** des Clubs (z. B. „Besserlegen“ im Winter,
+Quellen: [SIEK1][PAR1][RA2][RA3][USGA1][USGA2]. **Am 01.10.2026 jede Zeile mit dem R&A-Regeltext abgeglichen** [RA3];
+korrigiert: lose Naturstoffe auch auf dem Abschlag straflos (15.1b), Abschlag-Strafe steht in 6.1b. **Platzregeln** des Clubs (z. B. „Besserlegen“ im Winter,
 Alternative zu Schlag und Distanz nach Musterplatzregel E-5) gehen vor – stehen auf der Scorekarte oder
 am Aushang.
 
@@ -88,6 +89,8 @@ Die Platzreife wird bei DGV-Anlagen in Deutschland zwei Jahre lang gegenseitig a
 - [RA1] The R&A: New and updated Model Local Rules for 2026 (nächste Ausgabe 2028) – https://www.randa.org/en/articles/new-and-updated-model-local-rules-for-2026
 - [RA2] The R&A: Rules of Golf, Rule 5 – https://www.randa.org/en/rog/the-rules-of-golf/rule-5
 - [USGA1] USGA: Rules of Golf – https://www.usga.org/content/usga/home-page/rules-hub.html
+- [RA3] The R&A: Rules of Golf, Regeltext (Regeln 1–25) – https://www.randa.org/en/rog/the-rules-of-golf
+- [USGA2] USGA: Starting the hole – Teeing area (zwei Schlägerlängen tief) – https://www.usga.org/content/usga/home-page/rules-hub/topics/teeing-area.html
 - [SIEK1] Golfplatz Siek: Die wichtigsten Golfregeln einfach erklärt – https://golfplatz-siek.de/golf-wissen/regeln
 - [PAR1] par71: Golfregeln einfach erklärt – https://www.par71.de/blog/golfregeln-einfach-erklaert
 - [ETI1] Golfclub Siegerland: Etikette, Pitchmarken, Divots – https://www.golfclub-siegerland.de/der-platz/etikette
