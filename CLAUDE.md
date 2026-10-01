@@ -30,6 +30,9 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 
 - **Neue JS-Datei?** In `sw.js` (`APP_DATEIEN`) und `pwa.js` (`APP_DATEIEN`) eintragen,
   sonst fehlt sie offline.
+- **`vendor/` nie von Hand ändern** (MediaPipe + Pose-Modell, seit 0.26.0, C1). Neue Version = neuer Ordner,
+  Herkunft prüfen wie in `vendor/README.md`, Prüfsummen in `tests/vendor.test.mjs`, Pfade in `app.js` und
+  `sw.js` (`VENDOR_DATEIEN`). Der Service Worker liefert `vendor/` „Speicher zuerst“ – ohne neuen Ordner käme ein Update nie an.
 - **Jede Änderung an der App:** `APP_VERSION` in `pwa.js` erhöhen (steht unten in der App –
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
 - Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
@@ -52,8 +55,10 @@ Ausführlicher Stand mit allen Befunden: `docs/sicherheit/bericht.md` (IDs wie V
 nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit erledigen.
 
 - **Videos, Einzelbilder, Posedaten und Kennzahlen verlassen das Gerät nie.** Kein Upload,
-  kein `fetch` mit Nutzerdaten. Neue Internetadressen nur nach Rückfrage; erlaubt sind
-  `cdn.jsdelivr.net` (MediaPipe, Anthropic-SDK) und `storage.googleapis.com` (Modell).
+  kein `fetch` mit Nutzerdaten. Neue Internetadressen nur nach Rückfrage. Seit 0.26.0 (C1) lädt die App
+  **nichts mehr von fremden Servern**: MediaPipe und Modell liegen in `vendor/`, der Coach nutzt kein SDK.
+  Die CSP in `index.html` (C3) erlaubt nur `'self'` und `api.anthropic.com` – eine neue Adresse muss dort,
+  im Datenschutzhinweis (Einstellungen, README) und in `tests/sicherheit.test.mjs` mit.
   **Einzige Ausnahme: der freiwillige Coach** (Etappe 11b, `coach.js`) sendet nach Einwilligung Kennzahlen
   an `api.anthropic.com` – nie Videos, Bilder, Posedaten, Notizen, Namen oder Datum (Test: `tests/coach.test.mjs`).
 - **Keine Schlüssel, Tokens oder Passwörter im Code** – das Repo ist öffentlich.
@@ -86,6 +91,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `wissen.js` · `nachschlagen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
+| `vendor/` | MediaPipe 0.10.14 + Pose-Modell, selbst ausgeliefert und per Prüfsumme festgeschrieben (`tests/vendor.test.mjs`, Herkunft `vendor/README.md`) |
 | `style.css` · `darstellung.js` | Aussehen (Design-Variablen, Hell/Dunkel) · Umschalter Hell/Dunkel/Automatisch |
 | `docs/plan-speichern-und-fortschritt.md` | Plan für Etappen 8–10 inkl. Entscheidungen |
 | `docs/plan-tipps-neu.md` | Wisch-Karten, Kurztipps, Übungsmodus – Entscheidungen, geprüfte Texte, Quellen |
@@ -96,18 +102,22 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 ## Bekannte Eigenheiten iPhone / Safari
 
 - Home-Bildschirm-App hat eigenen Speicher (getrennt von Safari) → einmal von dort online öffnen.
-- Pose-Modell kommt mit `Vary: Origin` → Cache immer mit `ignoreVary: true` abfragen.
+- Service-Worker-Cache immer mit `ignoreVary: true` abfragen (Antworten mit `Vary`-Kopfzeile findet Safari sonst
+  nicht wieder; aufgefallen beim früheren Modell von Google mit `Vary: Origin`).
+- CSP mit `'wasm-unsafe-eval'` braucht Safari 16, WebAssembly-SIMD (MediaPipe ohne „nosimd“-Variante) iOS 16.4.
 - Bild-für-Bild-Springen in iPhone-Videos (HEVC/4K) ist sehr langsam → `videoanalyse.js` spielt ab.
 - Statuszeile nach der Analyse: „Analyse fertig (… s · … ms pro Bild · GPU/CPU · …)“ –
   diese Zeile bei Geschwindigkeitsproblemen von Marcel erfragen.
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9** (9 darf Marcel vorziehen). Neue Ideen hier passend einsortieren.
+Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 7 → 8** (6 und 9 erledigt). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
 1. **iPhone-Praxistest** (Marcel, ca. 30 min) – Checkliste: `docs/iphone-testliste.md`. Bündelt:
+   - **Sicherheits-Etappe (≥ 0.26.0, zuerst):** erster Start online bis „Offline bereit ✓“, dann im Flugmodus neu öffnen
+     und analysieren; Coach einmal mit eigenem Schlüssel (CSP darf nichts blockieren).
    - Schnelle Analyse (≥ 0.7.3) und Ladezeit (≥ 0.14.0, Befund S8): Zeile „Analyse fertig (… · Video geladen in … s)“.
    - Mehrere Schwünge (≥ 0.8.0): langes Range-Video + Mehrfachauswahl. Alle Schläge gefunden? Falsche Treffer
      (Aufteen)? Bisher nur mit zusammengesetzten Testdaten geprüft – Schwelle 3,5 ggf. anpassen.
@@ -127,13 +137,14 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
    - Aus `docs/wissen/abgleich-app.md` 2b: Stab-Übung in `technik.js` („neben die Hüfte“ → „neben den Fuß“),
      Selbst-Check „fliegender Ellbogen“ entschärfen.
    - Golf-App-Check-Skill Abschnitt 2 („kein API-Schlüssel im Browser“) an die Coach-Entscheidung vom 27.09. anpassen
-     und `api.anthropic.com` als erlaubten Host nennen.
+     und als erlaubte Hosts nur noch `api.anthropic.com` nennen (seit 0.26.0 keine jsDelivr/Google mehr; CSP prüfen).
 
 ### 🟡 Priorität 2 – Nächste Etappen
 
 5. **Etappe 10: Fortschritt** (Plan in `docs/plan-speichern-und-fortschritt.md`). Größter Nutzen fürs Golf-Lernen.
-6. **Sicherheits-Etappe C1 + C3** (ca. ½ Tag, nur nach Absprache): MediaPipe, Modell und Anthropic-SDK selbst
-   ausliefern bzw. mit Prüfsummen, danach CSP. **Pflicht, bevor Freunde die App nutzen.**
+6. ~~Sicherheits-Etappe C1 + C3~~ – **erledigt mit 0.26.0** (Branch `sicherheit-c1-c3`): MediaPipe und Modell in
+   `vendor/` mit Prüfsummen, Coach mit eigenem `fetch` statt SDK, CSP, Datenschutzhinweis (V4). Offen nur der
+   iPhone-Test dazu (siehe Nr. 1 und `docs/iphone-testliste.md`).
 7. **Automatischer Browser-Test (T3):** Chrome ohne Fenster über das DevTools-Protokoll (ohne neue Bibliothek) –
    Seite lädt, „Bereit“, keine Konsolenfehler.
 8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
@@ -149,9 +160,12 @@ Reihenfolge: **4 → (1 + 2 parallel bei Marcel) → 5 → 6 → 7 → 8 → 9**
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
-- **Teilen mit Freunden** (erst nach Nr. 6): Die App läuft bei jedem kostenlos, nur der Coach kostet. Optionen:
-  eigener Schlüssel (umgesetzt) · Schlüssel je Freund aus Marcels Workspace mit Limit · schlüsselfreier Knopf
-  „Für Claude kopieren“. Dazu kurzer Datenschutzhinweis für die ganze App (V4).
+- **Teilen mit Freunden** (Nr. 6 erledigt, nach dem iPhone-Test 0.26.0 möglich): Die App läuft bei jedem kostenlos,
+  nur der Coach kostet. Optionen: eigener Schlüssel (umgesetzt) · Schlüssel je Freund aus Marcels Workspace mit Limit ·
+  schlüsselfreier Knopf „Für Claude kopieren“. Datenschutzhinweis (V4) ist seit 0.26.0 in der App.
+- **Coach-Modell Claude Opus 5.5** (Idee 01.10.): neuer und günstiger als Opus 5 (4/20 statt 5/25 US-Dollar je Mio.
+  Tokens). Eigener Branch: Effort-Standard ist dort „medium“ (wir setzen „high“ ausdrücklich), Rückfall-Ziele prüfen,
+  danach echter Test (Kosten, Qualität).
 - **Zeitgrenze beim Video-Laden (S10):** erst nach der iPhone-Messung aus Nr. 1 festlegen.
 - **Übungsfiguren von hinten:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
   `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung erst mit einem

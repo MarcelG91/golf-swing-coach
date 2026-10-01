@@ -8,8 +8,24 @@ Bildschirmfoto festhalten und an Claude geben – daraus werden die nächsten Ei
 ## 0. Vorbereitung (zu Hause, mit WLAN)
 
 - [ ] App vom Home-Bildschirm öffnen (nicht Safari – die Home-App hat eigenen Speicher).
-- [ ] Unten steht Version **0.15.1** oder höher. Sonst App schließen, neu öffnen, kurz warten.
+- [ ] Unten steht Version **0.26.0** oder höher. Sonst App schließen, neu öffnen, kurz warten.
 - [ ] Meldung „Offline bereit ✓“ ist da.
+
+## 0b. Sicherheits-Etappe (Version ≥ 0.26, zuerst testen)
+
+Seit 0.26.0 kommt die Pose-Erkennung von GitHub Pages statt von jsDelivr/Google, der Coach läuft ohne
+SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthropic.
+
+- [ ] **Erster Start mit Internet** (WLAN): App vom Home-Bildschirm öffnen. Das Update lädt einmal ca. 20 MB –
+      warten, bis unten **„Version 0.26.0 · online · Offline bereit ✓“** steht (Bildschirmfoto). Dauer schätzen: ___ s
+- [ ] App ganz schließen (nach oben wischen), **Flugmodus an**, App neu öffnen: „Bereit“ erscheint, unten
+      „offline · Offline bereit ✓“.
+- [ ] Im Flugmodus ein Video analysieren – Zeile „Analyse fertig (…)“ als Bildschirmfoto.
+- [ ] Im Flugmodus kurz „📖 Wissen“ (eine Lektion mit Bild) und eine Übung im Vollbild öffnen.
+- [ ] Flugmodus aus. **Coach einmal** mit deinem Schlüssel (ca. 15–25 Cent): Kommt die Antwort? Wartezeit ___ s,
+      Kosten laut Zeile unter der Antwort ___ Cent.
+- [ ] Einstellungen → ganz unten „Datenschutz – kurz erklärt“: verständlich?
+- [ ] Fällt etwas auf (leere Fläche, Knopf ohne Wirkung, Meldung „nicht vollständig geladen“)? Bildschirmfoto.
 
 ## 1. Analyse und Ladezeit (Version ≥ 0.14, Befund S8)
 
