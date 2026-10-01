@@ -134,7 +134,7 @@ test("Nirgends wird der ganze Einstellungsspeicher, die Datenbank oder der Offli
 // können nie direkt als HTML in die Seite geraten.
 // ---------------------------------------------------------------
 const RECHENLOGIK = [
-  "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js",
+  "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js", "fortschritt.js",
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
   "wissen.js", "nachschlagen.js", "schaubilder.js",
 ];

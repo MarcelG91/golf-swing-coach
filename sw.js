@@ -29,6 +29,7 @@ const APP_DATEIEN = [
   "./speicher.js",
   "./videokuerzen.js",
   "./level.js",
+  "./fortschritt.js",
   "./tipps.js",
   "./strichfigur.js",
   "./uebungsbilder.js",

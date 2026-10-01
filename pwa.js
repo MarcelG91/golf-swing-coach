@@ -4,14 +4,14 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.26.1";
+export const APP_VERSION = "0.27.0";
 
 // Muss zu den Namen in sw.js passen (prüft tests/vendor.test.mjs)
 const CACHE_APP = "app-v2";
 const CACHE_VENDOR = "vendor-v1";
 
 // Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
-const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./level.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./wissen.js", "./nachschlagen.js", "./schaubilder.js", "./coach.js", "./pwa.js"];
+const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./level.js", "./fortschritt.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./wissen.js", "./nachschlagen.js", "./schaubilder.js", "./coach.js", "./pwa.js"];
 
 const $ = (id) => document.getElementById(id);
 
