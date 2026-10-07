@@ -90,7 +90,13 @@ async function aufraeumen() {
   chrome.kill();
   await Promise.race([beendet, warte(5000)]); // erst warten, bis Chrome fertig ist, sonst ist der Ordner noch belegt
   server.close();
-  fs.rmSync(profil, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  try {
+    fs.rmSync(profil, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+  } catch (fehler) {
+    // Chrome-Hilfsprozesse schreiben manchmal noch kurz in den Ordner (aufgefallen in der CI).
+    // Ein übrig gebliebener Temp-Ordner ist harmlos und soll einen bestandenen Test nicht kippen.
+    console.warn("Temp-Ordner nicht gelöscht:", fehler.code);
+  }
 }
 
 try {
