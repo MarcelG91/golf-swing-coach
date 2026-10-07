@@ -203,6 +203,24 @@ export function coachDaten({ kennzahlen, hintergrund = [], level, ansicht, recht
   };
 }
 
+// ---------------------------------------------------------------
+// „Für Claude kopieren“ (ohne API-Schlüssel): derselbe Anleitungstext und dieselben Daten wie
+// beim Coach, nur als ein Text zum Einfügen in einen eigenen Chat (z. B. claude.ai). Es wird
+// nichts gesendet – die App legt den Text nur in die Zwischenablage. Die Daten kommen aus
+// coachDaten(), enthalten also ebenfalls nur Kennzahlen.
+// ---------------------------------------------------------------
+export function baueKopierText(daten) {
+  return [
+    SYSTEMTEXT,
+    "",
+    "## Deine Aufgabe jetzt",
+    "Schreibe das Coaching als normalen Text auf Deutsch, gegliedert nach den oben beschriebenen Antwortfeldern",
+    "(Gesamtbild, Stärken, Fokus, …) mit je einer kurzen Überschrift. Gib kein JSON aus.",
+    "",
+    `Kennzahlen dieses Schwungs:\n${JSON.stringify(daten, null, 2)}`,
+  ].join("\n");
+}
+
 // Bei einer (sehr unwahrscheinlichen) Ablehnung springt automatisch ein anderes Modell ein
 // (fallbacks: "default" unten). Die API verlangt dafür diese Beta-Kennung als Kopfzeile.
 export const COACH_BETA = "server-side-fallback-2026-07-01";

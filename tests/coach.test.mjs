@@ -10,7 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  COACH_MODELL, COACH_BETA, SYSTEMTEXT, ANTWORT_SCHEMA, coachDaten, baueCoachAnfrage, coachKopfzeilen,
+  COACH_MODELL, COACH_BETA, baueKopierText, SYSTEMTEXT, ANTWORT_SCHEMA, coachDaten, baueCoachAnfrage, coachKopfzeilen,
   neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, verlaufKurz, kostenCent, leseAntwortText, leseAntwort, COACH_FEHLER,
 } from "../coach.js";
 import { TIPP_IDS, alleTipps } from "../tipps.js";
@@ -320,5 +320,15 @@ test("Kosten in Cent aus den Token-Zahlen, Fehlertexte vorhanden", () => {
   assert.equal(kostenCent(null), null);
   for (const art of ["schluessel", "guthaben", "zuViele", "ueberlastet", "verbindung", "abgelehnt", "unvollstaendig", "unbekannt"]) {
     assert.ok(COACH_FEHLER[art], art);
+  }
+});
+
+test("Für Claude kopieren: Anleitung plus dieselben Kennzahlen, nichts Privates", () => {
+  const daten = coachDaten({ kennzahlen: KENNZAHLEN, hintergrund: HINTERGRUND, level: "einsteiger", ansicht: "frontal" });
+  const text = baueKopierText(daten);
+  assert.ok(text.startsWith(SYSTEMTEXT), "enthält den festen Anleitungstext mit den geprüften Tipps");
+  assert.ok(text.includes(JSON.stringify(daten, null, 2)), "enthält genau die Coach-Daten");
+  for (const verboten of ["IMG_1234", "Range Hamburg", "2026-09-28", "punkte", "messwert"]) {
+    assert.ok(!text.includes(verboten), `${verboten} darf nicht im Kopiertext stehen`);
   }
 });

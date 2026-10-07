@@ -200,6 +200,15 @@
         </details>
       </section>
 
+      <!-- Für Claude kopieren: ohne Schlüssel, ohne Kosten – der Text landet nur in der Zwischenablage -->
+      <section id="kopierBox" class="coach" hidden>
+        <h3>Mit Claude besprechen</h3>
+        <p class="hinweis">Kein Schlüssel nötig: Die App kopiert deine Kennzahlen samt Anleitung. Du fügst sie selbst in einen Chat mit Claude ein (z. B. claude.ai). Die App sendet nichts.</p>
+        <button id="kopierKnopf" class="umriss">Für Claude kopieren</button>
+        <p id="kopierHinweis" class="hinweis" aria-live="polite"></p>
+        <textarea id="kopierText" class="vorschau" rows="6" readonly hidden aria-label="Text zum Kopieren"></textarea>
+      </section>
+
       <!-- Alle Kennzahlen nach Bereichen: Arme, Oberkörper, Drehung, Rhythmus -->
       <h3>Alle Kennzahlen</h3>
       <div id="kennzahlenListe" class="kennzahlen"></div>
@@ -435,6 +444,10 @@
         Kennzahlen des Schwungs mit Level, Ansicht und kurzem Verlauf an Anthropic (Claude). Nie gesendet
         werden Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch deine
         IP-Adresse und die Browserkennung.
+      </p>
+      <p class="hinweis">
+        <strong>„Für Claude kopieren“</strong> legt dieselben Kennzahlen nur in die Zwischenablage deines Geräts.
+        Die App sendet dabei nichts – was du danach in einen Chat einfügst, entscheidest du.
       </p>
       <p class="hinweis">
         Weitere Adressen kann die App nicht erreichen: Eine Sicherheitsregel im Browser (CSP) erlaubt
