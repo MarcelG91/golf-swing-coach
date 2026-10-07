@@ -265,3 +265,20 @@ test("Lernfortschritt (wissenFortschritt) übersteht „Alles löschen“ und en
   assert.match(allesLoeschen, /bleibt: \[[\s\S]*Lernfortschritt/, "Dialog nennt den Lernfortschritt unter „bleibt“");
   assert.ok(!allesLoeschen.includes("wissen"), "„Alles löschen“ fasst den Fortschritt nicht an");
 });
+
+// „Für Claude kopieren“ (0.30.0, Check 07.10.): Der Text geht nur in die Zwischenablage des Geräts.
+// Der Knopf darf nichts senden, nichts speichern und keine Daten außer den Coach-Kennzahlen verwenden.
+test("Für Claude kopieren: nur Zwischenablage, kein Netz, kein Speichern, nur Coach-Daten", () => {
+  const app = ohneKommentare(APP);
+  const von = app.indexOf("async function kopiereFuerClaude");
+  const bis = app.indexOf("function zeigeCoach()");
+  assert.ok(von > 0 && bis > von, "Abschnitt „Für Claude kopieren“ nicht gefunden");
+  const abschnitt = app.slice(von, bis);
+  assert.doesNotMatch(abschnitt, /fetch\(|sendBeacon|XMLHttpRequest|WebSocket|localStorage|sessionStorage|indexedDB|innerHTML|createObjectURL|speichere|loesche/);
+  // der Text kommt ausschließlich aus coachDatenJetzt() (dieselben Daten wie die Coach-Vorschau)
+  assert.match(abschnitt, /coachDatenJetzt\(\)\.then\(\(daten\) => baueKopierText\(daten\)\)/);
+  // Ausgabe nur per Zwischenablage oder als Text im Feld (value), nie als HTML
+  assert.match(abschnitt, /navigator\.clipboard\.(write|writeText)/);
+  // Der Datenschutzhinweis in den Einstellungen nennt den Knopf
+  assert.match(INDEX, /Für Claude kopieren[\s\S]{0,200}nur in die Zwischenablage/);
+});
