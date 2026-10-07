@@ -163,6 +163,13 @@ App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
   `api.anthropic.com` und liest die Antwort als Datenstrom selbst (`coach.js`). So sieht kein
   nachgeladener Fremdcode den Schlüssel. Gesendet wird genau dasselbe wie vorher.
 
+### Mit Freunden teilen: „Für Claude kopieren“
+
+Wer keinen API-Schlüssel hat, nutzt unter den Karten den Knopf **„Für Claude kopieren“**: Die App legt
+die Kennzahlen samt Anleitung für Claude in die Zwischenablage, und man fügt sie selbst in einen Chat
+(z. B. claude.ai) ein. Es wird nichts gesendet, es kostet die App nichts, und es gelten dieselben
+Daten wie beim Coach (nur Kennzahlen).
+
 ### So sehen die Tipps aus
 
 Nach der Analyse stehen die Baustellen als **Wisch-Karten** nebeneinander (zur Seite wischen,

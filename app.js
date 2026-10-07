@@ -63,7 +63,7 @@ import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, 
 import { GLOSSAR, GLOSSAR_GRUPPEN, IRRTUEMER, REGELN, REGEL_QUELLEN, AUSRUESTUNG, suche } from "./nachschlagen.js";
 import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
-import { coachDaten, baueCoachAnfrage, coachKopfzeilen, neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
+import { coachDaten, baueKopierText, baueCoachAnfrage, coachKopfzeilen, neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
 
 // Die Pfade müssen genau so in sw.js (VENDOR_DATEIEN) stehen – das prüft tests/vendor.test.mjs.
 const MP_MODUL = "./vendor/mediapipe-0.10.14/vision_bundle.mjs";
@@ -167,6 +167,11 @@ const coachSchluesselFeld = $("coachSchluessel");
 const coachSchluesselSpeichernBtn = $("coachSchluesselSpeichern");
 const coachSchluesselLoeschenBtn = $("coachSchluesselLoeschen");
 const coachSchluesselStatus = $("coachSchluesselStatus");
+// „Für Claude kopieren“ (ohne Schlüssel)
+const kopierBox = $("kopierBox");
+const kopierKnopf = $("kopierKnopf");
+const kopierHinweis = $("kopierHinweis");
+const kopierText = $("kopierText");
 const uebungsmodus = $("uebungsmodus");
 const uebungTitel = $("uebungTitel");
 const uebungZuBtn = $("uebungZu");
@@ -2115,8 +2120,43 @@ async function coachDatenJetzt() {
   });
 }
 
+// „Für Claude kopieren“: Text in die Zwischenablage legen. Es wird nichts gesendet.
+async function kopiereFuerClaude() {
+  kopierKnopf.disabled = true;
+  kopierText.hidden = true;
+  kopierHinweis.textContent = "";
+  // Der Text wird erst aus der Datenbank zusammengestellt. Safari erlaubt Kopieren aber nur direkt
+  // nach dem Fingertipp – deshalb bekommt die Zwischenablage ein „Versprechen“ (Promise) statt den fertigen Text.
+  const textVersprechen = coachDatenJetzt().then((daten) => baueKopierText(daten));
+  try {
+    if (window.ClipboardItem) {
+      const blobVersprechen = textVersprechen.then((t) => new Blob([t], { type: "text/plain" }));
+      await navigator.clipboard.write([new ClipboardItem({ "text/plain": blobVersprechen })]);
+    } else {
+      await navigator.clipboard.writeText(await textVersprechen);
+    }
+    kopierHinweis.textContent = "Kopiert ✓ – jetzt in einen Chat mit Claude einfügen.";
+  } catch (fehler) {
+    console.warn("Kopieren nicht möglich:", fehler);
+    // Rückfall: Text zum Markieren und Kopieren von Hand anzeigen
+    try {
+      kopierText.value = await textVersprechen;
+      kopierText.hidden = false;
+      kopierHinweis.textContent = "Automatisches Kopieren ging nicht. Tippe in das Feld, markiere alles und kopiere es.";
+    } catch (fehler2) {
+      console.error(fehler2);
+      kopierHinweis.textContent = "Der Text ließ sich nicht zusammenstellen.";
+    }
+  } finally {
+    kopierKnopf.disabled = false;
+  }
+}
+
 // Coach-Bereich unter den Karten: nur mit Schlüssel sichtbar
 function zeigeCoach() {
+  kopierBox.hidden = !bewertung;
+  kopierHinweis.textContent = "";
+  kopierText.hidden = true;
   coachBox.hidden = !leseEinstellung(SCHLUESSEL_NAME) || !bewertung;
   if (coachBox.hidden) return;
   coachAntwort.replaceChildren();
@@ -3512,6 +3552,7 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape" && aktiveUe
 coachSchluesselSpeichernBtn.addEventListener("click", speichereCoachSchluessel);
 coachSchluesselLoeschenBtn.addEventListener("click", loescheCoachSchluessel);
 coachKnopf.addEventListener("click", frageCoach);
+kopierKnopf.addEventListener("click", kopiereFuerClaude);
 coachVorschau.closest("details").addEventListener("toggle", async (e) => {
   if (!e.target.open || !bewertung) return;
   try {
