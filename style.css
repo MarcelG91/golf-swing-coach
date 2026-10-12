@@ -25,6 +25,11 @@
   --info: #7dd3fc;
   --auf-farbe: #06140c;      /* Schrift auf den farbigen Abzeichen */
   --rot-text: #ef4444;
+  /* Live-Rahmen (ampel.js): in Hell und Dunkel gleich, damit man ihn auch draußen sofort erkennt */
+  --ampel-gruen: #22c55e;
+  --ampel-gelb: #facc15;
+  --ampel-rot: #ef4444;
+  --ampel-grau: #8a8f98;
   --gelb-text: #facc15;
   /* Pfahlfarben auf dem Golfplatz (Schaubild in der Wissensseite) */
   --pfahl-weiss: #ffffff;
@@ -1135,3 +1140,27 @@ pre.vorschau {
 .vergleich-spalte figcaption { font-size: 0.8rem; color: var(--text-leise); margin-bottom: 4px; }
 .vergleich-bild canvas { width: 100%; height: auto; display: block; border-radius: var(--r-klein); background: #000; }
 .vergleich-zahlen { margin-top: 10px; font-size: 0.9rem; }
+
+/* Live-Kamera: Ampelrahmen und Kurzwort (Etappe 12c). Der Rahmen ist ein Schatten nach innen,
+   damit die Bühne nicht größer wird und das Bild nicht springt. */
+#liveBuehne { --ampel: transparent; box-shadow: inset 0 0 0 10px var(--ampel); }
+#liveBuehne.ampel-gruen { --ampel: var(--ampel-gruen); }
+#liveBuehne.ampel-gelb { --ampel: var(--ampel-gelb); }
+#liveBuehne.ampel-rot { --ampel: var(--ampel-rot); }
+#liveBuehne.ampel-grau { --ampel: var(--ampel-grau); }
+.live-wort {
+  position: absolute;
+  left: 50%;
+  top: 6%;
+  transform: translateX(-50%);
+  max-width: 90%;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--ampel);
+  color: #111;
+  font-size: clamp(1.2rem, 6vw, 2rem);
+  font-weight: 800;
+  text-align: center;
+  pointer-events: none;
+}
+.live-wort:empty { display: none; }

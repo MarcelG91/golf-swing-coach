@@ -45,6 +45,7 @@ const TIPPS = {
       kurz: "Du greifst nach dem Ball",
       warum: "Greifst du nach dem Ball, sind die Arme angespannt. Der Schwung wird flach und du kippst leicht nach vorne.",
       gedanke: "Arme hängen lassen",
+      wort: "Arme hängen lassen",
       uebung: { name: "Arme baumeln lassen", wiederholungen: 10, schritte: [
         "Ansprechhaltung ohne Schläger.",
         "Arme 3 Sekunden locker hängen lassen.",
@@ -55,6 +56,7 @@ const TIPPS = {
       kurz: "Hände zu nah am Körper",
       warum: "Sind die Hände zu nah am Körper, haben die Arme im Abschwung keinen Platz. Du musst ausweichen oder dich aufrichten.",
       gedanke: "Eine Faust Platz",
+      wort: "Etwas mehr Abstand",
       uebung: { name: "Faust-Check", wiederholungen: 5, schritte: [
         "Ansprechhaltung mit Schläger.",
         `${gross(s.h)} Hand als Faust zwischen Griffende und ${s.fen} Oberschenkel.`,
@@ -69,12 +71,14 @@ const TIPPS = {
       kurz: "Du stehst zu aufrecht",
       warum: "Stehst du aufrecht, dreht sich der Oberkörper eher waagerecht. Der Schwung wird flach, die Treffer oft dünn.",
       gedanke: "Aus der Hüfte kippen",
+      wort: "Mehr vorneigen",
       uebung: SCHLAEGER_AM_RUECKEN(),
     }),
     vorgebeugt: () => ({
       kurz: "Du beugst dich zu weit vor",
       warum: "Weit vorgebeugt fehlen dir Gleichgewicht und Drehfreiheit. Oft kippst du im Schwung nach vorne oder richtest dich auf.",
       gedanke: "Gewicht auf die Fußmitte",
+      wort: "Etwas aufrichten",
       uebung: SCHLAEGER_AM_RUECKEN(),
     }),
     gut: "Gute Vorneigung beim Ansprechen",
@@ -85,6 +89,7 @@ const TIPPS = {
       kurz: `${s.Fer} Arm knickt im Treffmoment`,
       warum: "Knickt der Arm, wird dein Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge: dünne oder getoppte Bälle und weniger Weite.",
       gedanke: "Lange Arme durch den Ball",
+      wort: "Arm lang lassen",
       uebung: { name: "Hüfte bis Hüfte", wiederholungen: 20, schritte: [
         "Nur bis Hüfthöhe ausholen.",
         "Bis Hüfthöhe durchschwingen.",
@@ -99,6 +104,7 @@ const TIPPS = {
       kurz: "Schultern drehen nicht voll",
       warum: "Ohne volle Drehung müssen die Arme die Arbeit machen. Das kostet Weite und führt oft zu einem Abschwung von außen – dem Slice.",
       gedanke: "Rücken zum Ziel",
+      wort: "Mehr Schulterdrehung",
       uebung: { name: "Schläger vor der Brust", wiederholungen: 10, schritte: [
         "Schläger quer vor die Brust, Ansprechhaltung.",
         `Drehen, bis das ${s.f} Schlägerende ungefähr auf den Ball zeigt.`,
@@ -114,6 +120,7 @@ const TIPPS = {
       kurz: "Arme heben statt drehen",
       warum: "Heben die Arme den Schläger, statt dass der Oberkörper dreht, kommt er steil von oben zurück. Der Treffpunkt wechselt von Schlag zu Schlag.",
       gedanke: "Drehen statt heben",
+      wort: "Drehen statt heben",
       uebung: { name: "Griffende zum Bauchnabel", wiederholungen: 10, schritte: [
         "Tief am Schaft greifen, Griffende an den Bauchnabel.",
         "Nur mit der Brust bis Hüfthöhe ausholen.",
@@ -128,6 +135,7 @@ const TIPPS = {
       kurz: "Oberkörper neigt zum Ziel",
       warum: `Deine ${s.h} Hand greift tiefer, also gehört auch die ${s.h} Schulter tiefer. Sonst stehst du schon „vor dem Ball“ – das begünstigt Slices.`,
       gedanke: `${gross(s.h)} Schulter etwas tiefer`,
+      wort: `${gross(s.h)} Schulter tiefer`,
       uebung: { name: "Hand hängen lassen", wiederholungen: 10, schritte: [
         "Ansprechhaltung einnehmen.",
         `${gross(s.h)} Hand vom Griff nehmen, locker hängen lassen.`,
@@ -138,6 +146,7 @@ const TIPPS = {
       kurz: "Zu stark vom Ziel weg geneigt",
       warum: "Zu viel Neigung verlagert den tiefsten Punkt des Schwungs nach hinten. Dann triffst du oft zuerst den Boden, dann den Ball.",
       gedanke: "Nur leicht neigen",
+      wort: "Weniger neigen",
       uebung: null,
     }),
     gut: "Gute Ausgangsposition hinter dem Ball",
@@ -148,6 +157,7 @@ const TIPPS = {
       kurz: "Oberkörper kippt am Top zum Ziel",
       warum: "Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft und belastet den unteren Rücken.",
       gedanke: "Brustbein bleibt hinter dem Ball",
+      wort: "Brustbein hinter Ball",
       uebung: { name: "Spiegel-Check", wiederholungen: 10, schritte: [
         "Frontal vor einen Spiegel stellen.",
         "Langsam zum Top ausholen, anhalten.",
@@ -162,6 +172,7 @@ const TIPPS = {
       kurz: "Oberkörper im Treffmoment zu gerade",
       warum: `Nur wenn die ${s.h} Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.`,
       gedanke: `${gross(s.h)} Schulter geht nach unten`,
+      wort: `${gross(s.h)} Schulter runter`,
       uebung: { name: "Treffposition in Zeitlupe", wiederholungen: 10, schritte: [
         "Langsam vom Top in die Treffposition.",
         "Anhalten und im Spiegel prüfen.",
@@ -177,6 +188,7 @@ const TIPPS = {
       kurz: "Hüfte schiebt zur Seite",
       warum: "Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.",
       gedanke: "Drehen statt schieben",
+      wort: "Drehen statt schieben",
       uebung: { name: "Stab-Übung", wiederholungen: 10, schritte: [
         `Stab senkrecht direkt außen neben den ${s.hen} Fuß stecken.`,
         "Langsam ausholen – die Hüfte berührt ihn nicht.",
@@ -191,6 +203,7 @@ const TIPPS = {
       kurz: "Rückschwung zu hastig",
       warum: "Ein hastiger Rückschwung bringt Arme und Körper aus dem Takt. Gute Spieler brauchen zurück etwa dreimal so lange wie nach vorne.",
       gedanke: "Drei zurück, eins runter",
+      wort: "Langsamer zurückschwingen",
       uebung: { name: "Mitzählen", wiederholungen: 10, schritte: [
         "Starte den Rückschwung auf „und“.",
         "„Eins – zwei – drei“: auf „drei“ bist du oben.",
@@ -201,6 +214,7 @@ const TIPPS = {
       kurz: "Rückschwung zu zäh",
       warum: "Ist der Rückschwung sehr zäh, fehlt der Schwung für den Rückweg. Der Abschwung wird dann hektisch oder zögerlich.",
       gedanke: "Schwingen wie ein Pendel",
+      wort: "Flüssig schwingen",
       uebung: { name: "Pendel", wiederholungen: 10, schritte: [
         "Flüssig zurückschwingen, oben keine Pause.",
         "Im gleichen Rhythmus durchschwingen.",
@@ -214,6 +228,7 @@ const TIPPS = {
       kurz: "Du richtest dich auf",
       warum: "Richtest du dich auf, ändert sich der Abstand zum Ball. Der Schläger kommt zu hoch an – getoppte oder dünne Schläge.",
       gedanke: `${gross(s.hes)} Knie bleibt gebeugt`,
+      wort: "Knie gebeugt lassen",
       uebung: { name: "Später hochschauen", wiederholungen: 10, schritte: [
         "Halbe Schwünge.",
         `${gross(s.hes)} Knie bleibt bis nach dem Treffen gebeugt.`,
@@ -224,6 +239,7 @@ const TIPPS = {
       kurz: "Du sackst ab",
       warum: "Sackst du ab, kommt der Schläger zu tief. Er trifft zuerst den Boden, dann den Ball – ein fetter Schlag.",
       gedanke: "Größe halten",
+      wort: "Größe halten",
       uebung: { name: "Höhe halten", wiederholungen: 10, schritte: [
         "Ansprechhaltung, Knie leicht gebeugt.",
         "Halbe Schwünge, die Körpergröße bleibt gleich.",
@@ -237,6 +253,7 @@ const TIPPS = {
       kurz: "Kopf wandert vor den Ball",
       warum: "Wandert der Kopf vor den Ball, kommt der Schläger steil von oben. Gute Spieler halten den Kopf im Treffmoment hinter dem Ball.",
       gedanke: "Kopf hinter dem Ball",
+      wort: "Kopf hinter Ball",
       uebung: { name: "Tee-Blick", wiederholungen: 10, schritte: [
         "Tee ein paar Zentimeter hinter den Ball stecken.",
         "Beim Schwung auf das Tee schauen.",
@@ -247,6 +264,7 @@ const TIPPS = {
       kurz: "Kopf schiebt zur Seite",
       warum: "Schiebst du Kopf und Oberkörper zur Seite, musst du im Abschwung genau zurück. Drehen ist leichter zu wiederholen als schieben.",
       gedanke: "Drehen wie im Fass",
+      wort: "Kopf ruhig halten",
       uebung: { name: "Enges Fass", wiederholungen: 10, schritte: [
         "Stell dir ein enges Fass um dich vor.",
         "Ausholen, ohne die Fasswand zu berühren.",
@@ -260,6 +278,7 @@ const TIPPS = {
       kurz: "Gewicht bleibt hinten",
       warum: "Bleibt das Gewicht hinten, fehlt Kraft im Treffmoment. Der Ball fliegt oft zu hoch oder zur Seite weg.",
       gedanke: "Finish halten",
+      wort: "Gewicht nach vorn",
       uebung: { name: "Finish 3 Sekunden", wiederholungen: 10, schritte: [
         "Nach dem Schlag im Finish stehen bleiben.",
         `Gewicht ${s.f === "linke" ? "links" : "rechts"}, ${s.her} Fuß nur auf der Spitze.`,
@@ -274,6 +293,7 @@ const TIPPS = {
       kurz: "Oberkörper richtet sich auf",
       warum: "Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Typische Folgen sind Toppen oder Shanks.",
       gedanke: "Po bleibt hinten",
+      wort: "Po hinten lassen",
       uebung: { name: "Po an die Wand", wiederholungen: 10, schritte: [
         "Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.",
         `Ausholen: die ${s.h} Po-Seite bleibt an der Wand.`,
@@ -289,6 +309,7 @@ const TIPPS = {
       kurz: "Hüfte schiebt zum Ball",
       warum: "Schiebt die Hüfte zum Ball, nimmt sie den Armen den Platz. Du musst ausweichen – der Schläger kommt unsauber an den Ball.",
       gedanke: "Po zur Tasche",
+      wort: "Po zur Tasche",
       uebung: { name: "Golftasche hinter dem Po", wiederholungen: 10, schritte: [
         "Golftasche direkt hinter den Po stellen.",
         `Rückschwung: die ${s.h} Po-Seite berührt die Tasche.`,
