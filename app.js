@@ -31,6 +31,7 @@ import { starteAufnahme, kannAufnehmen } from "./aufnahme.js";
 import { clipFenster, findeStueck, schwungImStueck } from "./liveclip.js";
 import { neueLiveErkennung } from "./liveschwung.js";
 import { ampel } from "./ampel.js";
+import { planeAbschnitte } from "./phasenabspieler.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
 // Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
@@ -2873,12 +2874,7 @@ async function holeVergleichsbilder(schwung) {
     kleinesVideo.playsInline = true;
     kleinesVideo.preload = "auto";
     kleinesVideo.src = adresse;
-    // Warten, bis das erste Bild da ist (höchstens 10 s)
-    await new Promise((ok, fehler) => {
-      const frist = setTimeout(() => fehler(new Error("Clip lädt zu langsam")), 10000);
-      kleinesVideo.addEventListener("loadeddata", () => { clearTimeout(frist); ok(); }, { once: true });
-      kleinesVideo.addEventListener("error", () => { clearTimeout(frist); fehler(new Error("Clip nicht lesbar")); }, { once: true });
-    });
+    await warteAufErstesBild(kleinesVideo);
     const skala = Math.min(1, 480 / Math.max(kleinesVideo.videoWidth, kleinesVideo.videoHeight));
     const bilder = {};
     for (const [phase] of VERGLEICH_PHASEN) {
@@ -2909,6 +2905,112 @@ async function holeVergleichsbilder(schwung) {
   }
 }
 
+// Wartet, bis das erste Bild eines Clips da ist (höchstens 10 s)
+function warteAufErstesBild(clipVideo) {
+  return new Promise((ok, fehler) => {
+    const frist = setTimeout(() => fehler(new Error("Clip lädt zu langsam")), 10000);
+    clipVideo.addEventListener("loadeddata", () => { clearTimeout(frist); ok(); }, { once: true });
+    clipVideo.addEventListener("error", () => { clearTimeout(frist); fehler(new Error("Clip nicht lesbar")); }, { once: true });
+  });
+}
+
+// Phasen-Abspieler: beide Clips nebeneinander abspielen, an den Phasen ausgerichtet.
+// Geplant wird in phasenabspieler.js (jeder Abschnitt dauert bei beiden gleich lang).
+// Hier: Clips laden, Abschnitt für Abschnitt abspielen. Wer einen Abschnitt zuerst beendet,
+// wartet auf den anderen. seiten = [{ schwung, bildPlatz }, { … }] (links/rechts).
+// Gibt eine Funktion zurück, die alles anhält und freigibt (Videos, Adressen).
+async function spieleVergleichAb(seiten, tempo, beiEnde, beiFehler, istNochDa) {
+  const abschnitte = planeAbschnitte(seiten[0].schwung.phasen, seiten[1].schwung.phasen, tempo);
+  if (!abschnitte) throw new Error("Phasen fehlen");
+  const teile = []; // je Seite: { video, leinwand, zeichner, posedaten, adresse, rueckruf }
+  let gestoppt = false;
+  const stoppe = () => {
+    gestoppt = true;
+    for (const t of teile) {
+      if (t.rueckruf !== null) t.video.cancelVideoFrameCallback(t.rueckruf);
+      t.video.pause();
+      // Videoelement loslassen (iPhone-Safari hat nur wenige Video-Decoder), Adresse freigeben
+      t.video.removeAttribute("src");
+      t.video.load();
+      URL.revokeObjectURL(t.adresse);
+    }
+  };
+  try {
+    for (const [i, seite] of seiten.entries()) {
+      const clip = await ladeMedium(`${seite.schwung.id}/video`);
+      if (!clip) throw new Error("Das Video wurde gelöscht");
+      const t = { video: document.createElement("video"), leinwand: document.createElement("canvas"), rueckruf: null };
+      t.adresse = URL.createObjectURL(clip);
+      teile.push(t); // gleich eintragen: stoppe() gibt die Adresse auch bei einem Fehler frei
+      t.posedaten = await ladeMedium(`${seite.schwung.id}/posedaten`);
+      t.video.muted = true;
+      t.video.playsInline = true;
+      t.video.preload = "auto";
+      t.video.src = t.adresse;
+      await warteAufErstesBild(t.video);
+      await springe(t.video, abschnitte[0].von[i], 5000);
+      t.zeichner = new DrawingUtils(t.leinwand.getContext("2d"));
+      const rahmen = neu("div", "abspiel-rahmen");
+      rahmen.append(t.video, t.leinwand);
+      seite.bildPlatz.replaceChildren(rahmen);
+    }
+  } catch (fehler) {
+    stoppe();
+    throw fehler;
+  }
+
+  const zeichneSkelettVergleich = (t, zeit) => {
+    if (t.leinwand.width !== t.video.videoWidth) {
+      t.leinwand.width = t.video.videoWidth;
+      t.leinwand.height = t.video.videoHeight;
+    }
+    const c = t.leinwand.getContext("2d");
+    c.clearRect(0, 0, t.leinwand.width, t.leinwand.height);
+    const punkte = t.posedaten?.[Math.round(zeit / BILD_DAUER)]?.punkte;
+    if (punkte) {
+      t.zeichner.drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, { color: GRUEN, lineWidth: Math.max(2, t.leinwand.width / 120) });
+    }
+  };
+  teile.forEach((t, i) => zeichneSkelettVergleich(t, abschnitte[0].von[i]));
+
+  let abschnitt = 0;
+  const angekommen = [false, false];
+  const startAbschnitt = () => {
+    angekommen[0] = angekommen[1] = false;
+    teile.forEach((t, i) => {
+      t.video.playbackRate = abschnitte[abschnitt].rate[i];
+      t.video.play().catch((fehler) => { stoppe(); beiFehler(fehler); });
+      t.rueckruf = t.video.requestVideoFrameCallback((_jetzt, info) => bild(i, info));
+    });
+  };
+  function bild(i, info) {
+    const t = teile[i];
+    t.rueckruf = null;
+    if (gestoppt) return;
+    if (!istNochDa()) { // der Filter wurde gewechselt, die Anzeige ist weg
+      stoppe();
+      return;
+    }
+    zeichneSkelettVergleich(t, info.mediaTime);
+    if (info.mediaTime >= abschnitte[abschnitt].bis[i] - 0.001) {
+      t.video.pause(); // wartet auf den anderen Clip
+      angekommen[i] = true;
+      if (angekommen[0] && angekommen[1]) {
+        if (abschnitt === abschnitte.length - 1) {
+          beiEnde();
+          return;
+        }
+        abschnitt++;
+        startAbschnitt();
+      }
+      return;
+    }
+    t.rueckruf = t.video.requestVideoFrameCallback((_jetzt, neueInfo) => bild(i, neueInfo));
+  }
+  startAbschnitt();
+  return stoppe;
+}
+
 async function baueVergleich(kasten, { vorher, nachher }, namen) {
   const hinweis = neu("p", "hinweis", "Lade Bilder aus den gespeicherten Clips …");
   kasten.append(hinweis);
@@ -2920,13 +3022,21 @@ async function baueVergleich(kasten, { vorher, nachher }, namen) {
     teil.append(neu("figcaption", "", `${titel} · ${deutschesDatum(schwung.datum)} · ${schwung.schlaeger}`));
     const bildPlatz = neu("div", "vergleich-bild");
     teil.append(bildPlatz);
-    return { teil, bildPlatz, bilder };
+    return { teil, bildPlatz, bilder, schwung };
   };
   const links = spalte("Vorher", vorher, bilderVorher);
   const rechts = spalte("Nachher", nachher, bilderNachher);
 
   const knoepfe = neu("div", "vergleich-phasen");
+  let stoppeAbspielen = null; // Funktion, die einen laufenden Abspieler anhält (null = keiner)
+  let abspielLaeuft = false;
+  let aktuellePhase = "top";
   const zeigePhase = (phase) => {
+    stoppeAbspielen?.();
+    stoppeAbspielen = null;
+    abspielLaeuft = false;
+    aktuellePhase = phase;
+    abspielKnopf.textContent = "▶ Beide abspielen";
     for (const s of [links, rechts]) {
       const bild = s.bilder?.[phase];
       s.bildPlatz.replaceChildren(bild ? bild : neu("p", "hinweis", s.bilder ? "Für diese Phase gibt es kein Bild." : "Das Video wurde gelöscht."));
@@ -2942,9 +3052,51 @@ async function baueVergleich(kasten, { vorher, nachher }, namen) {
     knoepfe.append(knopf);
   }
 
+  // Phasen-Abspieler: nur wenn beide Clips da sind und beide Schwünge vollständige Phasen haben
+  const abspielZeile = neu("div", "vergleich-abspielen");
+  const abspielKnopf = neu("button", "klein", "▶ Beide abspielen");
+  abspielKnopf.type = "button";
+  const tempoWahl = neu("select");
+  tempoWahl.setAttribute("aria-label", "Abspieltempo");
+  for (const [wert, text] of [["0.25", "0,25×"], ["0.5", "0,5×"], ["1", "1×"]]) {
+    const option = neu("option", "", text);
+    option.value = wert;
+    option.selected = wert === "0.5";
+    tempoWahl.append(option);
+  }
+  const abspielMeldung = neu("p", "hinweis");
+  abspielKnopf.addEventListener("click", async () => {
+    if (abspielLaeuft) { // Stopp: zurück zu den Standbildern der gewählten Phase
+      zeigePhase(aktuellePhase);
+      return;
+    }
+    abspielKnopf.disabled = true; // wird im finally wieder frei
+    abspielMeldung.textContent = "";
+    stoppeAbspielen?.();
+    stoppeAbspielen = null;
+    try {
+      stoppeAbspielen = await spieleVergleichAb(
+        [links, rechts],
+        Number(tempoWahl.value),
+        () => { abspielLaeuft = false; abspielKnopf.textContent = "▶ Nochmal"; },
+        (fehler) => { abspielMeldung.textContent = `Das Abspielen ging nicht (${fehler.message || fehler.name}).`; },
+        () => kasten.isConnected
+      );
+      abspielLaeuft = true;
+      abspielKnopf.textContent = "⏹ Stopp";
+    } catch (fehler) {
+      abspielMeldung.textContent = `Das Abspielen ging nicht (${fehler.message || fehler.name}).`;
+    } finally {
+      abspielKnopf.disabled = false;
+    }
+  });
+  if (bilderVorher && bilderNachher && planeAbschnitte(vorher.phasen, nachher.phasen)) {
+    abspielZeile.append(abspielKnopf, tempoWahl);
+  }
+
   const paarBilder = neu("div", "vergleich-paar");
   paarBilder.append(links.teil, rechts.teil);
-  hinweis.replaceWith(knoepfe, paarBilder);
+  hinweis.replaceWith(knoepfe, abspielZeile, abspielMeldung, paarBilder);
   if (!bilderVorher && !bilderNachher) {
     kasten.append(neu("p", "hinweis", "Die Videos dieser Schwünge wurden gelöscht – ein Bildvergleich ist nicht möglich. Die Kennzahlen siehst du unten."));
   }

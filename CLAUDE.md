@@ -89,6 +89,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `livekamera.js` · `liveschwung.js` · `ampel.js` · `aufnahme.js` · `liveclip.js` | Live-Kamera (Etappe 12): Kamera + Zeitmessung · Schwung live erkennen · Ampelrahmen + Kurzwort · versetzte 16-s-Aufnahmestücke im Arbeitsspeicher · Schwung ↔ Stück zuordnen und aufs Raster umrechnen (alles außer Kamera/Aufnahme reine Rechenlogik) |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
+| `phasenabspieler.js` | Phasen-Abspieler im Fortschritt (Vorher/Nachher): Abspielgeschwindigkeit je Abschnitt, damit die Phasen bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik; Abspielen in `app.js`) |
 | `fortschritt.js` | Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick aus gespeicherten Schwüngen (reine Rechenlogik, Etappe 10) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `wissen.js` · `nachschlagen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
@@ -143,7 +144,7 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
 5. ~~Etappe 10: Fortschritt~~ – **erledigt mit 0.27.0 (`fortschritt.js`) und 0.28.0 (Anzeige)**: Meine Schwünge → „📈 Fortschritt“
    mit Wochenrückblick, Fokus + Übung, Meilensteinen, Verlauf und Trend je Kennzahl (nach Ansicht und Schlägergruppe).
    **Vorher/Nachher erledigt mit 0.29.0** (Branch `vorher-nachher`): ältester gegen neuester Schwung, je Phase ein Bild aus dem
-   Clip mit Skelett (fehlt der Clip: Hinweis). **Offen: Phasen-Abspieler** (beide Clips synchron, an den Phasen ausgerichtet).
+   Clip mit Skelett (fehlt der Clip: Hinweis). **Phasen-Abspieler erledigt mit 0.36.0** (`phasenabspieler.js`): beide Clips nebeneinander, jeder Abschnitt (Ansprechen→Top→Treffmoment→Finish) bei beiden gleich lang, Tempo 0,25×/0,5×/1×.
    Offen bleibt der iPhone-Test mit echten Schwüngen über mehrere Tage.
 6. ~~Sicherheits-Etappe C1 + C3~~ – **erledigt mit 0.26.0** (Branch `sicherheit-c1-c3`): MediaPipe und Modell in
    `vendor/` mit Prüfsummen, Coach mit eigenem `fetch` statt SDK, CSP, Datenschutzhinweis (V4). Offen nur der
