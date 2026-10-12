@@ -66,6 +66,12 @@ const server = http.createServer((anfrage, antwort) => {
   if (datei.endsWith(path.sep)) datei += "index.html";
   fs.readFile(datei, (fehler, daten) => {
     if (fehler) { antwort.writeHead(404).end(); return; }
+    // Nur für diesen Test: app.js bekommt am Ende einen Zugang zu drei Live-Funktionen, damit der
+    // Test einen erkannten Schwung einspeisen kann (die Testkamera zeigt ja keinen Golfschwung).
+    // Die echte app.js im Repo enthält das nicht.
+    if (datei === path.join(WURZEL, "app.js")) {
+      daten = Buffer.concat([daten, Buffer.from("\nwindow.__live = { neuerLiveSchwung, beendeLive, setzeSeitenverhaeltnis: (r) => { liveSeitenverhaeltnis = r; } };\n")]);
+    }
     antwort.writeHead(200, { "content-type": MIME[path.extname(datei)] || "application/octet-stream" });
     antwort.end(daten);
   });
@@ -242,6 +248,58 @@ try {
   pruefe(keinSchwung, "Live beenden ohne Schwung: nichts gespeichert");
   pruefe(await auswerten(`document.getElementById("liveBox").hidden`), "Live-Ansicht ist nach dem Beenden zu");
 
+  // Ganzer Weg eines erkannten Schwungs: Live starten → Schwung einspeisen (echte Testdaten) →
+  // Beenden → Clip aus dem Aufnahme-Stück schneiden → Sitzung in der Datenbank prüfen
+  const vorher = await auswerten(`(async () => (await (await import("./speicher.js")).ladeSitzungen()).length)()`);
+  await auswerten(`(() => { document.getElementById("liveSchlaeger").value = "Eisen 7"; document.getElementById("liveStartKnopf").click(); })()`);
+  await wartenBis(`/ms pro Bild/.test(document.getElementById("liveWerte")?.textContent || "")`, 30);
+  const bisUhr = await auswerten(`(async () => {
+    const { neueLiveErkennung } = await import("./liveschwung.js");
+    const daten = await (await fetch("./tests/daten/faceon_amateur.json")).json();
+    const verhaeltnis = daten.breite / daten.hoehe;
+    window.__live.setzeSeitenverhaeltnis(verhaeltnis);
+    const punkte = (b) => b.punkte.map(([x, y]) => ({ x, y }));
+    const t0 = performance.now() / 1000 + 6; // Schwung beginnt 6 s nach jetzt, also sicher im Aufnahme-Stück
+    const erster = daten.bilder.find((b) => b.punkte), letzter = daten.bilder.findLast((b) => b.punkte);
+    const bilder = [];
+    for (let t = -3; t < 0; t += 1 / 30) bilder.push({ zeit: t0 + t, punkte: punkte(erster) });
+    for (const b of daten.bilder) bilder.push({ zeit: t0 + b.zeit - daten.bilder[0].zeit, punkte: b.punkte ? punkte(b) : null });
+    const ende = bilder.at(-1).zeit;
+    for (let i = 1; i <= 90; i++) bilder.push({ zeit: ende + i / 30, punkte: punkte(letzter) });
+    const live = neueLiveErkennung(verhaeltnis);
+    let schwung = null;
+    for (const b of bilder) schwung = live.neuesBild(b) || schwung;
+    if (!schwung) return -1;
+    window.__live.neuerLiveSchwung(schwung);
+    return schwung.phasen.finish.zeit + 1.5; // so lange muss das Aufnahme-Stück mindestens laufen
+  })()`);
+  pruefe(bisUhr > 0, "Testschwung wird live erkannt");
+  // Warten, bis die Uhr den Schwung überholt hat, dann beenden und speichern
+  await wartenBis(`performance.now() / 1000 > ${bisUhr}`, 40);
+  await auswerten(`document.getElementById("liveStoppKnopf").click()`);
+  const gespeichert = await wartenBis(`/gespeichert/.test(document.getElementById("status")?.textContent || "")`, 60);
+  const statusText = await auswerten(`document.getElementById("status")?.textContent`);
+  pruefe(gespeichert, `Live-Schwung wird gespeichert (steht: „${statusText}“)`);
+  pruefe(!/ohne Video/.test(statusText), "…mit Video");
+  const ergebnis = await auswerten(`(async () => {
+    const speicher = await import("./speicher.js");
+    const sitzungen = await speicher.ladeSitzungen();
+    const neu = sitzungen.filter((x) => x.notiz === "Live-Aufnahme");
+    if (neu.length !== 1) return { fehler: "Sitzungen: " + neu.length };
+    const [schwung] = await speicher.ladeSchwuengeDerSitzung(neu[0]);
+    const video = await speicher.ladeMedium(schwung.id + "/video");
+    const posedaten = await speicher.ladeMedium(schwung.id + "/posedaten");
+    const vorschau = await speicher.ladeMedium(schwung.id + "/vorschau");
+    return { gesamt: sitzungen.length, schlaeger: schwung.schlaeger, name: schwung.videoName, videoBytes: video?.size ?? 0,
+      posen: posedaten?.length ?? 0, mitSkelett: posedaten?.filter((p) => p.punkte).length ?? 0, vorschau: vorschau?.size ?? 0,
+      kennzahlen: schwung.kennzahlen?.length ?? 0, phasenOk: ["ansprechen", "top", "treffmoment", "finish"].every((n) => Number.isFinite(schwung.phasen?.[n]?.zeit)) };
+  })()`);
+  pruefe(!ergebnis.fehler && ergebnis.gesamt === vorher + 1, `Genau eine neue Sitzung in der Datenbank (${JSON.stringify(ergebnis)})`);
+  pruefe(ergebnis.schlaeger === "Eisen 7" && ergebnis.name === "Live-Aufnahme", "Schläger und Name stimmen");
+  pruefe(ergebnis.videoBytes > 1000, `Clip ist gespeichert (${ergebnis.videoBytes} Bytes)`);
+  pruefe(ergebnis.mitSkelett > 30 && ergebnis.vorschau > 100, "Posedaten mit Skelett und Vorschaubild sind gespeichert");
+  pruefe(ergebnis.kennzahlen > 5 && ergebnis.phasenOk, "Kennzahlen und alle vier Phasen sind gespeichert");
+
   // Aufnahme-Stück der Testkamera aufnehmen und daraus einen Clip schneiden (der Weg, den ein
   // erkannter Schwung beim Speichern geht)
   const clipGroesse = await auswerten(`(async () => {
@@ -267,7 +325,7 @@ try {
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
   // rechnet auf der CPU weiter (Statuszeile "… CPU"). Das ist gewollt und kein Fehler.
-  const erwartet = /kGpuService|emscripten_webgl_create_context|Source Location Trace|calculator_graph|graph_utils/;
+  const erwartet = /XNNPACK|kGpuService|emscripten_webgl_create_context|Source Location Trace|calculator_graph|graph_utils/;
   const echteFehler = konsolenFehler.filter((text) => !erwartet.test(text));
   pruefe(echteFehler.length === 0, `Keine Fehler in der Konsole${echteFehler.length ? ": " + echteFehler.join(" | ") : ""}`);
   const csp = await auswerten(`window.__csp`);
