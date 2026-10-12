@@ -279,6 +279,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
+| `livekamera.js` | Live-Kamera (Etappe 12a, Test): Kamera starten, Bild für Bild das Skelett rechnen und die Geschwindigkeit messen. Nichts wird gespeichert |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb (eigene Dateien „erst Netz“, `vendor/` „Speicher zuerst“) |
 | `vendor/` | Pose-Erkennung, selbst ausgeliefert: MediaPipe 0.10.14 (Modul, WASM-Lader und Rechenkern) und das Pose-Modell „full“, mit Lizenz. Herkunft und Prüfung in `vendor/README.md`. Nie von Hand ändern – neue Version = neuer Ordner |

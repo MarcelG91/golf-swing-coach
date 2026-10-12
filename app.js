@@ -26,6 +26,7 @@ import { ordneEin, wichtigsteBaustellen, KATEGORIEN } from "./technik.js";
 import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
 import { analysiereVideo, springe, pruefeVideoLaenge } from "./videoanalyse.js";
+import { starteKamera, starteSchleife } from "./livekamera.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
 // Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
@@ -2758,6 +2759,7 @@ let vorschauAdressen = []; // Adressen der Vorschaubilder – werden beim Neuzei
 // Oben umschalten zwischen "Analyse" und "Meine Schwünge"
 function zeigeBereich(welcher) {
   if (!aktuellesLevel) welcher = "einstellungen";
+  if (welcher !== "analyse") stoppeLive(); // Kamera nie im Hintergrund weiterlaufen lassen
   analyseBereich.hidden = welcher !== "analyse";
   gespeichertBereich.hidden = welcher !== "gespeichert";
   wissenBereich.hidden = welcher !== "wissen";
@@ -3440,6 +3442,88 @@ function schliesseGeloeschteSitzung() {
   zeigeBereich("gespeichert");
   setStatus("Gelöscht.");
 }
+
+// ---------------------------------------------------------------
+// Live-Kamera (Etappe 12a, Machbarkeitstest): Kamerabild + Skelett + Messwerte.
+// Nichts wird gespeichert oder gesendet. Die Rechnung steht in livekamera.js.
+// ---------------------------------------------------------------
+const liveStartKnopf = $("liveStartKnopf");
+const liveStoppKnopf = $("liveStoppKnopf");
+const liveBox = $("liveBox");
+const liveBuehne = $("liveBuehne");
+const liveVideo = $("liveVideo");
+const liveLeinwand = $("liveOverlay");
+const liveWerte = $("liveWerte");
+const liveCtx = liveLeinwand.getContext("2d");
+const liveZeichner = new DrawingUtils(liveCtx);
+let liveKameraStopp = null; // Funktionen zum Beenden (null = Live läuft nicht)
+let liveSchleifeStopp = null;
+let liveSperre = null; // Wake Lock: Bildschirm bleibt an, solange die Kamera läuft
+
+// Pose-Erkennung für ein Live-Bild (gleiche Zeitstempel-Regel wie erkennePose)
+function erkenneLive(quelle) {
+  const zeitstempel = Math.max(performance.now(), letzterZeitstempel + 1);
+  letzterZeitstempel = zeitstempel;
+  return poseLandmarker.detectForVideo(quelle, zeitstempel).landmarks[0] || null;
+}
+
+function zeichneLive(punkte, werte) {
+  // Leinwand an die echte Bildgröße anpassen (steht erst nach dem Start fest)
+  if (liveLeinwand.width !== liveVideo.videoWidth) {
+    liveLeinwand.width = liveVideo.videoWidth;
+    liveLeinwand.height = liveVideo.videoHeight;
+    liveBuehne.style.setProperty("--ratio", liveVideo.videoWidth / liveVideo.videoHeight);
+  }
+  liveCtx.clearRect(0, 0, liveLeinwand.width, liveLeinwand.height);
+  if (punkte) {
+    const staerke = Math.max(2, liveLeinwand.width / 250);
+    liveZeichner.drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, { color: GRUEN, lineWidth: staerke });
+    liveZeichner.drawLandmarks(punkte, { color: "#ffffff", radius: staerke * 0.8 });
+  }
+  liveWerte.textContent =
+    `Live (${genutzterRechner}): ${werte.msProBild} ms pro Bild · ${werte.bilderProSekunde} Bilder/s` +
+    (punkte ? "" : " · keine Person erkannt");
+}
+
+async function startLive() {
+  if (liveKameraStopp) return;
+  if (analyseLaeuft) return; // während einer Analyse nicht zusätzlich rechnen
+  if (!poseLandmarker) {
+    setStatus("Die Pose-Erkennung ist noch nicht bereit. Bitte kurz warten.");
+    return;
+  }
+  liveStartKnopf.disabled = true;
+  try {
+    video.pause();
+    liveBox.hidden = false;
+    liveWerte.textContent = "Kamera startet …";
+    liveKameraStopp = await starteKamera(liveVideo);
+    liveSchleifeStopp = starteSchleife(liveVideo, erkenneLive, zeichneLive);
+    // Bildschirm anlassen – klappt nicht überall, dann geht es auch ohne
+    navigator.wakeLock?.request("screen").then((sperre) => { liveSperre = sperre; }).catch(() => {});
+  } catch (fehler) {
+    console.warn("Live-Kamera:", fehler);
+    stoppeLive();
+    setStatus(
+      fehler?.name === "NotAllowedError"
+        ? "Kein Kamerazugriff. Erlaube die Kamera in den Einstellungen von Safari bzw. der App und versuche es noch einmal."
+        : `Die Kamera ließ sich nicht starten (${fehler?.message || fehler?.name}).`
+    );
+  } finally {
+    liveStartKnopf.disabled = false; // Knopf immer wieder freigeben
+  }
+}
+
+function stoppeLive() {
+  liveSchleifeStopp?.();
+  liveKameraStopp?.();
+  liveSperre?.release().catch(() => {});
+  liveSchleifeStopp = liveKameraStopp = liveSperre = null;
+  liveBox.hidden = true;
+}
+
+liveStartKnopf.addEventListener("click", startLive);
+liveStoppKnopf.addEventListener("click", stoppeLive);
 
 // ---------------------------------------------------------------
 // 6. Bedienung
