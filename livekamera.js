@@ -15,9 +15,9 @@ export async function starteKamera(video) {
     throw new Error("Dieses Gerät oder dieser Browser erlaubt keinen Kamerazugriff.");
   }
   const strom = await navigator.mediaDevices.getUserMedia({
-    // "environment" = Rückkamera. 1280 × 720 reicht für die Pose-Erkennung
+    // "user" = Frontkamera (so siehst du das Bild auf dem Display, während du schwingst). 1280 × 720 reicht für die Pose-Erkennung
     // und ist deutlich schneller als 4K. Kein Ton nötig.
-    video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+    video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
     audio: false,
   });
   video.srcObject = strom;
