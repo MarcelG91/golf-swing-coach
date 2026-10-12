@@ -3462,6 +3462,15 @@ const liveWerte = $("liveWerte");
 const liveMeldung = $("liveMeldung");
 const liveWort = $("liveWort");
 const liveSchlaeger = $("liveSchlaeger");
+const liveKamera = $("liveKamera");
+// Gewählte Kamera merken (reine Bequemlichkeit, geht auch ohne localStorage)
+try {
+  const gemerkt = localStorage.getItem("liveKamera");
+  if (gemerkt === "user" || gemerkt === "environment") liveKamera.value = gemerkt;
+} catch { /* ohne Speicher: Standard bleibt Vorderkamera */ }
+liveKamera.addEventListener("change", () => {
+  try { localStorage.setItem("liveKamera", liveKamera.value); } catch { /* egal */ }
+});
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
 // Dieselbe Auswahl wie beim Speichern (fester Text aus index.html, kein Nutzerinhalt)
@@ -3589,7 +3598,7 @@ async function startLive() {
         liveAufnahmeStopp = null;
         liveMeldung.textContent = "Aufnahme nicht möglich – die Schwünge werden ohne Video gespeichert.";
       });
-    });
+    }, liveKamera.value);
     if (analyseBereich.hidden) {
       // Während die Kamera startete, wurde der Bereich gewechselt → nicht im Hintergrund weiterlaufen
       stopp();
