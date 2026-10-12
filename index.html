@@ -76,8 +76,12 @@
         <input type="file" id="videoInput" accept="video/*" multiple>
         <span>Video auswählen oder aufnehmen</span>
       </label>
-      <!-- Etappe 12a: Live-Kamera (Machbarkeitstest). Das Bild wird nur angezeigt, nicht gespeichert. -->
-      <button id="liveStartKnopf" class="umriss">📹 Live-Kamera testen</button>
+      <!-- Etappe 12: Live-Kamera. Gespeichert werden nur erkannte Schwünge, auf dem Gerät. -->
+      <label class="live-schlaeger">Schläger
+        <select id="liveSchlaeger"><option value="">– bitte wählen –</option></select>
+      </label>
+      <button id="liveStartKnopf" class="umriss">📹 Live-Kamera starten</button>
+      <p class="hinweis">Live: Rahmen grün/gelb/rot nach jedem Schwung. Beim Beenden werden nur die erkannten Schwünge mit kurzem Video gespeichert.</p>
       <ul class="filmtipps">
         <li>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="13" rx="1.5"/><path d="M12 16v5M8 21h8"/></svg>
@@ -107,7 +111,7 @@
       </div>
       <p id="liveMeldung" class="status" aria-live="polite">Noch kein Schwung erkannt.</p>
       <p id="liveWerte" class="status" aria-live="off"></p>
-      <button id="liveStoppKnopf" class="umriss">Live-Kamera beenden</button>
+      <button id="liveStoppKnopf" class="haupt">Beenden und Schwünge speichern</button>
     </section>
 
     <!-- 2. Video mit Zeichenfläche darüber (Canvas = Leinwand für das Skelett) -->
@@ -460,9 +464,10 @@
         IP-Adresse und die Browserkennung.
       </p>
       <p class="hinweis">
-        <strong>Die Live-Kamera</strong> zeigt dir das Kamerabild nur an und rechnet das Skelett darauf aus.
-        Das Bild wird dabei weder gespeichert noch gesendet. Die Kamera schaltet sich beim Beenden und
-        beim Wechsel in einen anderen Bereich wieder ab.
+        <strong>Die Live-Kamera</strong> rechnet das Skelett auf dem Kamerabild aus. Das Bild wird nicht gesendet.
+        Während sie läuft, liegen kurze Aufnahmestücke nur im Arbeitsspeicher. Beim Beenden bleiben nur die
+        erkannten Schwünge als kurze Clips auf diesem Gerät (unter „Meine Schwünge“), alles andere wird verworfen.
+        Die Kamera schaltet sich beim Beenden und beim Wechsel in einen anderen Bereich ab.
       </p>
       <p class="hinweis">
         <strong>„Für Claude kopieren“</strong> legt dieselben Kennzahlen nur in die Zwischenablage deines Geräts.

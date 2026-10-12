@@ -279,9 +279,11 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
-| `livekamera.js` | Live-Kamera (Etappe 12a, Test): Kamera starten, Bild für Bild das Skelett rechnen und die Geschwindigkeit messen. Nichts wird gespeichert |
+| `livekamera.js` | Live-Kamera (Etappe 12a, Test): Kamera starten, Bild für Bild das Skelett rechnen und die Geschwindigkeit messen |
 | `liveschwung.js` | Schwünge live erkennen (Etappe 12b): merkt sich die letzten Sekunden, meldet einen Schwung nach Schlag + Finish (reine Rechenlogik) |
 | `ampel.js` | Ampel für das Live-Feedback (Etappe 12c): Farbe (grün/gelb/rot/grau) und Kurzwort aus einem ausgewerteten Schwung, nur Kennzahlen des gewählten Levels (reine Rechenlogik) |
+| `aufnahme.js` | Live-Aufnahme (Etappe 12d): zwei versetzte Aufnahmen in 16-s-Stücken, nur im Arbeitsspeicher |
+| `liveclip.js` | Rechnet einen live erkannten Schwung auf das passende Aufnahme-Stück um (Zeitraum, Stück finden, 30-Bilder-Raster; reine Rechenlogik) |
 | `pwa.js` | Installation, Offline-Status, Speicherschutz, Versionsnummer |
 | `sw.js` | Service Worker: speichert App und Pose-Erkennung für den Offline-Betrieb (eigene Dateien „erst Netz“, `vendor/` „Speicher zuerst“) |
 | `vendor/` | Pose-Erkennung, selbst ausgeliefert: MediaPipe 0.10.14 (Modul, WASM-Lader und Rechenkern) und das Pose-Modell „full“, mit Lizenz. Herkunft und Prüfung in `vendor/README.md`. Nie von Hand ändern – neue Version = neuer Ordner |

@@ -78,7 +78,9 @@ const adresse = `http://127.0.0.1:${webPort}/`;
 const debugPort = await freierPort();
 const profil = fs.mkdtempSync(path.join(os.tmpdir(), "golf-rauchtest-"));
 const chrome = spawn(chromePfad, [
-  "--headless=new", "--no-sandbox", "--disable-gpu", `--remote-debugging-port=${debugPort}`,
+  "--headless=new", "--no-sandbox", "--disable-gpu",
+  // Testkamera statt echter Kamera (Live-Kamera, Etappe 12) und Kamera-Erlaubnis ohne Nachfrage
+  "--use-fake-device-for-media-stream", "--use-fake-ui-for-media-stream", `--remote-debugging-port=${debugPort}`,
   `--user-data-dir=${profil}`, "--window-size=420,1400", "about:blank",
 ], { stdio: ["ignore", "ignore", "pipe"] });
 let chromeMeldungen = ""; // Fehlerausgabe von Chrome, hilft wenn er nicht startet
@@ -219,6 +221,40 @@ try {
   // Skelett wurde gezeichnet: grüne Pixel im Bild (GRUEN = #4ade80)
   pruefe(await auswerten(`[...document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas")].every((l) => { const d = l.getContext("2d").getImageData(0, 0, l.width, l.height).data; for (let i = 0; i < d.length; i += 4) if (d[i] === 74 && d[i + 1] === 222 && d[i + 2] === 128) return true; return false; })`), "Skelett ist in beiden Bildern eingezeichnet");
   pruefe(await auswerten(`/Dein Fokus/.test(document.getElementById("fortschrittInhalt").innerText)`), "Fortschritt zeigt „Dein Fokus“");
+
+  // Live-Kamera mit der Testkamera: starten, Skelett-Schleife läuft, beenden. Es gibt keinen
+  // Schwung zu sehen, also darf nichts gespeichert werden.
+  await auswerten(`document.getElementById("zuAnalyse").click()`);
+  await auswerten(`(() => { const s = document.getElementById("liveSchlaeger"); s.value = "Eisen 7"; document.getElementById("liveStartKnopf").click(); })()`);
+  const liveLaeuft = await wartenBis(`/ms pro Bild/.test(document.getElementById("liveWerte")?.textContent || "")`, 30);
+  pruefe(liveLaeuft, `Live-Kamera läuft (steht: „${await auswerten(`document.getElementById("liveWerte")?.textContent`)}“)`);
+  await auswerten(`document.getElementById("liveStoppKnopf").click()`);
+  const keinSchwung = await wartenBis(`/Kein Schwung erkannt/.test(document.getElementById("status")?.textContent || "")`, 15);
+  pruefe(keinSchwung, "Live beenden ohne Schwung: nichts gespeichert");
+  pruefe(await auswerten(`document.getElementById("liveBox").hidden`), "Live-Ansicht ist nach dem Beenden zu");
+
+  // Aufnahme-Stück der Testkamera aufnehmen und daraus einen Clip schneiden (der Weg, den ein
+  // erkannter Schwung beim Speichern geht)
+  const clipGroesse = await auswerten(`(async () => {
+    const { starteAufnahme } = await import("./aufnahme.js");
+    const { schneideClip } = await import("./videokuerzen.js");
+    const { springe } = await import("./videoanalyse.js");
+    const strom = await navigator.mediaDevices.getUserMedia({ video: true });
+    const stuecke = [];
+    const beende = starteAufnahme(strom, (st) => stuecke.push(st), (f) => { throw f; });
+    await new Promise((ok) => setTimeout(ok, 3000));
+    await beende();
+    strom.getTracks().forEach((t) => t.stop());
+    if (stuecke.length !== 1 || !(stuecke[0].ende > stuecke[0].start)) return -1;
+    const v = document.createElement("video");
+    v.muted = true; v.playsInline = true; v.className = "versteckt-video";
+    document.body.append(v);
+    await new Promise((ok, nein) => { v.onloadeddata = ok; v.onerror = nein; v.src = URL.createObjectURL(stuecke[0].blob); });
+    const clip = await schneideClip(v, 0.5, 1.5, springe);
+    URL.revokeObjectURL(v.src); v.remove();
+    return clip.video.size;
+  })()`);
+  pruefe(clipGroesse > 1000, `Aufnahme-Stück der Testkamera lässt sich zu einem Clip schneiden (${clipGroesse} Bytes)`);
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
   // rechnet auf der CPU weiter (Statuszeile "… CPU"). Das ist gewollt und kein Fehler.

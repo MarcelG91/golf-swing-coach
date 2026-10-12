@@ -10,7 +10,7 @@
 
 // Kamera starten. "video" ist das <video>-Element, in dem das Live-Bild erscheint.
 // Gibt eine Funktion zurück, mit der man die Kamera wieder abschaltet.
-export async function starteKamera(video) {
+export async function starteKamera(video, beiStrom = () => {}) {
   if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error("Dieses Gerät oder dieser Browser erlaubt keinen Kamerazugriff.");
   }
@@ -27,6 +27,7 @@ export async function starteKamera(video) {
     video.srcObject = null;
     throw fehler;
   });
+  beiStrom(strom); // z. B. damit aufnahme.js dieselbe Kamera aufnehmen kann
   return function stoppeKamera() {
     // Jede Spur einzeln stoppen, sonst bleibt die Kamera-Anzeige am iPhone an
     for (const spur of strom.getTracks()) spur.stop();
