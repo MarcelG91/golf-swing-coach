@@ -28,6 +28,7 @@ import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 import { analysiereVideo, springe, pruefeVideoLaenge } from "./videoanalyse.js";
 import { starteKamera, starteSchleife } from "./livekamera.js";
 import { neueLiveErkennung } from "./liveschwung.js";
+import { ampel } from "./ampel.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
 // Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
@@ -3456,6 +3457,7 @@ const liveVideo = $("liveVideo");
 const liveLeinwand = $("liveOverlay");
 const liveWerte = $("liveWerte");
 const liveMeldung = $("liveMeldung");
+const liveWort = $("liveWort");
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
 let liveKameraStopp = null; // Funktionen zum Beenden (null = Live läuft nicht)
@@ -3488,9 +3490,11 @@ function zeichneLive(punkte, werte) {
   const schwung = liveErkennung?.neuesBild({ zeit: performance.now() / 1000, punkte });
   if (schwung) {
     liveSchwuenge++;
-    liveMeldung.textContent = schwung.sicher
-      ? `Schwung ${liveSchwuenge} erkannt ✓`
-      : `Schwung ${liveSchwuenge} erkannt, aber unsicher: ${schwung.grund}`;
+    // Rahmenfarbe und Kurzwort bleiben stehen, bis der nächste Schwung fertig ist
+    const urteil = ampel(schwung, aktuellesLevel, schwung.technik?.rechtshaender ?? true);
+    liveBuehne.className = `buehne ampel-${urteil.farbe}`;
+    liveWort.textContent = urteil.wort;
+    liveMeldung.textContent = `Schwung ${liveSchwuenge} erkannt`;
   }
   liveWerte.textContent =
     `Live (${genutzterRechner}): ${werte.msProBild} ms pro Bild · ${werte.bilderProSekunde} Bilder/s` +
@@ -3513,6 +3517,8 @@ async function startLive() {
     liveErkennung = neueLiveErkennung(liveVideo.videoWidth / liveVideo.videoHeight);
     liveSchwuenge = 0;
     liveMeldung.textContent = "Noch kein Schwung erkannt.";
+    liveBuehne.className = "buehne"; // Rahmen vom letzten Mal entfernen
+    liveWort.textContent = "";
     liveSchleifeStopp = starteSchleife(liveVideo, erkenneLive, zeichneLive);
     // Bildschirm anlassen – klappt nicht überall, dann geht es auch ohne
     navigator.wakeLock?.request("screen").then((sperre) => { liveSperre = sperre; }).catch(() => {});

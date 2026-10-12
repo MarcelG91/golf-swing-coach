@@ -41,6 +41,7 @@ Formulierungen für Rechtshänder; die App setzt links/rechts für Linkshänder 
 - **kurz:** Du greifst nach dem Ball
 - **warum:** Greifst du nach dem Ball, sind die Arme angespannt. Der Schwung wird flach und du kippst leicht nach vorne.
 - **gedanke:** Arme hängen lassen
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Arme hängen lassen
 - **Übung: Arme baumeln lassen** · 10×
   1. Ansprechhaltung ohne Schläger.
   2. Arme 3 Sekunden locker hängen lassen.
@@ -51,6 +52,7 @@ Formulierungen für Rechtshänder; die App setzt links/rechts für Linkshänder 
 - **kurz:** Hände zu nah am Körper
 - **warum:** Sind die Hände zu nah am Körper, haben die Arme im Abschwung keinen Platz. Du musst ausweichen oder dich aufrichten.
 - **gedanke:** Eine Faust Platz
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Etwas mehr Abstand
 - **Übung: Faust-Check** · 5×
   1. Ansprechhaltung mit Schläger.
   2. Rechte Hand als Faust zwischen Griffende und linken Oberschenkel.
@@ -65,6 +67,7 @@ gut: Arme hängen locker unter den Schultern
 - **kurz:** Du stehst zu aufrecht
 - **warum:** Stehst du aufrecht, dreht sich der Oberkörper eher waagerecht. Der Schwung wird flach, die Treffer oft dünn.
 - **gedanke:** Aus der Hüfte kippen
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Mehr vorneigen
 - **Übung: Schläger am Rücken** · 5×
   1. Schläger längs an den Rücken: Kopf, Schulterblätter, Steißbein.
   2. Aus der Hüfte kippen, bis du auf den Ball schaust.
@@ -75,6 +78,7 @@ gut: Arme hängen locker unter den Schultern
 - **kurz:** Du beugst dich zu weit vor
 - **warum:** Weit vorgebeugt fehlen dir Gleichgewicht und Drehfreiheit. Oft kippst du im Schwung nach vorne oder richtest dich auf.
 - **gedanke:** Gewicht auf die Fußmitte
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Etwas aufrichten
 - **Übung: Schläger am Rücken** · 5×
   1. Schläger längs an den Rücken: Kopf, Schulterblätter, Steißbein.
   2. Aus der Hüfte kippen, bis du auf den Ball schaust.
@@ -87,6 +91,7 @@ gut: Gute Vorneigung beim Ansprechen
 - **kurz:** Linker Arm knickt im Treffmoment
 - **warum:** Knickt der Arm, wird dein Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge: dünne oder getoppte Bälle und weniger Weite.
 - **gedanke:** Lange Arme durch den Ball
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Arm lang lassen
 - **Übung: Hüfte bis Hüfte** · 20×
   1. Nur bis Hüfthöhe ausholen.
   2. Bis Hüfthöhe durchschwingen.
@@ -99,6 +104,7 @@ gut: Linker Arm ist im Treffmoment lang
 - **kurz:** Schultern drehen nicht voll
 - **warum:** Ohne volle Drehung müssen die Arme die Arbeit machen. Das kostet Weite und führt oft zu einem Abschwung von außen – dem Slice.
 - **gedanke:** Rücken zum Ziel
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Mehr Schulterdrehung
 - **Übung: Schläger vor der Brust** · 10×
   1. Schläger quer vor die Brust, Ansprechhaltung.
   2. Drehen, bis das linke Schlägerende ungefähr auf den Ball zeigt.
@@ -112,6 +118,7 @@ gut: Volle Schulterdrehung am Top
 - **kurz:** Arme heben statt drehen
 - **warum:** Heben die Arme den Schläger, statt dass der Oberkörper dreht, kommt er steil von oben zurück. Der Treffpunkt wechselt von Schlag zu Schlag.
 - **gedanke:** Drehen statt heben
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Drehen statt heben
 - **Übung: Griffende zum Bauchnabel** · 10×
   1. Tief am Schaft greifen, Griffende an den Bauchnabel.
   2. Nur mit der Brust bis Hüfthöhe ausholen.
@@ -126,6 +133,7 @@ gut: Arme und Oberkörper arbeiten zusammen
 - **kurz:** Oberkörper neigt zum Ziel
 - **warum:** Deine rechte Hand greift tiefer, also gehört auch die rechte Schulter tiefer. Sonst stehst du schon „vor dem Ball“ – das begünstigt Slices.
 - **gedanke:** Rechte Schulter etwas tiefer
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Rechte Schulter tiefer
 - **Übung: Hand hängen lassen** · 10×
   1. Ansprechhaltung einnehmen.
   2. Rechte Hand vom Griff nehmen, locker hängen lassen.
@@ -136,6 +144,7 @@ gut: Arme und Oberkörper arbeiten zusammen
 - **kurz:** Zu stark vom Ziel weg geneigt
 - **warum:** Zu viel Neigung verlagert den tiefsten Punkt des Schwungs nach hinten. Dann triffst du oft zuerst den Boden, dann den Ball.
 - **gedanke:** Nur leicht neigen
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Weniger neigen
 - **Übung:** – (bewusst keine)
 
 gut: Gute Ausgangsposition hinter dem Ball
@@ -145,6 +154,7 @@ gut: Gute Ausgangsposition hinter dem Ball
 - **kurz:** Oberkörper kippt am Top zum Ziel
 - **warum:** Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft und belastet den unteren Rücken.
 - **gedanke:** Brustbein bleibt hinter dem Ball
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Brustbein hinter Ball
 - **Übung: Spiegel-Check** · 10×
   1. Frontal vor einen Spiegel stellen.
   2. Langsam zum Top ausholen, anhalten.
@@ -157,6 +167,7 @@ gut: Oberkörper bleibt am Top hinter dem Ball
 - **kurz:** Oberkörper im Treffmoment zu gerade
 - **warum:** Nur wenn die rechte Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.
 - **gedanke:** Rechte Schulter geht nach unten
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Rechte Schulter runter
 - **Übung: Treffposition in Zeitlupe** · 10×
   1. Langsam vom Top in die Treffposition.
   2. Anhalten und im Spiegel prüfen.
@@ -170,6 +181,7 @@ gut: Oberkörper im Treffmoment vom Ziel weg
 - **kurz:** Hüfte schiebt zur Seite
 - **warum:** Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.
 - **gedanke:** Drehen statt schieben
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Drehen statt schieben
 - **Übung: Stab-Übung** · 10×
   1. Stab senkrecht direkt außen neben den rechten Fuß stecken.
   2. Langsam ausholen – die Hüfte berührt ihn nicht.
@@ -184,6 +196,7 @@ gut: Hüfte dreht auf der Stelle
 - **kurz:** Rückschwung zu hastig
 - **warum:** Ein hastiger Rückschwung bringt Arme und Körper aus dem Takt. Gute Spieler brauchen zurück etwa dreimal so lange wie nach vorne.
 - **gedanke:** Drei zurück, eins runter
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Langsamer zurückschwingen
 - **Übung: Mitzählen** · 10×
   1. Starte den Rückschwung auf „und“.
   2. „Eins – zwei – drei“: auf „drei“ bist du oben.
@@ -194,6 +207,7 @@ gut: Hüfte dreht auf der Stelle
 - **kurz:** Rückschwung zu zäh
 - **warum:** Ist der Rückschwung sehr zäh, fehlt der Schwung für den Rückweg. Der Abschwung wird dann hektisch oder zögerlich.
 - **gedanke:** Schwingen wie ein Pendel
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Flüssig schwingen
 - **Übung: Pendel** · 10×
   1. Flüssig zurückschwingen, oben keine Pause.
   2. Im gleichen Rhythmus durchschwingen.
@@ -207,6 +221,7 @@ gut: Rhythmus wie gute Spieler (3 : 1)
 - **kurz:** Du richtest dich auf
 - **warum:** Richtest du dich auf, ändert sich der Abstand zum Ball. Der Schläger kommt zu hoch an – getoppte oder dünne Schläge.
 - **gedanke:** Rechtes Knie bleibt gebeugt
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Knie gebeugt lassen
 - **Übung: Später hochschauen** · 10×
   1. Halbe Schwünge.
   2. Rechtes Knie bleibt bis nach dem Treffen gebeugt.
@@ -217,6 +232,7 @@ gut: Rhythmus wie gute Spieler (3 : 1)
 - **kurz:** Du sackst ab
 - **warum:** Sackst du ab, kommt der Schläger zu tief. Er trifft zuerst den Boden, dann den Ball – ein fetter Schlag.
 - **gedanke:** Größe halten
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Größe halten
 - **Übung: Höhe halten** · 10×
   1. Ansprechhaltung, Knie leicht gebeugt.
   2. Halbe Schwünge, die Körpergröße bleibt gleich.
@@ -230,6 +246,7 @@ gut: Kopfhöhe bleibt stabil
 - **kurz:** Kopf wandert vor den Ball
 - **warum:** Wandert der Kopf vor den Ball, kommt der Schläger steil von oben. Gute Spieler halten den Kopf im Treffmoment hinter dem Ball.
 - **gedanke:** Kopf hinter dem Ball
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Kopf hinter Ball
 - **Übung: Tee-Blick** · 10×
   1. Tee ein paar Zentimeter hinter den Ball stecken.
   2. Beim Schwung auf das Tee schauen.
@@ -240,6 +257,7 @@ gut: Kopfhöhe bleibt stabil
 - **kurz:** Kopf schiebt zur Seite
 - **warum:** Schiebst du Kopf und Oberkörper zur Seite, musst du im Abschwung genau zurück. Drehen ist leichter zu wiederholen als schieben.
 - **gedanke:** Drehen wie im Fass
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Kopf ruhig halten
 - **Übung: Enges Fass** · 10×
   1. Stell dir ein enges Fass um dich vor.
   2. Ausholen, ohne die Fasswand zu berühren.
@@ -251,6 +269,7 @@ gut: Kopf bleibt hinter dem Ball
 - **kurz:** Gewicht bleibt hinten
 - **warum:** Bleibt das Gewicht hinten, fehlt Kraft im Treffmoment. Der Ball fliegt oft zu hoch oder zur Seite weg.
 - **gedanke:** Finish halten
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Gewicht nach vorn
 - **Übung: Finish 3 Sekunden** · 10×
   1. Nach dem Schlag im Finish stehen bleiben.
   2. Gewicht links, rechter Fuß nur auf der Spitze.
@@ -263,6 +282,7 @@ gut: Gewicht im Finish vorn
 - **kurz:** Oberkörper richtet sich auf
 - **warum:** Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Typische Folgen sind Toppen oder Shanks.
 - **gedanke:** Po bleibt hinten
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Po hinten lassen
 - **Übung: Po an die Wand** · 10×
   1. Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.
   2. Ausholen: die rechte Po-Seite bleibt an der Wand.
@@ -276,6 +296,7 @@ gut: Vorneigung bleibt bis zum Treffmoment
 - **kurz:** Hüfte schiebt zum Ball
 - **warum:** Schiebt die Hüfte zum Ball, nimmt sie den Armen den Platz. Du musst ausweichen – der Schläger kommt unsauber an den Ball.
 - **gedanke:** Po zur Tasche
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Po zur Tasche
 - **Übung: Golftasche hinter dem Po** · 10×
   1. Golftasche direkt hinter den Po stellen.
   2. Rückschwung: die rechte Po-Seite berührt die Tasche.

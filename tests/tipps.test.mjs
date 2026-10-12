@@ -56,6 +56,8 @@ test("Tipps bleiben kurz", () => {
     const saetze = t.warum.split(/[.!?](\s|$)/).filter((x) => x && x.trim()).length;
     assert.ok(saetze >= 1 && saetze <= 2, `${wo}: warum soll 1–2 Sätze haben`);
     assert.ok(woerter(t.gedanke).length <= 5, `${wo}: gedanke hat zu viele Wörter: ${t.gedanke}`);
+    // Kurzwort für den Live-Rahmen (ampel.js): höchstens 3 Wörter, immer vorhanden
+    assert.ok(t.wort && woerter(t.wort).length <= 3, `${wo}: wort fehlt oder hat zu viele Wörter: ${t.wort}`);
     if (t.uebung === null) continue; // bewusst ohne Übung (z. B. "nur leicht neigen")
     assert.ok(t.uebung.name && t.uebung.wiederholungen > 0, `${wo}: Übung unvollständig`);
     assert.ok(t.uebung.schritte.length >= 2 && t.uebung.schritte.length <= 4, `${wo}: 2–4 Schritte`);
