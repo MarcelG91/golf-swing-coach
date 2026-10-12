@@ -76,6 +76,8 @@
         <input type="file" id="videoInput" accept="video/*" multiple>
         <span>Video auswählen oder aufnehmen</span>
       </label>
+      <!-- Etappe 12a: Live-Kamera (Machbarkeitstest). Das Bild wird nur angezeigt, nicht gespeichert. -->
+      <button id="liveStartKnopf" class="umriss">📹 Live-Kamera testen</button>
       <ul class="filmtipps">
         <li>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="13" rx="1.5"/><path d="M12 16v5M8 21h8"/></svg>
@@ -95,6 +97,16 @@
 
     <!-- Statuszeile: zeigt, was die App gerade macht -->
     <p id="status" class="status">Lade die Pose-Erkennung …</p>
+
+    <!-- Live-Kamera (Test): Kamerabild mit Skelett und Messwerten -->
+    <section id="liveBox" hidden>
+      <div id="liveBuehne" class="buehne">
+        <video id="liveVideo" playsinline muted></video>
+        <canvas id="liveOverlay"></canvas>
+      </div>
+      <p id="liveWerte" class="status" aria-live="off"></p>
+      <button id="liveStoppKnopf" class="umriss">Live-Kamera beenden</button>
+    </section>
 
     <!-- 2. Video mit Zeichenfläche darüber (Canvas = Leinwand für das Skelett) -->
     <div id="buehne" class="buehne" hidden>
@@ -444,6 +456,11 @@
         Kennzahlen des Schwungs mit Level, Ansicht und kurzem Verlauf an Anthropic (Claude). Nie gesendet
         werden Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch deine
         IP-Adresse und die Browserkennung.
+      </p>
+      <p class="hinweis">
+        <strong>Die Live-Kamera</strong> zeigt dir das Kamerabild nur an und rechnet das Skelett darauf aus.
+        Das Bild wird dabei weder gespeichert noch gesendet. Die Kamera schaltet sich beim Beenden und
+        beim Wechsel in einen anderen Bereich wieder ab.
       </p>
       <p class="hinweis">
         <strong>„Für Claude kopieren“</strong> legt dieselben Kennzahlen nur in die Zwischenablage deines Geräts.
