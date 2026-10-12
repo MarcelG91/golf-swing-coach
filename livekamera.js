@@ -10,14 +10,15 @@
 
 // Kamera starten. "video" ist das <video>-Element, in dem das Live-Bild erscheint.
 // Gibt eine Funktion zurück, mit der man die Kamera wieder abschaltet.
-export async function starteKamera(video, beiStrom = () => {}) {
+// seite: "user" = Frontkamera, "environment" = Rückkamera
+export async function starteKamera(video, beiStrom = () => {}, seite = "user") {
   if (!navigator.mediaDevices?.getUserMedia) {
     throw new Error("Dieses Gerät oder dieser Browser erlaubt keinen Kamerazugriff.");
   }
   const strom = await navigator.mediaDevices.getUserMedia({
-    // "user" = Frontkamera (so siehst du das Bild auf dem Display, während du schwingst). 1280 × 720 reicht für die Pose-Erkennung
+    // "ideal": Hat das Gerät die gewünschte Kamera nicht, nimmt es die andere. 1280 × 720 reicht für die Pose-Erkennung
     // und ist deutlich schneller als 4K. Kein Ton nötig.
-    video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+    video: { facingMode: { ideal: seite }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
     audio: false,
   });
   video.srcObject = strom;

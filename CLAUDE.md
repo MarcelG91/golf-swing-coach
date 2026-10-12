@@ -168,7 +168,7 @@ Frontkamera → Skelett live (26–36 ms pro Bild auf Marcels iPhone) → Schwun
 Ampelrahmen (grün/gelb/rot/grau) + Kurzwort → beim „Beenden“ werden nur die erkannten Schwünge als Clip + Analyse gespeichert.
 Rot = mehrere deutliche Abweichungen (Entscheidung). **Noch nie mit echten Schwüngen auf dem iPhone getestet** (Marcel hatte keine
 Möglichkeit): Erkennungsrate, Ampel-Schwellen (`ampel.js`, eigene Festlegung), Gleichlauf Skelett ↔ Clip (Startverzögerung der
-Aufnahme, bis ca. 0,1 s möglich), zwei gleichzeitige MediaRecorder in Safari, Wärme/Akku. Offen: Umschalter Front-/Rückkamera.
+Aufnahme, bis ca. 0,1 s möglich), zwei gleichzeitige MediaRecorder in Safari, Wärme/Akku. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`).
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
