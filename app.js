@@ -27,6 +27,7 @@ import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
 import { analysiereVideo, springe, pruefeVideoLaenge } from "./videoanalyse.js";
 import { starteKamera, starteSchleife } from "./livekamera.js";
+import { neueLiveErkennung } from "./liveschwung.js";
 // Offline-Prüfung (siehe pwa.js)
 import { meldeOfflineBereitschaft, pruefeOfflineDateien, dateiname, APP_VERSION } from "./pwa.js";
 // Schwünge auf dem Gerät speichern (siehe speicher.js und videokuerzen.js)
@@ -3454,10 +3455,13 @@ const liveBuehne = $("liveBuehne");
 const liveVideo = $("liveVideo");
 const liveLeinwand = $("liveOverlay");
 const liveWerte = $("liveWerte");
+const liveMeldung = $("liveMeldung");
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
 let liveKameraStopp = null; // Funktionen zum Beenden (null = Live läuft nicht)
 let liveSchleifeStopp = null;
+let liveErkennung = null; // erkennt fertige Schwünge aus den Live-Bildern (liveschwung.js)
+let liveSchwuenge = 0; // Zähler für die Anzeige
 let liveSperre = null; // Wake Lock: Bildschirm bleibt an, solange die Kamera läuft
 
 // Pose-Erkennung für ein Live-Bild (gleiche Zeitstempel-Regel wie erkennePose)
@@ -3480,6 +3484,14 @@ function zeichneLive(punkte, werte) {
     liveZeichner.drawConnectors(punkte, PoseLandmarker.POSE_CONNECTIONS, { color: GRUEN, lineWidth: staerke });
     liveZeichner.drawLandmarks(punkte, { color: "#ffffff", radius: staerke * 0.8 });
   }
+  // Bild an die Schwung-Erkennung geben. Sie meldet einen Schwung erst, wenn das Finish vorbei ist.
+  const schwung = liveErkennung?.neuesBild({ zeit: performance.now() / 1000, punkte });
+  if (schwung) {
+    liveSchwuenge++;
+    liveMeldung.textContent = schwung.sicher
+      ? `Schwung ${liveSchwuenge} erkannt ✓`
+      : `Schwung ${liveSchwuenge} erkannt, aber unsicher: ${schwung.grund}`;
+  }
   liveWerte.textContent =
     `Live (${genutzterRechner}): ${werte.msProBild} ms pro Bild · ${werte.bilderProSekunde} Bilder/s` +
     (punkte ? "" : " · keine Person erkannt");
@@ -3498,6 +3510,9 @@ async function startLive() {
     liveBox.hidden = false;
     liveWerte.textContent = "Kamera startet …";
     liveKameraStopp = await starteKamera(liveVideo);
+    liveErkennung = neueLiveErkennung(liveVideo.videoWidth / liveVideo.videoHeight);
+    liveSchwuenge = 0;
+    liveMeldung.textContent = "Noch kein Schwung erkannt.";
     liveSchleifeStopp = starteSchleife(liveVideo, erkenneLive, zeichneLive);
     // Bildschirm anlassen – klappt nicht überall, dann geht es auch ohne
     navigator.wakeLock?.request("screen").then((sperre) => { liveSperre = sperre; }).catch(() => {});
@@ -3518,7 +3533,7 @@ function stoppeLive() {
   liveSchleifeStopp?.();
   liveKameraStopp?.();
   liveSperre?.release().catch(() => {});
-  liveSchleifeStopp = liveKameraStopp = liveSperre = null;
+  liveSchleifeStopp = liveKameraStopp = liveSperre = liveErkennung = null;
   liveBox.hidden = true;
 }
 
