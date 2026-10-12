@@ -155,6 +155,7 @@ const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js", "fortschritt.js",
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
   "wissen.js", "nachschlagen.js", "schaubilder.js",
+  "ampel.js", "liveschwung.js", "liveclip.js", // Live-Kamera (Etappe 12): nur Rechnen
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
@@ -281,4 +282,23 @@ test("Für Claude kopieren: nur Zwischenablage, kein Netz, kein Speichern, nur C
   assert.match(abschnitt, /navigator\.clipboard\.(write|writeText)/);
   // Der Datenschutzhinweis in den Einstellungen nennt den Knopf
   assert.match(INDEX, /Für Claude kopieren[\s\S]{0,200}nur in die Zwischenablage/);
+});
+
+// ---------------------------------------------------------------
+// Live-Kamera (Etappe 12): Kamerabild und Aufnahmestücke bleiben auf dem Gerät
+// ---------------------------------------------------------------
+test("Live-Dateien senden nichts und fassen weder localStorage noch die Datenbank an", () => {
+  for (const datei of ["livekamera.js", "aufnahme.js", "liveclip.js", "liveschwung.js", "ampel.js"]) {
+    const code = ohneKommentare(QUELLDATEIEN.find((q) => q.datei === datei).text);
+    assert.doesNotMatch(code, /\b(fetch|XMLHttpRequest|sendBeacon|WebSocket|EventSource|localStorage|indexedDB)\b|innerHTML/, `${datei} enthält Netz-, Speicher- oder HTML-Code`);
+  }
+});
+
+test("Live-Kamera: Kamera wird beim Beenden abgeschaltet, Aufnahme-Adressen werden freigegeben", () => {
+  const kamera = ohneKommentare(QUELLDATEIEN.find((q) => q.datei === "livekamera.js").text);
+  assert.match(kamera, /getTracks\(\)[\s\S]*?\.stop\(\)/, "jede Kamera-Spur wird gestoppt");
+  const live = APP.slice(APP.indexOf("async function speichereLiveAuftraege"), APP.indexOf('liveStartKnopf.addEventListener("click"'));
+  assert.match(live, /finally\s*{[\s\S]*?revokeObjectURL[\s\S]*?setzeKnoepfeAktiv\(true\)/, "Adresse freigeben und Knöpfe im finally frei");
+  const beenden = APP.slice(APP.indexOf("async function beendeLive"), APP.indexOf("// Vorschaubild (Top-Position"));
+  assert.match(beenden, /finally\s*{[\s\S]*?liveStoppKnopf\.disabled = false/, "Beenden-Knopf im finally frei");
 });
