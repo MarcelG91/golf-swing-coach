@@ -12,7 +12,7 @@ const MAX_SEITE = 1280;
 const BITRATE = 2_500_000; // Bits pro Sekunde – gute Qualität bei kleiner Datei
 
 // Welches Videoformat kann dieser Browser aufnehmen? Safari: MP4, Chrome/Firefox: auch WebM
-function videoFormat() {
+export function videoFormat() {
   if (typeof MediaRecorder === "undefined") return null;
   const formate = ["video/mp4;codecs=avc1", "video/mp4", "video/webm;codecs=vp9", "video/webm"];
   return formate.find((f) => MediaRecorder.isTypeSupported(f)) ?? null;

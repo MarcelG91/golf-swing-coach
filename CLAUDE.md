@@ -87,6 +87,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
+| `livekamera.js` · `liveschwung.js` · `ampel.js` · `aufnahme.js` · `liveclip.js` | Live-Kamera (Etappe 12): Kamera + Zeitmessung · Schwung live erkennen · Ampelrahmen + Kurzwort · versetzte 16-s-Aufnahmestücke im Arbeitsspeicher · Schwung ↔ Stück zuordnen und aufs Raster umrechnen (alles außer Kamera/Aufnahme reine Rechenlogik) |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `fortschritt.js` | Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick aus gespeicherten Schwüngen (reine Rechenlogik, Etappe 10) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
@@ -160,6 +161,14 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
    `wissen-nachschlagen` erledigt (0.25.0)**: Umschalter „Lernpfade | Nachschlagen“, Suche, Glossar (60), Irrtümer (13),
    Regeln (17), Ausrüstung (6), Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“. **Wissensseite damit komplett.**
    Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
+
+### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
+
+Frontkamera → Skelett live (26–36 ms pro Bild auf Marcels iPhone) → Schwung nach Schlag + Finish erkannt (ca. 2,2 s) →
+Ampelrahmen (grün/gelb/rot/grau) + Kurzwort → beim „Beenden“ werden nur die erkannten Schwünge als Clip + Analyse gespeichert.
+Rot = mehrere deutliche Abweichungen (Entscheidung). **Noch nie mit echten Schwüngen auf dem iPhone getestet** (Marcel hatte keine
+Möglichkeit): Erkennungsrate, Ampel-Schwellen (`ampel.js`, eigene Festlegung), Gleichlauf Skelett ↔ Clip (Startverzögerung der
+Aufnahme, bis ca. 0,1 s möglich), zwei gleichzeitige MediaRecorder in Safari, Wärme/Akku. Offen: Umschalter Front-/Rückkamera.
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 

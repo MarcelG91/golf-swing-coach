@@ -27,6 +27,8 @@ import { ideallinien, MIT_LINIE } from "./ideallinien.js";
 // Schnelle Analyse durch Abspielen statt Springen (siehe videoanalyse.js)
 import { analysiereVideo, springe, pruefeVideoLaenge } from "./videoanalyse.js";
 import { starteKamera, starteSchleife } from "./livekamera.js";
+import { starteAufnahme, kannAufnehmen } from "./aufnahme.js";
+import { clipFenster, findeStueck, schwungImStueck } from "./liveclip.js";
 import { neueLiveErkennung } from "./liveschwung.js";
 import { ampel } from "./ampel.js";
 // Offline-Prüfung (siehe pwa.js)
@@ -2761,7 +2763,7 @@ let vorschauAdressen = []; // Adressen der Vorschaubilder – werden beim Neuzei
 // Oben umschalten zwischen "Analyse" und "Meine Schwünge"
 function zeigeBereich(welcher) {
   if (!aktuellesLevel) welcher = "einstellungen";
-  if (welcher !== "analyse") stoppeLive(); // Kamera nie im Hintergrund weiterlaufen lassen
+  if (welcher !== "analyse") beendeLive().catch((fehler) => console.warn("Live beenden:", fehler)); // Kamera nie im Hintergrund weiterlaufen lassen
   analyseBereich.hidden = welcher !== "analyse";
   gespeichertBereich.hidden = welcher !== "gespeichert";
   wissenBereich.hidden = welcher !== "wissen";
@@ -3446,8 +3448,9 @@ function schliesseGeloeschteSitzung() {
 }
 
 // ---------------------------------------------------------------
-// Live-Kamera (Etappe 12a, Machbarkeitstest): Kamerabild + Skelett + Messwerte.
-// Nichts wird gespeichert oder gesendet. Die Rechnung steht in livekamera.js.
+// Live-Kamera (Etappe 12): Kamerabild + Skelett, Schwünge erkennen, Ampelrahmen,
+// nur die Schwünge aufnehmen und speichern. Rechnung in livekamera.js, liveschwung.js,
+// ampel.js, liveclip.js, Aufnahme in aufnahme.js. Gesendet wird nichts.
 // ---------------------------------------------------------------
 const liveStartKnopf = $("liveStartKnopf");
 const liveStoppKnopf = $("liveStoppKnopf");
@@ -3458,13 +3461,25 @@ const liveLeinwand = $("liveOverlay");
 const liveWerte = $("liveWerte");
 const liveMeldung = $("liveMeldung");
 const liveWort = $("liveWort");
+const liveSchlaeger = $("liveSchlaeger");
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
+// Dieselbe Auswahl wie beim Speichern (fester Text aus index.html, kein Nutzerinhalt)
+liveSchlaeger.innerHTML = speichernSchlaeger.innerHTML;
+
+const LIVE_MAX_SCHWUENGE = 15; // Danach beendet die App von selbst: Die Stücke liegen im Arbeitsspeicher
+const LIVE_WARTEZEIT = 25; // So lange (Sekunden) wartet ein Schwung auf sein Aufnahme-Stück
 let liveKameraStopp = null; // Funktionen zum Beenden (null = Live läuft nicht)
 let liveSchleifeStopp = null;
+let liveAufnahmeStopp = null; // null = es wird nichts aufgenommen (Gerät kann es nicht oder Fehler)
 let liveErkennung = null; // erkennt fertige Schwünge aus den Live-Bildern (liveschwung.js)
+let liveSeitenverhaeltnis = 1;
 let liveSchwuenge = 0; // Zähler für die Anzeige
 let liveSperre = null; // Wake Lock: Bildschirm bleibt an, solange die Kamera läuft
+let liveStuecke = []; // fertig aufgenommene Stücke, die noch zu einem Schwung passen könnten
+let liveWartende = []; // erkannte Schwünge, deren Stück noch nicht fertig ist
+let liveAuftraege = []; // { schwung, fenster, stueck (oder null = ohne Video) } – werden beim Beenden gespeichert
+let liveBeendet = false; // verhindert doppeltes Beenden
 
 // Pose-Erkennung für ein Live-Bild (gleiche Zeitstempel-Regel wie erkennePose)
 function erkenneLive(quelle) {
@@ -3488,17 +3503,60 @@ function zeichneLive(punkte, werte) {
   }
   // Bild an die Schwung-Erkennung geben. Sie meldet einen Schwung erst, wenn das Finish vorbei ist.
   const schwung = liveErkennung?.neuesBild({ zeit: performance.now() / 1000, punkte });
-  if (schwung) {
-    liveSchwuenge++;
-    // Rahmenfarbe und Kurzwort bleiben stehen, bis der nächste Schwung fertig ist
-    const urteil = ampel(schwung, aktuellesLevel, schwung.technik?.rechtshaender ?? true);
-    liveBuehne.className = `buehne ampel-${urteil.farbe}`;
-    liveWort.textContent = urteil.wort;
-    liveMeldung.textContent = `Schwung ${liveSchwuenge} erkannt`;
-  }
+  if (schwung) neuerLiveSchwung(schwung);
   liveWerte.textContent =
     `Live (${genutzterRechner}): ${werte.msProBild} ms pro Bild · ${werte.bilderProSekunde} Bilder/s` +
     (punkte ? "" : " · keine Person erkannt");
+}
+
+function neuerLiveSchwung(schwung) {
+  liveSchwuenge++;
+  // Rahmenfarbe und Kurzwort bleiben stehen, bis der nächste Schwung fertig ist
+  const urteil = ampel(schwung, aktuellesLevel, schwung.technik?.rechtshaender ?? true);
+  liveBuehne.className = `buehne ampel-${urteil.farbe}`;
+  liveWort.textContent = urteil.wort;
+  liveMeldung.textContent = `Schwung ${liveSchwuenge} erkannt`;
+  // Nur auswertbare Schwünge werden gespeichert (grau = nicht erkannt)
+  if (urteil.farbe !== "grau") {
+    liveWartende.push({ schwung, fenster: clipFenster(schwung) });
+    ordneLiveZu();
+  }
+  if (liveAuftraege.length + liveWartende.length >= LIVE_MAX_SCHWUENGE) {
+    beendeLive().catch((fehler) => console.warn("Live beenden:", fehler));
+  }
+}
+
+// Wartende Schwünge dem Aufnahme-Stück zuordnen, in dem sie ganz liegen.
+// Nimmt die App nichts auf, geht der Schwung gleich ohne Video in die Aufträge.
+function ordneLiveZu() {
+  const jetzt = performance.now() / 1000;
+  liveWartende = liveWartende.filter((w) => {
+    const stueck = liveAufnahmeStopp ? findeStueck(w.fenster, liveStuecke) : null;
+    if (stueck) {
+      liveAuftraege.push({ ...w, stueck });
+      return false;
+    }
+    if (!liveAufnahmeStopp) {
+      liveAuftraege.push({ ...w, stueck: null });
+      return false;
+    }
+    // Zu lange ohne Stück: Der Schwung wird gespeichert, aber ohne Video
+    if (jetzt - w.fenster.bis > LIVE_WARTEZEIT) {
+      liveAuftraege.push({ ...w, stueck: null });
+      return false;
+    }
+    return true;
+  });
+  // Stücke, die zu keinem Schwung gehören, sofort vergessen (gibt Speicher frei).
+  // Ein junges Stück bleibt noch kurz, falls gleich ein passender Schwung gemeldet wird.
+  liveStuecke = liveStuecke.filter(
+    (st) => jetzt - st.ende < LIVE_WARTEZEIT || liveAuftraege.some((a) => a.stueck === st)
+  );
+}
+
+function neuesLiveStueck(stueck) {
+  liveStuecke.push(stueck);
+  ordneLiveZu();
 }
 
 async function startLive() {
@@ -3508,15 +3566,37 @@ async function startLive() {
     setStatus("Die Pose-Erkennung ist noch nicht bereit. Bitte kurz warten.");
     return;
   }
+  if (!liveSchlaeger.value) {
+    setStatus("Bitte wähle zuerst den Schläger aus – er wird mit den Schwüngen gespeichert.");
+    liveSchlaeger.focus();
+    return;
+  }
   liveStartKnopf.disabled = true;
   try {
     video.pause();
     liveBox.hidden = false;
     liveWerte.textContent = "Kamera startet …";
-    liveKameraStopp = await starteKamera(liveVideo);
-    liveErkennung = neueLiveErkennung(liveVideo.videoWidth / liveVideo.videoHeight);
+    liveBeendet = false;
+    liveStuecke = [];
+    liveWartende = [];
+    liveAuftraege = [];
+    const stopp = await starteKamera(liveVideo, (strom) => {
+      // Aufnahme in überlappenden Stücken (aufnahme.js). Klappt sie nicht, werden die
+      // Schwünge trotzdem gespeichert – nur ohne Video.
+      if (!kannAufnehmen()) return;
+      liveAufnahmeStopp = starteAufnahme(strom, neuesLiveStueck, (fehler) => {
+        console.warn("Aufnahme:", fehler);
+        liveAufnahmeStopp = null;
+        liveMeldung.textContent = "Aufnahme nicht möglich – die Schwünge werden ohne Video gespeichert.";
+      });
+    });
+    liveKameraStopp = stopp;
+    liveSeitenverhaeltnis = liveVideo.videoWidth / liveVideo.videoHeight;
+    liveErkennung = neueLiveErkennung(liveSeitenverhaeltnis);
     liveSchwuenge = 0;
-    liveMeldung.textContent = "Noch kein Schwung erkannt.";
+    liveMeldung.textContent = liveAufnahmeStopp
+      ? "Noch kein Schwung erkannt."
+      : "Noch kein Schwung erkannt. (Ohne Video: Dieses Gerät kann nicht aufnehmen.)";
     liveBuehne.className = "buehne"; // Rahmen vom letzten Mal entfernen
     liveWort.textContent = "";
     liveSchleifeStopp = starteSchleife(liveVideo, erkenneLive, zeichneLive);
@@ -3524,7 +3604,9 @@ async function startLive() {
     navigator.wakeLock?.request("screen").then((sperre) => { liveSperre = sperre; }).catch(() => {});
   } catch (fehler) {
     console.warn("Live-Kamera:", fehler);
-    stoppeLive();
+    liveAufnahmeStopp?.().catch(() => {});
+    liveAufnahmeStopp = null;
+    schalteLiveAus();
     setStatus(
       fehler?.name === "NotAllowedError"
         ? "Kein Kamerazugriff. Erlaube die Kamera in den Einstellungen von Safari bzw. der App und versuche es noch einmal."
@@ -3535,7 +3617,8 @@ async function startLive() {
   }
 }
 
-function stoppeLive() {
+// Kamera, Erkennung und Anzeige abschalten (ohne zu speichern)
+function schalteLiveAus() {
   liveSchleifeStopp?.();
   liveKameraStopp?.();
   liveSperre?.release().catch(() => {});
@@ -3543,8 +3626,165 @@ function stoppeLive() {
   liveBox.hidden = true;
 }
 
+// Beenden: Kamera aus, letzte Stücke abgeben, dann alle erkannten Schwünge speichern.
+// Wird auch aufgerufen, wenn man den Bereich wechselt – erkannte Schwünge gehen nicht verloren.
+async function beendeLive() {
+  if (!liveKameraStopp || liveBeendet) return;
+  liveBeendet = true;
+  liveStoppKnopf.disabled = true;
+  try {
+    liveSchleifeStopp?.(); // keine neuen Bilder mehr auswerten
+    const aufnahmeBeenden = liveAufnahmeStopp;
+    await aufnahmeBeenden?.(); // die letzten Stücke werden abgegeben (neuesLiveStueck)
+    ordneLiveZu();
+    // Was jetzt noch kein Stück hat, wird ohne Video gespeichert
+    liveAuftraege.push(...liveWartende.map((w) => ({ ...w, stueck: null })));
+    liveWartende = [];
+    liveAufnahmeStopp = null;
+    schalteLiveAus();
+    const auftraege = liveAuftraege;
+    liveAuftraege = [];
+    liveStuecke = [];
+    if (auftraege.length === 0) {
+      setStatus("Kein Schwung erkannt – nichts gespeichert.");
+      return;
+    }
+    await speichereLiveAuftraege(auftraege);
+  } catch (fehler) {
+    console.error(fehler);
+    setStatus(`Die Live-Schwünge ließen sich nicht speichern (${fehler.message || fehler.name}).`);
+    schalteLiveAus();
+  } finally {
+    liveBeendet = false;
+    liveStoppKnopf.disabled = false; // Knopf immer wieder freigeben
+  }
+}
+
+// Vorschaubild (Top-Position mit Skelett) aus einem Video-Element, wie macheVorschau()
+async function macheLiveVorschau(quelle, s) {
+  const zeit = s.phasen.top.zeit;
+  await springe(quelle, zeit, 5000);
+  const skala = 320 / Math.max(quelle.videoWidth, quelle.videoHeight);
+  const bild = document.createElement("canvas");
+  bild.width = Math.round(quelle.videoWidth * skala);
+  bild.height = Math.round(quelle.videoHeight * skala);
+  const bildCtx = bild.getContext("2d");
+  bildCtx.drawImage(quelle, 0, 0, bild.width, bild.height);
+  // Bilder von s liegen im Raster; das mit der kleinsten Zeitdifferenz zur Top-Position nehmen
+  const naechstes = s.bilder.reduce((a, b) => (Math.abs(b.zeit - zeit) < Math.abs(a.zeit - zeit) ? b : a));
+  if (naechstes.punkte) {
+    new DrawingUtils(bildCtx).drawConnectors(naechstes.punkte, PoseLandmarker.POSE_CONNECTIONS, { color: GRUEN, lineWidth: 2 });
+  }
+  return new Promise((fertig) => bild.toBlob(fertig, "image/jpeg", 0.8));
+}
+
+// Ein Stück in einem unsichtbaren Video-Element laden (für Clip und Vorschau)
+function ladeStueckInVideo(stueck, versteckt) {
+  return new Promise((ok, fehler) => {
+    const zeitlimit = setTimeout(() => fehler(new Error("Stück lässt sich nicht laden")), 10000);
+    versteckt.onloadeddata = () => { clearTimeout(zeitlimit); ok(); };
+    versteckt.onerror = () => { clearTimeout(zeitlimit); fehler(new Error("Stück lässt sich nicht laden")); };
+    versteckt.src = URL.createObjectURL(stueck.blob);
+  });
+}
+
+// Alle erkannten Schwünge als eine Sitzung speichern. Je Schwung wird aus dem Stück der
+// kurze Clip ausgeschnitten (dauert so lange wie der Clip selbst, in Echtzeit).
+async function speichereLiveAuftraege(auftraege) {
+  analyseLaeuft = true; // sperrt die anderen Knöpfe, solange gespeichert wird
+  setzeKnoepfeAktiv(false);
+  // Unsichtbares Video-Element – nicht display:none, sonst zeigt Safari keine Bilder
+  const versteckt = document.createElement("video");
+  versteckt.muted = true;
+  versteckt.playsInline = true;
+  versteckt.className = "versteckt-video";
+  document.body.append(versteckt);
+  const sitzungId = Date.now();
+  const datum = heute();
+  const schlaeger = liveSchlaeger.value;
+  let ohneVideo = 0;
+  let uebersprungen = 0;
+  try {
+    const eintraege = [];
+    let geladenesStueck = null;
+    for (const [i, a] of auftraege.entries()) {
+      setStatus(`Speichere Schwung ${i + 1} von ${auftraege.length} …`);
+      // Schwung auf die Zeit im Stück umrechnen (ohne Stück: Zeit ab Beginn des Fensters)
+      const s = schwungImStueck(a.schwung, a.stueck?.start ?? a.fenster.von, liveSeitenverhaeltnis, eintraege.length + 1);
+      if (!s.phasen) {
+        uebersprungen++;
+        continue;
+      }
+      const grenzen = clipGrenzen(s);
+      let clip = null;
+      let vorschau = null;
+      if (a.stueck && kannKuerzen()) {
+        try {
+          if (geladenesStueck !== a.stueck) {
+            if (versteckt.src) URL.revokeObjectURL(versteckt.src);
+            await ladeStueckInVideo(a.stueck, versteckt);
+            geladenesStueck = a.stueck;
+          }
+          vorschau = await macheLiveVorschau(versteckt, s);
+          clip = await schneideClip(versteckt, grenzen.start, grenzen.ende, springe);
+        } catch (fehler) {
+          console.warn("Live-Clip konnte nicht ausgeschnitten werden:", fehler);
+          geladenesStueck = null;
+        }
+      }
+      if (!clip) ohneVideo++;
+      const { schwung, posedaten } = schwungZumSpeichern(s, { ...grenzen, versatz: clip?.versatz ?? 0 });
+      eintraege.push({
+        schwung: {
+          ...schwung,
+          videoName: "Live-Aufnahme",
+          id: `${sitzungId}-${eintraege.length + 1}`,
+          sitzungId,
+          nummer: eintraege.length + 1,
+          datum,
+          schlaeger,
+          appVersion: APP_VERSION,
+        },
+        posedaten,
+        video: clip?.video ?? null,
+        vorschau,
+      });
+    }
+    if (eintraege.length === 0) {
+      setStatus("Kein Schwung war auswertbar – nichts gespeichert.");
+      return;
+    }
+    await speichereSitzung(
+      {
+        id: sitzungId,
+        datum,
+        schlaeger,
+        notiz: "Live-Aufnahme",
+        level: aktuellesLevel,
+        gedanke: "",
+        schwungIds: eintraege.map((e) => e.schwung.id),
+        appVersion: APP_VERSION,
+      },
+      eintraege
+    );
+    const anzahl = `${eintraege.length} ${eintraege.length === 1 ? "Schwung" : "Schwünge"}`;
+    setStatus(
+      `✓ ${anzahl} gespeichert – zu finden unter „Meine Schwünge“.` +
+        (ohneVideo ? ` ${ohneVideo} davon ohne Video.` : "") +
+        (uebersprungen ? ` ${uebersprungen} nicht auswertbar.` : "")
+    );
+  } finally {
+    // Aufräumen, auch bei Fehlern: Adresse freigeben, Element entfernen, Knöpfe frei
+    if (versteckt.src) URL.revokeObjectURL(versteckt.src);
+    versteckt.removeAttribute("src");
+    versteckt.remove();
+    analyseLaeuft = false;
+    setzeKnoepfeAktiv(true);
+  }
+}
+
 liveStartKnopf.addEventListener("click", startLive);
-liveStoppKnopf.addEventListener("click", stoppeLive);
+liveStoppKnopf.addEventListener("click", () => beendeLive().catch((fehler) => console.warn("Live beenden:", fehler)));
 
 // ---------------------------------------------------------------
 // 6. Bedienung

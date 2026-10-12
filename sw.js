@@ -31,6 +31,8 @@ const APP_DATEIEN = [
   "./livekamera.js",
   "./liveschwung.js",
   "./ampel.js",
+  "./aufnahme.js",
+  "./liveclip.js",
   "./level.js",
   "./fortschritt.js",
   "./tipps.js",

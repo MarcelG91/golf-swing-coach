@@ -1164,3 +1164,7 @@ pre.vorschau {
   pointer-events: none;
 }
 .live-wort:empty { display: none; }
+
+/* Live-Aufnahme (Etappe 12d): Schlägerwahl und das unsichtbare Video, aus dem Clips geschnitten werden */
+.live-schlaeger { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; }
+.versteckt-video { position: fixed; left: 0; top: 0; width: 64px; height: 64px; opacity: 0.01; pointer-events: none; }
