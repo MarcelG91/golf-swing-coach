@@ -220,6 +220,15 @@ try {
   pruefe(bilder, "Vorher/Nachher zeigt zwei Bilder aus den Clips");
   // Skelett wurde gezeichnet: grüne Pixel im Bild (GRUEN = #4ade80)
   pruefe(await auswerten(`[...document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas")].every((l) => { const d = l.getContext("2d").getImageData(0, 0, l.width, l.height).data; for (let i = 0; i < d.length; i += 4) if (d[i] === 74 && d[i + 1] === 222 && d[i + 2] === 128) return true; return false; })`), "Skelett ist in beiden Bildern eingezeichnet");
+  // Phasen-Abspieler: beide Clips laufen, Skelett wird auf die Videos gezeichnet, am Ende steht „Nochmal“
+  pruefe(await auswerten(`!!document.querySelector("#fortschrittInhalt .vergleich-abspielen button")`), "Phasen-Abspieler hat einen Abspielen-Knopf");
+  await auswerten(`document.querySelector("#fortschrittInhalt .vergleich-abspielen button").click()`);
+  pruefe(await wartenBis(`document.querySelectorAll("#fortschrittInhalt .abspiel-rahmen video").length === 2`, 15), "Abspieler zeigt beide Videos");
+  pruefe(await wartenBis(`/Nochmal/.test(document.querySelector("#fortschrittInhalt .vergleich-abspielen button")?.textContent || "")`, 30), "Abspieler spielt beide Clips bis zum Ende");
+  pruefe(await auswerten(`[...document.querySelectorAll("#fortschrittInhalt .abspiel-rahmen canvas")].every((l) => { const d = l.getContext("2d").getImageData(0, 0, l.width, l.height).data; for (let i = 3; i < d.length; i += 4) if (d[i] > 0) return true; return false; })`), "Skelett liegt über beiden Videos");
+  // Zurück zu den Bildern: Klick auf eine Phase gibt die Videos frei
+  await auswerten(`document.querySelector("#fortschrittInhalt .vergleich-phasen button").click()`);
+  pruefe(await auswerten(`document.querySelectorAll("#fortschrittInhalt .abspiel-rahmen").length === 0 && document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas").length === 2`), "Phase wählen zeigt wieder die Standbilder");
   pruefe(await auswerten(`/Dein Fokus/.test(document.getElementById("fortschrittInhalt").innerText)`), "Fortschritt zeigt „Dein Fokus“");
 
   // Live-Kamera mit der Testkamera: starten, Skelett-Schleife läuft, beenden. Es gibt keinen

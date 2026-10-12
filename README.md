@@ -280,6 +280,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `livekamera.js` | Live-Kamera (Etappe 12a, Test): Kamera starten, Bild für Bild das Skelett rechnen und die Geschwindigkeit messen |
+| `phasenabspieler.js` | Phasen-Abspieler (Vorher/Nachher): plant, wie schnell jeder Abschnitt abgespielt wird, damit Top und Treffmoment bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik) |
 | `liveschwung.js` | Schwünge live erkennen (Etappe 12b): merkt sich die letzten Sekunden, meldet einen Schwung nach Schlag + Finish (reine Rechenlogik) |
 | `ampel.js` | Ampel für das Live-Feedback (Etappe 12c): Farbe (grün/gelb/rot/grau) und Kurzwort aus einem ausgewerteten Schwung, nur Kennzahlen des gewählten Levels (reine Rechenlogik) |
 | `aufnahme.js` | Live-Aufnahme (Etappe 12d): zwei versetzte Aufnahmen in 16-s-Stücken, nur im Arbeitsspeicher |

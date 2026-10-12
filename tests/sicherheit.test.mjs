@@ -155,7 +155,7 @@ const RECHENLOGIK = [
   "phasen.js", "kennzahlen.js", "technik.js", "ideallinien.js", "level.js", "fortschritt.js",
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
   "wissen.js", "nachschlagen.js", "schaubilder.js",
-  "ampel.js", "liveschwung.js", "liveclip.js", // Live-Kamera (Etappe 12): nur Rechnen
+  "ampel.js", "liveschwung.js", "liveclip.js", "phasenabspieler.js", // Live-Kamera (Etappe 12): nur Rechnen
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {

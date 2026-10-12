@@ -1168,3 +1168,9 @@ pre.vorschau {
 /* Live-Aufnahme (Etappe 12d): Schlägerwahl und das unsichtbare Video, aus dem Clips geschnitten werden */
 .live-schlaeger { display: flex; align-items: center; gap: 8px; margin: 12px 0 8px; }
 .versteckt-video { position: fixed; left: 0; top: 0; width: 64px; height: 64px; opacity: 0.01; pointer-events: none; }
+
+/* Phasen-Abspieler (Vorher/Nachher): Video mit Skelett-Leinwand darüber */
+.vergleich-abspielen { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.abspiel-rahmen { position: relative; }
+.abspiel-rahmen video { display: block; width: 100%; height: auto; border-radius: var(--r-klein); background: #000; }
+.abspiel-rahmen canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
