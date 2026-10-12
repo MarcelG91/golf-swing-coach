@@ -3465,7 +3465,7 @@ const liveSchlaeger = $("liveSchlaeger");
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
 // Dieselbe Auswahl wie beim Speichern (fester Text aus index.html, kein Nutzerinhalt)
-liveSchlaeger.innerHTML = speichernSchlaeger.innerHTML;
+liveSchlaeger.replaceChildren(...[...speichernSchlaeger.children].map((kind) => kind.cloneNode(true)));
 
 const LIVE_MAX_SCHWUENGE = 15; // Danach beendet die App von selbst: Die Stücke liegen im Arbeitsspeicher
 const LIVE_WARTEZEIT = 25; // So lange (Sekunden) wartet ein Schwung auf sein Aufnahme-Stück
@@ -3590,6 +3590,14 @@ async function startLive() {
         liveMeldung.textContent = "Aufnahme nicht möglich – die Schwünge werden ohne Video gespeichert.";
       });
     });
+    if (analyseBereich.hidden) {
+      // Während die Kamera startete, wurde der Bereich gewechselt → nicht im Hintergrund weiterlaufen
+      stopp();
+      await liveAufnahmeStopp?.();
+      liveAufnahmeStopp = null;
+      schalteLiveAus();
+      return;
+    }
     liveKameraStopp = stopp;
     liveSeitenverhaeltnis = liveVideo.videoWidth / liveVideo.videoHeight;
     liveErkennung = neueLiveErkennung(liveSeitenverhaeltnis);
