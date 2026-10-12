@@ -65,6 +65,14 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 - [ ] Passt die Sprache zum Level (Einsteiger ohne Fachbegriffe und Zahlen)? Klingt etwas nach falscher Technik?
 - [ ] Wartezeit ca.: ___ s. Kosten laut Anzeige: ___ / ___ / ___ Cent. Erschien einmal „unvollständig“?
 
+## 5b. „Für Claude kopieren“ (Version ≥ 0.30, ohne Schlüssel, kostenlos)
+
+- [ ] Nach einer Analyse unter den Karten: Bereich „Mit Claude besprechen“ sichtbar (auch ohne Coach-Schlüssel)?
+- [ ] Knopf „Für Claude kopieren“ tippen: Erscheint **„Kopiert ✓“**? Oder erscheint stattdessen ein Textfeld
+      (Rückfall)? Welches von beiden: ___
+- [ ] In einen Chat mit Claude einfügen (Notizen-App reicht zum Ansehen): Steht die Anleitung samt Kennzahlen da?
+- [ ] Auch im Flugmodus: Kopieren geht ohne Internet?
+
 ## 6. Aufräumen (Version ≥ 0.11) – ganz zum Schluss, löscht Daten!
 
 - [ ] Speicheranzeige notieren (vorher): ___
@@ -81,5 +89,5 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 
 ## Rückmeldung an Claude
 
-Bildschirmfotos aus 1, 2 und 6 plus kurze Stichworte zu 3–5 reichen. Danach werden in
+Bildschirmfotos aus 1, 2 und 6 plus kurze Stichworte zu 3–5b reichen. Danach werden in
 `CLAUDE.md` die Punkte abgehakt und ggf. S10 (Zeitgrenze) und die Schwung-Schwelle angepasst.
