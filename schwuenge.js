@@ -22,12 +22,12 @@ export const SCHLAG_SCHWELLE = 3.5;
 
 // Zwei Schläge liegen mindestens so weit auseinander (Sekunden). Kleinere Spitzen
 // innerhalb eines Schwungs (z. B. im Finish) zählen so nicht als eigener Schlag.
-const MIN_ABSTAND = 3;
+export const MIN_ABSTAND = 3;
 
 // So viel Video vor und nach dem schnellsten Moment gehört zu einem Schwung (Sekunden).
 // Davor: ruhiges Ansprechen + Rückschwung (bis 2,5 s). Danach: Treffmoment + Finish (bis 2 s).
-const VORLAUF = 5;
-const NACHLAUF = 2.5;
+export const VORLAUF = 5;
+export const NACHLAUF = 2.5;
 
 // Zeitpunkte aller Schläge im Video (Sekunden, aufsteigend)
 export function findeSchlagZeiten(bilder, seitenverhaeltnis = 1) {
@@ -69,7 +69,7 @@ export function findeSchwuenge(bilder, seitenverhaeltnis = 1) {
 }
 
 // Einen Schwung auswerten: Phasen, Kennzahlen, Technik (wie bisher bei einem Video)
-function werteAus(bilder, seitenverhaeltnis, nummer) {
+export function werteAus(bilder, seitenverhaeltnis, nummer) {
   const phasen = erkennePhasen(bilder, seitenverhaeltnis);
   if (phasen.fehler) {
     return { nummer, bilder, sicher: false, grund: phasen.fehler };
