@@ -163,9 +163,11 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
-- **Teilen mit Freunden** (Nr. 6 erledigt, nach dem iPhone-Test 0.26.0 möglich): Die App läuft bei jedem kostenlos,
-  nur der Coach kostet. Optionen: eigener Schlüssel (umgesetzt) · Schlüssel je Freund aus Marcels Workspace mit Limit ·
-  schlüsselfreier Knopf „Für Claude kopieren“. Datenschutzhinweis (V4) ist seit 0.26.0 in der App.
+- **Teilen mit Freunden**: Die App läuft bei jedem kostenlos, nur der Coach kostet. **Erledigt mit 0.30.0:** schlüsselfreier
+  Knopf „Für Claude kopieren“ (legt Anleitung + Kennzahlen in die Zwischenablage, sendet nichts; `baueKopierText` in
+  `coach.js`). Eigener Schlüssel ist ebenfalls umgesetzt. Offen: iPhone-Test des Kopierens (Safari-Zwischenablage, siehe
+  `docs/iphone-testliste.md` Abschnitt 5b); „Schlüssel je Freund mit Limit“ bleibt eine spätere Option. Datenschutzhinweis
+  (V4) ist in der App.
 - **Coach-Modell Claude Opus 5.5** (Idee 01.10.): neuer und günstiger als Opus 5 (4/20 statt 5/25 US-Dollar je Mio.
   Tokens). Eigener Branch: Effort-Standard ist dort „medium“ (wir setzen „high“ ausdrücklich), Rückfall-Ziele prüfen,
   danach echter Test (Kosten, Qualität).
