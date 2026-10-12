@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 12.10.2026 · geprüft auf `origin/main` @ `56e8f1b` (Version 0.34.0, live; enthält zusätzlich die Live-Kamera aus 0.31.0–0.34.0, Fix 0.34.1 im Zweig `check-2026-10-12`)
+Stand: 12.10.2026 · geprüft auf `origin/main` @ `db4a07b` (Version 0.34.0, live; enthält zusätzlich die Live-Kamera aus 0.31.0–0.34.0, Fix 0.34.1 im Zweig `check-2026-10-12`)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
