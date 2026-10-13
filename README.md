@@ -177,7 +177,9 @@ App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
   **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Erklärungen und weitere Übungen sind
   nicht fachlich geprüft – das steht unter jeder Antwort. Leitplanken im Systemtext: den geprüften Tipps
   nie widersprechen, nur verbreitete Standardübungen, nichts erfinden.
-- Modell: Claude Opus 5 (gründlich), ca. 15–25 US-Cent und 30–90 Sekunden pro Coaching. Die Antwort
+- Modell: Claude Opus 5.5 (seit 0.38.0, vorher Opus 5; gründlich mit Effort „high“), ca. 15–25 US-Cent
+  und 30–90 Sekunden pro Coaching (Werte von Opus 5, neue Messung steht aus). Lehnt Claude ab, springt
+  automatisch ein älteres Modell ein; die Kosten unter der Antwort rechnen mit dessen Preis. Die Antwort
   wird mit dem Schwung gespeichert.
 - Der Schlüssel liegt nur im Browser dieses Geräts. Am besten einen eigenen Workspace mit
   Ausgabenlimit anlegen (Anleitung in den Einstellungen). „Alles löschen“ lässt den Schlüssel stehen.

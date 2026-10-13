@@ -21,10 +21,18 @@
 
 import { alleTipps } from "./tipps.js";
 
-// Modell und Preise an EINER Stelle (Entscheidung 28.09.: Claude Opus 5)
-export const COACH_MODELL = "claude-opus-5";
-export const MODELL_NAME = "Claude Opus 5";
-const PREIS_USD_PRO_MIO = { eingabe: 5, ausgabe: 25 }; // Stand 28.09.2026
+// Modell und Preise an EINER Stelle (Entscheidung 28.09.: Claude Opus 5, seit 13.10.: Claude Opus 5.5 –
+// neuer und günstiger, gleiche Anfrage)
+export const COACH_MODELL = "claude-opus-5-5";
+export const MODELL_NAME = "Claude Opus 5.5";
+// Preise in US-Dollar je Million Tokens (Stand 13.10.2026). Die zwei älteren Modelle stehen dabei,
+// weil bei einer Ablehnung eines davon einspringen kann (Rückfall, siehe COACH_BETA) – die Kosten
+// rechnet die App mit dem Preis des Modells, das die Antwort geschrieben hat.
+const PREISE_USD_PRO_MIO = {
+  "claude-opus-5-5": { eingabe: 4, ausgabe: 20 },
+  "claude-opus-5": { eingabe: 5, ausgabe: 25 },
+  "claude-opus-4-8": { eingabe: 5, ausgabe: 25 },
+};
 
 // Antwort in festen Feldern (Structured Outputs). Nur einfache Typen, keine Längenangaben –
 // die unterstützt das Schema nur eingeschränkt. Längen prüft pruefeCoachAntwort() selbst.
@@ -242,13 +250,16 @@ export function coachKopfzeilen(schluessel) {
 export function baueCoachAnfrage(daten) {
   return {
     model: COACH_MODELL,
-    // Genug Platz für Nachdenken plus eine lange Antwort. Sie kommt als Datenstrom (stream),
-    // damit die längere Wartezeit an kein Zeitlimit stößt.
-    max_tokens: 16000,
+    // Genug Platz für Nachdenken plus eine lange Antwort – das Nachdenken zählt mit. Opus 5.5
+    // denkt bei gleicher Stufe mehr als Opus 5, deshalb 32.000 statt 16.000 (ungenutzter Platz
+    // kostet nichts). Die Antwort kommt als Datenstrom (stream), damit die längere Wartezeit an
+    // kein Zeitlimit stößt.
+    max_tokens: 32000,
     stream: true,
     fallbacks: "default",
     thinking: { type: "adaptive" },
-    // "high": gründlicher beim Verknüpfen der Kennzahlen (Entscheidung 29.09., ca. 15–25 Cent)
+    // "high": gründlicher beim Verknüpfen der Kennzahlen (Entscheidung 29.09., bestätigt 13.10.).
+    // Ausdrücklich setzen: Bei Opus 5.5 wäre ohne Angabe "medium" der Standard.
     output_config: { effort: "high", format: { type: "json_schema", schema: ANTWORT_SCHEMA } },
     system: SYSTEMTEXT,
     messages: [{ role: "user", content: `Kennzahlen dieses Schwungs:\n${JSON.stringify(daten, null, 2)}` }],
@@ -406,11 +417,13 @@ export function coachFehlerArt({ status = 0, typ = "" } = {}) {
   return "unbekannt";
 }
 
-// Kosten einer Anfrage in US-Cent (aus den Token-Zahlen der Antwort)
-export function kostenCent(usage) {
+// Kosten einer Anfrage in US-Cent (aus den Token-Zahlen der Antwort und dem Modell, das sie
+// geschrieben hat). Unbekanntes Modell: Preis des Coach-Modells.
+export function kostenCent(usage, modell = COACH_MODELL) {
   if (!usage) return null;
+  const preis = PREISE_USD_PRO_MIO[modell] ?? PREISE_USD_PRO_MIO[COACH_MODELL];
   const eingabe = (usage.input_tokens || 0) + (usage.cache_creation_input_tokens || 0) + (usage.cache_read_input_tokens || 0);
-  const dollar = (eingabe * PREIS_USD_PRO_MIO.eingabe + (usage.output_tokens || 0) * PREIS_USD_PRO_MIO.ausgabe) / 1e6;
+  const dollar = (eingabe * preis.eingabe + (usage.output_tokens || 0) * preis.ausgabe) / 1e6;
   return Math.round(dollar * 1000) / 10; // auf 0,1 Cent
 }
 
