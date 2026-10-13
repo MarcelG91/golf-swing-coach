@@ -5,6 +5,8 @@
 //   2. Keine Fehler in der Konsole, keine CSP-Verstöße.
 //   3. Es gehen keine Anfragen an fremde Adressen.
 //   4. Der Bereich "Fortschritt" zeigt Diagramme für gespeicherte Testschwünge.
+//   5. Sicherung (Etappe 9): erstellen → alles löschen → einspielen → alles wieder da;
+//      kaputte Datei ändert nichts, der Coach-Schlüssel steht nie in der Datei.
 //
 // Aufruf:  node tests/browser-rauchtest.mjs
 // Chrome wird automatisch gesucht; sonst Pfad in der Umgebungsvariable CHROME_PFAD angeben.
@@ -181,7 +183,7 @@ try {
       for (let i = 0; i < 4; i++) {
         const id = sid + "-" + (i + 1);
         ids.push(id);
-        eintraege.push({ posedaten: new Blob(["x"]), schwung: { id, sitzungId: sid, nummer: i + 1, datum, schlaeger: "Eisen 7", ansicht: "frontal", sicher: true, appVersion: "test",
+        eintraege.push({ posedaten: [], schwung: { id, sitzungId: sid, nummer: i + 1, datum, schlaeger: "Eisen 7", ansicht: "frontal", sicher: true, appVersion: "test",
           kennzahlen: [{ id: "tempo", name: "Tempo", messwert: 3, wert: "3:1", bewertung: i < n + 1 ? "gut" : "verbessern" }] } });
       }
       await speicher.speichereSitzung({ id: sid, datum, schlaeger: "Eisen 7", notiz: "", schwungIds: ids, appVersion: "test" }, eintraege);
@@ -322,6 +324,75 @@ try {
     return clip.video.size;
   })()`);
   pruefe(clipGroesse > 1000, `Aufnahme-Stück der Testkamera lässt sich zu einem Clip schneiden (${clipGroesse} Bytes)`);
+
+  // Sicherung (Etappe 9): erstellen → alles löschen → einspielen → alles wieder da.
+  // Teilen-Menü gibt es hier nicht → die App lädt herunter. Den Download fangen wir ab
+  // (URL.createObjectURL merkt sich die Datei) und lassen Chrome nichts speichern.
+  await senden("Browser.setDownloadBehavior", { behavior: "deny" });
+  const KOEDER = "sk-ant-KOEDER-rauchtest";
+  const zaehle = `(async () => {
+    const speicher = await import("./speicher.js");
+    const { sitzungen, schwuenge, posedaten } = await speicher.ladeAllesFuerSicherung();
+    return { sitzungen: sitzungen.length, schwuenge: schwuenge.length, posen: Object.values(posedaten).reduce((n, p) => n + p.length, 0),
+      notizen: sitzungen.map((s) => s.notiz).sort().join("|") };
+  })()`;
+  const vorSicherung = await auswerten(zaehle);
+  await auswerten(`(() => {
+    localStorage.setItem("coachSchluessel", ${JSON.stringify(KOEDER)});
+    Object.defineProperty(navigator, "canShare", { value: undefined, configurable: true });
+    const original = URL.createObjectURL;
+    URL.createObjectURL = (datei) => { if (datei instanceof File) window.__sicherung = datei; return original(datei); };
+    document.getElementById("zuEinstellungen").click();
+    document.getElementById("sicherungErstellen").click();
+  })()`);
+  pruefe(await wartenBis(`!document.getElementById("sicherungBereit").hidden`, 20), "Sicherung wird erstellt");
+  await auswerten(`document.getElementById("sicherungSichern").click()`);
+  const sicherung = await wartenBis(`!!window.__sicherung`, 10) ? await auswerten(`window.__sicherung.text()`) : "";
+  pruefe(/^golf-sicherung-\d{4}-\d{2}-\d{2}\.json$/.test(await auswerten(`window.__sicherung?.name`)), "Sicherung wird als JSON-Datei heruntergeladen (ohne Teilen-Menü)");
+  pruefe(sicherung.length > 1000 && !sicherung.includes(KOEDER) && !sicherung.includes("coachSchluessel"), "Coach-Schlüssel steht nicht in der Sicherung");
+  await auswerten(`localStorage.removeItem("coachSchluessel")`);
+
+  // Alles löschen über den echten Dialog (Häkchen setzen, dann bestätigen)
+  await auswerten(`document.getElementById("allesLoeschen").click()`);
+  await wartenBis(`document.getElementById("loeschDialog").open`, 10);
+  await auswerten(`(() => { const h = document.getElementById("loeschHaken"); h.checked = true; h.dispatchEvent(new Event("change")); document.getElementById("loeschBestaetigen").click(); })()`);
+  pruefe(await wartenBis(`/Alle gespeicherten Schwünge sind gelöscht/.test(document.getElementById("datenMeldung").textContent)`, 10), "Alles löschen klappt");
+  pruefe((await auswerten(zaehle)).sitzungen === 0, "Nach dem Löschen ist die Datenbank leer");
+
+  // Datei in die Dateiauswahl legen (wie nach dem Antippen in der Dateien-App)
+  const waehle = (text) => auswerten(`(() => {
+    const auswahl = new DataTransfer();
+    auswahl.items.add(new File([${JSON.stringify(text)}], "golf-sicherung.json", { type: "application/json" }));
+    const feld = document.getElementById("sicherungDatei");
+    feld.files = auswahl.files;
+    feld.dispatchEvent(new Event("change"));
+  })()`);
+  const meldung = `document.getElementById("sicherungMeldung").textContent`;
+
+  // Kaputte Datei (ein geändertes Zeichen, sonst gültig): abgelehnt, nichts geschrieben
+  pruefe(sicherung.includes('"schlaeger":"Eisen 7"'), "Testdatei enthält die Stelle, die beschädigt wird");
+  await waehle(sicherung.replace('"schlaeger":"Eisen 7"', '"schlaeger":"Eisen 9"'));
+  pruefe(await wartenBis(`/beschädigt/.test(${meldung})`, 10), `Beschädigte Sicherung wird abgelehnt (steht: „${await auswerten(meldung)}“)`);
+  pruefe((await auswerten(zaehle)).sitzungen === 0 && await auswerten(`document.getElementById("sicherungPruefung").hidden`), "…und es wird nichts eingespielt");
+
+  // Echte Datei: prüfen, Zusammenfassung zeigen, einspielen
+  await waehle(sicherung);
+  pruefe(await wartenBis(`!document.getElementById("sicherungPruefung").hidden`, 10), "Sicherung wird geprüft und zusammengefasst");
+  const pruefText = await auswerten(`document.getElementById("sicherungPruefText").textContent`);
+  pruefe(pruefText.includes(`Neu dazu kommen ${vorSicherung.sitzungen} Sitzungen`), `Zusammenfassung nennt die neuen Sitzungen (steht: „${pruefText}“)`);
+  await auswerten(`document.getElementById("sicherungUebernehmen").click()`);
+  pruefe(await wartenBis(`/✓.*eingespielt/.test(${meldung})`, 20), `Einspielen meldet Erfolg (steht: „${await auswerten(meldung)}“)`);
+  const nachSicherung = await auswerten(zaehle);
+  pruefe(JSON.stringify(nachSicherung) === JSON.stringify(vorSicherung), `Alles wieder da: ${JSON.stringify(nachSicherung)}`);
+
+  // Nochmal einspielen: keine Doppelten
+  await waehle(sicherung);
+  pruefe(await wartenBis(`/schon auf diesem Gerät/.test(${meldung})`, 10), "Zweites Einspielen erkennt: alles schon da");
+  pruefe((await auswerten(zaehle)).sitzungen === vorSicherung.sitzungen, "…und legt keine Doppelten an");
+  // Meine Schwünge zeigt die eingespielten Sitzungen
+  await auswerten(`document.getElementById("zuGespeichert").click()`);
+  await auswerten(`document.getElementById("zuSitzungen").click()`);
+  pruefe(await wartenBis(`document.querySelectorAll("#sitzungsListe > *").length >= ${vorSicherung.sitzungen}`, 10), "Meine Schwünge zeigt die eingespielten Sitzungen");
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
   // rechnet auf der CPU weiter (Statuszeile "… CPU"). Das ist gewollt und kein Fehler.

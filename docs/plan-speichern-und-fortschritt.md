@@ -1,6 +1,6 @@
 # Plan: Schwünge speichern und Fortschritt messen
 
-Stand: 28.09.2026 · Status: **Etappe 7 und 8 umgesetzt** (Version 0.9.0), **Speicher aufräumen** umgesetzt (Version 0.11.0), Etappe 9 und 10 offen
+Stand: 28.09.2026 · Status: **Etappe 7 und 8 umgesetzt** (Version 0.9.0), **Speicher aufräumen** umgesetzt (Version 0.11.0), **Etappe 10** umgesetzt (0.27.0–0.36.0), **Etappe 9** umgesetzt (0.37.0, 13.10.2026 – Abweichungen siehe unten)
 
 ## Ziel
 
@@ -60,7 +60,7 @@ iPhone (Safari / Home-Bildschirm-App)
 | **Canvas + MediaRecorder** | Video kürzen und verkleinern | Im Browser eingebaut, auch in Safari. Spielt nur den Schwung ab (1 s vor dem Ansprechen bis 1 s nach dem Finish) und nimmt ihn in 720p neu auf. Alternative ffmpeg.wasm wäre ca. 30 MB groß und auf dem iPhone zu schwer. |
 | **Web-App-Manifest + Service Worker** | App auf den Home-Bildschirm, offline nutzbar | Startet wie eine echte App, funktioniert auf der Range auch ohne Netz, und Safari löscht die Daten einer Home-Bildschirm-App nicht einfach. |
 | **`navigator.storage.persist()`** | Browser bitten, die Daten dauerhaft zu behalten | Wird Home-Bildschirm-Apps in der Regel gewährt. |
-| **JSZip** (von cdnjs) | Sicherung als eine ZIP-Datei | Standardformat, lässt sich in „Dateien“/iCloud ablegen und am Mac öffnen. |
+| ~~JSZip (von cdnjs)~~ | ~~Sicherung als eine ZIP-Datei~~ | **Überholt (13.10.2026):** Seit 0.26.0 (C1) lädt die App nichts von fremden Servern. Die Sicherung enthält keine Videos und ist deshalb eine einfache JSON-Datei mit SHA-256-Prüfsumme (`sicherung.js`, ohne Bibliothek). |
 | **`fortschritt.js`** | Trends, Fokus, Meilensteine | Reine Rechenlogik wie `phasen.js` → mit `node --test` prüfbar. |
 
 ### Speicherplatz
@@ -153,3 +153,14 @@ schützen nur Home-Bildschirm-App und Speicherschutz („Daten geschützt ✓“
 - Online-Konten (z. B. Supabase oder eigener Server im Dev-Labor), wenn Geräte-übergreifende
   Daten oder Vergleiche unter Freunden gewünscht sind. Das Datenmodell oben lässt sich dafür
   1 : 1 übernehmen.
+
+## Etappe 9 – Entscheidungen (13.10.2026)
+
+| Frage | Entscheidung | Warum |
+|---|---|---|
+| Mit Videos? | **Nein, nur Kompakt**: Sitzungen, Schwünge, Kennzahlen, Notizen, Coach-Antworten, Posedaten, Lernfortschritt | Videos zeigen Marcel (V6) und würden die Datei auf Hunderte MB bringen. Ohne Clips fehlen nach dem Einspielen nur Video, Vorher/Nachher und Phasen-Abspieler. |
+| Passwort? | **Nein** | Ohne Bilder steht nur Golf-Statistik in der Datei (dazu Notizen und Videonamen). Ein vergessenes Passwort würde die Sicherung wertlos machen – bei einer Sicherung wiegt Datenverlust schwerer. V6 betraf ausdrücklich die Videos. Kommen je Videos dazu, kommt das Passwort mit (AES-GCM über Web Crypto). |
+| Ablage auf dem iPhone | Teilen-Menü → „In Dateien sichern“ → iCloud Drive; Rückfall Download | Zwei Schritte (erst bauen, dann „In Dateien sichern ›“), weil Safari das Teilen-Menü nur direkt nach einem Antippen öffnet. |
+| Schon Schwünge in der App? | **Nur zusammenführen** | Ersetzen hieße erst löschen – bricht das Einspielen danach ab, wäre alles weg. Gleiche Sitzungs-ID = schon da → übersprungen; Datenbank-`add` statt `put`, damit nie etwas überschrieben wird. |
+| Einstellungen | Nur Lernfortschritt (vereinigt) | Das Level verlangt die App beim ersten Start ohnehin, Darstellung und Kamera hängen am Gerät. Erlaubt-Liste statt Verboten-Liste – der Coach-Schlüssel kann nie hineinrutschen. |
+| Prüfung | Prüfsumme, Format + Version, Aufbau, freier Speicher – alles vor dem ersten Schreiben | Kaputte Dateien dürfen nichts verändern. |

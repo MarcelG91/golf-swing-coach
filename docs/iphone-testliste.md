@@ -73,11 +73,22 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 - [ ] In einen Chat mit Claude einfügen (Notizen-App reicht zum Ansehen): Steht die Anleitung samt Kennzahlen da?
 - [ ] Auch im Flugmodus: Kopieren geht ohne Internet?
 
+## 5c. Sicherung (Version ≥ 0.37) – vor Punkt 6 machen!
+
+- [ ] Einstellungen → „Sicherung erstellen“ → „In Dateien sichern ›“: Öffnet sich das **Teilen-Menü**?
+      (Oder kommt die Meldung „heruntergeladen“? Welches von beiden: ___)
+- [ ] Im Teilen-Menü „In Dateien sichern“ → iCloud Drive. Liegt `golf-sicherung-….json` danach in der Dateien-App?
+      Größe laut Dateien-App: ___
+- [ ] „Sicherung einspielen ›“ öffnet die Dateien-App. Ist die Sicherung dort **antippbar** (nicht ausgegraut)?
+- [ ] Gleiche Datei nochmal einspielen: Meldung „schon auf diesem Gerät“?
+- [ ] Nach „Alles löschen“ (Punkt 6) wieder einspielen: Sind alle Sitzungen mit Kennzahlen, Notizen und
+      Fortschritt-Verlauf wieder da (ohne Videos)?
+
 ## 6. Aufräumen (Version ≥ 0.11) – ganz zum Schluss, löscht Daten!
 
 - [ ] Speicheranzeige notieren (vorher): ___
 - [ ] Bei einer Sitzung „Videos löschen“ → Speicheranzeige (nachher): ___
-- [ ] Nur wenn du die Testschwünge nicht brauchst: „Alles löschen“ →
+- [ ] Erst Sicherung (5c), dann „Alles löschen“ →
       Level noch gewählt? Coach-Schlüssel noch da? App offline weiter nutzbar (Flugmodus)?
 
 ## 7. Neues Design (Version ≥ 0.16)

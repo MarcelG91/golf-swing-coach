@@ -51,7 +51,11 @@ import {
   loescheAlles,
   zaehleBilder,
   sitzungenAelterAls,
+  ladeAllesFuerSicherung,
+  spieleSitzungEin,
 } from "./speicher.js";
+// Sicherung als Datei (Etappe 9): Format, Prüfung, Zusammenführen
+import { baueSicherung, pruefeSicherung, planeEinspielen, einstellungenFuerSicherung, vereinigeLernfortschritt } from "./sicherung.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import {
   sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, vorherNachher, schlaegerGruppe, GRUPPEN_NAME,
@@ -208,6 +212,18 @@ const videosAuswahl = $("videosAuswahl");
 const videosLoeschenBtn = $("videosLoeschen");
 const allesLoeschenBtn = $("allesLoeschen");
 const datenMeldung = $("datenMeldung");
+// Sicherung (Etappe 9)
+const sicherungErstellenBtn = $("sicherungErstellen");
+const sicherungEinspielenBtn = $("sicherungEinspielen");
+const sicherungDateiWahl = $("sicherungDatei");
+const sicherungBereit = $("sicherungBereit");
+const sicherungBereitText = $("sicherungBereitText");
+const sicherungSichernBtn = $("sicherungSichern");
+const sicherungPruefung = $("sicherungPruefung");
+const sicherungPruefText = $("sicherungPruefText");
+const sicherungUebernehmenBtn = $("sicherungUebernehmen");
+const sicherungAbbrechenBtn = $("sicherungAbbrechen");
+const sicherungMeldung = $("sicherungMeldung");
 const loeschDialog = $("loeschDialog");
 const loeschTitel = $("loeschTitel");
 const loeschWeg = $("loeschWeg");
@@ -3583,6 +3599,194 @@ async function zeigeDatenUebersicht() {
   }
 }
 
+// ---------------------------------------------------------------
+// 5c. Sicherung (Etappe 9) – Format, Prüfung und Zusammenführen in sicherung.js
+// Eine Datei mit Kennzahlen, Notizen, Coach-Antworten, Posedaten und Lernfortschritt.
+// Keine Videos, keine Bilder, kein Coach-Schlüssel. Hochgeladen wird nichts: Die Datei
+// legst du selbst ab (Teilen-Menü → „In Dateien sichern“).
+// ---------------------------------------------------------------
+let fertigeSicherung = null; // gebaute Datei (File), wartet auf "In Dateien sichern"
+let gepruefteSicherung = null; // geprüfte Sicherung, wartet auf "Einspielen"
+
+const meldeSicherung = (text) => { sicherungMeldung.textContent = text; };
+// Kleine Sicherungen in KB statt "0,0 MB"
+const dateiGroesse = (bytes) => (bytes < 1e5 ? `${Math.max(1, Math.round(bytes / 1000))} KB` : mb(bytes));
+
+// Während einer Sicherung alle Knöpfe dazu sperren – und auch die Lösch-Knöpfe und den
+// Umschalter oben, damit nicht mitten im Einspielen gelöscht oder weggewechselt wird.
+function sperreSicherung(gesperrt) {
+  for (const knopf of [sicherungErstellenBtn, sicherungEinspielenBtn, sicherungSichernBtn, sicherungUebernehmenBtn, sicherungAbbrechenBtn]) {
+    knopf.disabled = gesperrt;
+  }
+  sperreLoeschKnoepfe(gesperrt);
+}
+
+// Schritt 1: Datei bauen. Das Teilen-Menü öffnet Safari nur direkt nach einem Antippen –
+// Lesen und Prüfsumme dauern aber einen Moment. Deshalb zwei Schritte: erst bauen, dann
+// mit einem zweiten Antippen ablegen (legeSicherungAb).
+async function erstelleSicherung() {
+  meldeSicherung("");
+  gepruefteSicherung = null;
+  sicherungPruefung.hidden = true;
+  sicherungBereit.hidden = true;
+  fertigeSicherung = null;
+  sperreSicherung(true);
+  try {
+    const { sitzungen, schwuenge, posedaten } = await ladeAllesFuerSicherung();
+    if (!sitzungen.length) {
+      meldeSicherung("Noch keine Schwünge gespeichert – es gibt nichts zu sichern.");
+      return;
+    }
+    const text = await baueSicherung({
+      sitzungen,
+      schwuenge,
+      posedaten,
+      // Nur die Einstellungen der Erlaubt-Liste in sicherung.js (nie der Coach-Schlüssel)
+      einstellungen: einstellungenFuerSicherung(leseEinstellung),
+      appVersion: APP_VERSION,
+      erstellt: new Date().toISOString(),
+    });
+    // Probe: Lässt sich die Datei später wieder einspielen? Lieber jetzt einen Fehler zeigen
+    // als erst beim Handywechsel merken, dass die Sicherung nicht passt.
+    const probe = await pruefeSicherung(text);
+    if (!probe.ok) throw new Error(`Probe-Prüfung fehlgeschlagen: ${probe.fehler}`);
+    fertigeSicherung = new File([text], `golf-sicherung-${heute()}.json`, { type: "application/json" });
+    sicherungBereitText.textContent =
+      `Sicherung bereit: ${stueck(sitzungen.length, "Sitzung", "Sitzungen")} mit ` +
+      `${stueck(schwuenge.length, "Schwung", "Schwüngen")} (${dateiGroesse(fertigeSicherung.size)}). ` +
+      "Im Teilen-Menü „In Dateien sichern“ wählen und iCloud Drive als Ort nehmen.";
+    sicherungBereit.hidden = false;
+  } catch (fehler) {
+    console.error(fehler);
+    meldeSicherung(`Sicherung erstellen hat nicht geklappt (${fehler.message || fehler.name}).`);
+  } finally {
+    sperreSicherung(false);
+  }
+}
+
+// Schritt 2: Datei ablegen – über das Teilen-Menü, sonst als Download
+async function legeSicherungAb() {
+  const datei = fertigeSicherung;
+  if (!datei) return;
+  // navigator.share als Erstes, ohne await davor – sonst gilt das Antippen als "abgelaufen"
+  if (navigator.canShare?.({ files: [datei] })) {
+    try {
+      await navigator.share({ files: [datei] });
+      sicherungBereit.hidden = true;
+      fertigeSicherung = null;
+      meldeSicherung(`✓ Sicherung „${datei.name}“ übergeben. Schau in der Dateien-App nach, ob sie in iCloud Drive liegt.`);
+      return;
+    } catch (fehler) {
+      if (fehler.name === "AbortError") {
+        meldeSicherung("Teilen abgebrochen – die Sicherung ist noch nicht abgelegt.");
+        return;
+      }
+      console.warn("Teilen ging nicht, lade die Sicherung stattdessen herunter:", fehler);
+    }
+  }
+  // Rückfall: herunterladen (iPhone: Dateien-App → Downloads)
+  const adresse = URL.createObjectURL(datei);
+  const link = document.createElement("a");
+  link.href = adresse;
+  link.download = datei.name;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(adresse), 60_000); // verzögert freigeben, der Download braucht sie noch
+  sicherungBereit.hidden = true;
+  fertigeSicherung = null;
+  meldeSicherung(`✓ Sicherung „${datei.name}“ heruntergeladen (Dateien-App → Downloads). Für einen Handywechsel nach iCloud Drive verschieben.`);
+}
+
+// Einspielen, Schritt 1: gewählte Datei prüfen – hier wird noch nichts geschrieben
+async function pruefeGewaehlteSicherung() {
+  const datei = sicherungDateiWahl.files[0];
+  if (!datei) return;
+  gepruefteSicherung = null;
+  sicherungBereit.hidden = true;
+  sicherungPruefung.hidden = true;
+  sperreSicherung(true);
+  meldeSicherung("Sicherung wird geprüft …");
+  try {
+    const ergebnis = await pruefeSicherung(await datei.text());
+    if (!ergebnis.ok) {
+      meldeSicherung(`✖ ${ergebnis.fehler}`);
+      return;
+    }
+    const { info, daten } = ergebnis;
+    const plan = planeEinspielen(daten, (await ladeSitzungen()).map((s) => s.id));
+    const lernfortschritt = vereinigeLernfortschritt(wissenErledigt, daten.einstellungen.wissenFortschritt);
+    const neueLektionen = lernfortschritt.length - wissenErledigt.length;
+    if (plan.neu.length === 0 && neueLektionen === 0) {
+      meldeSicherung("Alles aus dieser Sicherung ist schon auf diesem Gerät – es gibt nichts einzuspielen.");
+      return;
+    }
+    // Platz grob prüfen: das Doppelte der Datei sollte frei sein (die Datenbank braucht etwas mehr)
+    const platz = await speicherBelegung();
+    if (platz && platz.verfuegbar - platz.belegt < datei.size * 2) {
+      meldeSicherung("✖ Auf dem Gerät ist zu wenig Speicher frei. Lösche zuerst alte Videos (unten) und versuche es dann nochmal.");
+      return;
+    }
+    const neueSchwuenge = plan.neu.reduce((summe, eintrag) => summe + eintrag.schwuenge.length, 0);
+    const erstellt = /^\d{4}-\d{2}-\d{2}/.test(info.erstellt) ? `vom ${deutschesDatum(info.erstellt.slice(0, 10))}` : "";
+    sicherungPruefText.textContent = [
+      `✓ Sicherung ${erstellt} geprüft${info.appVersion ? ` (App ${info.appVersion})` : ""}: ` +
+        `${stueck(info.sitzungen, "Sitzung", "Sitzungen")} mit ${stueck(info.schwuenge, "Schwung", "Schwüngen")}.`,
+      plan.neu.length
+        ? `Neu dazu kommen ${stueck(plan.neu.length, "Sitzung", "Sitzungen")} mit ${stueck(neueSchwuenge, "Schwung", "Schwüngen")}.`
+        : "",
+      plan.schonDa ? `${plan.schonDa} ${plan.schonDa === 1 ? "Sitzung ist" : "Sitzungen sind"} schon da und ${plan.schonDa === 1 ? "bleibt" : "bleiben"} unverändert.` : "",
+      neueLektionen > 0 ? `Lernfortschritt: ${stueck(neueLektionen, "Lektion", "Lektionen")} als erledigt dazu.` : "",
+      "Was schon auf dem Gerät ist, wird nicht überschrieben.",
+    ].filter(Boolean).join(" ");
+    gepruefteSicherung = { plan, lernfortschritt: daten.einstellungen.wissenFortschritt };
+    sicherungPruefung.hidden = false;
+    meldeSicherung("");
+  } catch (fehler) {
+    console.error(fehler);
+    meldeSicherung(`Die Datei ließ sich nicht lesen (${fehler.message || fehler.name}). Es wurde nichts eingespielt.`);
+  } finally {
+    sperreSicherung(false);
+  }
+}
+
+// Einspielen, Schritt 2: Sitzung für Sitzung in die Datenbank (jede ganz oder gar nicht)
+async function spieleSicherungEin() {
+  const vorhaben = gepruefteSicherung;
+  if (!vorhaben) return;
+  gepruefteSicherung = null;
+  sicherungPruefung.hidden = true;
+  sperreSicherung(true);
+  const gesamt = vorhaben.plan.neu.length;
+  let fertig = 0;
+  try {
+    for (const { sitzung, schwuenge } of vorhaben.plan.neu) {
+      meldeSicherung(`Wird eingespielt … Sitzung ${fertig + 1} von ${gesamt}`);
+      await spieleSitzungEin(sitzung, schwuenge);
+      fertig++;
+    }
+    // Lernfortschritt: erledigt bleibt erledigt (Gerät + Sicherung)
+    wissenErledigt = vereinigeLernfortschritt(wissenErledigt, vorhaben.lernfortschritt);
+    try {
+      localStorage.setItem(FORTSCHRITT_NAME, JSON.stringify(wissenErledigt));
+    } catch (fehler) {
+      console.warn("Lernfortschritt nicht gespeichert:", fehler);
+    }
+    meldeSicherung(
+      gesamt
+        ? `✓ ${stueck(fertig, "Sitzung", "Sitzungen")} eingespielt – zu finden unter „Meine Schwünge“.`
+        : "✓ Lernfortschritt übernommen."
+    );
+  } catch (fehler) {
+    console.error(fehler);
+    meldeSicherung(
+      `Einspielen hat nach ${fertig} von ${gesamt} Sitzungen nicht geklappt (${fehler.message || fehler.name}). ` +
+        "Schon Eingespieltes bleibt. Nochmal einspielen ergänzt den Rest – ohne Doppelte."
+    );
+  } finally {
+    sperreSicherung(false);
+    await zeigeDatenUebersicht();
+  }
+}
+
 // Die geöffnete gespeicherte Sitzung aus der Ansicht nehmen (sie wurde gelöscht)
 function leereSitzungsAnsicht() {
   gespeicherteSitzung = null;
@@ -4116,6 +4320,21 @@ sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 videosSitzungLoeschenBtn.addEventListener("click", loescheVideosDerSitzung);
 videosLoeschenBtn.addEventListener("click", loescheVideosAusEinstellungen);
 allesLoeschenBtn.addEventListener("click", loescheAllesAusEinstellungen);
+sicherungErstellenBtn.addEventListener("click", erstelleSicherung);
+sicherungSichernBtn.addEventListener("click", legeSicherungAb);
+// Die versteckte Dateiauswahl öffnen (iPhone: Dateien-App). value leeren, damit dieselbe
+// Datei auch ein zweites Mal ausgewählt werden kann (sonst kommt kein "change").
+sicherungEinspielenBtn.addEventListener("click", () => {
+  sicherungDateiWahl.value = "";
+  sicherungDateiWahl.click();
+});
+sicherungDateiWahl.addEventListener("change", pruefeGewaehlteSicherung);
+sicherungUebernehmenBtn.addEventListener("click", spieleSicherungEin);
+sicherungAbbrechenBtn.addEventListener("click", () => {
+  gepruefteSicherung = null;
+  sicherungPruefung.hidden = true;
+  meldeSicherung("Abgebrochen – es wurde nichts eingespielt.");
+});
 // Bei "Alles löschen": Der rote Knopf wird erst mit dem Häkchen antippbar
 loeschHaken.addEventListener("change", () => {
   loeschBestaetigen.disabled = !loeschHaken.checked;

@@ -846,6 +846,11 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
 }
 .daten-zeile button.klein, .daten-zeile button.text-link { margin-top: 0; flex-shrink: 0; }
 .daten > .daten-zeile:last-of-type { border-bottom: none; }
+/* Sicherung: fertige Datei bzw. Prüfergebnis mit Knöpfen darunter */
+.sicherung-box { padding: 10px 0 12px; border-bottom: 1px solid var(--rand); }
+.sicherung-box .hinweis { margin-top: 0; }
+.sicherung-box .knopfzeile { display: flex; align-items: center; gap: 24px; }
+.sicherung-box .knopfzeile button.text-link { margin-top: 0; }
 
 /* ---------------------------------------------------------------------
    Dialoge: Rückfrage vor dem Löschen, Einwilligung Coach

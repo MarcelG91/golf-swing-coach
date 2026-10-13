@@ -423,6 +423,34 @@
       <h3>Daten auf diesem Gerät</h3>
       <p id="datenUebersicht" class="hinweis"></p>
 
+      <!-- Sicherung (Etappe 9, sicherung.js): eine Datei, die du selbst ablegst – es wird nichts hochgeladen.
+           Texte aus der Datei setzt app.js nur per textContent. -->
+      <h4>Sicherung – Schwünge als Datei aufheben</h4>
+      <p class="hinweis">
+        Sichert Kennzahlen, Notizen, Coach-Antworten, Posedaten und deinen Lernfortschritt in eine Datei –
+        ohne Videos, Bilder und Coach-Schlüssel. Lege sie in iCloud Drive ab, dann kannst du sie auch auf
+        einem neuen iPhone einspielen. Deine Notizen stehen lesbar in der Datei.
+      </p>
+      <div class="daten-zeile">
+        <button id="sicherungErstellen" class="text-aktion">Sicherung erstellen</button>
+        <button id="sicherungEinspielen" class="text-link">Sicherung einspielen ›</button>
+        <input type="file" id="sicherungDatei" accept=".json,application/json" hidden>
+      </div>
+      <div id="sicherungBereit" class="sicherung-box" hidden>
+        <p id="sicherungBereitText" class="hinweis"></p>
+        <div class="knopfzeile">
+          <button id="sicherungSichern" class="text-aktion">In Dateien sichern ›</button>
+        </div>
+      </div>
+      <div id="sicherungPruefung" class="sicherung-box" hidden>
+        <p id="sicherungPruefText" class="hinweis"></p>
+        <div class="knopfzeile">
+          <button id="sicherungUebernehmen" class="text-aktion">Einspielen</button>
+          <button id="sicherungAbbrechen" class="text-link">Abbrechen</button>
+        </div>
+      </div>
+      <p id="sicherungMeldung" class="status" aria-live="polite"></p>
+
       <h4>Videos und Bilder löschen – Kennzahlen bleiben</h4>
       <p class="hinweis">
         Videos brauchen fast den ganzen Platz. Kennzahlen, Notizen und Posedaten bleiben
@@ -437,7 +465,7 @@
       </div>
 
       <h4>Alle gespeicherten Schwünge löschen</h4>
-      <p class="hinweis">Löscht alles unter „Meine Schwünge“ – auch die Kennzahlen.</p>
+      <p class="hinweis">Löscht alles unter „Meine Schwünge“ – auch die Kennzahlen. Tipp: Vorher eine Sicherung erstellen.</p>
       <div class="daten-zeile">
         <button id="allesLoeschen" class="text-gefahr">Alles löschen ›</button>
       </div>
@@ -457,6 +485,11 @@
         <strong>Bleibt auf diesem Gerät:</strong> deine Videos, Einzelbilder, Körperpunkte (Posedaten),
         Kennzahlen, Notizen, dein Level, dein Lernfortschritt und – falls eingetragen – dein API-Schlüssel
         (er geht nur bei Coach-Anfragen zur Anmeldung an Anthropic). Die Analyse läuft komplett hier im Browser. Es gibt kein Konto, keine Werbung, kein Tracking und keine Cookies.
+      </p>
+      <p class="hinweis">
+        <strong>Sicherung:</strong> Nur wenn du sie erstellst, entsteht eine Datei mit Kennzahlen, Notizen,
+        Coach-Antworten, Posedaten und Lernfortschritt – ohne Videos, Bilder und API-Schlüssel. Hochgeladen wird
+        dabei nichts; wohin die Datei kommt (z. B. iCloud Drive), entscheidest du im Teilen-Menü.
       </p>
       <p class="hinweis">
         <strong>Beim Öffnen und bei Updates</strong> lädt die App ihre eigenen Dateien von GitHub Pages

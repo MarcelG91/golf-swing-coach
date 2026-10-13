@@ -81,7 +81,8 @@ test("Datenschutzhinweis (V4) nennt beide Empfänger und was nie gesendet wird",
   assert.ok(start > 0, "Abschnitt Datenschutz fehlt in den Einstellungen");
   const abschnitt = INDEX.slice(start, INDEX.indexOf("</section>", start));
   // Die CSP erlaubt genau zwei Ziele: die eigene Adresse (GitHub Pages) und den Coach (Anthropic)
-  for (const wort of ["GitHub", "Anthropic", "IP-Adresse", "Einwilligung", "Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum", "kein Tracking"]) {
+  for (const wort of ["GitHub", "Anthropic", "IP-Adresse", "Einwilligung", "Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum", "kein Tracking",
+    "Sicherung:", "ohne Videos, Bilder und API-Schlüssel", "Hochgeladen wird\n        dabei nichts"]) {
     assert.ok(abschnitt.includes(wort), `Datenschutzhinweis nennt „${wort}“ nicht`);
   }
 });
@@ -156,6 +157,7 @@ const RECHENLOGIK = [
   "tipps.js", "strichfigur.js", "uebungsbilder.js", "coach.js", "schwuenge.js", "gesamtauswertung.js",
   "wissen.js", "nachschlagen.js", "schaubilder.js",
   "ampel.js", "liveschwung.js", "liveclip.js", "phasenabspieler.js", // Live-Kamera (Etappe 12): nur Rechnen
+  "sicherung.js", // Sicherung (Etappe 9): Format, Prüfung, Zusammenführen
 ];
 
 test("Rechenlogik-Dateien benutzen keinen Browser-Code", () => {
@@ -252,9 +254,11 @@ test("Coach: Antwort aus allen Textblöcken lesen – auch nach einem Rückfall 
 });
 
 test("Lernfortschritt (wissenFortschritt) übersteht „Alles löschen“ und enthält keine Schwungdaten", () => {
-  // Nur app.js fasst den Schlüssel an – und nur zum Lesen und Schreiben, nie zum Entfernen
+  // Nur app.js fasst den Schlüssel an – und nur zum Lesen und Schreiben, nie zum Entfernen.
+  // sicherung.js nennt ihn für die Sicherung, liest aber nur über die Funktion, die app.js
+  // übergibt (kein eigener localStorage-Zugriff, siehe Test „Rechenlogik-Dateien …“).
   const mitSchluessel = QUELLDATEIEN.filter(({ text }) => text.includes("wissenFortschritt")).map(({ datei }) => datei);
-  assert.deepEqual(mitSchluessel.filter((d) => d !== "wissen.js"), ["app.js"]);
+  assert.deepEqual(mitSchluessel.filter((d) => d !== "wissen.js"), ["app.js", "sicherung.js"]);
   const code = ohneKommentare(APP);
   assert.doesNotMatch(code, /removeItem\(\s*(FORTSCHRITT_NAME|["']wissenFortschritt["'])/, "Fortschritt wird nie entfernt");
   assert.match(code, /const FORTSCHRITT_NAME = "wissenFortschritt"/);
@@ -301,4 +305,27 @@ test("Live-Kamera: Kamera wird beim Beenden abgeschaltet, Aufnahme-Adressen werd
   assert.match(live, /finally\s*{[\s\S]*?revokeObjectURL[\s\S]*?setzeKnoepfeAktiv\(true\)/, "Adresse freigeben und Knöpfe im finally frei");
   const beenden = APP.slice(APP.indexOf("async function beendeLive"), APP.indexOf("// Vorschaubild (Top-Position"));
   assert.match(beenden, /finally\s*{[\s\S]*?liveStoppKnopf\.disabled = false/, "Beenden-Knopf im finally frei");
+});
+
+// Sicherung (Etappe 9, V6): eine Datei, die Marcel selbst ablegt – kein Upload, kein Coach-Schlüssel,
+// keine Videos/Bilder, und Einspielen überschreibt nie etwas.
+test("Sicherung: nichts ins Netz, kein Coach-Schlüssel, keine Videos, Einspielen überschreibt nichts", () => {
+  const app = ohneKommentare(APP);
+  const teil = app.slice(app.indexOf("let fertigeSicherung"), app.indexOf("function leereSitzungsAnsicht"));
+  assert.ok(teil.length > 1000, "Abschnitt Sicherung nicht gefunden");
+  assert.doesNotMatch(teil, /fetch\(|sendBeacon|XMLHttpRequest|WebSocket/);
+  // Einstellungen nur über die Erlaubt-Liste in sicherung.js – nie den Schlüssel oder die Einwilligung
+  assert.doesNotMatch(teil, /coachSchluessel|SCHLUESSEL_NAME|EINWILLIGUNG|localStorage\.getItem|ladeMedium|loesche(Alles|Sitzung|Schwung|VideosUndBilder)/);
+  // Geschrieben wird nur der Lernfortschritt
+  assert.deepEqual([...teil.matchAll(/localStorage\.setItem\(([^,]+),/g)].map(([, name]) => name), ["FORTSCHRITT_NAME"]);
+  assert.equal((teil.match(/createObjectURL/g) ?? []).length, (teil.match(/revokeObjectURL/g) ?? []).length);
+  // Erst prüfen, dann einspielen: pruefeSicherung steht vor dem ersten Schreiben
+  assert.ok(teil.indexOf("pruefeSicherung(") < teil.indexOf("spieleSitzungEin("));
+
+  const speicher = ohneKommentare(QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text);
+  const laden = speicher.slice(speicher.indexOf("function ladeAllesFuerSicherung"), speicher.indexOf("function spieleSitzungEin"));
+  assert.doesNotMatch(laden, /\/video|\/vorschau|readwrite/, "Für die Sicherung werden nur Posedaten gelesen");
+  const einspielen = speicher.slice(speicher.indexOf("function spieleSitzungEin"), speicher.indexOf("function speicherBelegung"));
+  assert.match(einspielen, /\.add\(/);
+  assert.doesNotMatch(einspielen, /\.put\(|\.delete\(|\.clear\(/, "Einspielen darf nichts überschreiben oder löschen");
 });

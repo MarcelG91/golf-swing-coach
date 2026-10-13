@@ -313,6 +313,42 @@ export async function loescheAlles() {
   await abgeschlossen(t);
 }
 
+// ---------------------------------------------------------------
+// Sicherung (Etappe 9, Format und Prüfung in sicherung.js)
+// ---------------------------------------------------------------
+
+// Alles für die Sicherung lesen: Sitzungen, Schwünge und Posedaten – keine Videos und
+// keine Vorschaubilder (die werden gar nicht erst angefasst).
+// Rückgabe: { sitzungen, schwuenge, posedaten: { "<schwungId>": [...] } }
+export async function ladeAllesFuerSicherung() {
+  const db = await oeffne();
+  const t = db.transaction(["sitzungen", "schwuenge", "medien"]);
+  const medien = t.objectStore("medien");
+  const [sitzungen, schwuenge] = await Promise.all([
+    ergebnis(t.objectStore("sitzungen").getAll()),
+    ergebnis(t.objectStore("schwuenge").getAll()),
+  ]);
+  const listen = await Promise.all(schwuenge.map((s) => ergebnis(medien.get(`${s.id}/posedaten`))));
+  const posedaten = {};
+  schwuenge.forEach((s, i) => { posedaten[s.id] = listen[i] ?? []; });
+  return { sitzungen, schwuenge, posedaten };
+}
+
+// Eine Sitzung aus einer Sicherung einspielen – in einer Transaktion (ganz oder gar nicht).
+// "add" statt "put": Gibt es einen Eintrag schon, bricht die Transaktion ab, statt ihn zu
+// überschreiben. Vorhandene Daten bleiben so in jedem Fall unangetastet.
+// schwuenge = [{ schwung, posedaten }]
+export async function spieleSitzungEin(sitzung, schwuenge) {
+  const db = await oeffne();
+  const t = db.transaction(["sitzungen", "schwuenge", "medien"], "readwrite");
+  t.objectStore("sitzungen").add(sitzung);
+  for (const { schwung, posedaten } of schwuenge) {
+    t.objectStore("schwuenge").add(schwung);
+    t.objectStore("medien").add(posedaten, `${schwung.id}/posedaten`);
+  }
+  await abgeschlossen(t);
+}
+
 // Wie viel Speicher belegt die App? (in Bytes; der Browser schätzt grob)
 export async function speicherBelegung() {
   if (!navigator.storage?.estimate) return null;
