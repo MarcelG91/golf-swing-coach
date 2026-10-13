@@ -70,24 +70,28 @@
     <!-- 1. Video(s) auswählen. "multiple" = mehrere Videos auf einmal markierbar.
          Die Filmtipps blendet style.css aus, sobald ein Video geladen ist. -->
     <section class="start-karte">
+      <!-- Einstiegsbild: Logo (= App-Symbol) und Name. Verschwindet, sobald ein Video geladen ist. -->
+      <div class="start-text start-logo">
+        <img src="icons/icon-192.png" alt="" width="96" height="96">
+        <p class="start-name">Golf Swing Coach</p>
+      </div>
       <h2 class="start-text">Zeig mir deinen <em>Schwung.</em></h2>
-      <p class="hinweis start-text">Die Analyse läuft komplett auf deinem iPhone – dein Video verlässt nie das Gerät.</p>
       <label class="upload">
         <input type="file" id="videoInput" accept="video/*" multiple>
-        <span>Video auswählen oder aufnehmen</span>
+        <span>🎬 Video auswählen</span>
       </label>
       <!-- Etappe 12: Live-Kamera. Gespeichert werden nur erkannte Schwünge, auf dem Gerät. -->
-      <label class="live-schlaeger">Schläger
-        <select id="liveSchlaeger"><option value="">– bitte wählen –</option></select>
-      </label>
-      <label class="live-schlaeger">Kamera
-        <select id="liveKamera">
-          <option value="user">Vorne (du siehst das Bild)</option>
-          <option value="environment">Hinten (bessere Qualität)</option>
-        </select>
-      </label>
-      <button id="liveStartKnopf" class="umriss">📹 Live-Kamera starten</button>
-      <p class="hinweis">Live: Rahmen grün/gelb/rot nach jedem Schwung. Beim Beenden werden nur die erkannten Schwünge mit kurzem Video gespeichert.</p>
+      <div class="live-wahl">
+        <label class="live-schlaeger"><span class="nur-screenreader">Schläger</span>
+          <select id="liveSchlaeger"><option value="">Schläger wählen</option></select>
+        </label>
+        <!-- Kamera als zwei große Knöpfe statt Auswahlliste: schneller mit dem Daumen -->
+        <div class="segmente zwei" role="radiogroup" aria-label="Kamera">
+          <label><input type="radio" name="liveKamera" value="user" checked> Vorne</label>
+          <label><input type="radio" name="liveKamera" value="environment"> Hinten</label>
+        </div>
+        <button id="liveStartKnopf" class="umriss">📹 Live starten</button>
+      </div>
       <ul class="filmtipps">
         <li>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="3" width="8" height="13" rx="1.5"/><path d="M12 16v5M8 21h8"/></svg>
@@ -102,7 +106,6 @@
           <b>Ganz im Bild</b>mit Schläger
         </li>
       </ul>
-      <p class="hinweis">Von vorne oder von hinten. Ein Video mit einem Schlag, ein langes mit mehreren Schlägen – oder gleich mehrere Videos.</p>
     </section>
 
     <!-- Statuszeile: zeigt, was die App gerade macht -->
@@ -126,16 +129,19 @@
       <canvas id="overlay"></canvas>
     </div>
 
+    <!-- Mehrere Schwünge: hier direkt unter dem Video umschalten (füllt app.js, zeigeUebersicht) -->
+    <label id="schwungWahlBox" class="schwung-wahl" hidden>
+      <span class="nur-screenreader">Welcher Schwung?</span>
+      <select id="schwungWahl"></select>
+    </label>
+
     <!-- 3. Steuerung -->
     <div id="steuerung" class="steuerung" hidden>
       <!-- Zeitleiste mit einem Punkt pro Schwungphase, erscheint erst nach dem Analysieren.
            app.js baut die Punkte (zeigeErgebnis) und richtet sie an der echten Videozeit aus. -->
       <div id="phasenZeitleisteBox" hidden>
         <div id="phasenKnoepfe" class="zeitleiste" role="group" aria-label="Schwungphasen"></div>
-        <p class="hinweis klein-text">
-          Tippe auf einen Punkt, um zu dieser Phase zu springen.
-          <span class="legende"><b class="rot">Rot</b> = außerhalb des Zielbereichs, <b class="gelb">Gelb</b> = Ideallinie.</span>
-        </p>
+        <p class="hinweis klein-text legende"><b class="rot">Rot</b> = außerhalb · <b class="gelb">Gelb</b> = Ideallinie</p>
       </div>
       <div class="steuerung-transport">
         <button id="zurueck" aria-label="Ein Bild zurück">
@@ -173,20 +179,15 @@
       <!-- 4a. Nur bei mehreren Schwüngen: Gesamtauswertung und Liste aller Schwünge -->
       <div id="uebersicht" hidden>
         <h2>Gesamtauswertung</h2>
-        <p class="hinweis">
-          Zusammengefasst über alle Schwünge. Eine Baustelle ist ein Fehler, der in mindestens
-          der Hälfte der Schwünge auftaucht – ein einzelner Ausreißer zählt nicht.
-        </p>
+        <!-- Baustelle = Fehler in mindestens der Hälfte der Schwünge (gesamtauswertung.js) -->
+        <p class="hinweis">Fehler, die in mindestens jedem zweiten Schwung auftauchen.</p>
         <div id="gesamtListe"></div>
-
-        <h2>Deine Schwünge</h2>
-        <p class="hinweis">Tippe auf einen Schwung, um ihn im Video mit allen Details zu sehen.</p>
-        <div id="schwungListe" class="phasen"></div>
       </div>
 
       <!-- 4b. Ein einzelner Schwung im Detail -->
       <div id="einzel">
-      <h2 id="schwungTitel" hidden></h2>
+      <!-- Sichtbar steht der Schwung schon im Dropdown unter dem Video -->
+      <h2 id="schwungTitel" class="nur-screenreader" hidden></h2>
 
       <ul id="warnungen" class="warnungen"></ul>
 
@@ -227,7 +228,7 @@
       <!-- Für Claude kopieren: ohne Schlüssel, ohne Kosten – der Text landet nur in der Zwischenablage -->
       <section id="kopierBox" class="coach" hidden>
         <h3>Mit Claude besprechen</h3>
-        <p class="hinweis">Kein Schlüssel nötig: Die App kopiert deine Kennzahlen samt Anleitung. Du fügst sie selbst in einen Chat mit Claude ein (z. B. claude.ai). Die App sendet nichts.</p>
+        <p class="hinweis">Kopiert deine Kennzahlen – einfügen bei claude.ai. Die App sendet nichts.</p>
         <button id="kopierKnopf" class="umriss">Für Claude kopieren</button>
         <p id="kopierHinweis" class="hinweis" aria-live="polite"></p>
         <textarea id="kopierText" class="vorschau" rows="6" readonly hidden aria-label="Text zum Kopieren"></textarea>
@@ -241,11 +242,7 @@
       <h3 id="selbstCheckTitel">Selbst prüfen</h3>
       <div id="selbstCheckListe" class="kennzahlen"></div>
 
-      <p class="hinweis klein-text">
-        Die Bewertung ist eine Orientierung auf Basis deiner Körperhaltung im Video –
-        sie ersetzt keine Trainerstunde. Der gestrichelte Kreis im Video zeigt,
-        wo dein Kopf beim Ansprechen war.
-      </p>
+      <p class="hinweis klein-text">Orientierung, keine Trainerstunde. Gestrichelter Kreis = Kopf beim Ansprechen.</p>
 
       <button id="exportieren" class="text-link">Posedaten exportieren (für die Feinabstimmung)</button>
       </div>
@@ -253,11 +250,7 @@
       <!-- 4c. Frisch analysiert: Sitzung auf dem Gerät speichern (Etappe 8) -->
       <div id="speichernBox" class="speichern" hidden>
         <h2>💾 Speichern</h2>
-        <p class="hinweis">
-          Die Schwünge bleiben nur auf diesem Gerät – mit kurzem Video, allen Kennzahlen und
-          Posedaten. Für gute Verläufe immer ähnlich filmen: gleiche Ansicht, Kamera auf
-          Hüfthöhe, ca. 3 m Abstand.
-        </p>
+        <p class="hinweis">Bleibt nur auf diesem Gerät.</p>
         <div class="formular">
           <label>Datum <input type="date" id="speichernDatum"></label>
           <label>Schläger
@@ -280,7 +273,7 @@
           </label>
           <label class="breit">Notiz <input type="text" id="speichernNotiz" placeholder="z. B. Range, Fokus Vorneigung"></label>
         </div>
-        <p class="hinweis">Welche Schwünge? Unsichere (⚠️) sind nicht vorausgewählt.</p>
+        <p class="hinweis">Unsichere (⚠️) sind nicht angehakt.</p>
         <div id="speichernAuswahl" class="auswahl"></div>
         <button id="speichernKnopf" class="haupt">💾 Sitzung speichern</button>
       </div>
@@ -369,7 +362,6 @@
     <h2>Einstellungen</h2>
     <section class="einstellung">
       <h3>Dein Golf-Level</h3>
-      <p class="hinweis">Du kannst dein Level jederzeit ändern. Die App schlägt einen Wechsel nur vor.</p>
       <div id="levelAuswahl" class="level-auswahl" role="radiogroup" aria-label="Dein Golf-Level"></div>
     </section>
 
@@ -381,20 +373,21 @@
         <label><input type="radio" name="darstellung" value="hell"> Hell</label>
         <label><input type="radio" name="darstellung" value="dunkel"> Dunkel</label>
       </div>
-      <p class="hinweis">Automatisch folgt der Einstellung deines iPhones. Tipp für die Range: Hell ist in der Sonne besser lesbar.</p>
+      <p class="hinweis">Tipp: In der Sonne ist Hell besser lesbar.</p>
     </section>
 
+    <!-- Seltener Gebrauchtes steckt in Aufklappmenüs (<details>, im Browser eingebaut):
+         zu sehen ist nur die Überschrift, ein Tipp klappt den Inhalt auf. -->
+
     <!-- Coach mit Claude (Etappe 11b): freiwillig, eigener API-Schlüssel nur auf diesem Gerät -->
-    <section class="coach-einstellung einstellung">
-      <h3>Coach mit Claude (freiwillig)</h3>
+    <details class="aufklapp coach-einstellung einstellung">
+      <summary>🤖 Coach mit Claude <small>freiwillig</small></summary>
       <p class="hinweis">
-        Der Coach schreibt dir nach einer Analyse ein ausführliches, persönliches Coaching: Gesamtbild,
-        Ursachen, Anleitung und Trainingsplan. Dafür sendet die App deine Kennzahlen an Anthropic (Claude) –
-        Videos, Bilder und Posedaten verlassen das Gerät nie. Du brauchst einen eigenen API-Schlüssel;
-        ein Coaching kostet etwa 15–25 Cent.
+        Ausführliches Coaching nach jeder Analyse. Sendet nur deine Kennzahlen an Anthropic (Claude) –
+        nie Videos, Bilder oder Posedaten. Eigener API-Schlüssel nötig, ca. 15–25 Cent pro Coaching.
       </p>
       <details>
-        <summary>So richtest du den Schlüssel ein (einmalig, ca. 10 Minuten)</summary>
+        <summary>Schlüssel einrichten (einmalig, ca. 10 Minuten)</summary>
         <ol>
           <li>Auf console.anthropic.com anmelden und Guthaben aufladen (z. B. 5 €).</li>
           <li>Einen eigenen Workspace „Golf Coach“ anlegen und dort ein monatliches Ausgabenlimit setzen (z. B. 5 € – reicht für gut 20 Coachings).</li>
@@ -416,71 +409,74 @@
         <button id="coachSchluesselLoeschen" class="text-link" hidden>Schlüssel löschen</button>
       </div>
       <p id="coachSchluesselStatus" class="hinweis" aria-live="polite"></p>
-    </section>
+    </details>
 
-    <!-- Gespeicherte Schwünge aufräumen. Alles passiert nur auf diesem Gerät. -->
+    <!-- Gespeicherte Schwünge sichern und aufräumen. Alles passiert nur auf diesem Gerät. -->
     <section class="daten einstellung">
       <h3>Daten auf diesem Gerät</h3>
       <p id="datenUebersicht" class="hinweis"></p>
 
       <!-- Sicherung (Etappe 9, sicherung.js): eine Datei, die du selbst ablegst – es wird nichts hochgeladen.
            Texte aus der Datei setzt app.js nur per textContent. -->
-      <h4>Sicherung – Schwünge als Datei aufheben</h4>
-      <p class="hinweis">
-        Sichert Kennzahlen, Notizen, Coach-Antworten, Posedaten, Datum, Schläger, Videonamen und deinen
-        Lernfortschritt in eine Datei – ohne Videos, Bilder und Coach-Schlüssel. Lege sie in iCloud Drive ab,
-        dann kannst du sie auch auf einem neuen iPhone einspielen. Notizen und Videonamen stehen lesbar in der Datei.
-      </p>
-      <div class="daten-zeile">
-        <button id="sicherungErstellen" class="text-aktion">Sicherung erstellen</button>
-        <button id="sicherungEinspielen" class="text-link">Sicherung einspielen ›</button>
-        <input type="file" id="sicherungDatei" accept=".json,application/json" hidden>
-      </div>
-      <div id="sicherungBereit" class="sicherung-box" hidden>
-        <p id="sicherungBereitText" class="hinweis"></p>
-        <div class="knopfzeile">
-          <button id="sicherungSichern" class="text-aktion">In Dateien sichern ›</button>
+      <details id="sicherungTeil" class="aufklapp">
+        <summary>💾 Sicherung als Datei</summary>
+        <p class="hinweis">
+          Sichert Kennzahlen, Notizen, Coach-Antworten, Posedaten, Datum, Schläger, Videonamen und deinen
+          Lernfortschritt – ohne Videos, Bilder und Coach-Schlüssel. Z. B. in iCloud Drive ablegen und
+          auf einem neuen iPhone einspielen. Notizen und Videonamen stehen lesbar in der Datei.
+        </p>
+        <div class="daten-zeile">
+          <button id="sicherungErstellen" class="text-aktion">Sicherung erstellen</button>
+          <button id="sicherungEinspielen" class="text-link">Sicherung einspielen ›</button>
+          <input type="file" id="sicherungDatei" accept=".json,application/json" hidden>
         </div>
-      </div>
-      <div id="sicherungPruefung" class="sicherung-box" hidden>
-        <p id="sicherungPruefText" class="hinweis"></p>
-        <div class="knopfzeile">
-          <button id="sicherungUebernehmen" class="text-aktion">Einspielen</button>
-          <button id="sicherungAbbrechen" class="text-link">Abbrechen</button>
+        <div id="sicherungBereit" class="sicherung-box" hidden>
+          <p id="sicherungBereitText" class="hinweis"></p>
+          <div class="knopfzeile">
+            <button id="sicherungSichern" class="text-aktion">In Dateien sichern ›</button>
+          </div>
         </div>
-      </div>
-      <p id="sicherungMeldung" class="status" aria-live="polite"></p>
+        <div id="sicherungPruefung" class="sicherung-box" hidden>
+          <p id="sicherungPruefText" class="hinweis"></p>
+          <div class="knopfzeile">
+            <button id="sicherungUebernehmen" class="text-aktion">Einspielen</button>
+            <button id="sicherungAbbrechen" class="text-link">Abbrechen</button>
+          </div>
+        </div>
+        <p id="sicherungMeldung" class="status" aria-live="polite"></p>
+      </details>
 
-      <h4>Videos und Bilder löschen – Kennzahlen bleiben</h4>
-      <p class="hinweis">
-        Videos brauchen fast den ganzen Platz. Kennzahlen, Notizen und Posedaten bleiben
-        erhalten, der Level-Vorschlag funktioniert weiter.
-      </p>
-      <div class="daten-zeile">
-        <select id="videosAuswahl" aria-label="Von welchen Sitzungen?">
-          <option value="alt" selected>von Sitzungen älter als 30 Tage</option>
-          <option value="alle">von allen Sitzungen</option>
-        </select>
-        <button id="videosLoeschen" class="text-link">Löschen ›</button>
-      </div>
+      <details class="aufklapp">
+        <summary>🗑 Platz schaffen und löschen</summary>
+        <h4>Nur Videos und Bilder löschen</h4>
+        <p class="hinweis">Kennzahlen, Notizen und Posedaten bleiben.</p>
+        <div class="daten-zeile">
+          <select id="videosAuswahl" aria-label="Von welchen Sitzungen?">
+            <option value="alt" selected>von Sitzungen älter als 30 Tage</option>
+            <option value="alle">von allen Sitzungen</option>
+          </select>
+          <button id="videosLoeschen" class="text-link">Löschen ›</button>
+        </div>
 
-      <h4>Alle gespeicherten Schwünge löschen</h4>
-      <p class="hinweis">Löscht alles unter „Meine Schwünge“ – auch die Kennzahlen. Tipp: Vorher eine Sicherung erstellen.</p>
-      <div class="daten-zeile">
-        <button id="allesLoeschen" class="text-gefahr">Alles löschen ›</button>
-      </div>
+        <h4>Alle gespeicherten Schwünge löschen</h4>
+        <p class="hinweis">Auch die Kennzahlen. Tipp: Vorher eine Sicherung erstellen.</p>
+        <div class="daten-zeile">
+          <button id="allesLoeschen" class="text-gefahr">Alles löschen ›</button>
+        </div>
 
-      <p class="hinweis klein-text">
-        Bleibt immer erhalten: dein Level, dein Lernfortschritt unter „Wissen“, die App selbst mit
-        den Offline-Dateien und deine Originalvideos in der Fotos-App.
-      </p>
-      <p id="datenMeldung" class="status" aria-live="polite"></p>
+        <p class="hinweis klein-text">
+          Bleibt immer: dein Level, dein Lernfortschritt, die App mit den Offline-Dateien
+          und deine Originalvideos in der Fotos-App.
+        </p>
+        <p id="datenMeldung" class="status" aria-live="polite"></p>
+      </details>
     </section>
 
     <!-- Datenschutz für die ganze App (Befund V4) – fester Text. Ändert sich, was die App
          sendet oder wohin, muss dieser Text mit (siehe auch README „Datenschutz“). -->
     <section id="datenschutz" class="einstellung">
-      <h3>Datenschutz – kurz erklärt</h3>
+      <details class="aufklapp">
+      <summary>🔒 Datenschutz</summary>
       <p class="hinweis">
         <strong>Bleibt auf diesem Gerät:</strong> deine Videos, Einzelbilder, Körperpunkte (Posedaten),
         Kennzahlen, Notizen, dein Level, dein Lernfortschritt und – falls eingetragen – dein API-Schlüssel
@@ -517,6 +513,7 @@
         Weitere Adressen kann die App nicht erreichen: Eine Sicherheitsregel im Browser (CSP) erlaubt
         nur diese beiden.
       </p>
+      </details>
     </section>
   </main>
 
@@ -586,7 +583,9 @@
     </div>
   </div>
 
+  <!-- Nur auf der Startseite sichtbar (style.css) -->
   <footer class="fuss">
+    <p class="fuss-schutz">🔒 Die Analyse läuft auf deinem iPhone – dein Video verlässt nie das Gerät.</p>
     <span id="version"></span> · <span id="netzStatus"></span> · <span id="offlineStatus"></span> · <span id="speicherStatus"></span>
   </footer>
 

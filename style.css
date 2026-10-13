@@ -299,6 +299,13 @@ button.text-link {
   padding: 4px 8px;
 }
 
+/* Version, Netz und Offline-Stand stehen nur auf der Startseite (Analyse ohne Video).
+   :has() = "enthält" – so geht das ohne zusätzliches JavaScript. */
+body:has(#analyseBereich[hidden]) .fuss,
+body:has(#buehne:not([hidden])) .fuss,
+body:has(#liveBox:not([hidden])) .fuss { display: none; }
+/* Auf der Startseite steht der Name groß im Einstiegsbild – oben dann nicht noch einmal */
+body:has(#analyseBereich:not([hidden]) #buehne[hidden]):not(:has(#liveBox:not([hidden]))) h1 { visibility: hidden; }
 .fuss {
   max-width: 900px;
   margin: 8px auto 16px;
@@ -307,6 +314,7 @@ button.text-link {
   font-size: 0.75rem;
   text-align: center;
 }
+.fuss-schutz { margin: 0 0 4px; font-size: 0.85rem; }
 
 /* ---------------------------------------------------------------------
    Start: Video auswählen mit kurzen Filmtipps
@@ -326,7 +334,30 @@ button.text-link {
   line-height: 1.25;
 }
 .start-karte h2 em { font-style: italic; color: var(--akzent-marke); }
-.start-karte .hinweis:last-child { margin: 12px 0 0; }
+/* Einstiegsbild: Logo + Name groß und mittig, darunter der Spruch */
+.start-logo { text-align: center; margin: 6px 0 10px; }
+.start-logo img { display: block; margin: 0 auto 10px; width: 96px; height: 96px; border-radius: 22px; box-shadow: var(--schatten); }
+.start-name { margin: 0; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--akzent-marke); }
+.start-karte h2.start-text { text-align: center; margin-bottom: 4px; }
+
+/* Live: Schläger, Kamera (zwei große Knöpfe) und Start – alles volle Breite, gut mit dem Daumen */
+.live-wahl { display: grid; gap: 8px; margin-top: 12px; }
+.live-wahl .live-schlaeger { display: block; margin: 0; }
+.live-wahl select, .schwung-wahl select {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  background: var(--flaeche-innen);
+  color: var(--text);
+  border: 1px solid var(--rand);
+  border-radius: var(--r-klein);
+  font-size: 1rem; /* ab 16 px zoomt Safari beim Antippen nicht hinein */
+  font-weight: 600;
+}
+.live-wahl .segmente { margin: 0; }
+.live-wahl .segmente label { padding: 12px 4px; font-size: 1rem; }
+.live-wahl button.umriss { width: 100%; min-height: 48px; }
+.schwung-wahl { display: block; margin-top: 10px; }
 
 /* Upload-Knopf: das echte Datei-Feld wird versteckt, der Text ist klickbar */
 .upload { display: block; margin-top: 14px; }
@@ -370,7 +401,7 @@ button.text-link {
 
 /* Sobald ein Video geladen ist, braucht man die Filmtipps nicht mehr.
    :has() = "enthält" – so geht das ohne zusätzliches JavaScript. */
-#analyseBereich:has(#buehne:not([hidden])) :is(.start-text, .filmtipps, .start-karte .hinweis:last-child) { display: none; }
+#analyseBereich:has(#buehne:not([hidden])) :is(.start-text, .filmtipps) { display: none; }
 #analyseBereich:has(#buehne:not([hidden])) .start-karte h2 { display: none; }
 #analyseBereich:has(#buehne:not([hidden])) .upload { margin-top: 0; }
 
@@ -765,6 +796,25 @@ button.text-link {
   margin: 0 0 32px;
 }
 #einstellungenBereich h3 { margin: 0 0 6px; font-size: 0.95rem; }
+
+/* Aufklappmenü: eine antippbare Zeile mit Pfeil, der Inhalt erscheint darunter */
+details.aufklapp { border-bottom: 1px solid var(--rand); }
+details.aufklapp > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 10px 0;
+  list-style: none;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+details.aufklapp > summary::-webkit-details-marker { display: none; }
+details.aufklapp > summary small { color: var(--text-leise); font-weight: 400; }
+details.aufklapp > summary::after { content: "›"; margin-left: auto; color: var(--text-leise); font-size: 1.3rem; transition: transform 0.15s; }
+details.aufklapp[open] > summary::after { transform: rotate(90deg); }
+details.aufklapp[open] { padding-bottom: 12px; }
 
 .level-auswahl { display: grid; }
 .level-auswahl label {
