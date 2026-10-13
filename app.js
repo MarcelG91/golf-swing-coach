@@ -2365,7 +2365,8 @@ function baueCoachAntwort(coach) {
     const fokus = [];
     if (coach.anweisungen.length) fokus.push(liste("ol", coach.anweisungen));
     else if (hilfe) fokus.push(neu("p", "warum", hilfe.warum)); // Fokus von der App ersetzt: ihre geprüfte Erklärung
-    abschnitt(hilfe ? `🎯 Dein Fokus: ${hilfe.kurz}` : "🎯 So festigst du es", ...fokus);
+    // Ohne Inhalt (kein Fokus und keine Anweisung) kein leerer Abschnitt
+    if (fokus.length) abschnitt(hilfe ? `🎯 Dein Fokus: ${hilfe.kurz}` : "🎯 So festigst du es", ...fokus);
     if (hilfe) {
       karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
       if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));

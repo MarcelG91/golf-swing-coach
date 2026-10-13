@@ -7,6 +7,7 @@
 //   4. Der Bereich "Fortschritt" zeigt Diagramme für gespeicherte Testschwünge.
 //   5. Sicherung (Etappe 9): erstellen → alles löschen → einspielen → alles wieder da;
 //      kaputte Datei ändert nichts, der Coach-Schlüssel steht nie in der Datei.
+//   6. Gespeicherte Coach-Antworten (kurz, ausführlich, ganz alt) werden nur als Text angezeigt.
 //
 // Aufruf:  node tests/browser-rauchtest.mjs
 // Chrome wird automatisch gesucht; sonst Pfad in der Umgebungsvariable CHROME_PFAD angeben.
@@ -417,6 +418,53 @@ try {
   await auswerten(`(() => { const wahl = document.getElementById("schwungWahl"); wahl.selectedIndex = 1; wahl.dispatchEvent(new Event("change")); })()`);
   pruefe(await wartenBis(`/^Schwung 2 /.test(document.getElementById("schwungTitel").textContent)`, 15),
     `Auswahl wechselt zum zweiten Schwung (steht: „${await auswerten(`document.getElementById("schwungTitel").textContent`)}“)`);
+
+  // Gespeicherte Coach-Antworten (ohne Anfrage an Anthropic) am echten Live-Schwung von oben: Kurz-Format
+  // (seit 0.40.0), ausführliches Format (0.17.0–0.39.x) und ganz altes Format werden angezeigt – alles nur
+  // als Text, ein Schadtext mit HTML wird nicht ausgeführt. Der Testschlüssel macht nur den Coach-Bereich
+  // sichtbar, gesendet wird nichts (siehe „Keine Anfragen an fremde Adressen“ unten).
+  const coachZiel = await auswerten(`(async () => {
+    const speicher = await import("./speicher.js");
+    const { TIPP_IDS } = await import("./tipps.js");
+    const sitzung = (await speicher.ladeSitzungen()).find((s) => s.notiz === "Live-Aufnahme");
+    const [schwung] = sitzung ? await speicher.ladeSchwuengeDerSitzung(sitzung) : [];
+    const fokus = schwung && [...schwung.bewertung.kennzahlen, ...schwung.technik.kennzahlen].find((k) => TIPP_IDS.includes(k.id))?.id;
+    localStorage.setItem("coachSchluessel", "sk-ant-test-rauchtest");
+    return { id: schwung?.id, fokus };
+  })()`);
+  pruefe(coachZiel.id && coachZiel.fokus, `Gespeicherter Live-Schwung für den Coach-Test gefunden (${JSON.stringify(coachZiel)})`);
+  const schad = "<img src=x onerror=window.__xss=1>";
+  const karte = `document.querySelector("#coachAntwort .coach-antwort")`;
+  // Antwort am Schwung speichern und die Sitzung neu öffnen
+  const zeigeCoachAntwort = async (coach) => {
+    await auswerten(`(async () => {
+      const speicher = await import("./speicher.js");
+      await speicher.aktualisiereSchwung(${JSON.stringify(coachZiel.id)}, { coach: ${JSON.stringify(coach)} });
+      document.getElementById("zuGespeichert").click();
+      document.getElementById("zuSitzungen").click();
+    })()`);
+    const knopf = `[...document.querySelectorAll("#sitzungsListe > button")].find((k) => /Live-Aufnahme/.test(k.textContent))`;
+    // Die Liste wird neu aufgebaut – erst klicken, wenn der Knopf da ist
+    await auswerten(`document.getElementById("coachAntwort").replaceChildren()`);
+    await wartenBis(`(() => { const k = ${knopf}; k?.click(); return !!k; })()`, 10);
+  };
+  await zeigeCoachAntwort({ staerke: `Ruhiges Tempo ${schad}`, fokusKennzahl: coachZiel.fokus, anweisungen: ["Erste Anweisung.", schad], warum: `Weil ${schad}`, fokusErsetzt: false, kostenCent: 3.2 });
+  pruefe(await wartenBis(`/Erste Anweisung/.test(${karte}?.textContent || "")`, 15),
+    `Kurz-Coaching wird angezeigt (Coach-Bereich sichtbar: ${await auswerten(`!document.getElementById("coachBox")?.hidden`)})`);
+  const kurzKarte = await auswerten(`(() => { const k = ${karte}; if (!k) return null; const warum = [...k.querySelectorAll("details")].find((d) => d.querySelector("summary").textContent === "Warum?");
+    return { punkte: k.querySelectorAll("details.abschnitt > ol > li").length, warumZu: warum ? !warum.open : null, bilder: k.querySelectorAll("img").length, gedanke: !!k.querySelector(".gedanke"), herkunft: k.querySelector(".herkunft")?.textContent || "" }; })()`);
+  pruefe(kurzKarte?.punkte === 2 && kurzKarte.warumZu === true && kurzKarte.bilder === 0 && kurzKarte.gedanke && /Anweisungen von Claude/.test(kurzKarte.herkunft),
+    `Kurz-Coaching: Anweisungen als Liste, „Warum?“ zugeklappt, Gedanke der App, HTML nur als Text (${JSON.stringify(kurzKarte)})`);
+  // Keine Baustelle und keine Anweisung: kein leerer Abschnitt
+  await zeigeCoachAntwort({ staerke: "Nur Lob", fokusKennzahl: "", anweisungen: [], warum: "", fokusErsetzt: false });
+  pruefe(await wartenBis(`/Nur Lob/.test(${karte}?.textContent || "")`, 15) && await auswerten(`${karte}?.querySelectorAll("details").length === 0`),
+    "Kurz-Coaching ohne Fokus und Anweisung zeigt keinen leeren Abschnitt");
+  await zeigeCoachAntwort({ gesamtbild: "Gesamtbild-Text", staerken: ["Stärke A"], fokusKennzahl: coachZiel.fokus, wasPassiert: "Was passiert", anleitung: ["Schritt"], trainingsplan: [{ titel: "Block", anleitung: "x", menge: "5×", erfolg: "ok" }] });
+  pruefe(await wartenBis(`/Gesamtbild-Text/.test(${karte}?.textContent || "") && /Dein Trainingsplan/.test(${karte}.textContent)`, 15), "Ausführliche Antwort (0.17.0–0.39.x) bleibt lesbar");
+  await zeigeCoachAntwort({ lob: "Altes Lob", fokusKennzahl: coachZiel.fokus, fokusBotschaft: "Alte Botschaft", naechstesMal: "Nächstes Mal" });
+  pruefe(await wartenBis(`/Altes Lob/.test(${karte}?.textContent || "") && /Alte Botschaft/.test(${karte}.textContent)`, 15), "Ganz alte Antwort (vor 0.17.0) bleibt lesbar");
+  pruefe(await auswerten(`window.__xss === undefined`), "Schadtext in einer Coach-Antwort wird nicht ausgeführt");
+  await auswerten(`localStorage.removeItem("coachSchluessel")`);
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
   // rechnet auf der CPU weiter (Statuszeile "… CPU"). Das ist gewollt und kein Fehler.
