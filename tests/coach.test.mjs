@@ -323,6 +323,8 @@ test("Für Claude kopieren: Anleitung plus dieselben Kennzahlen, nichts Privates
   const text = baueKopierText(daten);
   assert.ok(text.startsWith(SYSTEMTEXT), "enthält den festen Anleitungstext mit den geprüften Tipps");
   assert.ok(text.includes(JSON.stringify(daten, null, 2)), "enthält genau die Coach-Daten");
+  // Im fremden Chat zeigt keine App Gedanke und Übung an – Claude soll sie dort aus dem Katalog abschreiben
+  assert.match(text.slice(SYSTEMTEXT.length), /Schwunggedanken\s+und die Übung der App zur Fokus-Kennzahl wörtlich aus dem Katalog/);
   for (const verboten of ["IMG_1234", "Range Hamburg", "2026-09-28", "punkte", "messwert"]) {
     assert.ok(!text.includes(verboten), `${verboten} darf nicht im Kopiertext stehen`);
   }

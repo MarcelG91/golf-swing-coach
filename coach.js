@@ -186,6 +186,10 @@ export function baueKopierText(daten) {
     "## Deine Aufgabe jetzt",
     "Schreibe das Coaching als normalen Text auf Deutsch, gegliedert nach den oben beschriebenen Antwortfeldern",
     "(Stärke, Fokus, Anweisungen, Warum) mit je einer kurzen Überschrift. Gib kein JSON aus.",
+    // Hier zeigt keine App den geprüften Schwunggedanken und die Übung an – deshalb soll Claude
+    // sie diesmal wörtlich aus dem Katalog übernehmen (statt sie wegzulassen, wie im Systemtext).
+    "Anders als oben: Hier zeigt keine App etwas an. Schreib deshalb zum Schluss den Schwunggedanken",
+    "und die Übung der App zur Fokus-Kennzahl wörtlich aus dem Katalog ab (Übungsschritte als Liste).",
     "",
     `Kennzahlen dieses Schwungs:\n${JSON.stringify(daten, null, 2)}`,
   ].join("\n");
