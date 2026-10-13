@@ -135,7 +135,8 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt), dann die Feedback-Ru
    - Aufräumen (≥ 0.11.0): Speicheranzeige vorher/nachher; „Alles löschen“ → Level noch da, offline nutzbar?
    - Tipps neu + Übungsmodus (≥ 0.13.0): Wischen flüssig? Figuren/Skala verständlich? Bildschirm bleibt an (Wake Lock ab iOS 16.4)?
 2. **Echter Coach-Test** (Marcel, ≥ 0.38.0 mit Claude Opus 5.5, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
-   „wertlos“ → seit 0.17.0 ausführliches Coaching (Gesamtbild, Ursachen, Anleitung, Trainingsplan, Effort „high“).
+   „wertlos“ → 0.17.0 ausführliches Coaching (600–900 Wörter) → zu lang und unübersichtlich (13.10.) → seit 0.40.0
+   **Kurz-Coaching** wie auf der Range (Stärke, ein Fokus, 2–3 Anweisungen, „Warum?“ zugeklappt, ≤ 120 Wörter).
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
 3. ~~Golflehrer-Durchsicht~~ – **entfällt** (Entscheidung 30.09.). Fachliche Absicherung stattdessen über die
    strengen Quellenregeln (siehe „Dauerhafte Regeln“ und `docs/plan-wissensseite.md`).
@@ -217,7 +218,11 @@ nachjustieren. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`)
 - Einheitlicher Lösch-Dialog auch für „Schwung löschen“ / „Sitzung löschen“ (ca. 20 Zeilen, Check 28.09.).
 - LICENSE und Lizenzen der Testdaten-Quellen (C6) · MediaPipe-Update 0.10.14 → 1.x in eigenem Branch (C4).
 - **Rückfragen an den Coach** (Idee 29.09.): kleiner Chat unter der Coach-Antwort („Wie übe ich das ohne Range?“).
-  Erst nach dem echten Coach-Test (Nr. 2) entscheiden, ob die ausführliche Antwort schon reicht.
+  Erst nach dem echten Coach-Test (Nr. 2) entscheiden, ob das Kurz-Coaching (0.40.0) reicht.
+- **Coach für längere Auswertungen** (Idee 13.10.): Coaching über viele Schwünge (Gesamtauswertung, Fortschritt) –
+  länger als beim Einzelschwung, aber klar gegliedert (Muster, ein Fokus für die nächsten Wochen, kurzer Plan).
+  Erst nach dem Test des Kurz-Coachings. Sendet zusammengefasste Kennzahlen → neue Datenart: Einwilligung,
+  V2 und Datenschutzhinweis anpassen, eigener Plan.
 
 ### Dauerhafte Regeln und Hinweise
 
