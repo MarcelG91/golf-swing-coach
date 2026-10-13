@@ -2359,6 +2359,8 @@ function baueCoachAntwort(coach) {
   if (Array.isArray(coach.anweisungen)) {
     if (coach.staerke) karte.append(neu("p", "lob", `👍 ${coach.staerke}`));
     const fokus = [];
+    // Befund (seit 0.43.0): was die Messung zeigt – Phase, was passiert, in welche Richtung
+    if (coach.befund) fokus.push(neu("p", "befund", `🔍 ${coach.befund}`));
     if (coach.anweisungen.length) fokus.push(liste("ol", coach.anweisungen));
     else if (hilfe) fokus.push(neu("p", "warum", hilfe.warum)); // Fokus von der App ersetzt: ihre geprüfte Erklärung
     // Ohne Inhalt (kein Fokus und keine Anweisung) kein leerer Abschnitt

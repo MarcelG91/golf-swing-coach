@@ -170,9 +170,10 @@ Linkshänder, die Anzahl erkannter Schwünge, die wichtigste Baustelle aus Sicht
 kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder Datum. Vor dem ersten Senden fragt die
 App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
 
-- Seit 0.40.0 coacht Claude **kurz und klar wie ein Trainer auf der Range** (höchstens ca. 120 Wörter):
-  eine Stärke, **ein Fokus mit 2–3 Anweisungen**, Schwunggedanke und Übung der App, das „Warum?“
-  zugeklappt. Die Sprache passt sich dem Level an. (0.17.0–0.39.x: ausführliches Coaching mit
+- Seit 0.40.0 coacht Claude **kurz und klar wie ein Trainer auf der Range** (seit 0.43.0 höchstens ca. 140 Wörter):
+  eine Stärke, **ein Fokus mit Befund und 2–3 Anweisungen**, Schwunggedanke und Übung der App, das „Warum?“
+  zugeklappt. Seit 0.43.0 („kurz, aber präziser“) sagt der **Befund** in einem Satz, was die Messung zeigt
+  (Phase, was passiert, Richtung), und jede Anweisung nennt Körperteil oder Schläger, Richtung und Moment. Die Sprache passt sich dem Level an. (0.17.0–0.39.x: ausführliches Coaching mit
   600–900 Wörtern – zu lang; solche gespeicherten Antworten zeigt die App weiter an.)
 - Der **Fokus** kommt immer aus den Baustellen deines Levels (die App prüft das). Schwunggedanke und
   **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Anweisungen sind nicht fachlich

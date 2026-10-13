@@ -448,13 +448,13 @@ try {
     await auswerten(`document.getElementById("coachAntwort").replaceChildren()`);
     await wartenBis(`(() => { const k = ${knopf}; k?.click(); return !!k; })()`, 10);
   };
-  await zeigeCoachAntwort({ staerke: `Ruhiges Tempo ${schad}`, fokusKennzahl: coachZiel.fokus, anweisungen: ["Erste Anweisung.", schad], warum: `Weil ${schad}`, fokusErsetzt: false, kostenCent: 3.2 });
+  await zeigeCoachAntwort({ staerke: `Ruhiges Tempo ${schad}`, fokusKennzahl: coachZiel.fokus, befund: `Im Treffmoment richtest du dich auf ${schad}`, anweisungen: ["Erste Anweisung.", schad], warum: `Weil ${schad}`, fokusErsetzt: false, kostenCent: 3.2 });
   pruefe(await wartenBis(`/Erste Anweisung/.test(${karte}?.textContent || "")`, 15),
     `Kurz-Coaching wird angezeigt (Coach-Bereich sichtbar: ${await auswerten(`!document.getElementById("coachBox")?.hidden`)})`);
   const kurzKarte = await auswerten(`(() => { const k = ${karte}; if (!k) return null; const warum = [...k.querySelectorAll("details")].find((d) => d.querySelector("summary").textContent === "Warum?");
-    return { punkte: k.querySelectorAll("details.abschnitt > ol > li").length, warumZu: warum ? !warum.open : null, bilder: k.querySelectorAll("img").length, gedanke: !!k.querySelector(".gedanke"), herkunft: k.querySelector(".herkunft")?.textContent || "" }; })()`);
-  pruefe(kurzKarte?.punkte === 2 && kurzKarte.warumZu === true && kurzKarte.bilder === 0 && kurzKarte.gedanke && /Anweisungen von Claude/.test(kurzKarte.herkunft),
-    `Kurz-Coaching: Anweisungen als Liste, „Warum?“ zugeklappt, Gedanke der App, HTML nur als Text (${JSON.stringify(kurzKarte)})`);
+    return { punkte: k.querySelectorAll("details.abschnitt > ol > li").length, warumZu: warum ? !warum.open : null, bilder: k.querySelectorAll("img").length, gedanke: !!k.querySelector(".gedanke"), befund: /richtest du dich auf/.test(k.querySelector("details.abschnitt .befund")?.textContent || ""), herkunft: k.querySelector(".herkunft")?.textContent || "" }; })()`);
+  pruefe(kurzKarte?.punkte === 2 && kurzKarte.warumZu === true && kurzKarte.bilder === 0 && kurzKarte.gedanke && kurzKarte.befund && /Anweisungen von Claude/.test(kurzKarte.herkunft),
+    `Kurz-Coaching: Befund im Fokus, Anweisungen als Liste, „Warum?“ zugeklappt, Gedanke der App, HTML nur als Text (${JSON.stringify(kurzKarte)})`);
   // Keine Baustelle und keine Anweisung: kein leerer Abschnitt
   await zeigeCoachAntwort({ staerke: "Nur Lob", fokusKennzahl: "", anweisungen: [], warum: "", fokusErsetzt: false });
   pruefe(await wartenBis(`/Nur Lob/.test(${karte}?.textContent || "")`, 15) && await auswerten(`${karte}?.querySelectorAll("details").length === 0`),

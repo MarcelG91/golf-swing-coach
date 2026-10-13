@@ -12,8 +12,14 @@ import assert from "node:assert/strict";
 import {
   COACH_MODELL, COACH_BETA, baueKopierText, SYSTEMTEXT, ANTWORT_SCHEMA, coachDaten, baueCoachAnfrage, coachKopfzeilen,
   neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, verlaufKurz, kostenCent, leseAntwortText, leseAntwort, COACH_FEHLER,
+  PHASE_DER_KENNZAHL,
 } from "../coach.js";
 import { TIPP_IDS, alleTipps } from "../tipps.js";
+import fs from "node:fs";
+import { AB_LEVEL } from "../level.js";
+import { erkennePhasen } from "../phasen.js";
+import { bewerteSchwung } from "../kennzahlen.js";
+import { bewerteTechnik, ordneEin } from "../technik.js";
 
 // Eine Kennzahl, wie die App sie intern hat – mit vielen Feldern, die NICHT gesendet werden dürfen
 const kennzahl = (id, bewertung, extra = {}) => ({
@@ -29,6 +35,7 @@ const HINTERGRUND = [kennzahl("kopfSeitlich", "verbessern"), kennzahl("hueftBall
 const ANTWORT = {
   staerke: " Dein Tempo ist ruhig. ",
   fokusKennzahl: "schulterdrehung",
+  befund: " Am Top drehen deine Schultern nur etwa halb so weit wie das Ziel. ",
   anweisungen: ["Rücken zum Ziel drehen.", "  ", 42, "Linke Schulter unters Kinn."],
   warum: "Die Schultern drehen nur halb – das kostet Weite.",
 };
@@ -86,9 +93,15 @@ test("Systemtext: fest (kein Datum, keine Nutzerdaten), alle geprüften Tipps vo
   assert.match(SYSTEMTEXT, /Erfinde keine Messwerte/);
   assert.match(SYSTEMTEXT, /hintergrundKennzahlen: .*nie als Fokus/s);
   // Kurz und auf den Punkt (Entscheidung 13.10.): feste Längen im Systemtext
-  assert.match(SYSTEMTEXT, /höchstens 120 Wörter/);
+  // Seit 0.43.0 "kurz, aber präziser": etwas mehr Platz für den Befund
+  assert.match(SYSTEMTEXT, /höchstens 140 Wörter/);
   assert.match(SYSTEMTEXT, /2–3 Anweisungen/);
-  assert.match(SYSTEMTEXT, /je höchstens 12 Wörter/);
+  assert.match(SYSTEMTEXT, /je höchstens 14 Wörter/);
+  // Präziser: Befund mit Phase und Richtung, Anweisungen mit Körperteil, Richtung und Moment, keine Floskeln
+  assert.match(SYSTEMTEXT, /in welcher Phase/);
+  assert.match(SYSTEMTEXT, /zu viel\/zu wenig/);
+  assert.match(SYSTEMTEXT, /einen Körperteil oder den Schläger, \(2\) eine Richtung oder Position und \(3\) den Moment/);
+  assert.match(SYSTEMTEXT, /„Bleib locker“/);
   // Jedes Antwortfeld ist im Systemtext erklärt
   for (const feld of Object.keys(ANTWORT_SCHEMA.properties)) assert.match(SYSTEMTEXT, new RegExp(`- ${feld}:`), `Feld ${feld} nicht erklärt`);
 });
@@ -98,6 +111,7 @@ test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ers
   assert.deepEqual(ok, {
     staerke: "Dein Tempo ist ruhig.",
     fokusKennzahl: "schulterdrehung",
+    befund: "Am Top drehen deine Schultern nur etwa halb so weit wie das Ziel.",
     // leere Einträge und Nicht-Texte fallen weg
     anweisungen: ["Rücken zum Ziel drehen.", "Linke Schulter unters Kinn."],
     warum: "Die Schultern drehen nur halb – das kostet Weite.",
@@ -146,7 +160,7 @@ test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ers
   assert.equal(lang.warum.length, 400);
   // Felder des alten, ausführlichen Formats werden nicht mehr übernommen
   const alt = pruefeCoachAntwort({ ...ANTWORT, gesamtbild: "x", trainingsplan: [{ titel: "y" }] }, { kennzahlen: KENNZAHLEN });
-  assert.deepEqual(Object.keys(alt).sort(), ["anweisungen", "fokusErsetzt", "fokusKennzahl", "staerke", "warum"]);
+  assert.deepEqual(Object.keys(alt).sort(), ["anweisungen", "befund", "fokusErsetzt", "fokusKennzahl", "staerke", "warum"]);
   assert.equal(leseAntwortText("kein json"), null);
   assert.deepEqual(leseAntwortText('{"lob":"x"}'), { lob: "x" });
 });
@@ -328,4 +342,32 @@ test("Für Claude kopieren: Anleitung plus dieselben Kennzahlen, nichts Privates
   for (const verboten of ["IMG_1234", "Range Hamburg", "2026-09-28", "punkte", "messwert"]) {
     assert.ok(!text.includes(verboten), `${verboten} darf nicht im Kopiertext stehen`);
   }
+});
+
+test("Systemtext: Phase je Kennzahl stimmt mit den echten Messungen überein (präziser Befund, 0.43.0)", () => {
+  // Jede Kennzahl, die die App bewerten kann, hat eine Phase im Katalog
+  for (const id of Object.keys(AB_LEVEL)) assert.ok(PHASE_DER_KENNZAHL[id], `Phase für ${id} fehlt`);
+  for (const id of Object.keys(PHASE_DER_KENNZAHL)) assert.match(SYSTEMTEXT, new RegExp(`### ${id}[^#]*Gemessen: `), `Katalog nennt die Phase von ${id} nicht`);
+  // Gegenprobe mit echten Schwüngen: die Phase aus der Analyse (technik.js / kennzahlen.js)
+  const NAME = { ansprechen: "Ansprechen", top: "Top", treffmoment: "Treffmoment", finish: "Finish" };
+  for (const [datei, ansicht] of [["faceon_amateur", "frontal"], ["hinten_amateur_a", "hinten"]]) {
+    const d = JSON.parse(fs.readFileSync(new URL(`./daten/${datei}.json`, import.meta.url), "utf8"));
+    const bilder = d.bilder.map((b) => ({ zeit: b.zeit, punkte: b.punkte ? b.punkte.map(([x, y]) => ({ x, y })) : null }));
+    const sv = d.breite / d.hoehe;
+    const phasen = erkennePhasen(bilder, sv);
+    const alle = [...bewerteSchwung(bilder, phasen, sv).kennzahlen, ...bewerteTechnik(bilder, phasen, sv, ansicht).kennzahlen].map(ordneEin);
+    for (const k of alle) {
+      if (k.id === "tempo" || !PHASE_DER_KENNZAHL[k.id]) continue;
+      assert.ok(PHASE_DER_KENNZAHL[k.id].startsWith(NAME[k.phase]), `${k.id}: App misst „${k.phase}“, Katalog sagt „${PHASE_DER_KENNZAHL[k.id]}“`);
+    }
+  }
+});
+
+test("Antwort prüfen: Befund nur mit Fokus – ersetzt die App den Fokus, bleibt er leer", () => {
+  const erfunden = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "handgelenkWinkel" }, { kennzahlen: KENNZAHLEN, wichtigste: KENNZAHLEN[1] });
+  assert.equal(erfunden.befund, "");
+  const ohneFokus = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "" }, { kennzahlen: [] });
+  assert.equal(ohneFokus.befund, "");
+  const zuLang = pruefeCoachAntwort({ ...ANTWORT, befund: "x".repeat(900) }, { kennzahlen: KENNZAHLEN });
+  assert.equal(zuLang.befund.length, 250);
 });
