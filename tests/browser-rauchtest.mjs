@@ -167,7 +167,7 @@ try {
   await auswerten(`localStorage.setItem("level", "einsteiger")`);
   await senden("Page.navigate", { url: adresse });
 
-  const gestartet = await wartenBis(`document.documentElement.dataset.appGestartet === "ja"`);
+  const gestartet = await wartenBis(`document.documentElement?.dataset.appGestartet === "ja"`);
   pruefe(gestartet, "App-Skript ist angelaufen");
   const bereit = await wartenBis(`/Bereit/.test(document.getElementById("status")?.textContent || "")`, 60);
   pruefe(bereit, `Statuszeile meldet „Bereit“ (steht: „${await auswerten(`document.getElementById("status")?.textContent`)}“)`);
