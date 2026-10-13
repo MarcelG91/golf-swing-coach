@@ -309,6 +309,25 @@ test("Live-Kamera: Kamera wird beim Beenden abgeschaltet, Aufnahme-Adressen werd
   assert.match(beenden, /finally\s*{[\s\S]*?liveStoppKnopf\.disabled = false/, "Beenden-Knopf im finally frei");
 });
 
+// Kürzere Texte (0.39.0): Die Hinweise zu Coach und Löschen müssen trotzdem stimmen (V10)
+test("Coach-Einstellung und Lösch-Dialog sagen weiter das Richtige", () => {
+  const coachStart = INDEX.indexOf('<details class="aufklapp coach-einstellung');
+  assert.ok(coachStart > 0, "Abschnitt Coach fehlt in den Einstellungen");
+  const coach = INDEX.slice(coachStart, INDEX.indexOf("</p>", coachStart)).replace(/\s+/g, " ");
+  // Gesendet wird nur auf Knopfdruck (und erst nach Einwilligung), nie automatisch nach jeder Analyse
+  assert.ok(coach.includes("auf Knopfdruck"), "Coach-Hinweis sagt nicht, dass nur auf Knopfdruck gesendet wird");
+  assert.doesNotMatch(coach, /nach jeder Analyse/);
+  for (const wort of ["nur deine Kennzahlen", "nie Videos, Bilder oder Posedaten", "Eigener API-Schlüssel"]) {
+    assert.ok(coach.includes(wort), `Coach-Hinweis nennt „${wort}“ nicht`);
+  }
+  // Seit 0.37.0 gibt es eine Sicherung – sie enthält aber nie Videos und Bilder
+  const dialogStart = INDEX.indexOf('<dialog id="loeschDialog"');
+  assert.ok(dialogStart > 0, "Lösch-Dialog fehlt");
+  const dialog = INDEX.slice(dialogStart, INDEX.indexOf("</dialog>", dialogStart));
+  assert.doesNotMatch(dialog, /noch keine Sicherung/);
+  assert.match(dialog, /keine Videos und Bilder/);
+});
+
 // Sicherung (Etappe 9, V6): eine Datei, die Marcel selbst ablegt – kein Upload, kein Coach-Schlüssel,
 // keine Videos/Bilder, und Einspielen überschreibt nie etwas.
 test("Sicherung: Hinweis in den Einstellungen nennt alles, was in der Datei steht (auch Videonamen)", () => {
