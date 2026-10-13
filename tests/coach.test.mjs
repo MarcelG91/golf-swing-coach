@@ -3,7 +3,7 @@
 // 1. Die Anfrage enthält nur Kennzahlen – keine Posedaten, Videonamen, Notizen, Bilder.
 // 2. Der Systemtext ist fest (kein Datum) und enthält alle geprüften Tipps der App vollständig.
 // 3. Claude kann keinen Fokus "erfinden": ungültige Antworten fallen auf die App zurück.
-// 4. Die ausführliche Antwort (ab 0.17.0) wird geprüft und gekürzt.
+// 4. Das Kurz-Coaching (ab 0.40.0) wird geprüft und gekürzt; der Systemtext verlangt kurze Antworten.
 // 5. Die Antwort wird auch nach einem Rückfall auf ein anderes Modell vollständig gelesen.
 // 6. Seit 0.26.0 ohne SDK: Kopfzeilen, Datenstrom (SSE) und Fehlerarten (HTTP-Status) selbst.
 // Ausführen im Projektordner:  node --test
@@ -25,25 +25,12 @@ const KENNZAHLEN = [kennzahl("tempo", "gut"), kennzahl("hueftSway", "verbessern"
 // Kennzahlen über dem Level – gehen nur als Hintergrund mit
 const HINTERGRUND = [kennzahl("kopfSeitlich", "verbessern"), kennzahl("hueftBall", "gut")];
 
-// Eine vollständige, gültige Antwort im neuen Format (Fokus: schulterdrehung)
+// Eine vollständige, gültige Antwort im Kurz-Format (Fokus: schulterdrehung)
 const ANTWORT = {
-  gesamtbild: " Dein Rhythmus passt, die Drehung fehlt. ",
-  staerken: ["Ruhiges Tempo.", "  ", 42],
+  staerke: " Dein Tempo ist ruhig. ",
   fokusKennzahl: "schulterdrehung",
-  wasPassiert: "Die Schultern drehen nur halb.",
-  ursachen: "Oft zu aufrecht.",
-  folgen: "Weniger Weite.",
-  anleitung: ["Schritt 1", "Schritt 2", "Schritt 3", "Schritt 4"],
-  gefuehl: "Rücken zeigt zum Ziel.",
-  trainingsplan: [
-    { titel: "Schläger vor der Brust", anleitung: "App-Übung", menge: "10×", erfolg: "Ende zeigt auf den Ball" },
-    { titel: "Halbe Schwünge", anleitung: "Mit Ball", menge: "15 Bälle", erfolg: "Sauberer Treffer" },
-    null,
-  ],
-  typischeFehler: ["Nur die Arme drehen"],
-  zuHause: "Vor dem Spiegel.",
-  danach: "Dann die Hüfte.",
-  naechsteAufnahme: "Wieder von vorne filmen.",
+  anweisungen: ["Rücken zum Ziel drehen.", "  ", 42, "Linke Schulter unters Kinn."],
+  warum: "Die Schultern drehen nur halb – das kostet Weite.",
 };
 test("Gesendet werden nur Kennzahlen – keine Posedaten, Videonamen, Notizen oder Daten", () => {
   const daten = coachDaten({ kennzahlen: KENNZAHLEN, hintergrund: HINTERGRUND, level: "fortgeschritten", ansicht: "frontal", wichtigste: KENNZAHLEN[1] });
@@ -80,9 +67,6 @@ test("Anfrage: Modell, strukturierte Antwort, Rückfall bei Ablehnung, gründlic
   // Das Schema muss für strukturierte Antworten vollständig und geschlossen sein
   assert.equal(ANTWORT_SCHEMA.additionalProperties, false);
   assert.deepEqual([...ANTWORT_SCHEMA.required].sort(), Object.keys(ANTWORT_SCHEMA.properties).sort());
-  const block = ANTWORT_SCHEMA.properties.trainingsplan.items;
-  assert.equal(block.additionalProperties, false);
-  assert.deepEqual([...block.required].sort(), Object.keys(block.properties).sort());
   // Die Beispiel-Antwort oben hat genau die Felder des Schemas
   assert.deepEqual(Object.keys(ANTWORT).sort(), Object.keys(ANTWORT_SCHEMA.properties).sort());
 });
@@ -101,21 +85,24 @@ test("Systemtext: fest (kein Datum, keine Nutzerdaten), alle geprüften Tipps vo
   assert.match(SYSTEMTEXT, /Keine eigenen Erfindungen/);
   assert.match(SYSTEMTEXT, /Erfinde keine Messwerte/);
   assert.match(SYSTEMTEXT, /hintergrundKennzahlen: .*nie als Fokus/s);
+  // Kurz und auf den Punkt (Entscheidung 13.10.): feste Längen im Systemtext
+  assert.match(SYSTEMTEXT, /höchstens 120 Wörter/);
+  assert.match(SYSTEMTEXT, /2–3 Anweisungen/);
+  assert.match(SYSTEMTEXT, /je höchstens 12 Wörter/);
   // Jedes Antwortfeld ist im Systemtext erklärt
   for (const feld of Object.keys(ANTWORT_SCHEMA.properties)) assert.match(SYSTEMTEXT, new RegExp(`- ${feld}:`), `Feld ${feld} nicht erklärt`);
 });
 
 test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ersetzt", () => {
   const ok = pruefeCoachAntwort(ANTWORT, { kennzahlen: KENNZAHLEN, wichtigste: KENNZAHLEN[1] });
-  assert.equal(ok.fokusKennzahl, "schulterdrehung");
-  assert.equal(ok.fokusErsetzt, false);
-  assert.equal(ok.gesamtbild, "Dein Rhythmus passt, die Drehung fehlt.");
-  assert.deepEqual(ok.staerken, ["Ruhiges Tempo."], "leere Einträge und Nicht-Texte fallen weg");
-  assert.equal(ok.wasPassiert, "Die Schultern drehen nur halb.");
-  assert.equal(ok.anleitung.length, 4);
-  assert.equal(ok.trainingsplan.length, 2, "kaputter Block fällt weg");
-  assert.deepEqual(ok.trainingsplan[0], ANTWORT.trainingsplan[0]);
-  assert.equal(ok.naechsteAufnahme, "Wieder von vorne filmen.");
+  assert.deepEqual(ok, {
+    staerke: "Dein Tempo ist ruhig.",
+    fokusKennzahl: "schulterdrehung",
+    // leere Einträge und Nicht-Texte fallen weg
+    anweisungen: ["Rücken zum Ziel drehen.", "Linke Schulter unters Kinn."],
+    warum: "Die Schultern drehen nur halb – das kostet Weite.",
+    fokusErsetzt: false,
+  });
 
   // Kennzahl, die gar nicht gemessen wurde → App-eigene wichtigste Baustelle
   const erfunden = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "handgelenkWinkel" },
@@ -123,11 +110,10 @@ test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ers
   assert.equal(erfunden.fokusKennzahl, "hueftSway");
   assert.equal(erfunden.fokusErsetzt, true);
   // Claudes Texte zum Fokus passen nicht zum ersetzten Fokus – die App zeigt dann ihre eigenen
-  for (const feld of ["wasPassiert", "ursachen", "folgen", "gefuehl", "zuHause"]) assert.equal(erfunden[feld], "", feld);
-  for (const feld of ["anleitung", "trainingsplan", "typischeFehler"]) assert.deepEqual(erfunden[feld], [], feld);
+  assert.deepEqual(erfunden.anweisungen, []);
+  assert.equal(erfunden.warum, "");
   // Was nicht am Fokus hängt, bleibt
-  assert.equal(erfunden.gesamtbild, "Dein Rhythmus passt, die Drehung fehlt.");
-  assert.equal(erfunden.naechsteAufnahme, "Wieder von vorne filmen.");
+  assert.equal(erfunden.staerke, "Dein Tempo ist ruhig.");
 
   // Eine Kennzahl aus dem Hintergrund (über dem Level) ist als Fokus ungültig
   const hintergrund = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "kopfSeitlich" }, { kennzahlen: KENNZAHLEN, wichtigste: KENNZAHLEN[1] });
@@ -136,32 +122,31 @@ test("Antwort prüfen: gültiger Fokus bleibt, erfundener wird durch die App ers
   // Eine GRÜNE Kennzahl als Fokus ist auch ungültig
   assert.equal(pruefeCoachAntwort({ fokusKennzahl: "tempo" }, { kennzahlen: KENNZAHLEN, wichtigste: KENNZAHLEN[1] }).fokusKennzahl, "hueftSway");
 
-  // Keine Baustelle gemessen, Claude lässt das Feld leer → kein Fokus, nichts ersetzt, Plan zum Festigen bleibt
-  const allesGut = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "", wasPassiert: "" },
+  // Keine Baustelle gemessen, Claude lässt das Feld leer → kein Fokus, nichts ersetzt, Hinweise zum Festigen bleiben
+  const allesGut = pruefeCoachAntwort({ ...ANTWORT, fokusKennzahl: "", warum: "" },
     { kennzahlen: [kennzahl("tempo", "gut")], wichtigste: null });
   assert.equal(allesGut.fokusKennzahl, "");
   assert.equal(allesGut.fokusErsetzt, false);
-  assert.equal(allesGut.trainingsplan.length, 2);
+  assert.equal(allesGut.anweisungen.length, 2);
 
   // Kaputte Antwort (kein Objekt, falsche Typen) → leere Texte, App-Fokus
   const kaputt = pruefeCoachAntwort(null, { kennzahlen: KENNZAHLEN, wichtigste: KENNZAHLEN[1] });
-  assert.deepEqual([kaputt.gesamtbild, kaputt.fokusKennzahl, kaputt.staerken], ["", "hueftSway", []]);
-  const falscheTypen = pruefeCoachAntwort({ gesamtbild: 42, anleitung: "kein Array", trainingsplan: {} }, { kennzahlen: KENNZAHLEN });
-  assert.deepEqual([falscheTypen.gesamtbild, falscheTypen.anleitung, falscheTypen.trainingsplan], ["", [], []]);
-  // Überlange Texte und Listen werden gekürzt
+  assert.deepEqual([kaputt.staerke, kaputt.fokusKennzahl, kaputt.anweisungen, kaputt.warum], ["", "hueftSway", [], ""]);
+  const falscheTypen = pruefeCoachAntwort({ staerke: 42, anweisungen: "kein Array", warum: {} }, { kennzahlen: KENNZAHLEN });
+  assert.deepEqual([falscheTypen.staerke, falscheTypen.anweisungen, falscheTypen.warum], ["", [], ""]);
+  // Zu lange Antworten werden gekürzt: höchstens 3 Anweisungen, feste Höchstlängen
   const lang = pruefeCoachAntwort({
     ...ANTWORT,
-    gesamtbild: "a".repeat(5000),
-    wasPassiert: "b".repeat(5000),
-    staerken: Array(10).fill("c".repeat(1000)),
-    anleitung: Array(20).fill("Schritt"),
-    trainingsplan: Array(10).fill({ titel: "t".repeat(500), anleitung: "x", menge: "y", erfolg: "z" }),
+    staerke: "a".repeat(5000),
+    anweisungen: Array(10).fill("b".repeat(1000)),
+    warum: "c".repeat(5000),
   }, { kennzahlen: KENNZAHLEN });
-  assert.equal(lang.gesamtbild.length, 1200);
-  assert.equal(lang.wasPassiert.length, 800);
-  assert.deepEqual([lang.staerken.length, lang.staerken[0].length], [3, 400]);
-  assert.equal(lang.anleitung.length, 8);
-  assert.deepEqual([lang.trainingsplan.length, lang.trainingsplan[0].titel.length], [6, 80]);
+  assert.equal(lang.staerke.length, 200);
+  assert.deepEqual([lang.anweisungen.length, lang.anweisungen[0].length], [3, 160]);
+  assert.equal(lang.warum.length, 400);
+  // Felder des alten, ausführlichen Formats werden nicht mehr übernommen
+  const alt = pruefeCoachAntwort({ ...ANTWORT, gesamtbild: "x", trainingsplan: [{ titel: "y" }] }, { kennzahlen: KENNZAHLEN });
+  assert.deepEqual(Object.keys(alt).sort(), ["anweisungen", "fokusErsetzt", "fokusKennzahl", "staerke", "warum"]);
   assert.equal(leseAntwortText("kein json"), null);
   assert.deepEqual(leseAntwortText('{"lob":"x"}'), { lob: "x" });
 });

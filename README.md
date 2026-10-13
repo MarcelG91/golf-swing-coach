@@ -169,14 +169,14 @@ Linkshänder, die Anzahl erkannter Schwünge, die wichtigste Baustelle aus Sicht
 kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder Datum. Vor dem ersten Senden fragt die
 App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
 
-- Seit 0.17.0 schreibt Claude ein **ausführliches Coaching**: Gesamtbild (wie hängen die Kennzahlen
-  zusammen?), Stärken, Hauptbaustelle mit Ursachen und Folgen, Schritt-für-Schritt-Anleitung,
-  Trainingsplan für die nächste Einheit, typische Fallen, Übung für zu Hause, nächste Baustelle und
-  Tipp für die nächste Aufnahme. Gleiche Tiefe in jedem Level, nur die Sprache passt sich an.
+- Seit 0.40.0 coacht Claude **kurz und klar wie ein Trainer auf der Range** (höchstens ca. 120 Wörter):
+  eine Stärke, **ein Fokus mit 2–3 Anweisungen**, Schwunggedanke und Übung der App, das „Warum?“
+  zugeklappt. Die Sprache passt sich dem Level an. (0.17.0–0.39.x: ausführliches Coaching mit
+  600–900 Wörtern – zu lang; solche gespeicherten Antworten zeigt die App weiter an.)
 - Der **Fokus** kommt immer aus den Baustellen deines Levels (die App prüft das). Schwunggedanke und
-  **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Erklärungen und weitere Übungen sind
-  nicht fachlich geprüft – das steht unter jeder Antwort. Leitplanken im Systemtext: den geprüften Tipps
-  nie widersprechen, nur verbreitete Standardübungen, nichts erfinden.
+  **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Anweisungen sind nicht fachlich
+  geprüft – das steht unter jeder Antwort. Leitplanken im Systemtext: den geprüften Tipps nie
+  widersprechen, nichts erfinden.
 - Modell: Claude Opus 5.5 (seit 0.38.0, vorher Opus 5; gründlich mit Effort „high“), ca. 15–25 US-Cent
   und 30–90 Sekunden pro Coaching (Werte von Opus 5, neue Messung steht aus). Lehnt Claude ab, springt
   automatisch ein älteres Modell ein; die Kosten unter der Antwort rechnen mit dessen Preis. Die Antwort
