@@ -75,12 +75,14 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 
 ## 5c. Sicherung (Version ≥ 0.37) – vor Punkt 6 machen!
 
-- [ ] Einstellungen → „Sicherung erstellen“ → „In Dateien sichern ›“: Öffnet sich das **Teilen-Menü**?
-      (Oder kommt die Meldung „heruntergeladen“? Welches von beiden: ___)
-- [ ] Im Teilen-Menü „In Dateien sichern“ → iCloud Drive. Liegt `golf-sicherung-….json` danach in der Dateien-App?
+Getestet 13.10. mit 0.37.1: die ersten vier Punkte ✓.
+
+- [x] Einstellungen → „Sicherung erstellen“ → „In Dateien sichern ›“: Öffnet sich das **Teilen-Menü**?
+      (Oder kommt die Meldung „heruntergeladen“? Welches von beiden: Teilen-Menü)
+- [x] Im Teilen-Menü „In Dateien sichern“ → iCloud Drive. Liegt `golf-sicherung-….json` danach in der Dateien-App?
       Größe laut Dateien-App: ___
-- [ ] „Sicherung einspielen ›“ öffnet die Dateien-App. Ist die Sicherung dort **antippbar** (nicht ausgegraut)?
-- [ ] Gleiche Datei nochmal einspielen: Meldung „schon auf diesem Gerät“?
+- [x] „Sicherung einspielen ›“ öffnet die Dateien-App. Ist die Sicherung dort **antippbar** (nicht ausgegraut)?
+- [x] Gleiche Datei nochmal einspielen: Meldung „schon auf diesem Gerät“?
 - [ ] Nach „Alles löschen“ (Punkt 6) wieder einspielen: Sind alle Sitzungen mit Kennzahlen, Notizen und
       Fortschritt-Verlauf wieder da (ohne Videos)?
 
