@@ -176,7 +176,7 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt), dann die Feedback-Ru
 
 Gut so, nicht umbauen: Schwünge mit Bild, Übung/Übungsmodus, Verlauf je Kennzahl, Diagrammauswahl, Level, Einstellungen.
 Reihenfolge (je eigener Branch):
-- ~~**A+B Startseite + weniger Text**~~ – **erledigt mit 0.38.0** (Branch `startseite-weniger-text`): Einstiegsbild mit
+- ~~**A+B Startseite + weniger Text**~~ – **erledigt mit 0.39.0** (Branch `startseite-weniger-text`): Einstiegsbild mit
   Logo und Name, Version/Offline/🔒-Hinweis nur noch auf der Startseite, Live mit großen Knöpfen (Kamera Vorne/Hinten),
   Schwung-Auswahl als Dropdown unter dem Video, Gesamtauswertung mit zugeklappten Karten, Einstellungen mit Aufklappmenüs.
 - **Fehler 1 – Pfeile ◀ ▶:** springen nur 1 Bild (1/30 s) weiter. Gewünscht: zur nächsten/vorigen Phasen-Kugel springen.
