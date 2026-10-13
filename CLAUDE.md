@@ -160,8 +160,9 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt). Neue Ideen hier pass
 8. ~~Etappe 9: Sicherung~~ – **erledigt mit 0.37.0** (Branch `etappe-9-sicherung`, `sicherung.js`): Einstellungen →
    „Sicherung erstellen“ legt eine JSON-Datei (SHA-256-Prüfsumme) übers Teilen-Menü ab, „Sicherung einspielen“ prüft
    erst alles und führt dann zusammen (nie ersetzen, `add` statt `put`). Entscheidungen 13.10.: **ohne Videos/Bilder,
-   ohne Passwort** (V6 erledigt), nur Zusammenführen, von den Einstellungen nur der Lernfortschritt. Offen: iPhone-Test
-   (`docs/iphone-testliste.md` 5c – öffnet das Teilen-Menü, ist die Datei in der Dateiauswahl antippbar?).
+   ohne Passwort** (V6 erledigt), nur Zusammenführen, von den Einstellungen nur der Lernfortschritt. **iPhone-Test
+   erfolgt (13.10., 0.37.1): Teilen-Menü öffnet sich, Datei liegt in der Dateien-App und ist beim Einspielen antippbar.**
+   Noch offen: Einspielen nach „Alles löschen“ und Verhalten mit sehr vielen Schwüngen (S15).
 9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1
    `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. **Schritte 2 + 3
    `wissen-pfade-2-3` erledigt (0.23.0)**: Pfade „Vollschwung“ und „Ballflug“ (je 7 Lektionen), 12 Schaubilder, P1–P10
