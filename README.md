@@ -123,7 +123,7 @@ z. B. `golf-sicherung-2026-10-13.json`, und spielst sie später wieder ein – n
 nach „Alles löschen“.
 
 - **Drin:** Sitzungen mit Datum, Schläger und Notiz, alle Kennzahlen, Bewertungen, Coach-Antworten,
-  Posedaten (nur Zahlen) und der Lernfortschritt unter „📖 Wissen“. Ca. 0,2–0,3 MB pro Schwung.
+  Videonamen (Dateiname des Originalvideos), Posedaten (nur Zahlen) und der Lernfortschritt unter „📖 Wissen“. Ca. 0,2–0,3 MB pro Schwung.
 - **Nicht drin:** Videos und Vorschaubilder (zeigen dich und wären riesig), der Coach-Schlüssel,
   Level, Darstellung und Kamerawahl. Ohne Bilder braucht die Datei kein Passwort; die Notizen stehen
   allerdings lesbar darin.
@@ -249,7 +249,7 @@ der App unter ⚙️ Einstellungen → „Datenschutz – kurz erklärt“.
 | Was | Wohin |
 |---|---|
 | Videos, Einzelbilder, Posedaten, Kennzahlen, Notizen, Level, Lernfortschritt, API-Schlüssel | Bleiben auf dem Gerät (Browser-Speicher); der Schlüssel geht nur bei Coach-Anfragen zur Anmeldung an Anthropic. Kein Konto, keine Werbung, kein Tracking, keine Cookies. |
-| Sicherung (nur wenn du sie erstellst) | Eine Datei mit Kennzahlen, Notizen, Coach-Antworten, Posedaten und Lernfortschritt – ohne Videos, Bilder und API-Schlüssel. Nichts wird hochgeladen; wo die Datei liegt (z. B. iCloud Drive), entscheidest du im Teilen-Menü. |
+| Sicherung (nur wenn du sie erstellst) | Eine Datei mit Kennzahlen, Notizen, Coach-Antworten, Posedaten, Datum, Schläger, Videonamen und Lernfortschritt – ohne Videos, Bilder und API-Schlüssel. Nichts wird hochgeladen; wo die Datei liegt (z. B. iCloud Drive), entscheidest du im Teilen-Menü. |
 | App-Dateien (auch die Pose-Erkennung, ca. 20 MB) | Kommen von GitHub Pages. GitHub sieht dabei wie bei jeder Webseite IP-Adresse und Zeitpunkt. Danach läuft die App offline. |
 | Coach (freiwillig, nach Einwilligung) | Kennzahlen, Level, Ansicht und kurzer Verlauf an Anthropic (Claude) – nie Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch die IP-Adresse und die Browserkennung. |
 

@@ -82,7 +82,9 @@ test("Datenschutzhinweis (V4) nennt beide Empfänger und was nie gesendet wird",
   const abschnitt = INDEX.slice(start, INDEX.indexOf("</section>", start));
   // Die CSP erlaubt genau zwei Ziele: die eigene Adresse (GitHub Pages) und den Coach (Anthropic)
   for (const wort of ["GitHub", "Anthropic", "IP-Adresse", "Einwilligung", "Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum", "kein Tracking",
-    "Sicherung:", "ohne Videos, Bilder und API-Schlüssel", "Hochgeladen wird\n        dabei nichts"]) {
+    "Sicherung:", "ohne Videos, Bilder und API-Schlüssel", "Hochgeladen wird\n        dabei nichts",
+    // Die Sicherung enthält auch den Dateinamen des Videos (Feld videoName) – das muss der Hinweis sagen
+    "Datum, Schläger, Videonamen und Lernfortschritt"]) {
     assert.ok(abschnitt.includes(wort), `Datenschutzhinweis nennt „${wort}“ nicht`);
   }
 });
@@ -309,6 +311,17 @@ test("Live-Kamera: Kamera wird beim Beenden abgeschaltet, Aufnahme-Adressen werd
 
 // Sicherung (Etappe 9, V6): eine Datei, die Marcel selbst ablegt – kein Upload, kein Coach-Schlüssel,
 // keine Videos/Bilder, und Einspielen überschreibt nie etwas.
+test("Sicherung: Hinweis in den Einstellungen nennt alles, was in der Datei steht (auch Videonamen)", () => {
+  // Gespeichert wird videoName im Schwung (speicher.js) – die Sicherung nimmt jeden Schwung komplett mit
+  assert.match(QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text, /videoName:/);
+  const start = INDEX.indexOf("<h4>Sicherung");
+  assert.ok(start > 0, "Abschnitt Sicherung fehlt");
+  const hinweis = INDEX.slice(start, INDEX.indexOf("</p>", start)).replace(/\s+/g, " ");
+  for (const wort of ["Kennzahlen", "Notizen", "Coach-Antworten", "Posedaten", "Datum", "Schläger", "Videonamen", "Lernfortschritt", "ohne Videos, Bilder und Coach-Schlüssel"]) {
+    assert.ok(hinweis.includes(wort), `Hinweis zur Sicherung nennt „${wort}“ nicht`);
+  }
+});
+
 test("Sicherung: nichts ins Netz, kein Coach-Schlüssel, keine Videos, Einspielen überschreibt nichts", () => {
   const app = ohneKommentare(APP);
   const teil = app.slice(app.indexOf("let fertigeSicherung"), app.indexOf("function leereSitzungsAnsicht"));
