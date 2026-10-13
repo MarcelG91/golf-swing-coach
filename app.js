@@ -944,7 +944,7 @@ function zeigeUebersicht() {
   if (nichtGezaehlt) {
     const hinweis = document.createElement("p");
     hinweis.className = "hinweis";
-    hinweis.textContent = `${nichtGezaehlt} ${nichtGezaehlt === 1 ? "Schwung zählt" : "Schwünge zählen"} nicht mit, – Erkennung unsicher (⚠️).`;
+    hinweis.textContent = `${nichtGezaehlt} ${nichtGezaehlt === 1 ? "Schwung zählt" : "Schwünge zählen"} nicht mit – Erkennung unsicher (⚠️).`;
     gesamtListe.appendChild(hinweis);
   }
   if (gruppen.length === 0) {

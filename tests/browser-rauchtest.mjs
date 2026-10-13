@@ -167,7 +167,7 @@ try {
   await auswerten(`localStorage.setItem("level", "einsteiger")`);
   await senden("Page.navigate", { url: adresse });
 
-  const gestartet = await wartenBis(`document.documentElement.dataset.appGestartet === "ja"`);
+  const gestartet = await wartenBis(`document.documentElement?.dataset.appGestartet === "ja"`);
   pruefe(gestartet, "App-Skript ist angelaufen");
   const bereit = await wartenBis(`/Bereit/.test(document.getElementById("status")?.textContent || "")`, 60);
   pruefe(bereit, `Statuszeile meldet „Bereit“ (steht: „${await auswerten(`document.getElementById("status")?.textContent`)}“)`);
@@ -242,6 +242,16 @@ try {
   // Live-Kamera mit der Testkamera: starten, Skelett-Schleife läuft, beenden. Es gibt keinen
   // Schwung zu sehen, also darf nichts gespeichert werden.
   await auswerten(`document.getElementById("zuAnalyse").click()`);
+  // Kamera-Wahl (zwei Knöpfe Vorne/Hinten): die Wahl wird gemerkt; danach zurück auf Vorne (Testkamera)
+  const kameraWahl = await auswerten(`(() => {
+    const knopf = (wert) => document.querySelector('input[name="liveKamera"][value="' + wert + '"]');
+    const start = knopf("user").checked;
+    knopf("environment").click();
+    const hinten = localStorage.getItem("liveKamera");
+    knopf("user").click();
+    return { start, hinten, vorne: localStorage.getItem("liveKamera") };
+  })()`);
+  pruefe(kameraWahl.start && kameraWahl.hinten === "environment" && kameraWahl.vorne === "user", `Kamera-Wahl Vorne/Hinten wird gemerkt (${JSON.stringify(kameraWahl)})`);
   await auswerten(`(() => { const s = document.getElementById("liveSchlaeger"); s.value = "Eisen 7"; document.getElementById("liveStartKnopf").click(); })()`);
   const liveLaeuft = await wartenBis(`/ms pro Bild/.test(document.getElementById("liveWerte")?.textContent || "")`, 30);
   pruefe(liveLaeuft, `Live-Kamera läuft (steht: „${await auswerten(`document.getElementById("liveWerte")?.textContent`)}“)`);
@@ -393,6 +403,20 @@ try {
   await auswerten(`document.getElementById("zuGespeichert").click()`);
   await auswerten(`document.getElementById("zuSitzungen").click()`);
   pruefe(await wartenBis(`document.querySelectorAll("#sitzungsListe > *").length >= ${vorSicherung.sitzungen}`, 10), "Meine Schwünge zeigt die eingespielten Sitzungen");
+
+  // Sitzung mit mehreren Schwüngen öffnen: Auswahl (Dropdown) unter dem Video, Wechsel zeigt den anderen Schwung
+  const mehrere = await auswerten(`(() => {
+    const knopf = [...document.querySelectorAll("#sitzungsListe > button")]
+      .find((k) => Number(k.querySelector("small")?.textContent.match(/^(\\d+) Schwünge/)?.[1]) >= 2);
+    knopf?.click();
+    return !!knopf;
+  })()`);
+  pruefe(mehrere, "Es gibt eine Sitzung mit mehreren Schwüngen");
+  pruefe(await wartenBis(`!document.getElementById("schwungWahlBox").hidden && document.getElementById("schwungWahl").options.length >= 2 && /^Schwung 1 /.test(document.getElementById("schwungTitel").textContent)`, 15),
+    "Mehrere Schwünge: Auswahl unter dem Video, Schwung 1 ist gewählt");
+  await auswerten(`(() => { const wahl = document.getElementById("schwungWahl"); wahl.selectedIndex = 1; wahl.dispatchEvent(new Event("change")); })()`);
+  pruefe(await wartenBis(`/^Schwung 2 /.test(document.getElementById("schwungTitel").textContent)`, 15),
+    `Auswahl wechselt zum zweiten Schwung (steht: „${await auswerten(`document.getElementById("schwungTitel").textContent`)}“)`);
 
   // Ohne Grafikkarte (Chrome ohne Fenster, CI-Server) meldet MediaPipe, dass die GPU fehlt, und die App
   // rechnet auf der CPU weiter (Statuszeile "… CPU"). Das ist gewollt und kein Fehler.
