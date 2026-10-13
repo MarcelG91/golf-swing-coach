@@ -180,9 +180,11 @@ Reihenfolge (je eigener Branch):
 - ~~**A+B Startseite + weniger Text**~~ – **erledigt mit 0.39.0** (Branch `startseite-weniger-text`): Einstiegsbild mit
   Logo und Name, Version/Offline/🔒-Hinweis nur noch auf der Startseite, Live mit großen Knöpfen (Kamera Vorne/Hinten),
   Schwung-Auswahl als Dropdown unter dem Video, Gesamtauswertung mit zugeklappten Karten, Einstellungen mit Aufklappmenüs.
-- **Fehler 1 – Pfeile ◀ ▶:** springen nur 1 Bild (1/30 s) weiter. Gewünscht: zur nächsten/vorigen Phasen-Kugel springen.
-- **Fehler 2 – rote/gelbe Linien nur bei einer Pose:** an anderen Phasen keine Linien. Ursache prüfen (Linie nur, wenn
-  das Video genau auf dem Phasenbild steht; je Level/Ansicht evtl. keine Kennzahl mit Linie, `app.js` `technikImBild`).
+- ~~**Fehler 1 + 2 – Pfeile und Linien**~~ – **erledigt mit 0.41.0** (Branch `pfeile-und-linien`): Pfeile ◀ ▶ springen
+  nach der Analyse von Phase zu Phase (vorher 1 Bild). Ursache der fehlenden Linien: Einsteiger hat von vorne beim
+  Ansprechen und im Treffmoment keine Kennzahl mit Linie (von hinten nur beim Ansprechen). Entscheidung 13.10.: Dann
+  zeigt das Bild die Kennzahlen der höheren Level als „Für später“ (keine Baustellen); ganz ohne Messung ein Schild
+  „hier keine Messung“ (`app.js` `technikImBild`).
 - **C Fortschritt:** weniger Kästchen; Meilensteine deutlich kürzer, ohne Ansicht/Schläger-Filter und Texte darunter;
   Diagramme mit Skala und Zielband (was ist im Bereich, was außerhalb?) – prüfen, ob die Werte richtig ankommen;
   Antippen → passende Lektion (mehr KPI-Wissen).
