@@ -41,6 +41,10 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
 - Der Lernfortschritt der Wissensseite liegt unter `localStorage`-Schlüssel `wissenFortschritt`
   (nur Liste erledigter Lektions-IDs, keine Schwungdaten). „Alles löschen“ lässt ihn stehen wie das
   Level (Test: `tests/sicherheit.test.mjs`).
+- **Sicherung** (`sicherung.js`): Einstellungen kommen nur über die Erlaubt-Liste `EINSTELLUNGEN_IN_SICHERUNG` hinein
+  (derzeit nur `wissenFortschritt`) – nie `coachSchluessel` oder die Einwilligung. Neue Felder in Sitzung/Schwung landen
+  automatisch in der Sicherung; ändert sich der Aufbau so, dass alte Dateien nicht mehr passen, `SICHERUNG_VERSION`
+  erhöhen und alte Versionen weiter einlesen können. Keine Videos in die Sicherung ohne Passwort (V6).
 - Hell/Dunkel liegt unter `localStorage`-Schlüssel `darstellung` (`auto`/`hell`/`dunkel`, `darstellung.js`).
   Farben nur über die Variablen oben in `style.css` setzen (beide Farbsätze pflegen).
 - **Keine Videos, keine exportierten Posedaten ins Repo** (`tests/keine-videos.test.mjs`
@@ -86,6 +90,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `videoanalyse.js` | Video schnell durchgehen (abspielen statt springen, Lücken nachholen) |
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
+| `sicherung.js` | Sicherung als JSON-Datei: bauen (Prüfsumme), prüfen, Zusammenführen planen, Erlaubt-Liste der Einstellungen (reine Rechenlogik; Teilen/Einspielen in `app.js`) |
 | `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
 | `livekamera.js` · `liveschwung.js` · `ampel.js` · `aufnahme.js` · `liveclip.js` | Live-Kamera (Etappe 12): Kamera + Zeitmessung · Schwung live erkennen · Ampelrahmen + Kurzwort · versetzte 16-s-Aufnahmestücke im Arbeitsspeicher · Schwung ↔ Stück zuordnen und aufs Raster umrechnen (alles außer Kamera/Aufnahme reine Rechenlogik) |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
@@ -116,7 +121,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier passend einsortieren.
+Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -152,8 +157,11 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
 7. ~~Automatischer Browser-Test (T3)~~ – **erledigt** (Branch `browser-test`): `node tests/browser-rauchtest.mjs`
    (Chrome ohne Fenster über das DevTools-Protokoll, ohne neue Bibliothek, läuft auch in der CI). Nach Änderungen an
    der Oberfläche einmal lokal laufen lassen.
-8. **Etappe 9: Sicherung** (bewusst ans Ende, Entscheidung 27.09.). Mit Verschlüsselung oder ohne Videos (V6).
-   Muss den Coach-Schlüssel (`localStorage` `coachSchluessel`) ausdrücklich weglassen.
+8. ~~Etappe 9: Sicherung~~ – **erledigt mit 0.37.0** (Branch `etappe-9-sicherung`, `sicherung.js`): Einstellungen →
+   „Sicherung erstellen“ legt eine JSON-Datei (SHA-256-Prüfsumme) übers Teilen-Menü ab, „Sicherung einspielen“ prüft
+   erst alles und führt dann zusammen (nie ersetzen, `add` statt `put`). Entscheidungen 13.10.: **ohne Videos/Bilder,
+   ohne Passwort** (V6 erledigt), nur Zusammenführen, von den Einstellungen nur der Lernfortschritt. Offen: iPhone-Test
+   (`docs/iphone-testliste.md` 5c – öffnet das Teilen-Menü, ist die Datei in der Dateiauswahl antippbar?).
 9. **Wissensseite mit Lernpfaden** (Plan und Entscheidungen 30.09.: `docs/plan-wissensseite.md`). **Schritt 1
    `wissen-geruest` erledigt (0.22.0)**: Bereich, Lektionsansicht, Fortschritt, Pfad 1 mit 7 Schaubildern. **Schritte 2 + 3
    `wissen-pfade-2-3` erledigt (0.23.0)**: Pfade „Vollschwung“ und „Ballflug“ (je 7 Lektionen), 12 Schaubilder, P1–P10

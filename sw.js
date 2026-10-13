@@ -28,6 +28,7 @@ const APP_DATEIEN = [
   "./gesamtauswertung.js",
   "./speicher.js",
   "./videokuerzen.js",
+  "./sicherung.js",
   "./phasenabspieler.js",
   "./livekamera.js",
   "./liveschwung.js",

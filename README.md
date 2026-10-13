@@ -113,8 +113,30 @@ Schwung einmal durch – dabei nimmt die App ihn als kurzes Video auf.
 - **Wieder ansehen:** Oben auf **„📚 Meine Schwünge“** → Sitzung antippen. Sie öffnet sich wie
   eine frische Analyse – mit Phasen, „Im Video zeigen“ und roten/gelben Linien.
 - **Löschen:** In der geöffneten Sitzung ganz unten (einzelner Schwung oder ganze Sitzung).
-- **Wichtig:** Gelöschte Safari-Daten oder ein verlorenes Handy = Schwünge weg.
-  Eine Sicherung zum Exportieren kommt mit Etappe 9.
+- **Wichtig:** Gelöschte Safari-Daten oder ein verlorenes Handy = Schwünge weg –
+  außer du hast eine **Sicherung** (siehe unten).
+
+### Sicherung (seit 0.37.0)
+
+Unter **⚙️ Einstellungen → „Daten auf diesem Gerät“** legst du deine Schwünge als **eine Datei** ab,
+z. B. `golf-sicherung-2026-10-13.json`, und spielst sie später wieder ein – nach einem Handywechsel oder
+nach „Alles löschen“.
+
+- **Drin:** Sitzungen mit Datum, Schläger und Notiz, alle Kennzahlen, Bewertungen, Coach-Antworten,
+  Videonamen (Dateiname des Originalvideos), Posedaten (nur Zahlen) und der Lernfortschritt unter „📖 Wissen“. Ca. 0,2–0,3 MB pro Schwung.
+- **Nicht drin:** Videos und Vorschaubilder (zeigen dich und wären riesig), der Coach-Schlüssel,
+  Level, Darstellung und Kamerawahl. Ohne Bilder braucht die Datei kein Passwort; die Notizen stehen
+  allerdings lesbar darin.
+- **Sichern:** „Sicherung erstellen“ → „In Dateien sichern ›“ → im Teilen-Menü **„In Dateien sichern“**
+  → **iCloud Drive** wählen (nur dort kommt ein neues iPhone an die Datei). Geht das Teilen-Menü nicht,
+  lädt die App die Datei herunter (Dateien-App → Downloads).
+- **Einspielen:** „Sicherung einspielen ›“ → Datei in der Dateien-App wählen. Die App **prüft zuerst die
+  ganze Datei** (Prüfsumme, Format, Version, Aufbau) und schreibt nichts, wenn etwas nicht stimmt. Dann
+  zeigt sie, was dazukommt, und spielt erst nach „Einspielen“ ein.
+- **Zusammenführen, nie ersetzen:** Sitzungen, die schon auf dem Gerät sind, bleiben unverändert;
+  dazu kommen nur fehlende. Zweimal einspielen schadet nicht. Wer ganz ersetzen will: vorher „Alles löschen“.
+- **Handywechsel:** neues iPhone → Safari → App zum Home-Bildschirm → einmal online öffnen, Level wählen →
+  Sicherung aus iCloud Drive einspielen.
 
 ### Speicher aufräumen
 
@@ -227,6 +249,7 @@ der App unter ⚙️ Einstellungen → „Datenschutz – kurz erklärt“.
 | Was | Wohin |
 |---|---|
 | Videos, Einzelbilder, Posedaten, Kennzahlen, Notizen, Level, Lernfortschritt, API-Schlüssel | Bleiben auf dem Gerät (Browser-Speicher); der Schlüssel geht nur bei Coach-Anfragen zur Anmeldung an Anthropic. Kein Konto, keine Werbung, kein Tracking, keine Cookies. |
+| Sicherung (nur wenn du sie erstellst) | Eine Datei mit Kennzahlen, Notizen, Coach-Antworten, Posedaten, Datum, Schläger, Videonamen und Lernfortschritt – ohne Videos, Bilder und API-Schlüssel. Nichts wird hochgeladen; wo die Datei liegt (z. B. iCloud Drive), entscheidest du im Teilen-Menü. |
 | App-Dateien (auch die Pose-Erkennung, ca. 20 MB) | Kommen von GitHub Pages. GitHub sieht dabei wie bei jeder Webseite IP-Adresse und Zeitpunkt. Danach läuft die App offline. |
 | Coach (freiwillig, nach Einwilligung) | Kennzahlen, Level, Ansicht und kurzer Verlauf an Anthropic (Claude) – nie Videos, Bilder, Posedaten, Notizen, Videonamen oder Datum. Anthropic sieht dabei auch die IP-Adresse und die Browserkennung. |
 
@@ -277,7 +300,8 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen, Ballflug-Helfer (Start + Kurve → Name und Ursache), welche Lektion zu welcher Baustelle gehört |
 | `nachschlagen.js` | Bereich „📖 Wissen“ → Nachschlagen: Glossar, Irrtümer, Regeln, Ausrüstung (jeweils mit Quellen) und die Suche |
 | `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
-| `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen) |
+| `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen); für die Sicherung alles lesen und Sitzungen einspielen (ohne zu überschreiben) |
+| `sicherung.js` | Sicherung als Datei (Etappe 9): baut die JSON-Datei mit Prüfsumme (SHA-256), prüft eine Datei vor dem Einspielen (Format, Version, Aufbau), plant das Zusammenführen; Erlaubt-Liste der Einstellungen (nur Lernfortschritt, nie der Coach-Schlüssel) – reine Rechenlogik |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |
 | `livekamera.js` | Live-Kamera (Etappe 12a, Test): Kamera starten, Bild für Bild das Skelett rechnen und die Geschwindigkeit messen |
 | `phasenabspieler.js` | Phasen-Abspieler (Vorher/Nachher): plant, wie schnell jeder Abschnitt abgespielt wird, damit Top und Treffmoment bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik) |
@@ -295,7 +319,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 
 | Datei | Aufgabe |
 |---|---|
-| `tests/browser-rauchtest.mjs` | Startet die App in Chrome ohne Fenster: „Bereit“, Fortschritt zeigt Diagramme, keine Konsolenfehler, keine Fremdanfragen (`node tests/browser-rauchtest.mjs`, läuft auch in der CI) |
+| `tests/browser-rauchtest.mjs` | Startet die App in Chrome ohne Fenster: „Bereit“, Fortschritt zeigt Diagramme, Live-Kamera, Sicherung erstellen → alles löschen → einspielen (kaputte Datei ändert nichts, kein Coach-Schlüssel in der Datei), keine Konsolenfehler, keine Fremdanfragen (`node tests/browser-rauchtest.mjs`, läuft auch in der CI) |
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
@@ -303,6 +327,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `tests/videoanalyse.test.mjs` | Prüft das Zeitraster der schnellen Analyse (30-, 60-, 24-Bilder-Videos, Lücken) |
 | `tests/schwuenge.test.mjs` | Prüft mehrere Schläge in einem langen Video und die Gesamtauswertung |
 | `tests/speicher.test.mjs` | Prüft das Umrechnen auf den Clip: gespeicherte Schwünge ergeben dieselben Kennzahlen |
+| `tests/sicherung.test.mjs` | Prüft die Sicherung: hin und zurück ohne Verlust, Köder-Schlüssel steht nie in der Datei, beschädigte/zu neue/von Hand veränderte Dateien werden abgelehnt, Zusammenführen ohne Doppelte |
 | `tests/level.test.mjs` | Prüft Kennzahl-Level, Filter, Baustellenzahl und Auf-/Abstiegsvorschläge |
 | `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet (feste Felder der Anfrage), Kopfzeilen, Claude kann keinen Fokus erfinden, der Datenstrom wird auch in kleinen Stücken und nach einem Rückfall auf ein anderes Modell vollständig gelesen, Fehlerarten aus HTTP-Status und Datenstrom |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
@@ -312,7 +337,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |
 | `tests/keine-videos.test.mjs` | Video-Wächter: keine Videos, Posedaten-Exporte oder zu großen Dateien im Repo (über 5 MB nur die geprüften Dateien in `vendor/`) |
 | `tests/vendor.test.mjs` | Prüfsumme (SHA-256) jeder Datei in `vendor/`, keine ungeprüfte Datei dort, App und Service Worker laden die Pose-Erkennung nur von dort, Speicher-Namen in `sw.js` und `pwa.js` gleich |
-| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts (nur noch `api.anthropic.com`), dass kein Fremdcode nachgeladen wird, die CSP, den Datenschutzhinweis, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Lernfortschritt, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt |
+| `tests/sicherheit.test.mjs` | Prüft erlaubte Hosts (nur noch `api.anthropic.com`), dass kein Fremdcode nachgeladen wird, die CSP, den Datenschutzhinweis, Offline-Dateilisten und dynamische Codeausführung; dass Speichern/Löschen nichts sendet und nie Level, Lernfortschritt, Einstellungen oder Offline-Dateien löscht; dass die Coach-Einwilligung jedes gesendete Feld nennt; dass die Sicherung nichts sendet, den Coach-Schlüssel nicht anfasst und beim Einspielen nichts überschreibt |
 | `tests/daten/` | Posedaten der echten Testschwünge (nur Koordinaten, keine Videos) |
 | `tests/daten/QUELLEN.md` | Woher die Testschwünge stammen |
 
@@ -547,10 +572,11 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
   (0.27.0 Rechnen, 0.28.0 Anzeige; Langzeit-Feedback durch den Coach bleibt offen)
 - [x] Sicherheits-Etappe (0.26.0): Pose-Erkennung selbst ausgeliefert mit Prüfsummen, Coach ohne SDK, CSP,
   Datenschutzhinweis – Voraussetzung, um die App mit Freunden zu teilen (Befunde C1, C3, V4)
+- [x] 9. Sicherung exportieren / einspielen (0.37.0): eine JSON-Datei ohne Videos und ohne Passwort, Prüfung vor dem
+  Einspielen, Zusammenführen statt Ersetzen
 
-Als Nächstes, in dieser Reihenfolge (die Nummern bleiben, damit alle Verweise stimmen):
-
-- [ ] 9. Sicherung exportieren / einspielen
+Alle geplanten Etappen sind gebaut. Offen sind die iPhone-Tests (`docs/iphone-testliste.md`) und die
+Ideen unter „Offene Punkte“ in `CLAUDE.md`.
 
 Details: `docs/plan-etappe-11-level-und-coach.md` (Etappe 11) und
 `docs/plan-speichern-und-fortschritt.md` (Etappen 8–10)
