@@ -2274,7 +2274,7 @@ async function frageCoach() {
     if (!(await frageCoachEinwilligung())) return; // "Abbrechen": finally gibt den Knopf wieder frei
     const { wichtigste, sichtbar } = coachGrundlage();
     const anfrage = baueCoachAnfrage(await coachDatenJetzt());
-    // Als Datenstrom empfangen: Die ausführliche Antwort braucht bis zu 1–2 Minuten, und ein
+    // Als Datenstrom empfangen: Mit Nachdenken braucht die Antwort bis zu 1–2 Minuten, und ein
     // Datenstrom stößt dabei an kein Zeitlimit. sendeAnClaude() wartet, bis alles da ist.
     const antwort = await sendeAnClaude(anfrage, schluessel);
     if (antwort.stop_reason === "refusal") throw coachFehler("abgelehnt");
@@ -2312,7 +2312,9 @@ async function frageCoach() {
 
 // Die Coach-Antwort als Karte. Schwunggedanke und Übung zum Fokus kommen aus der App
 // (tipps.js, fachlich geprüft), alles andere schreibt Claude. Alle Texte per textContent (neu()).
-// Antworten von vor 0.17.0 haben nur lob, fokusBotschaft und naechstesMal – auch die zeigt sie an.
+// Seit 0.40.0 kurz: Stärke, Fokus mit 2–3 Anweisungen, Gedanke und Übung, „Warum?“ zugeklappt.
+// Gespeicherte ältere Antworten zeigt sie weiter an: ausführlich (0.17.0–0.39.x, mit gesamtbild)
+// und ganz alt (vor 0.17.0: lob, fokusBotschaft, naechstesMal).
 function baueCoachAntwort(coach) {
   const rechtshaender = haendigkeit();
   const karte = neu("article", "karte coach-antwort");
@@ -2322,6 +2324,7 @@ function baueCoachAntwort(coach) {
     box.open = true;
     box.append(neu("summary", "", titel), ...inhalt);
     karte.append(box);
+    return box;
   };
   const liste = (tag, eintraege) => {
     const element = neu(tag);
@@ -2335,12 +2338,29 @@ function baueCoachAntwort(coach) {
     return p;
   };
 
+  const k = alleKennzahlen.find((x) => x.id === coach.fokusKennzahl);
+  const hilfe = k ? tipp(k, rechtshaender) : null;
+
+  // Kurz-Coaching (seit 0.40.0) – wie ein Trainer auf der Range
+  if (Array.isArray(coach.anweisungen)) {
+    if (coach.staerke) karte.append(neu("p", "lob", `👍 ${coach.staerke}`));
+    const fokus = [];
+    if (coach.anweisungen.length) fokus.push(liste("ol", coach.anweisungen));
+    else if (hilfe) fokus.push(neu("p", "warum", hilfe.warum)); // Fokus von der App ersetzt: ihre geprüfte Erklärung
+    abschnitt(hilfe ? `🎯 Dein Fokus: ${hilfe.kurz}` : "🎯 So festigst du es", ...fokus);
+    if (hilfe) {
+      karte.append(neu("p", "gedanke", `💭 „${hilfe.gedanke}“`));
+      if (hilfe.uebung) karte.append(baueUebung(hilfe.uebung, { gedanke: hilfe.gedanke }));
+    }
+    // Die Erklärung ist zugeklappt – wer sie lesen will, tippt darauf
+    if (coach.warum) abschnitt("Warum?", neu("p", "", coach.warum)).open = false;
+    return mitHerkunft(karte, coach);
+  }
+
   if (coach.lob) karte.append(neu("p", "lob", `👍 ${coach.lob}`)); // altes Format
   if (coach.gesamtbild) abschnitt("🔎 Gesamtbild", neu("p", "", coach.gesamtbild));
   if (coach.staerken?.length) abschnitt("👍 Das machst du schon gut", liste("ul", coach.staerken));
 
-  const k = alleKennzahlen.find((x) => x.id === coach.fokusKennzahl);
-  const hilfe = k ? tipp(k, rechtshaender) : null;
   if (hilfe) {
     const fokus = [];
     if (coach.wasPassiert) {
@@ -2378,9 +2398,15 @@ function baueCoachAntwort(coach) {
   if (coach.danach) karte.append(neu("p", "naechstes", `🔭 Danach: ${coach.danach}`));
   if (coach.naechsteAufnahme) karte.append(neu("p", "naechstes", `🎥 ${coach.naechsteAufnahme}`));
   if (coach.naechstesMal) karte.append(neu("p", "naechstes", `➡️ ${coach.naechstesMal}`)); // altes Format
+  return mitHerkunft(karte, coach);
+}
 
+// Letzte Zeile jeder Coach-Karte: Herkunft, Kosten und was fachlich geprüft ist
+function mitHerkunft(karte, coach) {
   const kosten = typeof coach.kostenCent === "number" ? ` · ca. ${zahl(coach.kostenCent, 1)} US-Cent` : "";
-  const geprueft = coach.gesamtbild ? " · Erklärungen und Plan von Claude, fachlich geprüft ist nur die Übung der App" : "";
+  const geprueft = coach.anweisungen
+    ? " · Anweisungen von Claude, fachlich geprüft sind Gedanke und Übung der App"
+    : coach.gesamtbild ? " · Erklärungen und Plan von Claude, fachlich geprüft ist nur die Übung der App" : "";
   karte.append(neu("p", "herkunft",
     `Antwort von Claude${kosten}${coach.fokusErsetzt ? " · Fokus von der App gewählt" : ""}${geprueft} · ersetzt keine Trainerstunde`));
   return karte;
