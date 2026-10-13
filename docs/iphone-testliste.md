@@ -25,7 +25,7 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 - [ ] Im Flugmodus kurz „📖 Wissen“ (eine Lektion mit Bild) und eine Übung im Vollbild öffnen.
 - [ ] Flugmodus aus. **Coach einmal** mit deinem Schlüssel (ca. 15–25 Cent): Kommt die Antwort? Wartezeit ___ s,
       Kosten laut Zeile unter der Antwort ___ Cent.
-- [ ] Einstellungen → ganz unten „Datenschutz – kurz erklärt“: verständlich?
+- [ ] Einstellungen → ganz unten „🔒 Datenschutz“ aufklappen: verständlich?
 - [ ] Fällt etwas auf (leere Fläche, Knopf ohne Wirkung, Meldung „nicht vollständig geladen“)? Bildschirmfoto.
 
 ## 1. Analyse und Ladezeit (Version ≥ 0.14, Befund S8)

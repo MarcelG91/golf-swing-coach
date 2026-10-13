@@ -50,7 +50,7 @@ Mehr unter [Datenschutz](#datenschutz).
   alle Dateien immer zur selben Version zusammen. Die Versionsnummer steht ganz unten.
 - **„Daten geschützt ✓“** unten erscheint, wenn der Browser zugesagt hat, die Daten der App
   nicht automatisch zu löschen (klappt in der Regel nur als Home-Bildschirm-App).
-- „Video auswählen oder aufnehmen“ tippen → direkt filmen oder Videos aus den Fotos wählen
+- „🎬 Video auswählen“ tippen → direkt filmen oder Videos aus den Fotos wählen
   (mehrere markieren geht auch), dann „🔍 Analysieren“.
 - Das Video bleibt auf dem Handy. Aus dem Internet geladen wird nur die App selbst (mit der Pose-Erkennung) von GitHub Pages.
 - Die Online-Version ist immer der Stand von `main`. Nach einem Merge dauert es 1–2 Minuten, bis sie aktualisiert ist.
@@ -246,7 +246,7 @@ nachprüfen, ohne das Video erneut analysieren zu müssen.
 ## Datenschutz
 
 Kurz gesagt: **Alles bleibt auf deinem Gerät – außer du nutzt den Coach.** Dieselbe Erklärung steht in
-der App unter ⚙️ Einstellungen → „Datenschutz – kurz erklärt“.
+der App unter ⚙️ Einstellungen → „🔒 Datenschutz“ (zum Aufklappen).
 
 | Was | Wohin |
 |---|---|

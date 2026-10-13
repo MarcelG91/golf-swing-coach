@@ -117,7 +117,8 @@ const warnungenListe = $("warnungen");
 const exportierenBtn = $("exportieren");
 const uebersichtBox = $("uebersicht");
 const gesamtListe = $("gesamtListe");
-const schwungListe = $("schwungListe");
+const schwungWahlBox = $("schwungWahlBox");
+const schwungWahl = $("schwungWahl");
 const einzelBox = $("einzel");
 const schwungTitel = $("schwungTitel");
 // Etappe 8: Speichern und Meine Schwünge
@@ -279,6 +280,7 @@ function setzeErgebnisZurueck() {
   alleKennzahlen = [];
   aktuellerGedanke = "";
   ergebnisBox.hidden = true;
+  schwungWahlBox.hidden = true;
 }
 
 // Farben im Video
@@ -927,6 +929,7 @@ function zeigeUebersicht() {
   // Nur ein Schwung? Dann sieht alles aus wie früher – ohne Gesamtauswertung.
   uebersichtBox.hidden = alleSchwuenge.length < 2;
   schwungTitel.hidden = alleSchwuenge.length < 2;
+  schwungWahlBox.hidden = alleSchwuenge.length < 2;
   ergebnisBox.hidden = false;
   if (alleSchwuenge.length < 2) return;
 
@@ -941,13 +944,13 @@ function zeigeUebersicht() {
   if (nichtGezaehlt) {
     const hinweis = document.createElement("p");
     hinweis.className = "hinweis";
-    hinweis.textContent = `${nichtGezaehlt} ${nichtGezaehlt === 1 ? "Schwung zählt" : "Schwünge zählen"} nicht mit, weil die Erkennung unsicher war (⚠️ in der Liste unten).`;
+    hinweis.textContent = `${nichtGezaehlt} ${nichtGezaehlt === 1 ? "Schwung zählt" : "Schwünge zählen"} nicht mit, – Erkennung unsicher (⚠️).`;
     gesamtListe.appendChild(hinweis);
   }
   if (gruppen.length === 0) {
     const hinweis = document.createElement("p");
     hinweis.className = "karte unsicher";
-    hinweis.textContent = "Kein Schwung ließ sich sicher auswerten – schau dir die Schwünge unten einzeln an.";
+    hinweis.textContent = "Kein Schwung ließ sich sicher auswerten – wähle sie unter dem Video einzeln.";
     gesamtListe.appendChild(hinweis);
   }
   for (const gruppe of gruppen) {
@@ -963,7 +966,7 @@ function zeigeUebersicht() {
       lob.textContent = "Keine Baustelle, die sich wiederholt – stark!";
       baustellen.appendChild(lob);
     }
-    gruppe.baustellen.forEach((k, i) => baustellen.appendChild(baueKarte(k, { nummer: i + 1, offen: true })));
+    gruppe.baustellen.forEach((k, i) => baustellen.appendChild(baueKarte(k, { nummer: i + 1 })));
     gesamtListe.appendChild(baustellen);
 
     // Alle Kennzahlen zum Aufklappen, nach Bereichen sortiert
@@ -985,23 +988,16 @@ function zeigeUebersicht() {
     gesamtListe.appendChild(details);
   }
 
-  // 2. Liste aller Schwünge – ein Knopf pro Schwung
-  schwungListe.innerHTML = "";
-  for (const s of alleSchwuenge) {
-    const knopf = document.createElement("button");
-    knopf.dataset.nummer = s.nummer;
-    const wann = s.phasen ? ` · bei ${uhrzeit(s.phasen.treffmoment.zeit)}` : "";
-    const ansicht = s.ansicht ? ` · ${s.ansicht === "frontal" ? "von vorne" : "von hinten"}` : "";
-    knopf.innerHTML = `<strong></strong><small></small>`;
-    knopf.querySelector("strong").textContent = `${s.sicher ? "" : "⚠️ "}Schwung ${s.nummer}`;
-    knopf.querySelector("small").textContent =
-      `${videoNameVon(s)}${wann}${ansicht}` + (s.sicher ? "" : " · zählt nicht mit");
-    knopf.addEventListener("click", async () => {
-      await waehleSchwung(s);
-      buehne.scrollIntoView({ behavior: "smooth", block: "center" }); // hoch zum Video
-    });
-    schwungListe.appendChild(knopf);
-  }
+  // 2. Auswahl der Schwünge als Dropdown direkt unter dem Video
+  //    (Text per textContent: der Videoname kommt vom Nutzer)
+  schwungWahl.replaceChildren(...alleSchwuenge.map((s) => {
+    const eintrag = document.createElement("option");
+    eintrag.value = s.nummer;
+    const wann = s.phasen ? ` · ${uhrzeit(s.phasen.treffmoment.zeit)}` : "";
+    eintrag.textContent = `${s.sicher ? "" : "⚠️ "}Schwung ${s.nummer} · ${videoNameVon(s)}${wann}` +
+      (s.sicher ? "" : " · zählt nicht mit");
+    return eintrag;
+  }));
 }
 
 // Name des Originalvideos. Gespeicherte Schwünge ohne Clip (siehe unten) haben keine
@@ -1010,9 +1006,7 @@ const videoNameVon = (s) => s.datei?.name ?? s.videoName;
 
 // Einen Schwung im Detail zeigen: sein Video laden, Phasen und Bewertung anzeigen
 async function waehleSchwung(s) {
-  for (const knopf of schwungListe.children) {
-    knopf.classList.toggle("aktiv", Number(knopf.dataset.nummer) === s.nummer);
-  }
+  schwungWahl.value = s.nummer;
   aktiveMessung = null;
   aktuellerSchwung = s;
   if (s.datei) {
@@ -3230,9 +3224,7 @@ async function zeigeFortschritt(ersterAufruf = false) {
 async function zeigeMeineSchwuenge() {
   const belegung = await speicherBelegung();
   belegungText.textContent = belegung
-    ? `Die App belegt auf diesem Gerät ${Math.round(belegung.belegt / 1e6)} MB ` +
-      `(inkl. Pose-Erkennung, möglich wären ca. ${zahl(belegung.verfuegbar / 1e9, 1)} GB). ` +
-      "Platz schaffen kannst du unter ⚙️ Einstellungen."
+    ? `Belegt: ${Math.round(belegung.belegt / 1e6)} MB von ca. ${zahl(belegung.verfuegbar / 1e9, 1)} GB`
     : "";
 
   const sitzungen = await ladeSitzungen();
@@ -3818,19 +3810,24 @@ const liveWerte = $("liveWerte");
 const liveMeldung = $("liveMeldung");
 const liveWort = $("liveWort");
 const liveSchlaeger = $("liveSchlaeger");
-const liveKamera = $("liveKamera");
+// Kamera: zwei Knöpfe (Vorne/Hinten) mit name="liveKamera" – gewählt ist der mit Häkchen
+const kameraKnoepfe = [...document.querySelectorAll('input[name="liveKamera"]')];
+const gewaehlteKamera = () => kameraKnoepfe.find((knopf) => knopf.checked).value;
 // Gewählte Kamera merken (reine Bequemlichkeit, geht auch ohne localStorage)
 try {
   const gemerkt = localStorage.getItem("liveKamera");
-  if (gemerkt === "user" || gemerkt === "environment") liveKamera.value = gemerkt;
+  for (const knopf of kameraKnoepfe) if (knopf.value === gemerkt) knopf.checked = true;
 } catch { /* ohne Speicher: Standard bleibt Vorderkamera */ }
-liveKamera.addEventListener("change", () => {
-  try { localStorage.setItem("liveKamera", liveKamera.value); } catch { /* egal */ }
-});
+for (const knopf of kameraKnoepfe) {
+  knopf.addEventListener("change", () => {
+    try { localStorage.setItem("liveKamera", gewaehlteKamera()); } catch { /* egal */ }
+  });
+}
 const liveCtx = liveLeinwand.getContext("2d");
 const liveZeichner = new DrawingUtils(liveCtx);
 // Dieselbe Auswahl wie beim Speichern (fester Text aus index.html, kein Nutzerinhalt)
 liveSchlaeger.replaceChildren(...[...speichernSchlaeger.children].map((kind) => kind.cloneNode(true)));
+liveSchlaeger.options[0].textContent = "Schläger wählen"; // hier ohne sichtbare Beschriftung davor
 
 const LIVE_MAX_SCHWUENGE = 15; // Danach beendet die App von selbst: Die Stücke liegen im Arbeitsspeicher
 const LIVE_WARTEZEIT = 25; // So lange (Sekunden) wartet ein Schwung auf sein Aufnahme-Stück
@@ -3954,7 +3951,7 @@ async function startLive() {
         liveAufnahmeStopp = null;
         liveMeldung.textContent = "Aufnahme nicht möglich – die Schwünge werden ohne Video gespeichert.";
       });
-    }, liveKamera.value);
+    }, gewaehlteKamera());
     if (analyseBereich.hidden) {
       // Während die Kamera startete, wurde der Bereich gewechselt → nicht im Hintergrund weiterlaufen
       stopp();
@@ -4162,6 +4159,12 @@ liveStoppKnopf.addEventListener("click", () => beendeLive().catch((fehler) => co
 // ---------------------------------------------------------------
 // 6. Bedienung
 // ---------------------------------------------------------------
+// Mehrere Schwünge: anderen Schwung im Dropdown gewählt → diesen im Video zeigen
+schwungWahl.addEventListener("change", () => {
+  const s = alleSchwuenge.find((schwung) => schwung.nummer === Number(schwungWahl.value));
+  waehleSchwung(s).catch((fehler) => setStatus(`Der Schwung ließ sich nicht öffnen (${fehler.message || fehler.name}).`));
+});
+
 videoInput.addEventListener("change", () => {
   if (videoInput.files.length === 0) return;
   dateien = [...videoInput.files]; // eine Liste aus allen markierten Videos

@@ -121,7 +121,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 
 ## Offene Punkte – priorisierter Backlog (Stand 30.09.)
 
-Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt). Neue Ideen hier passend einsortieren.
+Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt), dann die Feedback-Runde 13.10. (unten). Neue Ideen hier passend einsortieren.
 
 ### 🔴 Priorität 1 – Gebautes in der Praxis absichern
 
@@ -171,6 +171,25 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt). Neue Ideen hier pass
    `wissen-nachschlagen` erledigt (0.25.0)**: Umschalter „Lernpfade | Nachschlagen“, Suche, Glossar (60), Irrtümer (13),
    Regeln (17), Ausrüstung (6), Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“. **Wissensseite damit komplett.**
    Keine externen Links, lieber Bilder als Text (alles im Code gezeichnet).
+
+### 🟠 Feedback-Runde 13.10. (Marcel: „zu viel Text, zu viele Kästchen – keep it short and simple“)
+
+Gut so, nicht umbauen: Schwünge mit Bild, Übung/Übungsmodus, Verlauf je Kennzahl, Diagrammauswahl, Level, Einstellungen.
+Reihenfolge (je eigener Branch):
+- ~~**A+B Startseite + weniger Text**~~ – **erledigt mit 0.39.0** (Branch `startseite-weniger-text`): Einstiegsbild mit
+  Logo und Name, Version/Offline/🔒-Hinweis nur noch auf der Startseite, Live mit großen Knöpfen (Kamera Vorne/Hinten),
+  Schwung-Auswahl als Dropdown unter dem Video, Gesamtauswertung mit zugeklappten Karten, Einstellungen mit Aufklappmenüs.
+- **Fehler 1 – Pfeile ◀ ▶:** springen nur 1 Bild (1/30 s) weiter. Gewünscht: zur nächsten/vorigen Phasen-Kugel springen.
+- **Fehler 2 – rote/gelbe Linien nur bei einer Pose:** an anderen Phasen keine Linien. Ursache prüfen (Linie nur, wenn
+  das Video genau auf dem Phasenbild steht; je Level/Ansicht evtl. keine Kennzahl mit Linie, `app.js` `technikImBild`).
+- **C Fortschritt:** weniger Kästchen; Meilensteine deutlich kürzer, ohne Ansicht/Schläger-Filter und Texte darunter;
+  Diagramme mit Skala und Zielband (was ist im Bereich, was außerhalb?) – prüfen, ob die Werte richtig ankommen;
+  Antippen → passende Lektion (mehr KPI-Wissen).
+- **E Coach genauer:** Antworten noch zu oberflächlich – konkrete Zahlen, Phase, Ursache, eine Übung (Systemtext `coach.js`).
+- **D Wissensseite:** alle Schaubilder prüfen (z. B. Griff, Lektion 3, erstes Bild nicht erkennbar), Inhalte vertiefen
+  und korrigieren. **Bilder: Entscheidung 13.10.** – freie Fotos mit Lizenz (z. B. Wikimedia Commons, Quelle + Lizenz
+  nennen) ins Repo legen, nichts von fremden Servern nachladen; wo es keine guten freien Fotos gibt, die Zeichnungen verbessern.
+  Größte Aufgabe, eigener Chat.
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 

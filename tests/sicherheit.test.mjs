@@ -314,7 +314,7 @@ test("Live-Kamera: Kamera wird beim Beenden abgeschaltet, Aufnahme-Adressen werd
 test("Sicherung: Hinweis in den Einstellungen nennt alles, was in der Datei steht (auch Videonamen)", () => {
   // Gespeichert wird videoName im Schwung (speicher.js) – die Sicherung nimmt jeden Schwung komplett mit
   assert.match(QUELLDATEIEN.find(({ datei }) => datei === "speicher.js").text, /videoName:/);
-  const start = INDEX.indexOf("<h4>Sicherung");
+  const start = INDEX.indexOf('<details id="sicherungTeil"');
   assert.ok(start > 0, "Abschnitt Sicherung fehlt");
   const hinweis = INDEX.slice(start, INDEX.indexOf("</p>", start)).replace(/\s+/g, " ");
   for (const wort of ["Kennzahlen", "Notizen", "Coach-Antworten", "Posedaten", "Datum", "Schläger", "Videonamen", "Lernfortschritt", "ohne Videos, Bilder und Coach-Schlüssel"]) {
