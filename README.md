@@ -15,6 +15,7 @@ Mehr unter [Datenschutz](#datenschutz).
 - Die **3 wichtigsten Baustellen** mit Gefühl-Tipp und Übung nennen
 - Tipps passend zu deinem Level anzeigen: Einsteiger, Fortgeschritten oder Könner
 - Fehler direkt im Video zeigen: **rot** = deine Linie, **gelb** = Ideallinie, dazu Pfeil und Sprechblase
+- Mit den Pfeilen ◀ ▶ unter dem Video von Phase zu Phase springen (Ansprechen → Top → Treffmoment → Finish); hat dein Level an einer Phase keine Kennzahl, zeigt das Bild die der höheren Level als „Für später“
 - Schwünge **auf dem Handy speichern** – mit kurzem Video, Schläger und Notiz – und später wieder öffnen
 - Speicher aufräumen: **alte Videos löschen, Kennzahlen behalten** – oder alles löschen
 - Als App auf dem iPhone-Home-Bildschirm laufen – auch **offline** auf der Range
@@ -193,7 +194,7 @@ Wer keinen API-Schlüssel hat, nutzt unter den Karten den Knopf **„Für Claude
 die Kennzahlen samt Anleitung für Claude in die Zwischenablage, und man fügt sie selbst in einen Chat
 (z. B. claude.ai) ein. Es wird nichts gesendet, es kostet die App nichts, und es gelten dieselben
 Daten wie beim Coach (nur Kennzahlen). Weil dort keine App den geprüften Schwunggedanken und die Übung
-anzeigt, bittet der Text Claude, beide wörtlich aus dem Katalog der App abzuschreiben (seit 0.40.2).
+anzeigt, bittet der Text Claude, beide wörtlich aus dem Katalog der App abzuschreiben (seit 0.41.1).
 
 ### So sehen die Tipps aus
 

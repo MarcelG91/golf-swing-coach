@@ -483,16 +483,27 @@ function technikImBild() {
   if (!video.paused) return null;
   const phase = PHASEN.find((p) => imBild(phasenErgebnis[p.schluessel].zeit));
   if (!phase) return null;
-  const sichtbare = fuerLevel(alleKennzahlen, aktuellesLevel).sichtbar;
-  const gemessen = sichtbare.filter((k) => k.phase === phase.schluessel && MIT_LINIE.has(k.id));
-  if (gemessen.length === 0) return null;
+  const { sichtbar, fuerSpaeter } = fuerLevel(alleKennzahlen, aktuellesLevel);
+  const mitLinie = (liste) => liste.filter((k) => k.phase === phase.schluessel && MIT_LINIE.has(k.id));
+  let gemessen = mitLinie(sichtbar);
+  // Hat dein Level an dieser Phase keine Kennzahl mit Linie (z. B. Einsteiger im Treffmoment),
+  // zeigen wir die der höheren Level – als "für später", damit es an jeder Phase Feedback gibt
+  // (Entscheidung 13.10.). Zu Baustellen werden sie dadurch nicht.
+  const spaeter = gemessen.length === 0;
+  if (spaeter) gemessen = mitLinie(fuerSpaeter);
+  if (gemessen.length === 0) {
+    // Von dieser Seite misst die App an dieser Phase gar nichts (z. B. von hinten im Finish)
+    return { titel: `${phase.name}: hier keine Messung`, kennzahlen: [], keineMessung: true };
+  }
   const abweichungen = gemessen.filter(ausserhalb);
+  const vorsatz = spaeter ? "Für später – " : "";
   return {
     titel: abweichungen.length
-      ? `${phase.name}: ${abweichungen.map((k) => k.name).join(", ")}`
-      : `${phase.name}: alles im Zielbereich ✓`,
+      ? `${phase.name}: ${vorsatz}${abweichungen.map((k) => k.name).join(", ")}`
+      : `${phase.name}: ${vorsatz}alles im Zielbereich ✓`,
     kennzahlen: abweichungen,
     alleGut: abweichungen.length === 0,
+    spaeter,
   };
 }
 
@@ -566,6 +577,9 @@ function zeichneAbweichungen(linien, auswahl, punkte) {
   const schrift = Math.max(14, canvas.height * 0.028);
   let legende = "rot = außerhalb des Zielbereichs · gelb = Ideallinie · Pfeil = so korrigieren";
   if (auswahl.ohneSkelett) legende = "Schau selbst hin – das Skelett ist ausgeblendet";
+  else if (auswahl.keineMessung) legende = "Von dieser Seite misst die App hier nichts";
+  else if (auswahl.spaeter && auswahl.alleGut) legende = "Kennzahlen höherer Level – hier passt schon alles";
+  else if (auswahl.spaeter) legende = "Höheres Level, noch keine Baustelle · rot = außerhalb · gelb = Ideal";
   else if (auswahl.alleGut) legende = "Alle hier gemessenen Linien liegen im Zielbereich";
   else if (auswahl.kennzahlen.length === 0) legende = "Dafür gibt es keine Linie im Bild";
   else if (!auswahl.kennzahlen.some(ausserhalb)) legende = "grün = im Zielbereich";
@@ -4262,15 +4276,26 @@ playPauseBtn.addEventListener("click", () => {
   else video.pause();
 });
 
-zurueckBtn.addEventListener("click", () => {
-  video.pause();
-  video.currentTime = Math.max(0, video.currentTime - BILD_DAUER);
-});
+// Pfeile: Nach der Analyse springen sie von Phase zu Phase (Ansprechen → Top → Treffmoment → Finish),
+// also von Kugel zu Kugel auf der Zeitleiste. Vorher (noch nicht analysiert) ein Einzelbild weiter.
+// richtung: +1 = vor, -1 = zurück
+function springePhase(richtung) {
+  if (!phasenErgebnis || !geladeneDatei) {
+    video.pause();
+    video.currentTime = Math.min(video.duration, Math.max(0, video.currentTime + richtung * BILD_DAUER));
+    return;
+  }
+  const jetzt = video.currentTime;
+  // Halbes Bild Spielraum: Steht das Video schon auf einer Phase, zählt diese nicht als "nächste"
+  const kandidaten = PHASEN.filter((p) => richtung * (phasenErgebnis[p.schluessel].zeit - jetzt) > BILD_DAUER / 2);
+  // vor: die erste Phase danach · zurück: die letzte Phase davor
+  const ziel = richtung > 0 ? kandidaten[0] : kandidaten.at(-1);
+  if (!ziel) return; // schon am Finish bzw. am Ansprechen
+  zeigePhase(ziel.schluessel, phasenErgebnis).catch((fehler) => setStatus(`Springen ging nicht (${fehler.message || fehler.name}).`));
+}
 
-vorBtn.addEventListener("click", () => {
-  video.pause();
-  video.currentTime = Math.min(video.duration, video.currentTime + BILD_DAUER);
-});
+zurueckBtn.addEventListener("click", () => springePhase(-1));
+vorBtn.addEventListener("click", () => springePhase(1));
 
 tempoSelect.addEventListener("change", () => {
   video.playbackRate = Number(tempoSelect.value);
