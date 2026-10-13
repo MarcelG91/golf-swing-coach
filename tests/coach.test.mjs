@@ -65,7 +65,7 @@ test("Gesendet werden nur Kennzahlen – keine Posedaten, Videonamen, Notizen od
 test("Anfrage: Modell, strukturierte Antwort, Rückfall bei Ablehnung, gründliches Denken", () => {
   const anfrage = baueCoachAnfrage(coachDaten({ kennzahlen: KENNZAHLEN, level: "koenner", ansicht: "frontal" }));
   assert.equal(anfrage.model, COACH_MODELL);
-  assert.equal(anfrage.model, "claude-opus-5");
+  assert.equal(anfrage.model, "claude-opus-5-5");
   assert.deepEqual(anfrage.output_config.format, { type: "json_schema", schema: ANTWORT_SCHEMA });
   assert.equal(anfrage.fallbacks, "default");
   // Genau diese Felder gehen an die API – wie bisher mit dem SDK (es hat "betas" als Kopfzeile
@@ -75,7 +75,7 @@ test("Anfrage: Modell, strukturierte Antwort, Rückfall bei Ablehnung, gründlic
   assert.equal(anfrage.stream, true);
   assert.deepEqual(anfrage.thinking, { type: "adaptive" });
   assert.equal(anfrage.output_config.effort, "high");
-  assert.ok(anfrage.max_tokens >= 16000, "genug Platz für Nachdenken plus lange Antwort");
+  assert.ok(anfrage.max_tokens >= 32000, "genug Platz für Nachdenken (Opus 5.5 denkt mehr) plus lange Antwort");
   assert.equal(anfrage.system, SYSTEMTEXT);
   // Das Schema muss für strukturierte Antworten vollständig und geschlossen sein
   assert.equal(ANTWORT_SCHEMA.additionalProperties, false);
@@ -172,7 +172,7 @@ test("Antwort lesen: ein Textblock, Rückfall mitten in der Antwort, Neubeginn (
   const denken = { type: "thinking", thinking: "", signature: "x" };
   const text = (t) => ({ type: "text", text: t });
   // So markiert die API den Wechsel auf ein anderes Modell im Datenstrom
-  const rueckfall = { type: "fallback", from: { model: "claude-opus-5" }, to: { model: "claude-opus-4-8" } };
+  const rueckfall = { type: "fallback", from: { model: "claude-opus-5-5" }, to: { model: "claude-opus-5" } };
 
   // Normalfall: Denk-Block und EIN Textblock
   assert.deepEqual(leseAntwort([denken, text(json)]), ANTWORT);
@@ -215,7 +215,7 @@ function lies(text, stueckLaenge = 7) {
   for (let i = 0; i < text.length; i += stueckLaenge) strom.fuettere(text.slice(i, i + stueckLaenge));
   return strom;
 }
-const start = (model = "claude-opus-5") => ({
+const start = (model = "claude-opus-5-5") => ({
   type: "message_start",
   message: { id: "msg_1", type: "message", role: "assistant", model, content: [], stop_reason: null, usage: { input_tokens: 3000, cache_read_input_tokens: 0, output_tokens: 1 } },
 });
@@ -226,7 +226,7 @@ const ende = (stop_reason = "end_turn", output_tokens = 1000) => [
   { type: "message_delta", delta: { stop_reason, stop_sequence: null }, usage: { output_tokens, input_tokens: null } },
   { type: "message_stop" },
 ];
-// Nachdenken: bei Claude Opus 5 kommt nur die Signatur, kein lesbarer Text
+// Nachdenken: bei Claude Opus 5.5 kommt nur die Signatur, kein lesbarer Text
 const denken = (index) => [
   blockStart(index, { type: "thinking", thinking: "", signature: "" }),
   { type: "content_block_delta", index, delta: { type: "signature_delta", signature: "sig" } },
@@ -246,13 +246,14 @@ test("Datenstrom: Normalfall – Nachricht wie vom SDK, auch in kleinen Stücken
       assert.equal(strom.fertig, true);
       assert.equal(strom.fehlerTyp, "");
       assert.equal(strom.textBegonnen, true);
-      assert.equal(strom.nachricht.model, "claude-opus-5");
+      assert.equal(strom.nachricht.model, "claude-opus-5-5");
       assert.equal(strom.nachricht.stop_reason, "end_turn");
       // Token-Zahlen: Eingabe aus message_start bleibt (null überschreibt nicht), Ausgabe aus message_delta
       assert.deepEqual(strom.nachricht.usage, { input_tokens: 3000, cache_read_input_tokens: 0, output_tokens: 1000 });
       assert.deepEqual(strom.nachricht.content[0], { type: "thinking", thinking: "", signature: "sig" });
       assert.deepEqual(leseAntwort(strom.nachricht.content), ANTWORT);
-      assert.equal(kostenCent(strom.nachricht.usage), 4);
+      // 3 000 hinein (4 $/Mio.) + 1 000 heraus (20 $/Mio.) = 0,012 + 0,02 = 0,032 $ = 3,2 Cent
+      assert.equal(kostenCent(strom.nachricht.usage, strom.nachricht.model), 3.2);
     }
   }
 });
@@ -264,13 +265,15 @@ test("Datenstrom: Rückfall mitten in der Antwort – ein Strom, Block „fallba
     start(), ...denken(0),
     blockStart(1, { type: "text", text: "" }), textStueck(1, json.slice(0, teil)), blockEnde(1),
     // So markiert die API den Wechsel (kein eigenes Ereignis, ein normaler Block)
-    blockStart(2, { type: "fallback", from: { model: "claude-opus-5" }, to: { model: "claude-opus-4-8" } }), blockEnde(2),
+    blockStart(2, { type: "fallback", from: { model: "claude-opus-5-5" }, to: { model: "claude-opus-5" } }), blockEnde(2),
     blockStart(3, { type: "text", text: "" }), textStueck(3, json.slice(teil)), blockEnde(3),
     ...ende(),
   ]));
   assert.equal(strom.fertig, true);
-  assert.equal(strom.nachricht.model, "claude-opus-4-8", "gespeichert wird das Modell, das die Antwort fertig geschrieben hat");
+  assert.equal(strom.nachricht.model, "claude-opus-5", "gespeichert wird das Modell, das die Antwort fertig geschrieben hat");
   assert.deepEqual(leseAntwort(strom.nachricht.content), ANTWORT);
+  // Kosten zum Preis des einspringenden Modells (Opus 5: 5 $ / 25 $ je Mio.)
+  assert.equal(kostenCent(strom.nachricht.usage, strom.nachricht.model), 4);
 });
 
 test("Datenstrom: Fehler mitten im Strom, Abbruch und Ablehnung werden erkannt", () => {
@@ -314,9 +317,16 @@ test("Verlauf: nur sichere Schwünge, höchstens die letzten 10, erst ab 2 Messu
   assert.deepEqual(verlaufKurz([schwung("1-1", "gut")], ["tempo"]), {});
 });
 
-test("Kosten in Cent aus den Token-Zahlen, Fehlertexte vorhanden", () => {
-  // 3 000 Tokens hinein (5 $/Mio.) + 1 000 heraus (25 $/Mio.) = 0,015 + 0,025 = 0,04 $ = 4 Cent
-  assert.equal(kostenCent({ input_tokens: 3000, output_tokens: 1000 }), 4);
+test("Kosten in Cent aus den Token-Zahlen und dem Modell, Fehlertexte vorhanden", () => {
+  const usage = { input_tokens: 3000, output_tokens: 1000 };
+  // Opus 5.5 (Standard): 3 000 hinein (4 $/Mio.) + 1 000 heraus (20 $/Mio.) = 0,032 $ = 3,2 Cent
+  assert.equal(kostenCent(usage), 3.2);
+  assert.equal(kostenCent(usage, "claude-opus-5-5"), 3.2);
+  // Rückfall-Modelle: 5 $ / 25 $ je Mio. = 0,015 + 0,025 = 0,04 $ = 4 Cent
+  assert.equal(kostenCent(usage, "claude-opus-5"), 4);
+  assert.equal(kostenCent(usage, "claude-opus-4-8"), 4);
+  // Unbekanntes Modell: Preis des Coach-Modells
+  assert.equal(kostenCent(usage, "unbekannt"), 3.2);
   assert.equal(kostenCent(null), null);
   for (const art of ["schluessel", "guthaben", "zuViele", "ueberlastet", "verbindung", "abgelehnt", "unvollstaendig", "unbekannt"]) {
     assert.ok(COACH_FEHLER[art], art);
