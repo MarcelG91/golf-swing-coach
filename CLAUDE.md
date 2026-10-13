@@ -167,9 +167,10 @@ Reihenfolge: **(1 + 2 bei Marcel) → 8** (4, 6 und 9 erledigt). Neue Ideen hier
 
 Frontkamera → Skelett live (26–36 ms pro Bild auf Marcels iPhone) → Schwung nach Schlag + Finish erkannt (ca. 2,2 s) →
 Ampelrahmen (grün/gelb/rot/grau) + Kurzwort → beim „Beenden“ werden nur die erkannten Schwünge als Clip + Analyse gespeichert.
-Rot = mehrere deutliche Abweichungen (Entscheidung). **Noch nie mit echten Schwüngen auf dem iPhone getestet** (Marcel hatte keine
-Möglichkeit): Erkennungsrate, Ampel-Schwellen (`ampel.js`, eigene Festlegung), Gleichlauf Skelett ↔ Clip (Startverzögerung der
-Aufnahme, bis ca. 0,1 s möglich), zwei gleichzeitige MediaRecorder in Safari, Wärme/Akku. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`).
+Rot = mehrere deutliche Abweichungen (Entscheidung). **iPhone-Test mit echten Schwüngen erfolgt (13.10.): alle Schwünge erkannt, Feedback (Ampel + Kurzwort) gut.** Nicht
+einzeln nachgemessen und weiter offen: Gleichlauf Skelett ↔ Clip im gespeicherten Clip (Startverzögerung der Aufnahme, bis
+ca. 0,1 s möglich), Wärme/Akku bei langen Sitzungen, Ampel-Schwellen (`ampel.js`, eigene Festlegung) mit vielen Schwüngen
+nachjustieren. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`).
 
 ### 🟢 Priorität 3 – Später / bei Bedarf
 
