@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
-  schlaegerGruppe, sichereSchwuenge, verlauf, gleitenderMittelwert, trend, fokus, meilensteine, wochenRueckblick,
+  schlaegerGruppe, sichereSchwuenge, verlauf, gleitenderMittelwert, trend, fokus, meilensteine, wochenRueckblick, wertDiagramm,
 } from "../fortschritt.js";
 
 // Baut einen Schwung mit einer Kennzahl je Eintrag in "werte" ({ id: bewertung }).
@@ -162,4 +162,35 @@ test("Vorher/Nachher: ältester und neuester Schwung, nie aus derselben Sitzung"
   assert.equal(vorherNachher(gleiche), null);
   // Filter: anderer Schläger zählt nicht mit
   assert.equal(vorherNachher([schwung(1, { tempo: "gut" }), schwung(2, { tempo: "gut" }, { schlaeger: "Driver" })], { gruppe: "eisen" }), null);
+});
+
+// Feedback 13.10.: Im Diagramm soll man sehen, was im Zielbereich liegt
+test("Wert-Diagramm: Messwert über grünem Zielbereich, Skala nennt die Grenzen", () => {
+  const punkte = [
+    { messwert: 3.1, bewertung: "gut", datum: "2026-09-23" },
+    { messwert: 2.1, bewertung: "achtung", datum: "2026-09-30" },
+    { messwert: 9, bewertung: "verbessern", datum: "2026-10-05" },
+  ];
+  const d = wertDiagramm("tempo", punkte, { breite: 300, hoehe: 130 });
+  assert.equal(d.ziel, "Ziel: 2,4 bis 4 : 1");
+  const gruen = d.zonen.find((z) => z.klasse === "gut");
+  // Punkt im Zielbereich liegt im grünen Streifen, der Achtung-Punkt darunter
+  assert.ok(d.punkte[0].y > gruen.y && d.punkte[0].y < gruen.y + gruen.hoehe);
+  assert.ok(d.punkte[1].y > gruen.y + gruen.hoehe);
+  // 9 : 1 liegt über dem Ende der Skala (5,5) → am Rand, als Randwert markiert
+  assert.equal(d.punkte[2].randwert, true);
+  assert.equal(d.punkte[2].y, 10);
+  // Die Skala nennt beide Grenzen des Zielbereichs
+  assert.deepEqual(d.marken.filter((m) => m.grenze).map((m) => m.text).sort(), ["2,4", "4"]);
+  assert.equal(d.ersterTag, "2026-09-23");
+});
+
+test("Wert-Diagramm: ohne Skala oder mit zu wenig Werten → null (dann das einfache Diagramm)", () => {
+  const zwei = [{ messwert: 1, bewertung: "gut" }, { messwert: 1, bewertung: "gut" }];
+  assert.equal(wertDiagramm("gibtEsNicht", zwei), null);
+  assert.equal(wertDiagramm("tempo", [{ messwert: 3, bewertung: "gut" }]), null);
+  // Zielbereich "ab 80°" (Schulterdrehung): grün reicht bis zum oberen Rand
+  const d = wertDiagramm("schulterdrehung", [{ messwert: 90, bewertung: "gut" }, { messwert: 70, bewertung: "achtung" }]);
+  const gruen = d.zonen.find((z) => z.klasse === "gut");
+  assert.equal(gruen.y, 10);
 });

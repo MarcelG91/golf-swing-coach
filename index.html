@@ -303,15 +303,19 @@
       <div id="sitzungsListe" class="sitzungen"></div>
     </div>
     <section id="fortschrittTeil" hidden>
+      <!-- Verglichen wird nur, was zusammenpasst: gleiche Ansicht, gleiche Schlägergruppe, nur sichere
+           Schwünge. Als kleine Knöpfe (Feedback 13.10.); app.js stellt beim Öffnen die letzte Sitzung ein. -->
       <div class="fortschritt-filter">
-        <label>Ansicht
-          <select id="fortschrittAnsicht"><option value="frontal">Von vorne</option><option value="hinten">Von hinten</option></select>
-        </label>
-        <label>Schläger
-          <select id="fortschrittGruppe"><option value="hoelzer">Hölzer</option><option value="eisen">Eisen</option><option value="wedges">Wedges</option></select>
-        </label>
+        <div class="segmente zwei" role="radiogroup" aria-label="Ansicht">
+          <label><input type="radio" name="fortschrittAnsicht" value="frontal" checked> Vorne</label>
+          <label><input type="radio" name="fortschrittAnsicht" value="hinten"> Hinten</label>
+        </div>
+        <div class="segmente" role="radiogroup" aria-label="Schlägergruppe">
+          <label><input type="radio" name="fortschrittGruppe" value="hoelzer"> Hölzer</label>
+          <label><input type="radio" name="fortschrittGruppe" value="eisen" checked> Eisen</label>
+          <label><input type="radio" name="fortschrittGruppe" value="wedges"> Wedges</label>
+        </div>
       </div>
-      <p class="hinweis">Verglichen wird nur, was zusammenpasst: gleiche Ansicht, gleiche Schlägergruppe, nur sichere Schwünge. Filme möglichst immer gleich (Stativ auf Hüfthöhe, ca. 3 m Abstand).</p>
       <div id="fortschrittInhalt"></div>
     </section>
   </main>
