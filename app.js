@@ -2294,7 +2294,7 @@ async function frageCoach() {
       ...pruefeCoachAntwort(roh, { kennzahlen: sichtbar, wichtigste }),
       level,
       modell: antwort.model,
-      kostenCent: kostenCent(antwort.usage),
+      kostenCent: kostenCent(antwort.usage, antwort.model), // Preis des Modells, das geantwortet hat
     };
     schwung.coach = coach;
     // Gespeicherter Schwung (hat eine id aus der Datenbank)? Dann nur die Antwort dort nachtragen.

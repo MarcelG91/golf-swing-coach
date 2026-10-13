@@ -55,7 +55,7 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 - [ ] App schließen, neu öffnen, Schwung aus der Liste öffnen: Clip spielt, **sitzt das Skelett** auf dem Körper?
 - [ ] Flugmodus wieder aus.
 
-## 5. Coach (Version ≥ 0.17, am Mac oder iPhone, kostet ca. 15–25 Cent je Coaching)
+## 5. Coach (Version ≥ 0.38, Claude Opus 5.5, am iPhone, kostet ca. 15–25 Cent je Coaching)
 
 - [ ] Schlüssel unter ⚙️ Einstellungen eintragen (Workspace mit Ausgabenlimit, Anleitung steht dort).
       Ausgabenlimit mindestens 5 € (2 € reichen nur für ca. 10 Coachings).
@@ -63,7 +63,9 @@ SDK, und eine Sicherheitsregel (CSP) erlaubt nur noch eigene Dateien und Anthrop
 - [ ] Denselben Schwung in allen drei Levels (Einsteiger, Fortgeschritten, Könner) coachen lassen.
 - [ ] Genug Tiefe? Verstehst du, **warum** der Fehler passiert? Ist der Trainingsplan direkt umsetzbar?
 - [ ] Passt die Sprache zum Level (Einsteiger ohne Fachbegriffe und Zahlen)? Klingt etwas nach falscher Technik?
-- [ ] Wartezeit ca.: ___ s. Kosten laut Anzeige: ___ / ___ / ___ Cent. Erschien einmal „unvollständig“?
+- [ ] Je Level (Einsteiger / Fortgeschritten / Könner): Wartezeit ___ / ___ / ___ s, Kosten laut Anzeige
+      ___ / ___ / ___ Cent, Tiefe (1–5) ___ / ___ / ___. Erschien einmal „unvollständig“ oder „abgelehnt“?
+- [ ] Vergleich zu Opus 5 (bis 0.37): besser, gleich oder schlechter? Zu lange gewartet → Effort „medium“ prüfen.
 
 ## 5b. „Für Claude kopieren“ (Version ≥ 0.30, ohne Schlüssel, kostenlos)
 

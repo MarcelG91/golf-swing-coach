@@ -134,7 +134,7 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt). Neue Ideen hier pass
    - Speichern im Flugmodus (≥ 0.9.0): sitzt das Skelett im gespeicherten Clip?
    - Aufräumen (≥ 0.11.0): Speicheranzeige vorher/nachher; „Alles löschen“ → Level noch da, offline nutzbar?
    - Tipps neu + Übungsmodus (≥ 0.13.0): Wischen flüssig? Figuren/Skala verständlich? Bildschirm bleibt an (Wake Lock ab iOS 16.4)?
-2. **Echter Coach-Test** (Marcel, ≥ 0.17.0, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
+2. **Echter Coach-Test** (Marcel, ≥ 0.38.0 mit Claude Opus 5.5, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
    „wertlos“ → seit 0.17.0 ausführliches Coaching (Gesamtbild, Ursachen, Anleitung, Trainingsplan, Effort „high“).
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
 3. ~~Golflehrer-Durchsicht~~ – **entfällt** (Entscheidung 30.09.). Fachliche Absicherung stattdessen über die
@@ -188,9 +188,9 @@ nachjustieren. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`)
   `coach.js`). Eigener Schlüssel ist ebenfalls umgesetzt. Offen: iPhone-Test des Kopierens (Safari-Zwischenablage, siehe
   `docs/iphone-testliste.md` Abschnitt 5b); „Schlüssel je Freund mit Limit“ bleibt eine spätere Option. Datenschutzhinweis
   (V4) ist in der App.
-- **Coach-Modell Claude Opus 5.5** (Idee 01.10.): neuer und günstiger als Opus 5 (4/20 statt 5/25 US-Dollar je Mio.
-  Tokens). Eigener Branch: Effort-Standard ist dort „medium“ (wir setzen „high“ ausdrücklich), Rückfall-Ziele prüfen,
-  danach echter Test (Kosten, Qualität).
+- ~~Coach-Modell Claude Opus 5.5~~ – **umgestellt mit 0.38.0** (Branch `coach-opus-5-5`): `claude-opus-5-5`, Effort „high“
+  ausdrücklich, `max_tokens` 32.000, Kosten je Modell (Rückfall Opus 5/4.8 zu 5/25). Offen: Marcels Test (Nr. 2) –
+  danach Kostenhinweis „ca. 15–25 Cent“ in App/README ggf. anpassen und „medium“ erneut abwägen.
 - **Zeitgrenze beim Video-Laden (S10):** erst nach der iPhone-Messung aus Nr. 1 festlegen.
 - **Übungsfiguren von hinten:** Nur Posen zeigen, die die Grenzwerte der App erfüllen (Tests in
   `tests/uebungsbilder.test.mjs`). Von hinten gibt es bisher nur die Ansprechhaltung; Bewegung erst mit einem
