@@ -377,7 +377,7 @@ export const LEKTIONEN = [
     karten: [
       { text: "Linke Hand: Den Griff schräg durch die Finger legen, vom kleinen Finger bis zum Zeigefinger – nicht in die Handfläche. Der Daumen liegt leicht rechts der Mitte.", bild: "foto:griff-linke-hand" },
       { text: "Rechte Hand: Griff vor allem in den Fingern. Die Lebenslinie liegt auf dem linken Daumen, das V zwischen Daumen und Zeigefinger zeigt zur rechten Schulter." },
-      { text: "Neutral, stark, schwach: Siehst du 3 oder mehr Knöchel, ist der Griff stark – die Fläche schließt leichter, das hilft Slicern. Bei 0–1 Knöcheln bleibt sie eher offen." },
+      { text: "Neutral, stark, schwach: Siehst du 3 oder mehr Knöchel, ist der Griff stark – die Fläche schließt leichter, ein etwas stärkerer Griff hilft Slicern. Bei 0–1 Knöcheln bleibt sie eher offen." },
       { text: "Verbindung der Hände: überlappend (kleiner Finger rechts auf dem Zeigefinger links), verzahnt (beide greifen ineinander) oder mit zehn Fingern. Keine Variante ist „richtig“ – die Hände sollen als Einheit arbeiten.", bild: "foto:griff-ueberlappend" },
       { text: "Griffdruck etwa 4–5 von 10: fest genug für Kontrolle, locker genug für lockere Unterarme. Laut HackMotion greifen 57 % der Tourspieler neutral." },
       { text: "Liegt der Griff in der Handfläche statt in den Fingern, sind die Handgelenke blockiert. Prüfe deshalb beim Aufbauen zuerst die linke Hand, dann die rechte." },
@@ -883,7 +883,7 @@ export const LEKTIONEN = [
       { text: "Der Ball schießt fast rechtwinklig nach rechts. Häufige Gründe: zu nah am Ball stehen, die Hüfte schiebt zum Ball (Early Extension) oder das Gewicht rutscht auf die Zehen." },
       { text: "Schiebt die Hüfte zum Ball, werden die Hände nach außen gedrückt – der Hosel kommt zuerst an den Ball. Hilfe: Der Po bleibt hinten, das Gewicht auf der Fußmitte." },
       { text: "Check beim Ansprechen: Zwischen Griffende und linkem Oberschenkel passt eine Faust (App-Übung „Faust-Check“). So stimmt der Abstand zum Ball." },
-      { text: "Auch eine sehr offene Schlagfläche bringt den Hosel nach vorn an den Ball. Ein Grund mehr für einen neutralen Griff." },
+      { text: "Auch eine sehr offene Schlagfläche bringt den Hosel nach vorn an den Ball." },
       { text: "Hilfe gegen Early Extension: ein Stuhl oder Stab knapp hinter dem Po. Der Po bleibt im ganzen Schwung daran." },
     ],
     quiz: {
@@ -992,7 +992,6 @@ export const LEKTIONEN = [
       { text: "Uhren-System nach Dave Pelz: Der linke Arm ist der Stundenzeiger. Ausholen bis 7:30, 9:00 (Arm waagerecht) oder 10:30 – das ergibt drei feste Längen." },
       { text: "Rhythmus und Durchschwung bleiben gleich, nur der Rückschwung ändert sich. Mit drei Längen und drei bis vier Wedges hast du neun bis zwölf feste Entfernungen." },
       { text: "Die genauen Uhrzeiten sind nicht heilig – manche Trainer nutzen 8, 9 und 10 Uhr. Wichtig ist, deine Längen auf der Range zu messen und aufzuschreiben." },
-      { text: "Lob-Schlag nur, wenn nötig: Stand deutlich links ausgerichtet, Schlagfläche weit offen, Ball mittig – und ohne Abbremsen. Das Risiko ist hoch." },
     ],
     quiz: {
       frage: "Was änderst du beim Uhren-System von Schlag zu Schlag?",
@@ -1420,7 +1419,7 @@ export const LEKTIONEN = [
       { text: "Filmen: frontal oder von hinten, Handy auf Hüfthöhe, der ganze Körper im Bild. Dann eine Baustelle wählen – die erste Karte, nicht alle gleichzeitig." },
       { text: "Üben: die Übung der Karte im Übungsmodus, danach den Schwunggedanken auf der Range. Nach ein bis zwei Wochen neu filmen und vergleichen." },
       { text: "Wie oft Rückmeldung (etwa ein Video) beim Lernen hilft, ist nicht eindeutig: Neuere Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil." },
-      { text: "Vor dem Blick ins Video selbst schätzen: „Was war wohl der Fehler?“ Dann in der App nachsehen. Das schult das eigene Gefühl." },
+      { text: "Vor dem Blick ins Video selbst schätzen: „Was war wohl der Fehler?“ Dann in der App nachsehen." },
       { text: "Ob die Übung wirkt, zeigt Meine Schwünge → Fortschritt: je Kennzahl deine Werte über dem grünen Zielbereich." },
     ],
     quiz: {
