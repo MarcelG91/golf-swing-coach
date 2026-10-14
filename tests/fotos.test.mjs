@@ -29,6 +29,18 @@ test("Fotos: Nachweis passt zur Lizenz (CC BY mit Lizenzadresse und Hinweis auf 
   }
 });
 
+// Ergänzt beim Check 14.10. (2): App und fotos/README.md nennen denselben Fotografen. Bei Buch-Fotos ist das
+// der Fotograf, nicht der Buchautor (Vardon-Tafeln: Arthur Ullyett). Name = letzter Teil nach „·“, vor dem Komma.
+test("Fotos: Fotograf im Nachweis steht auch in der Zeile von fotos/README.md", () => {
+  const zeilen = lies("fotos/README.md").toString("utf8").split("\n");
+  for (const [name, f] of Object.entries(FOTOS)) {
+    const zeile = zeilen.find((z) => z.startsWith(`| \`${f.datei.slice(6)}\``));
+    assert.ok(zeile, `${name}: keine Zeile in fotos/README.md`);
+    const fotograf = f.urheber.split(" · ").at(-1).split(",")[0].trim();
+    assert.ok(zeile.includes(fotograf), `${name}: „${fotograf}“ fehlt in der README-Zeile`);
+  }
+});
+
 test("Fotos: stehen in beiden Offline-Listen (sw.js und pwa.js)", () => {
   const liste = (datei) => {
     const treffer = lies(datei).toString("utf8").match(/APP_DATEIEN\s*=\s*\[([\s\S]*?)\]/);

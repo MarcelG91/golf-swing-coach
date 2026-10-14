@@ -1386,7 +1386,7 @@ export const LEKTIONEN = [
       { text: "Dynamisches Aufwärmen mit Bewegungen und Schwüngen erhöhte dagegen das Tempo. Ein Golf-Aufwärmprogramm steigerte es in einer Studie über sieben Wochen." },
       { text: "Laut TPI haben viele Schwungfehler körperliche Gründe. Drei einfache Selbsttests: Zehen berühren, tiefe Kniebeuge, Drehung im Sitzen.", bild: "selbsttests" },
       { text: "Die Tests sind nur ein Hinweis, keine Diagnose. Bei Schmerzen frag eine Ärztin, einen Arzt oder die Physiotherapie." },
-      { text: "Beweglichkeit zählt: Wer keine tiefe Kniebeuge mit Fersen am Boden schafft, kann die Haltung im Abschwung kaum halten. Eine Studie fand einen Zusammenhang mit der Zehenberührung." },
+      { text: "Beweglichkeit zählt: Wer keine tiefe Kniebeuge mit Fersen am Boden schafft, kann die Haltung im Abschwung kaum halten. Eine Studie fand einen Zusammenhang zwischen Zehenberührungs-Test und Early Extension (Hüfte schiebt zum Ball)." },
       { text: "Rücken schonen: Rund 83 % der Golfverletzungen sind Überlastung. Es helfen Aufwärmen, Pausen statt vieler Bälle am Stück und eine Hüfte, die im Rückschwung mitdreht." },
     ],
     quiz: {
