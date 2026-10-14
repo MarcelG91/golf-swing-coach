@@ -97,7 +97,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `phasenabspieler.js` | Phasen-Abspieler im Fortschritt (Vorher/Nachher): Abspielgeschwindigkeit je Abschnitt, damit die Phasen bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik; Abspielen in `app.js`) |
 | `fortschritt.js` | Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick aus gespeicherten Schwüngen (reine Rechenlogik, Etappe 10) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
-| `wissen.js` · `nachschlagen.js` · `schaubilder.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) |
+| `wissen.js` · `nachschlagen.js` · `schaubilder.js` · `fotos.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) · echte Fotos (`fotos/`, freie Lizenz, Nachweis in `fotos/README.md`) |
 | `tipps.js` · `strichfigur.js` · `uebungsbilder.js` | Alle kurzen Tipp-Texte + Skala (fachlich geprüft, Quellen in `docs/plan-tipps-neu.md`) · Figur für die Karten · Figuren/Animationen im Übungsmodus |
 | `pwa.js` · `sw.js` · `manifest.webmanifest` | Installation, Offline, Version |
 | `vendor/` | MediaPipe 0.10.14 + Pose-Modell, selbst ausgeliefert und per Prüfsumme festgeschrieben (`tests/vendor.test.mjs`, Herkunft `vendor/README.md`) |
@@ -194,10 +194,14 @@ Reihenfolge (je eigener Branch):
 - ~~**E Coach genauer**~~ – **erledigt mit 0.43.0** (Branch `coach-praeziser`, Entscheidung 13.10. „kurz, aber präziser“):
   neues Feld `befund`, Phase je Kennzahl im Systemtext, Anweisungen mit Körperteil, Richtung und Moment. Gesendete Daten
   unverändert. Offen: echter Test (Nr. 2 oben).
-- **D Wissensseite:** alle Schaubilder prüfen (z. B. Griff, Lektion 3, erstes Bild nicht erkennbar), Inhalte vertiefen
-  und korrigieren. **Bilder: Entscheidung 13.10.** – freie Fotos mit Lizenz (z. B. Wikimedia Commons, Quelle + Lizenz
-  nennen) ins Repo legen, nichts von fremden Servern nachladen; wo es keine guten freien Fotos gibt, die Zeichnungen verbessern.
-  Größte Aufgabe, eigener Chat.
+- **D Wissensseite** – in Etappen (Entscheidung 13.10.: alle vier Bereiche; Bilder: freie Fotos, sonst bessere Zeichnungen):
+  - ~~**D1 Bilder**~~ – **erledigt mit 0.44.0** (Branch `wissen-fotos`): alle 47 Bilder geprüft (14.10.) – fachlich keins
+    falsch; Griff neu gezeichnet (vorher nicht erkennbar), Hanglagen mit Figur und Blickrichtung. 6 Fotos von Wikimedia
+    Commons (CC0/CC BY 4.0) in `fotos/` mit Nachweis: Griff linke Hand, Top, nach dem Treffen, Finish, Bunker, Grün lesen.
+    Verworfen: Ansprech-Foto (Haltung falsch), Griff-Foto 1921 (Griffart nicht belegt). Ein gutes Foto der
+    **Ansprechhaltung** fehlt noch (eigenes Foto von Marcel?).
+  - **D2** Inhalte vertiefen: Grundlagen + Vollschwung · **D3** Rund ums Grün + Ballflug · **D4** Clever spielen + Üben
+    (jeweils mehr Karten, Quellenregeln aus „Dauerhafte Regeln“).
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 

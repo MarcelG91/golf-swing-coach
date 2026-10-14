@@ -305,6 +305,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `wissen.js` | Bereich „📖 Wissen“: Lernpfade, Lektionen (Kernsatz, Karten, Quiz, Übung), Quellen als Text, Fortschritt lesen, Ballflug-Helfer (Start + Kurve → Name und Ursache), welche Lektion zu welcher Baustelle gehört |
 | `nachschlagen.js` | Bereich „📖 Wissen“ → Nachschlagen: Glossar, Irrtümer, Regeln, Ausrüstung (jeweils mit Quellen) und die Suche |
 | `schaubilder.js` | Beschriftete Schaubilder für die Lektionen (u. a. Loft, Griff, Ballposition, kinematische Kette, neun Flugkurven, Uhren-System, Bunker, Falllinie, Streuung, Hanglagen, Range-Plan) und Figuren aus den Profi-Posen (P1–P10 und Probeschwünge bewegt) |
+| `fotos.js` · `fotos/` | Echte Fotos der Wissensseite (Wikimedia Commons, nur freie Lizenzen), je mit Satz „worauf achten“ und Nachweis (Fotograf · Lizenz); Herkunft und Prüfung in `fotos/README.md` |
 | `speicher.js` | Schwünge auf dem Gerät speichern (IndexedDB): Sitzungen, Schwünge, Videos; rechnet Posedaten auf den Clip um; Aufräumen (Videos löschen, alles löschen); für die Sicherung alles lesen und Sitzungen einspielen (ohne zu überschreiben) |
 | `sicherung.js` | Sicherung als Datei (Etappe 9): baut die JSON-Datei mit Prüfsumme (SHA-256), prüft eine Datei vor dem Einspielen (Format, Version, Aufbau), plant das Zusammenführen; Erlaubt-Liste der Einstellungen (nur Lernfortschritt, nie der Coach-Schlüssel) – reine Rechenlogik |
 | `videokuerzen.js` | Schneidet einen Schwung als kurzes 720p-Video aus (Canvas + MediaRecorder) |

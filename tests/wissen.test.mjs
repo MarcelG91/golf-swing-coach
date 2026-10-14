@@ -18,6 +18,7 @@ import {
 import { gibtBild, schaubild, ballflugBild, FIGUREN, SCHAUBILD_NAMEN } from "../schaubilder.js";
 import { zeichnung, gesamtDauer, poseZurZeit, UEBUNGEN_MIT_BILDERN, POSEN } from "../uebungsbilder.js";
 import { LEVEL_OPTIONEN, AB_LEVEL } from "../level.js";
+import { FOTOS, LIZENZEN, foto, fotoNachweis } from "../fotos.js";
 
 const PROJEKT = fileURLToPath(new URL("..", import.meta.url));
 const woerter = (text) => text.match(/[A-Za-zÄÖÜäöüß0-9]+/g) || [];
@@ -308,4 +309,33 @@ test("Fortschritt: nur bekannte Lektions-IDs, kaputte Daten führen nicht zum Ab
   assert.deepEqual(liste, ["start-weg", "start-chip"]);
   assert.deepEqual(setzeErledigt(liste, "start-weg", false), ["start-chip"]);
   assert.deepEqual(setzeErledigt(liste, "start-chip", true), ["start-weg", "start-chip"], "kein doppelter Eintrag");
+});
+
+// ---------------------------------------------------------------
+// Fotos (fotos.js, Feedback 13.10.): nur freie Lizenz, mit Nachweis, offline verfügbar, klein
+// ---------------------------------------------------------------
+test("Fotos: freie Lizenz, Nachweis, Datei vorhanden und klein, offline gespeichert, in fotos/README.md belegt", () => {
+  const sw = fs.readFileSync(new URL("../sw.js", import.meta.url), "utf8");
+  const nachweis = fs.readFileSync(new URL("../fotos/README.md", import.meta.url), "utf8");
+  for (const [name, f] of Object.entries(FOTOS)) {
+    assert.ok(LIZENZEN.includes(f.lizenz), `${name}: Lizenz ${f.lizenz} ist nicht frei`);
+    for (const feld of ["alt", "text", "urheber"]) assert.ok(f[feld]?.length > 3, `${name}: ${feld} fehlt`);
+    assert.match(f.datei, /^fotos\/[a-z-]+\.jpg$/);
+    const groesse = fs.statSync(new URL(`../${f.datei}`, import.meta.url)).size;
+    assert.ok(groesse < 200 * 1024, `${name}: ${Math.round(groesse / 1024)} KB – bitte verkleinern`);
+    assert.ok(sw.includes(`"./${f.datei}"`), `${name}: fehlt in sw.js (offline)`);
+    assert.ok(nachweis.includes(`\`${f.datei.slice(6)}\``), `${name}: fehlt in fotos/README.md`);
+    assert.match(fotoNachweis(f), new RegExp(`^Foto: .+ · ${f.lizenz.replace(/[.]/g, "\\.")} · Wikimedia Commons$`));
+  }
+  // Keine verwaiste Datei: jedes Foto im Ordner steht in fotos.js
+  const dateien = fs.readdirSync(new URL("../fotos/", import.meta.url)).filter((d) => d.endsWith(".jpg"));
+  assert.deepEqual(dateien.sort(), Object.values(FOTOS).map((f) => f.datei.slice(6)).sort());
+});
+
+test("Fotos: jedes Foto hängt an einer Lektion, unbekannte Namen gibt es nicht", () => {
+  const benutzt = new Set(LEKTIONEN.flatMap((l) => [l.bild, ...l.karten.map((k) => k.bild)]).filter((b) => b?.startsWith("foto:")));
+  assert.deepEqual([...benutzt].map((b) => b.slice(5)).sort(), Object.keys(FOTOS).sort());
+  assert.equal(foto("foto:gibtEsNicht"), null);
+  assert.equal(foto("top"), null, "ohne Vorsilbe foto: ist es kein Foto");
+  assert.ok(gibtBild("foto:top"));
 });

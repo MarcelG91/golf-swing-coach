@@ -9,7 +9,7 @@
 // var(--akzent)), damit die Bilder hell und dunkel passen. Der Test prüft, dass es
 // jede Variable in beiden Farbsätzen gibt.
 //
-//   gibtBild(name)   → true, wenn es das Bild gibt (Schaubild oder Figur)
+//   gibtBild(name)   → true, wenn es das Bild gibt (Schaubild, Figur oder Foto "foto:…" aus fotos.js)
 //   schaubild(name, hervor) → { ausschnitt, elemente } oder null (hervor: nur bei neunFlugkurven)
 //   ballflugBild(start, kurve) → ein einzelner Ballflug von oben (für den Ballflug-Helfer)
 //   FIGUREN[name]    → Bildbeschreibung für zeichnung() aus uebungsbilder.js
@@ -24,6 +24,7 @@
 // ===============================================================
 
 import { BALLFLUG_NAMEN } from "./wissen.js";
+import { foto } from "./fotos.js";
 
 // Weg zu einer Pose ohne Beschriftung, dann Pause MIT Beschriftung – so steht „P6 · Schaft
 // waagerecht“ nur da, wenn der Schaft auch wirklich waagerecht ist (nicht schon unterwegs)
@@ -193,25 +194,43 @@ const SCHAUBILDER = {
 
   // Lektion „Der Griff“: stark vereinfacht, Blick von oben (so auch beschriftet)
   griff() {
+    // Neu gezeichnet 14.10. (Feedback: „beim ersten Bild nicht erkennbar“). Zwei Teile, beide so,
+    // wie du selbst von oben auf deine Hände schaust; der Schlägerkopf liegt unten.
     const b = baukasten();
-    b.rechteck(150, 6, 20, 176, "rand", "flaeche-innen", 6); // Griff des Schlägers
-    // Linke Hand (oben) mit zwei sichtbaren Knöcheln
-    b.rechteck(122, 36, 64, 52, "text", "flaeche", 14);
-    for (const x of [136, 154]) b.kreis([x, 42], 5, "akzent", 2, "akzent");
-    b.linie([128, 42], [84, 34], "akzent", 1.5);
-    b.text([80, 30], "2 Knöchel sichtbar", { farbe: "akzent", anker: "end" });
-    // Rechte Hand (darunter) mit dem V aus Daumen und Zeigefinger
-    b.rechteck(126, 96, 58, 50, "text", "flaeche", 14);
-    b.pfad([[150, 132], [166, 110], [178, 130]], "akzent", 3);
-    // Das V zeigt zur rechten Schulter (vom Spieler aus gesehen: rechts oben)
-    b.linie([166, 110], [246, 58], "akzent", 2, true);
-    pfeilspitze(b, [166, 110], [246, 58], "akzent");
-    b.text([252, 44], "V zeigt zur", { farbe: "akzent", anker: "start" });
-    b.text([252, 58], "rechten Schulter", { farbe: "akzent", anker: "start" });
-    b.text([64, 120], "linke Hand oben,", { farbe: "text-leise", anker: "end" });
-    b.text([64, 134], "rechte darunter", { farbe: "text-leise", anker: "end" });
-    b.text([160, 196], "vereinfachte Skizze · Blick von oben · Rechtshänder", { farbe: "text-leise", groesse: 10 });
-    return { ausschnitt: { x: -30, y: 0, breite: 380, hoehe: 204 }, elemente: b.elemente };
+    // --- Links: nur die linke Hand ---
+    b.text([75, 14], "1 · linke Hand", { fett: true });
+    b.rechteck(68, 22, 14, 160, "rand", "flaeche-innen", 5); // Griff
+    // Handrücken als Faust um den Griff
+    const rund = (punkte) => glatt([...punkte, punkte[0]], 8); // geschlossene, weiche Umrisslinie
+    b.pfad(rund([[34, 64], [60, 48], [98, 46], [114, 62], [114, 104], [98, 124], [54, 124], [36, 106]]), "text", 2, false, "flaeche");
+    // Knöchel: Zeige- und Mittelfinger sichtbar, Ring- und kleiner Finger verschwinden unter dem Griff
+    for (const [x, y] of [[90, 52], [104, 58]]) b.kreis([x, y], 5.5, "akzent", 2, "akzent");
+    for (const [x, y] of [[74, 49], [58, 52]]) b.kreis([x, y], 5, "text-leise", 1.2, null);
+    // Daumen: auf dem Griff, leicht rechts der Mitte
+    b.rechteck(77, 92, 12, 44, "text", "flaeche", 6);
+    b.text([118, 40], "2 Knöchel", { farbe: "akzent", anker: "start", fett: true });
+    b.text([118, 53], "sichtbar", { farbe: "akzent", anker: "start" });
+    b.text([28, 144], "Daumen leicht", { farbe: "text-leise", anker: "start", groesse: 10 });
+    b.text([28, 156], "rechts der Mitte", { farbe: "text-leise", anker: "start", groesse: 10 });
+    b.linie([84, 136], [64, 140], "text-leise", 1);
+
+    // --- Rechts: beide Hände ---
+    b.text([250, 14], "2 · beide Hände", { fett: true });
+    b.rechteck(243, 22, 14, 160, "rand", "flaeche-innen", 5);
+    b.pfad(rund([[212, 52], [236, 36], [274, 36], [286, 50], [284, 70], [246, 76], [214, 70]]), "text", 2, false, "flaeche"); // linke Hand
+    b.pfad(rund([[216, 84], [240, 72], [278, 74], [292, 92], [288, 124], [270, 142], [232, 142], [216, 120]]), "text", 2, false, "flaeche"); // rechte Hand
+    // Das V aus Daumen und Zeigefinger der rechten Hand …
+    b.pfad([[238, 84], [256, 116], [272, 82]], "akzent", 3);
+    // … zeigt zur rechten Schulter (von dir aus: nach rechts oben)
+    b.linie([256, 116], [316, 58], "akzent", 2, true);
+    pfeilspitze(b, [256, 116], [316, 58], "akzent");
+    b.text([306, 40], "V zur rechten", { farbe: "akzent", anker: "middle", groesse: 10 });
+    b.text([306, 52], "Schulter", { farbe: "akzent", anker: "middle", groesse: 10 });
+    b.text([214, 160], "rechte Hand deckt", { farbe: "text-leise", anker: "start", groesse: 10 });
+    b.text([214, 172], "den linken Daumen", { farbe: "text-leise", anker: "start", groesse: 10 });
+
+    b.text([170, 196], "Skizze · so siehst du deine Hände von oben · Rechtshänder", { farbe: "text-leise", groesse: 10 });
+    return { ausschnitt: { x: 0, y: 0, breite: 340, hoehe: 204 }, elemente: b.elemente };
   },
 
   // Lektion „Ausrichtung“: Eisenbahnschienen von oben
@@ -940,14 +959,22 @@ const SCHAUBILDER = {
       const anteil = l.flug === undefined ? 0.75 : 0.3;
       const ball = [l.von[0] + (l.bis[0] - l.von[0]) * anteil, l.von[1] + (l.bis[1] - l.von[1]) * anteil - 4];
       if (l.flug === undefined) {
-        const fuss = [l.von[0] + (l.bis[0] - l.von[0]) * 0.15, l.von[1] + (l.bis[1] - l.von[1]) * 0.15];
-        b.rechteck(fuss[0] - 6, y0 + fuss[1] - 6, 12, 5, "text-leise", "text-leise", 2);
+        // Kleine Figur auf dem Hang (Blick von hinten), nach vorn zum Ball geneigt – so sieht man,
+        // dass der Ball höher bzw. tiefer liegt als die Füße (Feedback 14.10.: sah aus wie bergauf/bergab)
+        const fuss = p([l.von[0] + (l.bis[0] - l.von[0]) * 0.22, l.von[1] + (l.bis[1] - l.von[1]) * 0.22]);
+        const huefte = [fuss[0] + 1, fuss[1] - 13];
+        const kopf = [huefte[0] + 7, huefte[1] - 11];
+        b.linie(fuss, huefte, "text-leise", 2);
+        b.linie(huefte, kopf, "text-leise", 2);
+        b.kreis(kopf, 3.5, "text-leise", 1.5, "flaeche");
+        b.linie([huefte[0] + 4, huefte[1] - 6], p(ball), "text-leise", 1.2); // Arme + Schläger zum Ball
       } else {
         b.pfad(bogen(p(ball), p([ball[0] + 46, ball[1] - 6]), l.flug, 12), "akzent", 1.5, true);
       }
       b.kreis(p(ball), 4, "text", 1.5, "flaeche");
       b.text([94, y0 + 16], l.titel, { anker: "start", fett: true });
       b.text([94, y0 + 31], l.wirkung, { anker: "start", groesse: 10, farbe: "akzent" });
+      b.text([312, y0 + 16], l.flug === undefined ? "von hinten" : "von der Seite", { anker: "end", groesse: 9, farbe: "text-leise" });
     });
     b.text([160, 190], "schematisch · Rechtshänder · am Hang mit ca. 80 % Tempo", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 0, breite: 320, hoehe: 196 }, elemente: b.elemente };
@@ -1153,7 +1180,8 @@ const SCHAUBILDER = {
 export const SCHAUBILD_NAMEN = Object.keys(SCHAUBILDER);
 
 export function gibtBild(name) {
-  return name in SCHAUBILDER || name in FIGUREN;
+  // "foto:…" = echtes Foto aus fotos.js (Wikimedia Commons, freie Lizenz)
+  return name in SCHAUBILDER || name in FIGUREN || foto(name) !== null;
 }
 
 export function schaubild(name, hervor = null) {

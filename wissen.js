@@ -359,7 +359,7 @@ export const LEKTIONEN = [
     kern: "Neutraler Griff: zwei Knöchel der linken Hand sichtbar, das V zeigt zur rechten Schulter.",
     bild: "griff",
     karten: [
-      { text: "Linke Hand: Den Griff schräg durch die Finger legen, vom kleinen Finger bis zum Zeigefinger – nicht in die Handfläche. Der Daumen liegt leicht rechts der Mitte." },
+      { text: "Linke Hand: Den Griff schräg durch die Finger legen, vom kleinen Finger bis zum Zeigefinger – nicht in die Handfläche. Der Daumen liegt leicht rechts der Mitte.", bild: "foto:griff-linke-hand" },
       { text: "Rechte Hand: Griff vor allem in den Fingern. Die Lebenslinie liegt auf dem linken Daumen, das V zwischen Daumen und Zeigefinger zeigt zur rechten Schulter." },
       { text: "Überlappend, verzahnt oder mit zehn Fingern: Keine Variante ist „richtig“. Wichtig ist, dass beide Hände als Einheit arbeiten." },
       { text: "Griffdruck etwa 4–5 von 10: fest genug für Kontrolle, locker genug für lockere Unterarme. Laut HackMotion greifen 57 % der Tourspieler neutral." },
@@ -569,7 +569,7 @@ export const LEKTIONEN = [
     bild: "topProfi",
     karten: [
       { text: "3D-Messungen (GOLFTEC): Tourspieler drehen die Schultern am Top etwa 90°, bei P2 schon ca. 60°. Die Hüfte dreht bei P2 ca. 25–30°, bei vielen Freizeitspielern höchstens 15°.", bild: "messwerte" },
-      { text: "Die Hüfte dreht auf der Stelle. Wenig seitliches Schieben (Sway) am Top gehört laut GOLFTEC zu sechs Merkmalen, die mit gutem Spiel zusammenhängen. Die App misst das als Verschiebung." },
+      { text: "Die Hüfte dreht auf der Stelle. Wenig seitliches Schieben (Sway) am Top gehört laut GOLFTEC zu sechs Merkmalen, die mit gutem Spiel zusammenhängen. Die App misst das als Verschiebung.", bild: "foto:top" },
       { text: "Am Top liegen bei Tourspielern ca. 70–80 % des Drucks auf dem rechten Fuß. Das linke Handgelenk ist flach – Amateure strecken es im Schnitt ca. 10° mehr, das öffnet die Schlagfläche." },
       { text: "Die linke Schulter steht am Top tiefer: Tourspieler haben ca. 36° Schulterneigung, hohe Handicaps ca. 30°. Mehr Neigung hilft, den Ball von oben zu treffen." },
     ],
@@ -617,7 +617,7 @@ export const LEKTIONEN = [
     bild: "treffProfi",
     karten: [
       { text: "Die Hüfte ist im Treffmoment bei Tourspielern ca. 36° zum Ziel geöffnet, bei hohen Handicaps nur ca. 20°. Das sind 3D-Messungen von GOLFTEC.", bild: "messwerte" },
-      { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher." },
+      { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher.", bild: "foto:nach-dem-treffen" },
       { text: "Die Vorneigung bleibt bis zum Treffen, der Po bleibt hinten. Richtet sich der Körper auf (Early Extension), bleibt die Fläche laut GOLFTEC oft offen – ein häufiger Grund für Slices." },
     ],
     quiz: {
@@ -639,7 +639,7 @@ export const LEKTIONEN = [
     kern: "Zurück dreimal so lang wie nach vorn – und im Finish ruhig stehen bleiben.",
     bild: "finishProfi",
     karten: [
-      { text: "Im Finish liegt fast das ganze Gewicht auf dem linken Fuß. Die rechte Ferse ist oben, nur die Schuhspitze berührt den Boden. Brust und Gürtelschnalle zeigen zum Ziel." },
+      { text: "Im Finish liegt fast das ganze Gewicht auf dem linken Fuß. Die rechte Ferse ist oben, nur die Schuhspitze berührt den Boden. Brust und Gürtelschnalle zeigen zum Ziel.", bild: "foto:finish" },
       { text: "Ein ruhiges Finish ist die Folge eines guten Ablaufs. Test: Kannst du es halten, bis der Ball landet? Die App-Übung „Finish 3 Sekunden“ trainiert genau das." },
       { text: "Rhythmus 3 : 1: Der Rückschwung dauert etwa dreimal so lang wie der Abschwung. John Novosel maß bei Tourspielern zum Beispiel ca. 0,8 zu 0,27 Sekunden.", bild: "zeitbalken" },
       { text: "Eine Yale-Messung bestätigt: Tourspieler liegen bei ca. 2,5 bis 3,5 : 1 und schwingen sehr gleichmäßig. Wichtig ist also ein gleichmäßiger Rhythmus, nicht besonders langsames Schwingen." },
@@ -798,7 +798,7 @@ export const LEKTIONEN = [
     kern: "Beim Eisen liegt der tiefste Punkt des Schwungs knapp nach dem Ball.",
     bild: "tiefsterPunkt",
     karten: [
-      { text: "Fett: Der Schläger trifft zuerst den Boden, der tiefste Punkt liegt zu früh – auf der Seite weg vom Ziel. Häufige Gründe: Das Gewicht bleibt rechts oder die Hände schaufeln." },
+      { text: "Fett: Der Schläger trifft zuerst den Boden, der tiefste Punkt liegt zu früh – auf der Seite weg vom Ziel. Häufige Gründe: Das Gewicht bleibt rechts oder die Hände schaufeln.", bild: "foto:nach-dem-treffen" },
       { text: "Getoppt: Der Schläger trifft den Ball oben. Der Bogen ist zu hoch, weil du dich aufrichtest oder die Arme kurz werden – oder der Schläger steigt schon wieder." },
       { text: "Wechseln sich fett und getoppt ab, liegt es oft an der Höhe des Bogens: Aufrichten oder Absacken. Hilfe: Größe und Vorneigung halten." },
     ],
@@ -967,7 +967,7 @@ export const LEKTIONEN = [
     karten: [
       { text: "Schlagfläche zuerst öffnen, dann greifen – so bleibt sie offen. Die rundliche Sohle gleitet dann durch den Sand, statt sich einzugraben." },
       { text: "Breiter Stand, die Füße leicht in den Sand drehen. Ball links der Mitte, Gewicht links – und dort lassen." },
-      { text: "Der Schläger tritt ca. 2–5 cm hinter dem Ball in den Sand ein. Eine Linie im Sand hilft beim Üben, genau diese Stelle zu treffen." },
+      { text: "Der Schläger tritt ca. 2–5 cm hinter dem Ball in den Sand ein. Eine Linie im Sand hilft beim Üben, genau diese Stelle zu treffen.", bild: "foto:bunker" },
       { text: "Regel 12.2: Im Bunker berührst du den Sand vor dem Schlag nicht mit dem Schläger – weder beim Probeschwung noch beim Aufsetzen oder im Rückschwung. Im Zählspiel kostet das zwei Strafschläge." },
     ],
     quiz: {
@@ -1022,7 +1022,7 @@ export const LEKTIONEN = [
     kern: "Die Falllinie zeigt, wohin das Grün fällt – auf ihr läuft ein Putt gerade.",
     bild: "falllinie",
     karten: [
-      { text: "Die Falllinie ist die Richtung, in die Wasser vom Loch wegfließen würde. Putts genau auf ihr laufen gerade, bergauf oder bergab – alle anderen brechen." },
+      { text: "Die Falllinie ist die Richtung, in die Wasser vom Loch wegfließen würde. Putts genau auf ihr laufen gerade, bergauf oder bergab – alle anderen brechen.", bild: "foto:gruen-lesen" },
       { text: "Bergab bricht ein Putt mehr als bergauf: Er rollt langsamer, und die Neigung wirkt länger auf ihn." },
       { text: "Am meisten bricht ein Putt am Ende, wo er am langsamsten ist. Lies bei langen Putts deshalb vor allem das letzte Drittel." },
       { text: "Mit den Füßen fühlen (Idee aus AimPoint): Auf halber Strecke breitbeinig über die Puttlinie stellen und spüren, wohin das Grün fällt." },
