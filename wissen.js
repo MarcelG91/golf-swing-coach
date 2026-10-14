@@ -60,6 +60,13 @@ export const QUELLEN = {
   "grundlagen:WG1": "Women's Golf: Railroad Tracks",
   "grundlagen:PGN1": "Pro Golf Now: Intermediate targets",
   "grundlagen:GT1": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "mental-und-fitness:INJ2": "Golf-related lower back injuries: an epidemiological survey",
+  "mental-und-fitness:INJ3": "Golf-related low back pain: a review of causative factors and prevention strategies",
+  "mental-und-fitness:INJ4": "AAOS OrthoInfo: Golf injury prevention",
+  "platzstrategie:PG3": "Practical Golf: Iron vs. driver off the tee",
+  "platzstrategie:TM1": "TrackMan: 6 numbers every amateur should know",
+  "platzstrategie:TM2": "TrackMan: Performance of the average male amateur",
+  "richtig-ueben:AY3": "Adam Young: The study – differential versus calibrational",
   "putten:HM1": "HackMotion: Gate putting drill",
   "ballflug-und-fehler:GOLF1": "GOLF.com: How fast golfers swing driver by handicap",
   "grundlagen:VAR1": "Harry Vardon: How to Play Golf (1912)",
@@ -1114,6 +1121,9 @@ export const LEKTIONEN = [
       { text: "Jeder Spieler hat ein Muster, wo seine Bälle landen: eine Ellipse. Auch Tourspieler treffen nicht auf den Punkt." },
       { text: "Wähle das Ziel so, dass möglichst viel der Ellipse in sicherem Gelände liegt – weg von Wasser und Aus, auch wenn die Fahne dort steht." },
       { text: "Studie mit 32 Golfern: Mit dem ganzen Fairway als Ziel trafen sie es öfter (ca. 67 % statt 50 %) als mit einem kleinen Zielpunkt – und schlugen weiter." },
+      { text: "Erwartungen: Durchschnittliche Amateure landen aus 137–160 m im Schnitt ca. 8,5 m von der Fahne, aus 90–115 m ca. 6 m. Ein Grün zu treffen ist schon ein Erfolg." },
+      { text: "Doppel-Bogeys vermeiden ist wichtiger als Birdies jagen. Plane für deine Streuung, nicht für deinen besten Schlag." },
+      { text: "Am Abschlag zählt laut Mark Broadie Länge mehr als Genauigkeit. Shot-Scope-Daten: Mit Driver und Holz 3 treffen Amateure gleich oft das Fairway, ca. 47 %." },
     ],
     quiz: {
       frage: "Worauf zielst du mit dem Driver laut Studie besser?",
@@ -1122,7 +1132,7 @@ export const LEKTIONEN = [
       erklaerung: "Mit dem ganzen Fairway als Ziel trafen die Golfer öfter das Fairway und schlugen sogar weiter.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:MGS1", "platzstrategie:PG2", "platzstrategie:LS1"],
+    quellen: ["platzstrategie:MGS1", "platzstrategie:PG2", "platzstrategie:LS1", "platzstrategie:PG1", "platzstrategie:SS1", "platzstrategie:PG3"],
     beleg: "studie",
   },
   {
@@ -1136,6 +1146,7 @@ export const LEKTIONEN = [
       { text: "Ziele bei der Annäherung auf die Grünmitte statt auf die Fahne. So bleibt bei einem kleinen Fehler mehr Grün für den Ball." },
       { text: "Golfer verfehlen ca. 80–90 % der Grüns zu kurz. Wähle den Schläger deshalb nach der Entfernung zum hinteren Grünrand." },
       { text: "Selten ist ein Schlag perfekt getroffen – ein etwas längerer Schläger gleicht das aus. Die Fahne direkt anzuspielen lohnt erst, wenn neben ihr nichts Gefährliches liegt." },
+      { text: "Kenne deine Längen: Miss je Schläger die durchschnittliche Carry-Länge, nicht die längste. Schon das verbessert das Ergebnis ohne jede Technikänderung." },
     ],
     quiz: {
       frage: "Wohin verfehlen die meisten Golfer das Grün?",
@@ -1144,7 +1155,7 @@ export const LEKTIONEN = [
       erklaerung: "Ca. 80–90 % der verfehlten Grüns sind zu kurz. Deshalb lieber etwas mehr Schläger nehmen.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:PG1", "platzstrategie:LS2", "platzstrategie:H19"],
+    quellen: ["platzstrategie:PG1", "platzstrategie:LS2", "platzstrategie:H19", "platzstrategie:TM1", "platzstrategie:TM2"],
     beleg: "zwei-quellen",
   },
   {
@@ -1158,6 +1169,7 @@ export const LEKTIONEN = [
       { text: "Par 4 mit Bogey-Plan: zwei Schläge bis vor das Grün, ein Chip, zwei Putts. Par 3: Abschlag Richtung Grün, Chip, zwei Putts. Par 5: drei sichere Schläge, Chip, zwei Putts." },
       { text: "Bogey an jedem Loch ergibt auf einem Par-72-Platz 90 Schläge – ein Ziel, das viele Clubspieler nicht erreichen." },
       { text: "Große Zahlen vermeiden spart die meisten Schläge: Aus Bäumen oder tiefem Rough zuerst sicher zurück aufs Fairway statt durch eine enge Lücke." },
+      { text: "Lange Löcher: Vorlage auf deine Lieblingsdistanz, dann ein Pitch zur Grünmitte und zwei Putts. So bleibt jeder Schlag einer, den du sicher kannst." },
     ],
     quiz: {
       frage: "Mit wie vielen Schlägen planst du ein Par 4 beim persönlichen Par?",
@@ -1181,6 +1193,7 @@ export const LEKTIONEN = [
       { text: "Ball unter den Füßen: breiter stehen, tiefer in die Knie, Gewicht Richtung Fersen. Der Ball fliegt eher nach rechts – ziele etwas links." },
       { text: "Bergauf: Schultern parallel zum Hang, Ball etwas weiter vorn. Der Ball fliegt höher und kürzer – nimm mehr Schläger." },
       { text: "Bergab: Schultern parallel zum Hang, Ball etwas weiter hinten. Der Ball fliegt flacher und weiter – nimm weniger Schläger." },
+      { text: "Bergauf fliegt der Ball zusätzlich eher nach links, bergab eher nach rechts. Ziele deshalb bergauf etwas rechts, bergab etwas links." },
     ],
     quiz: {
       frage: "Der Ball liegt über deinen Füßen. Wohin fliegt er eher?",
@@ -1204,6 +1217,8 @@ export const LEKTIONEN = [
       { text: "Der Grund: Gegenwind verstärkt die Wirkung des Rückwärtsdralls, der Ball steigt und verliert Länge. Rückenwind macht den Flug flacher." },
       { text: "Leichtes bis mittleres Rough: Gras zwischen Schlagfläche und Ball nimmt Drall weg. Der Ball fliegt und rollt dann oft weiter als erwartet – ein „Flyer“." },
       { text: "Kälte und Nässe: Ein kalter Ball fliegt kürzer, und auf nassem, weichem Boden rollt er kaum. Plane dann mit der reinen Fluglänge." },
+      { text: "Eine zweite Faustregel von Arccos und Blue Tees: pro 16 km/h Gegenwind ca. ein Schläger mehr, bei Rückenwind ein halber weniger." },
+      { text: "Kälte in Zahlen: Laut Blue Tees fliegt ein Eisen je ca. 5–6 °C unter 21 °C etwa 1–2 Yards kürzer. Aus tiefem Rough mehr Loft nehmen und nur rausspielen." },
     ],
     quiz: {
       frage: "Was wirkt sich stärker auf die Länge aus?",
@@ -1227,6 +1242,8 @@ export const LEKTIONEN = [
       { text: "Denk-Zone hinter dem Ball: Ziel, Schläger und Schlagidee festlegen. Dann bewusst einen Schritt nach vorn – in der Spiel-Zone zählen nur noch Gefühl und Ziel." },
       { text: "Auf der European Tour spielten Spieler mit gleich langer Routine über die Saison konstanter. Ausgewertet wurden über 22.000 Schläge." },
       { text: "Quiet Eye beim Putten: Blick ruhig auf die Rückseite des Balls, auch während des Putts. In einer Studie puttete die trainierte Gruppe unter Druck genauer." },
+      { text: "Gewöhnung hilft auch: unter leichtem Druck üben – Wettspiele gegen dich selbst, Strafpunkte oder kleine Wetten mit Freunden." },
+      { text: "Quiet Eye in Zahlen: Der ruhige Blick der trainierten Gruppe dauerte ca. 2,8 statt 1,4 Sekunden. Im Wettspiel berichteten die Spieler ca. 2 Putts weniger pro Runde." },
     ],
     quiz: {
       frage: "Welche Hilfe gegen Versagen unter Druck nennt die Übersichtsarbeit?",
@@ -1261,6 +1278,8 @@ export const LEKTIONEN = [
       { text: "Studie Wulf & Su (2007): Mit äußerem Fokus pitchten Anfänger und erfahrene Golfer genauer als mit innerem Fokus oder ohne Anweisung." },
       { text: "Eine Übersicht über 52 Golf-Studien bestätigt den Vorteil. Allerdings sind viele Studien klein und untersuchen vor allem Anfänger beim Putten." },
       { text: "So formulierst du um: „Weiter Bogen mit dem Schlägerkopf“ statt „linker Arm gestreckt“. „Divot vor dem Ball“ statt „Gewicht nach links“." },
+      { text: "Weitere Beispiele: „Gürtelschnalle zeigt im Finish zum Ziel“ statt „Hüfte zuerst drehen“, „Putterkopf pendelt wie ein Uhrpendel“ statt „Handgelenke ruhig“." },
+      { text: "Nimm nur einen Schwunggedanken gleichzeitig mit auf die Range – einen mit äußerem Fokus. So sind auch die Schwunggedanken der App formuliert." },
     ],
     quiz: {
       frage: "Welcher Gedanke ist ein äußerer Fokus?",
@@ -1283,6 +1302,8 @@ export const LEKTIONEN = [
       { text: "Ein Bild wie „schwing wie ein Pendel“ ersetzt viele Einzelanweisungen. Wer mit Bildern lernt, bleibt laut Studien unter Druck stabiler." },
       { text: "In einer Studie sollten Spieler einen Putt „nicht zu lang“ spielen. Unter Ablenkung passierte genau das häufiger." },
       { text: "Deshalb positiv formulieren: „Ball knapp hinter das Loch rollen lassen“ statt „nicht zu lang“, „Größe halten“ statt „nicht in die Knie gehen“." },
+      { text: "Aus „Kopf unten lassen“ wird ein Bild: „den Grashalm unter dem Ball anschauen, bis er weg ist“." },
+      { text: "Der alte Tipp „Ball ans Loch sterben lassen“ passt nicht: Nach Pelz bliebe ein verfehlter Putt ideal ca. 40 cm hinter dem Loch liegen.", bild: "puttZiel" },
     ],
     quiz: {
       frage: "Welcher Gedanke hilft unter Druck eher?",
@@ -1291,7 +1312,7 @@ export const LEKTIONEN = [
       erklaerung: "In der Studie passierte das Verbotene unter Ablenkung häufiger. Ein positives Bild sagt, was passieren soll.",
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:AN1", "richtig-ueben:AN2", "richtig-ueben:IR1"],
+    quellen: ["richtig-ueben:AN1", "richtig-ueben:AN2", "richtig-ueben:IR1", "putten:PELZ1"],
     beleg: "studie",
   },
   {
@@ -1306,6 +1327,8 @@ export const LEKTIONEN = [
       { text: "Zu Hause zählt mit: den Griff aufbauen, das Ansprechen vor dem Spiegel üben, Putts auf dem Teppich." },
       { text: "Block-Üben (20× derselbe Schlag) fühlt sich gut an. Abwechseln (jeder Schlag anders) bleibt oft besser haften – die Forschung ist aber nicht eindeutig." },
       { text: "Faustregel: Neue Bewegungen erst im Block üben. Sitzt eine Bewegung schon etwas, wird abgewechselt." },
+      { text: "Praxis: lieber dreimal 20 Minuten in der Woche als einmal 60 Minuten." },
+      { text: "Schwierigkeit richtig wählen (Adam Young): Eine Übung soll in 3–7 von 10 Versuchen klappen. Klappt mehr, mach sie schwerer, klappt weniger, leichter." },
     ],
     quiz: {
       frage: "Was brachte in der Putt-Studie mehr?",
@@ -1314,7 +1337,7 @@ export const LEKTIONEN = [
       erklaerung: "Verteilt geübt machte die Gruppe nach 28 Tagen deutlich kleinere Fehler.",
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:DIST1", "richtig-ueben:REV1", "richtig-ueben:CI1", "richtig-ueben:CI2"],
+    quellen: ["richtig-ueben:DIST1", "richtig-ueben:REV1", "richtig-ueben:CI1", "richtig-ueben:CI2", "richtig-ueben:AY1"],
     beleg: "studie",
   },
   {
@@ -1329,6 +1352,7 @@ export const LEKTIONEN = [
       { text: "Technik: eine Baustelle aus der App, mit Hilfsmittel. Drei bis fünf Schwünge filmen, dann ohne Video weiterüben. Wann du filmst, bestimmst du selbst." },
       { text: "Variabel: dasselbe Ziel einmal hoch, einmal flach, mit verschiedenen Schlägern. So lernst du, das Ziel auf verschiedenen Wegen zu erreichen." },
       { text: "Range-Runde: Jeder Ball ist ein anderer Schlag wie auf dem Platz – Driver, Eisen, Wedge, jeweils mit voller Routine." },
+      { text: "Differenziell üben: bewusst an Spitze und Ferse treffen, absichtlich hooken und slicen. In Adam Youngs kleiner Untersuchung trafen Spieler danach öfter die Mitte." },
     ],
     quiz: {
       frage: "Was macht die Range-Runde aus?",
@@ -1347,7 +1371,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:REV1", "richtig-ueben:CI1", "richtig-ueben:AY1", "richtig-ueben:AY2", "richtig-ueben:FB1", "richtig-ueben:FB2"],
+    quellen: ["richtig-ueben:REV1", "richtig-ueben:CI1", "richtig-ueben:AY1", "richtig-ueben:AY2", "richtig-ueben:FB1", "richtig-ueben:FB2", "richtig-ueben:AY3"],
     beleg: "zwei-quellen",
   },
   {
@@ -1362,6 +1386,8 @@ export const LEKTIONEN = [
       { text: "Dynamisches Aufwärmen mit Bewegungen und Schwüngen erhöhte dagegen das Tempo. Ein Golf-Aufwärmprogramm steigerte es in einer Studie über sieben Wochen." },
       { text: "Laut TPI haben viele Schwungfehler körperliche Gründe. Drei einfache Selbsttests: Zehen berühren, tiefe Kniebeuge, Drehung im Sitzen.", bild: "selbsttests" },
       { text: "Die Tests sind nur ein Hinweis, keine Diagnose. Bei Schmerzen frag eine Ärztin, einen Arzt oder die Physiotherapie." },
+      { text: "Beweglichkeit zählt: Wer keine tiefe Kniebeuge mit Fersen am Boden schafft, kann die Haltung im Abschwung kaum halten. Eine Studie fand einen Zusammenhang mit der Zehenberührung." },
+      { text: "Rücken schonen: Rund 83 % der Golfverletzungen sind Überlastung. Es helfen Aufwärmen, Pausen statt vieler Bälle am Stück und eine Hüfte, die im Rückschwung mitdreht." },
     ],
     quiz: {
       frage: "Wie wärmst du dich vor der Runde am besten auf?",
@@ -1380,7 +1406,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["mental-und-fitness:WU1", "mental-und-fitness:WU2", "mental-und-fitness:WU3", "mental-und-fitness:TPI1", "mental-und-fitness:TPI3", "mental-und-fitness:TPI4"],
+    quellen: ["mental-und-fitness:WU1", "mental-und-fitness:WU2", "mental-und-fitness:WU3", "mental-und-fitness:TPI1", "mental-und-fitness:TPI3", "mental-und-fitness:TPI4", "mental-und-fitness:INJ2", "mental-und-fitness:INJ3", "mental-und-fitness:INJ4"],
     beleg: "studie",
   },
   {
@@ -1394,6 +1420,8 @@ export const LEKTIONEN = [
       { text: "Filmen: frontal oder von hinten, Handy auf Hüfthöhe, der ganze Körper im Bild. Dann eine Baustelle wählen – die erste Karte, nicht alle gleichzeitig." },
       { text: "Üben: die Übung der Karte im Übungsmodus, danach den Schwunggedanken auf der Range. Nach ein bis zwei Wochen neu filmen und vergleichen." },
       { text: "Wie oft Rückmeldung (etwa ein Video) beim Lernen hilft, ist nicht eindeutig: Neuere Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil." },
+      { text: "Vor dem Blick ins Video selbst schätzen: „Was war wohl der Fehler?“ Dann in der App nachsehen. Das schult das eigene Gefühl." },
+      { text: "Ob die Übung wirkt, zeigt Meine Schwünge → Fortschritt: je Kennzahl deine Werte über dem grünen Zielbereich." },
     ],
     quiz: {
       frage: "Was sagt die Forschung, wie oft man Rückmeldung bekommen sollte?",

@@ -213,7 +213,10 @@ Reihenfolge (je eigener Branch):
     je 4–6 Karten (Beispiele Pull-Slice/Push-Draw, Bulge, Bocksprung, Tor, AimPoint-Idee, Lob, Bunker-Schwunglänge …).
     Korrigiert: Foto vom sauberen Treffer stand auf der Karte „Fett“ – jetzt eigene Karte „Richtig: erst Ball, dann Boden“.
     Weggelassen (nur eine Quelle): Landepunkt bergauf/bergab beim Chip.
-  - **D4** Clever spielen + Üben (gleiches Vorgehen).
+  - ~~**D4 Clever spielen + Üben**~~ – **erledigt mit 0.47.0** (Branch `wissen-tiefer-platz-ueben`): 12 Lektionen mit je 4–6
+    Karten (Erwartungen an Annäherungen, Abschlag nach Broadie/Shot Scope, eigene Längen, Wind in Schlägern, Kälte, Druck üben,
+    Quiet Eye in Zahlen, weitere Fokus-Beispiele, 3–7 von 10, differenziell üben, Beweglichkeit, Rücken). **Wissensseite D damit
+    komplett** – offen nur ein gutes Foto der Ansprechhaltung und eigene Griff-Fotos.
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 
