@@ -136,7 +136,8 @@ Reihenfolge: **1 + 2 bei Marcel** (4, 6, 8 und 9 erledigt), dann die Feedback-Ru
    - Tipps neu + Übungsmodus (≥ 0.13.0): Wischen flüssig? Figuren/Skala verständlich? Bildschirm bleibt an (Wake Lock ab iOS 16.4)?
 2. **Echter Coach-Test** (Marcel, ≥ 0.38.0 mit Claude Opus 5.5, ca. 60 Cent): Erster Test mit 0.15.0 (29.09.): Antworten zu knapp und
    „wertlos“ → 0.17.0 ausführliches Coaching (600–900 Wörter) → zu lang und unübersichtlich (13.10.) → seit 0.40.0
-   **Kurz-Coaching** wie auf der Range (Stärke, ein Fokus, 2–3 Anweisungen, „Warum?“ zugeklappt, ≤ 120 Wörter).
+   **Kurz-Coaching** wie auf der Range (Stärke, ein Fokus, 2–3 Anweisungen, „Warum?“ zugeklappt, ≤ 120 Wörter),
+   seit 0.43.0 mit **Befund** (Phase, was passiert, Richtung) und präziseren Anweisungen (≤ 140 Wörter).
    Jetzt alle drei Level – Tiefe, Ton, Länge, Fachlichkeit? Wartezeit und Kosten (steht unter der Antwort) notieren.
 3. ~~Golflehrer-Durchsicht~~ – **entfällt** (Entscheidung 30.09.). Fachliche Absicherung stattdessen über die
    strengen Quellenregeln (siehe „Dauerhafte Regeln“ und `docs/plan-wissensseite.md`).
@@ -185,10 +186,14 @@ Reihenfolge (je eigener Branch):
   Ansprechen und im Treffmoment keine Kennzahl mit Linie (von hinten nur beim Ansprechen). Entscheidung 13.10.: Dann
   zeigt das Bild die Kennzahlen der höheren Level als „Für später“ (keine Baustellen); ganz ohne Messung ein Schild
   „hier keine Messung“ (`app.js` `technikImBild`).
-- **C Fortschritt:** weniger Kästchen; Meilensteine deutlich kürzer, ohne Ansicht/Schläger-Filter und Texte darunter;
-  Diagramme mit Skala und Zielband (was ist im Bereich, was außerhalb?) – prüfen, ob die Werte richtig ankommen;
-  Antippen → passende Lektion (mehr KPI-Wissen).
-- **E Coach genauer:** Antworten noch zu oberflächlich – konkrete Zahlen, Phase, Ursache, eine Übung (Systemtext `coach.js`).
+- ~~**C Fortschritt**~~ – **erledigt mit 0.42.0** (Branch `fortschritt-uebersichtlich`): Ansicht/Schläger als kleine
+  Knöpfe (Entscheidung 13.10., Auswahl bleibt nötig, App stellt die letzte Sitzung ein), Erklärtexte raus, Meilensteine als
+  Abzeichen, Vorher/Nachher ohne Videos nur eine Zeile. Diagramme zeigen jetzt den **echten Messwert** über grünem Zielbereich
+  mit Skala (Grenzen aus `tipps.js` `SKALEN`, `wertDiagramm` in `fortschritt.js`); vorher nur die Bewertung in 3 Stufen.
+  Ohne Skala (z. B. Armschwung am Top) bleibt das einfache Diagramm. „📖 Lektion“ unter jedem Diagramm.
+- ~~**E Coach genauer**~~ – **erledigt mit 0.43.0** (Branch `coach-praeziser`, Entscheidung 13.10. „kurz, aber präziser“):
+  neues Feld `befund`, Phase je Kennzahl im Systemtext, Anweisungen mit Körperteil, Richtung und Moment. Gesendete Daten
+  unverändert. Offen: echter Test (Nr. 2 oben).
 - **D Wissensseite** – in Etappen (Entscheidung 13.10.: alle vier Bereiche; Bilder: freie Fotos, sonst bessere Zeichnungen):
   - ~~**D1 Bilder**~~ – **erledigt mit 0.44.0** (Branch `wissen-fotos`): alle 47 Bilder geprüft (14.10.) – fachlich keins
     falsch; Griff neu gezeichnet (vorher nicht erkennbar), Hanglagen mit Figur und Blickrichtung. 6 Fotos von Wikimedia

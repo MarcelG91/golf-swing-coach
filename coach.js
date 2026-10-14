@@ -13,7 +13,9 @@
 //     Videonamen oder Datum.
 //   - Claude wählt den Fokus nur aus den gemessenen Baustellen deines Levels. Die App prüft das.
 //   - Seit 0.40.0 (Entscheidung 13.10.) coacht Claude wie auf der Range: eine Stärke, ein Fokus,
-//     2–3 kurze Anweisungen, ein Satz „Warum“ – zusammen höchstens ca. 120 Wörter. Vorher
+//     2–3 kurze Anweisungen, ein Satz „Warum“ – zusammen höchstens ca. 120 Wörter. Seit 0.43.0
+//     („kurz, aber präziser“, 13.10.) zusätzlich ein Satz „Befund“ (Phase, was passiert, Richtung)
+//     und Anweisungen mit Körperteil, Richtung und Moment (höchstens ca. 140 Wörter). Vorher
 //     (0.17.0–0.39.x) schrieb Claude 600–900 Wörter in 13 Feldern – viel zu lang.
 //     Leitplanken: Die geprüften Tipps aus tipps.js stehen im Systemtext und dürfen nicht
 //     widersprochen werden; Schwunggedanke und Übung zeigt die App selbst aus tipps.js.
@@ -44,10 +46,11 @@ export const ANTWORT_SCHEMA = {
   properties: {
     staerke: TEXT,
     fokusKennzahl: { type: "string", description: "Die id EINER Kennzahl aus „kennzahlen“ mit Bewertung achtung/verbessern – oder leer." },
+    befund: TEXT,
     anweisungen: { type: "array", items: TEXT },
     warum: TEXT,
   },
-  required: ["staerke", "fokusKennzahl", "anweisungen", "warum"],
+  required: ["staerke", "fokusKennzahl", "befund", "anweisungen", "warum"],
   additionalProperties: false,
 };
 
@@ -56,6 +59,17 @@ export const ANTWORT_SCHEMA = {
 // je Level und alle geprüften Tipps der App. Er ändert sich nie pro Anfrage
 // (kein Datum, keine Nutzerdaten).
 // ---------------------------------------------------------------
+// In welcher Phase die App jede Kennzahl misst (wie in technik.js / kennzahlen.js; tests/coach.test.mjs
+// vergleicht das mit echten Schwüngen). Seit 0.43.0 steht das im Systemtext, damit Claude den Befund
+// genau verorten kann („im Treffmoment“) – gesendet wird dadurch nichts Neues.
+export const PHASE_DER_KENNZAHL = {
+  armeAnsprechen: "Ansprechen", vorneigungAnsprechen: "Ansprechen", seitneigungAnsprechen: "Ansprechen",
+  armschwungTop: "Top", schulterdrehung: "Top", hueftSway: "Top", oberkoerperTop: "Top", tempo: "ganzer Schwung (Rückschwung : Abschwung)",
+  fuehrungsarmTreff: "Treffmoment", vorneigungHalten: "Treffmoment", oberkoerperTreff: "Treffmoment",
+  kopfhoehe: "Treffmoment (verglichen mit dem Ansprechen)", kopfSeitlich: "Treffmoment (verglichen mit dem Ansprechen)", hueftBall: "Treffmoment",
+  gewicht: "Finish",
+};
+
 function katalog() {
   return alleTipps(true)
     .map((t) => {
@@ -64,6 +78,7 @@ function katalog() {
         : "Übung der App: keine";
       return [
         `### ${t.id}${t.variante ? ` (${t.variante})` : ""}`,
+        `Gemessen: ${PHASE_DER_KENNZAHL[t.id] ?? "–"}`,
         `Kurz: ${t.kurz}`,
         `Warum: ${t.warum}`,
         `Schwunggedanke: „${t.gedanke}“`,
@@ -80,7 +95,11 @@ der Du-Form.
 
 So coachst du: wie ein guter Trainer zwischen zwei Bällen – kurz, klar, auf den Punkt. Ein Fokus, wenige
 Anweisungen, die man beim nächsten Schlag sofort umsetzen kann. Keine Vorträge, keine Floskeln, keine
-Wiederholungen. Die ganze Antwort hat höchstens 120 Wörter.
+Wiederholungen. Die ganze Antwort hat höchstens 140 Wörter.
+
+Kurz heißt nicht ungenau: Jeder Satz bezieht sich auf genau diesen Schwung und seine Messwerte. Ein Satz,
+der zu jedem Golfer passen würde („Bleib locker“, „Achte auf deine Haltung“, „Schwing gleichmäßig“), ist
+wertlos – ersetze ihn durch das Konkrete: welcher Körperteil, in welche Richtung, wie weit, in welchem Moment.
 
 ## Was die Daten bedeuten
 - level: einsteiger, fortgeschritten oder koenner. Bestimmt die Sprache (siehe unten).
@@ -105,15 +124,21 @@ einem Handyvideo sind Schätzungen – Werte knapp am Rand nicht dramatisieren.
   vor „achtung“ und Grundlagen (Ansprechhaltung, Drehung, Tempo) vor Folgefehlern (z. B. Kopfbewegung). Weiche von
   wichtigsteBaustelleDerApp nur ab, wenn eine andere Baustelle erkennbar die Ursache ist. Gibt es keine solche
   Kennzahl, lass das Feld leer.
-- anweisungen: 2–3 Anweisungen zum Fokus in der Reihenfolge der Ausführung, je höchstens 12 Wörter, in Befehlsform
-  („Gewicht auf die Fußballen.“). Konkret: welcher Körperteil, welche Richtung. Positiv formulieren, lieber ein Bild
-  oder ein äußeres Ziel (Schläger, Ball, Ziel) als ein Verbot. Nicht den Schwunggedanken oder die Übung der App
+- befund: EIN Satz (höchstens 25 Wörter) dazu, was die Messung beim Fokus zeigt: in welcher Phase (siehe
+  „Gemessen“ im Katalog), was genau passiert und in welche Richtung es vom Ziel abweicht (zu viel/zu wenig,
+  zu früh/zu spät). Lies dafür wert und ziel. Sprache je Level (unten): einsteiger ohne Zahlen, aber am
+  Körper beschrieben („Im Treffmoment richtet sich dein Oberkörper auf – er sollte nach vorn geneigt bleiben.“);
+  koenner mit Wert und Zielbereich. Bei leerer fokusKennzahl bleibt befund leer.
+- anweisungen: 2–3 Anweisungen zum Fokus in der Reihenfolge der Ausführung, je höchstens 14 Wörter, in Befehlsform.
+  Jede nennt (1) einen Körperteil oder den Schläger, (2) eine Richtung oder Position und (3) den Moment im Schwung
+  („Beim Ansprechen: Gesäß nach hinten schieben, bis die Arme senkrecht hängen.“). Positiv formulieren, lieber ein
+  Bild oder ein äußeres Ziel (Schläger, Ball, Ziel) als ein Verbot. Nicht den Schwunggedanken oder die Übung der App
   wiederholen – die zeigt die App direkt darunter selbst an.
-- warum: 1–2 kurze Sätze (zusammen höchstens 35 Wörter): was im Schwung passiert und was es typischerweise für
-  den Schlag bedeutet.
+- warum: 1–2 kurze Sätze (zusammen höchstens 35 Wörter): die Ursache-Wirkungs-Kette vom Befund zur typischen
+  Folge für den Schlag. Nutzt du dafür eine hintergrundKennzahl als Ursache, nenne die Bewegung, nicht die Kennzahl.
 
-Gibt es keine Baustelle (fokusKennzahl leer): anweisungen sind 1–2 Hinweise, das Gute zu festigen (z. B. derselbe
-Rhythmus mit einem anderen Schläger), warum bleibt leer.
+Gibt es keine Baustelle (fokusKennzahl leer): befund und warum bleiben leer, anweisungen sind 1–2 Hinweise, das
+Gute zu festigen (z. B. derselbe Rhythmus mit einem anderen Schläger).
 
 ## Leitplanken für die Technik
 Die Person hat eine klare Regel: keine falsche Technik. Deshalb:
@@ -185,7 +210,7 @@ export function baueKopierText(daten) {
     "",
     "## Deine Aufgabe jetzt",
     "Schreibe das Coaching als normalen Text auf Deutsch, gegliedert nach den oben beschriebenen Antwortfeldern",
-    "(Stärke, Fokus, Anweisungen, Warum) mit je einer kurzen Überschrift. Gib kein JSON aus.",
+    "(Stärke, Fokus, Befund, Anweisungen, Warum) mit je einer kurzen Überschrift. Gib kein JSON aus.",
     // Hier zeigt keine App den geprüften Schwunggedanken und die Übung an – deshalb soll Claude
     // sie diesmal wörtlich aus dem Katalog übernehmen (statt sie wegzulassen, wie im Systemtext).
     "Anders als oben: Hier zeigt keine App etwas an. Schreib deshalb zum Schluss den Schwunggedanken",
@@ -252,6 +277,7 @@ export function pruefeCoachAntwort(roh, { kennzahlen, wichtigste = null }) {
   return {
     staerke: text(antwort.staerke, 200),
     fokusKennzahl,
+    befund: fokusKennzahl ? text(zumFokus.befund, 250) : "",
     anweisungen: anweisungen.map((eintrag) => text(eintrag, 160)).filter(Boolean).slice(0, 3),
     warum: text(zumFokus.warum, 400),
     fokusErsetzt,

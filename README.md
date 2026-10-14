@@ -170,9 +170,10 @@ Linkshänder, die Anzahl erkannter Schwünge, die wichtigste Baustelle aus Sicht
 kurzen Verlauf – **nie** Videos, Bilder, Posedaten, Notizen oder Datum. Vor dem ersten Senden fragt die
 App um Einwilligung, „Was wird gesendet?“ zeigt die Daten vorab.
 
-- Seit 0.40.0 coacht Claude **kurz und klar wie ein Trainer auf der Range** (höchstens ca. 120 Wörter):
-  eine Stärke, **ein Fokus mit 2–3 Anweisungen**, Schwunggedanke und Übung der App, das „Warum?“
-  zugeklappt. Die Sprache passt sich dem Level an. (0.17.0–0.39.x: ausführliches Coaching mit
+- Seit 0.40.0 coacht Claude **kurz und klar wie ein Trainer auf der Range** (seit 0.43.0 höchstens ca. 140 Wörter):
+  eine Stärke, **ein Fokus mit Befund und 2–3 Anweisungen**, Schwunggedanke und Übung der App, das „Warum?“
+  zugeklappt. Seit 0.43.0 („kurz, aber präziser“) sagt der **Befund** in einem Satz, was die Messung zeigt
+  (Phase, was passiert, Richtung), und jede Anweisung nennt Körperteil oder Schläger, Richtung und Moment. Die Sprache passt sich dem Level an. (0.17.0–0.39.x: ausführliches Coaching mit
   600–900 Wörtern – zu lang; solche gespeicherten Antworten zeigt die App weiter an.)
 - Der **Fokus** kommt immer aus den Baustellen deines Levels (die App prüft das). Schwunggedanke und
   **Übung der App** (fachlich geprüft) sind immer dabei. Claudes Anweisungen sind nicht fachlich
@@ -296,7 +297,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `schwuenge.js` | Findet alle Schläge in einem Video und wertet jeden einzeln aus |
 | `gesamtauswertung.js` | Fasst mehrere Schwünge zusammen: wie oft gut/Achtung/verbessern, typischer Wert, Baustellen |
 | `level.js` | Ordnet Kennzahlen den Leveln zu, filtert die Anzeige und berechnet Level-Vorschläge |
-| `fortschritt.js` | Rechnet Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick, Diagrammpunkte und die Auswahl für Vorher/Nachher aus den gespeicherten Schwüngen (Anzeige: Meine Schwünge → Fortschritt) |
+| `fortschritt.js` | Rechnet Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick, Diagrammpunkte (mit Messwert und Zielbereich aus `tipps.js`) und die Auswahl für Vorher/Nachher aus den gespeicherten Schwüngen (Anzeige: Meine Schwünge → Fortschritt) |
 | `tipps.js` | Alle kurzen Tipp-Texte an einer Stelle: Kurzzeile, Warum, Schwunggedanke, Übung, Lob; dazu die Skala mit Zielbereich |
 | `strichfigur.js` | Rechnet aus deinen Posedaten die kleine Figur mit roter und gelber Linie für die Karten |
 | `coach.js` | Coach mit Claude: was gesendet wird (nur Kennzahlen), fester Anleitungstext, Antwort prüfen |
@@ -573,7 +574,7 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
   (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
 - [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
   Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
-- [x] 10. Fortschritt messen: Meine Schwünge → „📈 Fortschritt“ mit Verlauf, Trend, Fokus, Meilensteinen und Wochenrückblick
+- [x] 10. Fortschritt messen: Meine Schwünge → „📈 Fortschritt“ mit Verlauf, Trend, Fokus, Meilensteinen und Wochenrückblick (seit 0.42.0: Diagramme mit echtem Messwert, grünem Zielbereich und Skala; Antippen öffnet die passende Lektion)
   (0.27.0 Rechnen, 0.28.0 Anzeige; Langzeit-Feedback durch den Coach bleibt offen)
 - [x] Sicherheits-Etappe (0.26.0): Pose-Erkennung selbst ausgeliefert mit Prüfsummen, Coach ohne SDK, CSP,
   Datenschutzhinweis – Voraussetzung, um die App mit Freunden zu teilen (Befunde C1, C3, V4)
