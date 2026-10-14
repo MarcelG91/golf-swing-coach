@@ -978,6 +978,12 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
 .schaubild { background: var(--flaeche-innen); border-radius: var(--r-klein); margin-top: 10px; padding: 6px 4px; }
 .schaubild svg { display: block; width: 100%; height: 170px; font-family: inherit; }
 .schaubild.hoch svg { height: 230px; } /* hohe Bilder, z. B. die neun Flugkurven */
+/* Echte Fotos (fotos.js): höchstens so hoch wie ein großes Schaubild, ganz zu sehen (contain),
+   darunter worauf man achtet und klein der Nachweis (Fotograf · Lizenz) */
+.foto { margin: 10px 0 0; }
+.foto img { display: block; width: 100%; height: auto; max-height: 230px; object-fit: contain; background: var(--flaeche-innen); border-radius: var(--r-klein); }
+.foto figcaption { margin-top: 6px; font-size: 0.9rem; }
+.foto figcaption small { display: block; margin-top: 2px; color: var(--text-leise); font-size: 0.7rem; }
 .figur .figur-text { margin: 0; padding: 0 0 8px; text-align: center; font-weight: 700; color: var(--figur-text); }
 /* Ballflug-Helfer: zwei Knopfgruppen (Start, Kurve) und das Ergebnis */
 .helfer-gruppe { margin-top: 14px; }

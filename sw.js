@@ -43,12 +43,20 @@ const APP_DATEIEN = [
   "./wissen.js",
   "./nachschlagen.js",
   "./schaubilder.js",
+  "./fotos.js",
   "./coach.js",
   "./pwa.js",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/apple-touch-icon.png",
+  // Fotos der Wissensseite (fotos.js, Herkunft und Lizenz: fotos/README.md)
+  "./fotos/griff-linke-hand.jpg",
+  "./fotos/top.jpg",
+  "./fotos/nach-dem-treffen.jpg",
+  "./fotos/finish.jpg",
+  "./fotos/bunker.jpg",
+  "./fotos/gruen-lesen.jpg",
 ];
 
 // Pose-Erkennung von Google (ca. 19 MB): Programm, WebAssembly, Modell.

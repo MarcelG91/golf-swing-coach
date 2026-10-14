@@ -56,6 +56,7 @@ import {
 } from "./speicher.js";
 // Sicherung als Datei (Etappe 9): Format, Prüfung, Zusammenführen
 import { baueSicherung, pruefeSicherung, planeEinspielen, einstellungenFuerSicherung, vereinigeLernfortschritt } from "./sicherung.js";
+import { foto, fotoNachweis } from "./fotos.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import {
   sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, vorherNachher, schlaegerGruppe, GRUPPEN_NAME,
@@ -1981,6 +1982,21 @@ function abschlussKarte(l, zurueck) {
 // Bild zur Lektion: Figur aus echten Posen (dunkler Kasten wie bei den Übungen)
 // oder Schaubild in den Farben der Seite (hell/dunkel)
 function wissensBild(name) {
+  // Echtes Foto (fotos.js): eigene Datei aus fotos/, darunter worauf man achtet und der Nachweis
+  // (Fotograf · Lizenz · Wikimedia Commons), den die freie Lizenz verlangt
+  const f = foto(name);
+  if (f) {
+    const rahmen = neu("figure", "foto");
+    const bild = document.createElement("img");
+    bild.src = f.datei; // fester Pfad aus fotos.js – nichts von fremden Servern
+    bild.alt = f.alt;
+    bild.loading = "lazy";
+    bild.decoding = "async";
+    const unterschrift = neu("figcaption");
+    unterschrift.append(neu("span", "", f.text), neu("small", "", fotoNachweis(f)));
+    rahmen.append(bild, unterschrift);
+    return rahmen;
+  }
   const figur = FIGUREN[name];
   if (figur) {
     const box = neu("div", "figur");
