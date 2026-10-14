@@ -1145,6 +1145,7 @@ pre.vorschau {
   border-bottom: none;
 }
 .karte.coach-antwort .lob, .karte.coach-antwort .naechstes { margin-top: 8px; }
+.karte.coach-antwort .befund { margin: 6px 0 8px; font-weight: 600; }
 .karte.coach-antwort .herkunft { color: var(--text-leise); font-size: 0.78rem; margin-top: 12px; }
 /* Ausführliche Antwort (ab 0.17.0): Abschnitte zum Auf- und Zuklappen */
 .karte.coach-antwort details.abschnitt { margin-top: 14px; }
