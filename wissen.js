@@ -60,6 +60,7 @@ export const QUELLEN = {
   "grundlagen:WG1": "Women's Golf: Railroad Tracks",
   "grundlagen:PGN1": "Pro Golf Now: Intermediate targets",
   "grundlagen:GT1": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "grundlagen:VAR1": "Harry Vardon: How to Play Golf (1912)",
   "grundlagen:SC1": "Swing Catalyst: Body mass and pressure",
   "putten:LR1": "The Left Rough: How to hit solid putts",
   "vollschwung:HM4": "HackMotion: 6 golf shank drills (Anti-Casting)",
@@ -367,10 +368,11 @@ export const LEKTIONEN = [
     karten: [
       { text: "Linke Hand: Den Griff schräg durch die Finger legen, vom kleinen Finger bis zum Zeigefinger – nicht in die Handfläche. Der Daumen liegt leicht rechts der Mitte.", bild: "foto:griff-linke-hand" },
       { text: "Rechte Hand: Griff vor allem in den Fingern. Die Lebenslinie liegt auf dem linken Daumen, das V zwischen Daumen und Zeigefinger zeigt zur rechten Schulter." },
-      { text: "Neutral, stark, schwach: Siehst du 3 oder mehr Knöchel, ist der Griff stark – die Fläche schließt leichter, das hilft Slicern. Bei 0–1 Knöcheln bleibt sie eher offen.", bild: "griff" },
-      { text: "Verbindung der Hände: überlappend (kleiner Finger rechts auf dem Zeigefinger links), verzahnt (beide greifen ineinander) oder mit zehn Fingern. Keine Variante ist „richtig“ – die Hände sollen als Einheit arbeiten." },
+      { text: "Neutral, stark, schwach: Siehst du 3 oder mehr Knöchel, ist der Griff stark – die Fläche schließt leichter, das hilft Slicern. Bei 0–1 Knöcheln bleibt sie eher offen." },
+      { text: "Verbindung der Hände: überlappend (kleiner Finger rechts auf dem Zeigefinger links), verzahnt (beide greifen ineinander) oder mit zehn Fingern. Keine Variante ist „richtig“ – die Hände sollen als Einheit arbeiten.", bild: "foto:griff-ueberlappend" },
       { text: "Griffdruck etwa 4–5 von 10: fest genug für Kontrolle, locker genug für lockere Unterarme. Laut HackMotion greifen 57 % der Tourspieler neutral." },
       { text: "Liegt der Griff in der Handfläche statt in den Fingern, sind die Handgelenke blockiert. Prüfe deshalb beim Aufbauen zuerst die linke Hand, dann die rechte." },
+      { text: "Häufiger Fehler: Die rechte Hand ist zu weit unter den Griff gedreht. Das macht den Griff stark – die Fläche schließt leichter, es droht ein Hook. Harry Vardon nannte das schon 1912 eindeutig falsch.", bild: "foto:griff-falsch" },
     ],
     quiz: {
       frage: "Wie viele Knöchel der linken Hand siehst du beim neutralen Griff?",
@@ -389,7 +391,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["grundlagen:HM1", "grundlagen:MGS1", "grundlagen:HM2", "grundlagen:GT1"],
+    quellen: ["grundlagen:HM1", "grundlagen:MGS1", "grundlagen:HM2", "grundlagen:GT1", "grundlagen:VAR1"],
     beleg: "zwei-quellen",
   },
   {

@@ -43,7 +43,8 @@ Ball, zu Hause und vor dem Spiegel üben – und die App kann Teile davon messen
 Unterarme nicht verspannen. Zu fest kostet Länge und Gefühl.
 
 **Häufige Fehler**: Griff in der Handfläche · rechte Hand zu weit unter dem Griff (Hook) oder obendrauf
-(Slice) · Griffdruck steigt im Rückschwung („Würgen“).
+(Slice) · Griffdruck steigt im Rückschwung („Würgen“). Die rechte Hand „zu weit unter dem Schaft“ zeigt schon Harry Vardon
+(1912) als „eindeutig falschen Griff“ [VAR1]; dass ein starker Griff die Fläche leichter schließt, steht in [HM1][GT1].
 
 **Übung „Griff ohne Hinschauen“**: 10× hintereinander den Griff aufbauen, loslassen, neu aufbauen – mit
 Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
@@ -128,6 +129,7 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
 - [HM1] HackMotion: Golf Grip 101 – https://hackmotion.com/how-to-grip-golf-club/
 - [HM3] HackMotion: Golf swing positions P1–P10 – https://hackmotion.com/golf-swing-positions/
 - [SC1] Swing Catalyst: Body mass and pressure – https://swingcatalyst.com/resources/articles/body-mass-and-pressure
+- [VAR1] Harry Vardon: How to Play Golf (1912), Tafeln „The overlapping grip“ und „Grips right and wrong“ – https://archive.org/details/howtoplaygolf00vardrich
 - [HM2] HackMotion: Overlap vs. Interlock – https://hackmotion.com/overlapping-vs-interlocking-golf-grip/
 - [MGS1] MyGolfSpy: Golf Grip Explained – https://mygolfspy.com/news-opinion/golf-grip-explained/
 - [MGS2] MyGolfSpy: How to aim in golf – https://mygolfspy.com/news-opinion/instruction/how-to-aim-in-golf-alignment-basics-for-beginners/

@@ -52,6 +52,8 @@ const APP_DATEIEN = [
   "./icons/apple-touch-icon.png",
   // Fotos der Wissensseite (fotos.js, Herkunft und Lizenz: fotos/README.md)
   "./fotos/griff-linke-hand.jpg",
+  "./fotos/griff-ueberlappend.jpg",
+  "./fotos/griff-falsch.jpg",
   "./fotos/top.jpg",
   "./fotos/nach-dem-treffen.jpg",
   "./fotos/finish.jpg",

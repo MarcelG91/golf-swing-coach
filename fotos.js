@@ -29,6 +29,20 @@ export const FOTOS = {
     urheber: "Bobjgalindo",
     lizenz: "CC BY 4.0",
   },
+  "griff-ueberlappend": {
+    datei: "fotos/griff-ueberlappend.jpg",
+    alt: "Zwei Hände greifen einen Golfschläger eng zusammen, die rechte Hand überlappt die linke",
+    text: "Der überlappende Griff, wie Harry Vardon ihn 1912 zeigt: Beide Hände liegen eng zusammen und arbeiten als Einheit.",
+    urheber: "Harry Vardon, How to Play Golf (1912)",
+    lizenz: "gemeinfrei",
+  },
+  "griff-falsch": {
+    datei: "fotos/griff-falsch.jpg",
+    alt: "Griff von vorn, die rechte Hand ist weit unter den Schaft gedreht",
+    text: "Laut Vardon „eindeutig falsch“: Die rechte Hand ist zu weit unter den Schaft gedreht.",
+    urheber: "Harry Vardon, How to Play Golf (1912)",
+    lizenz: "gemeinfrei",
+  },
   top: {
     datei: "fotos/top.jpg",
     alt: "Golfer am höchsten Punkt des Rückschwungs, Rücken zum Ziel gedreht",

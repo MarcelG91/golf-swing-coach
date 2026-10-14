@@ -6,15 +6,22 @@ und nichts von fremden Servern lädt. Die App nennt unter jedem Foto Fotograf, L
 (`fotos.js`), bei CC BY zusätzlich die Lizenzadresse und den Hinweis „bearbeitet“, wie die Lizenz es verlangt.
 
 **Änderungen:** Alle Fotos wurden verkleinert (längste Seite höchstens 800 Pixel) und neu als JPEG
-gespeichert. `top.jpg`, `finish.jpg` und `gruen-lesen.jpg` wurden zusätzlich seitlich beschnitten.
+gespeichert. `top.jpg`, `finish.jpg` und `gruen-lesen.jpg` wurden zusätzlich seitlich beschnitten, aus den
+Vardon-Tafeln je ein Bild ausgeschnitten (die Tafel mit dem überlappenden Griff ist im Buch quer gedruckt).
 
 **Fachlich geprüft (13.10.2026):** Jedes Foto zeigt nur, was die Lektion daneben sagt. Verworfen
 wurden ein Foto der Ansprechhaltung (Haltung zu aufrecht, Ball zu weit weg) und ein Griff-Foto von
-1921, bei dem nicht belegt ist, welche Griffart es zeigt.
+1921, bei dem nicht belegt ist, welche Griffart es zeigt, und eine Griff-Zeichnung („GolfGripC“), deren
+Lizenzangabe nicht stimmig ist (kein Urheber, vermutlich aus einem geschützten Buch).
+Bei den Vardon-Tafeln (1912) steht im Buch selbst, was sie zeigen: „The overlapping grip“ und
+„Grips right and wrong“ – „a frequently seen but unquestionably wrong grip … the right hand is turned
+too far under the shaft“.
 
 | Datei | Lektion | Original | Urheber | Lizenz |
 |---|---|---|---|---|
 | `griff-linke-hand.jpg` | Der Griff | [Illustration of golf grip left hand.jpg](https://commons.wikimedia.org/wiki/File:Illustration_of_golf_grip_left_hand.jpg) | Bobjgalindo | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `griff-ueberlappend.jpg` | Der Griff | Tafel „The overlapping grip“ (neben S. 84) in Harry Vardon: *How to Play Golf* (1912), [Internet Archive howtoplaygolf00vardrich](https://archive.org/details/howtoplaygolf00vardrich); dieselbe Tafel auf Commons: [How to play golf (Vardon grip) (page 111 crop).jpg](https://commons.wikimedia.org/wiki/File:How_to_play_golf_(Vardon_grip)_(page_111_crop).jpg) | Harry Vardon (†1937) | gemeinfrei ([PD-US-expired](https://commons.wikimedia.org/wiki/Template:PD-US-expired)) |
+| `griff-falsch.jpg` | Der Griff | Tafel „Grips right and wrong“, rechtes Bild (neben S. 82), gleiches Buch; auf Commons: [How to play golf (Vardon grip) (page 107 crop).jpg](https://commons.wikimedia.org/wiki/File:How_to_play_golf_(Vardon_grip)_(page_107_crop).jpg) | Harry Vardon (†1937) | gemeinfrei ([PD-US-expired](https://commons.wikimedia.org/wiki/Template:PD-US-expired)) |
 | `top.jpg` | Rückschwung und Top | [2016 Lyoness Open - Bernd Wiesberger (26976946043).jpg](https://commons.wikimedia.org/wiki/File:2016_Lyoness_Open_-_Bernd_Wiesberger_(26976946043).jpg) | Shot Clock Masters | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 | `nach-dem-treffen.jpg` | Treffmoment · Fett und getoppt | [2016 Lyoness Open - Bernd Wiesberger (27306986930).jpg](https://commons.wikimedia.org/wiki/File:2016_Lyoness_Open_-_Bernd_Wiesberger_(27306986930).jpg) | Shot Clock Masters | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |
 | `finish.jpg` | Finish und Rhythmus | [2016 Lyoness Open - Bernd Wiesberger (27583996395).jpg](https://commons.wikimedia.org/wiki/File:2016_Lyoness_Open_-_Bernd_Wiesberger_(27583996395).jpg) | Shot Clock Masters | [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) |

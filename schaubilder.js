@@ -216,43 +216,33 @@ const SCHAUBILDER = {
 
   // Lektion „Der Griff“: stark vereinfacht, Blick von oben (so auch beschriftet)
   griff() {
-    // Neu gezeichnet 14.10. (Feedback: „beim ersten Bild nicht erkennbar“). Zwei Teile, beide so,
-    // wie du selbst von oben auf deine Hände schaust; der Schlägerkopf liegt unten.
+    // Neu 14.10. (Feedback: eigene Skizze „wenig aussagekräftig“): drei linke Hände nebeneinander,
+    // so wie du von oben auf deine Hand schaust. Je weiter die Hand nach rechts über den Griff
+    // gedreht ist, desto mehr Knöchel siehst du. Werte: grundlagen.md [HM1][GT1].
     const b = baukasten();
-    // --- Links: nur die linke Hand ---
-    b.text([75, 14], "1 · linke Hand", { fett: true });
-    b.rechteck(68, 22, 14, 160, "rand", "flaeche-innen", 5); // Griff
-    // Handrücken als Faust um den Griff
-    const rund = (punkte) => glatt([...punkte, punkte[0]], 8); // geschlossene, weiche Umrisslinie
-    b.pfad(rund([[34, 64], [60, 48], [98, 46], [114, 62], [114, 104], [98, 124], [54, 124], [36, 106]]), "text", 2, false, "flaeche");
-    // Knöchel: Zeige- und Mittelfinger sichtbar, Ring- und kleiner Finger verschwinden unter dem Griff
-    for (const [x, y] of [[90, 52], [104, 58]]) b.kreis([x, y], 5.5, "akzent", 2, "akzent");
-    for (const [x, y] of [[74, 49], [58, 52]]) b.kreis([x, y], 5, "text-leise", 1.2, null);
-    // Daumen: auf dem Griff, leicht rechts der Mitte
-    b.rechteck(77, 92, 12, 44, "text", "flaeche", 6);
-    b.text([118, 40], "2 Knöchel", { farbe: "akzent", anker: "start", fett: true });
-    b.text([118, 53], "sichtbar", { farbe: "akzent", anker: "start" });
-    b.text([28, 144], "Daumen leicht", { farbe: "text-leise", anker: "start", groesse: 10 });
-    b.text([28, 156], "rechts der Mitte", { farbe: "text-leise", anker: "start", groesse: 10 });
-    b.linie([84, 136], [64, 140], "text-leise", 1);
-
-    // --- Rechts: beide Hände ---
-    b.text([250, 14], "2 · beide Hände", { fett: true });
-    b.rechteck(243, 22, 14, 160, "rand", "flaeche-innen", 5);
-    b.pfad(rund([[212, 52], [236, 36], [274, 36], [286, 50], [284, 70], [246, 76], [214, 70]]), "text", 2, false, "flaeche"); // linke Hand
-    b.pfad(rund([[216, 84], [240, 72], [278, 74], [292, 92], [288, 124], [270, 142], [232, 142], [216, 120]]), "text", 2, false, "flaeche"); // rechte Hand
-    // Das V aus Daumen und Zeigefinger der rechten Hand …
-    b.pfad([[238, 84], [256, 116], [272, 82]], "akzent", 3);
-    // … zeigt zur rechten Schulter (von dir aus: nach rechts oben)
-    b.linie([256, 116], [316, 58], "akzent", 2, true);
-    pfeilspitze(b, [256, 116], [316, 58], "akzent");
-    b.text([306, 40], "V zur rechten", { farbe: "akzent", anker: "middle", groesse: 10 });
-    b.text([306, 52], "Schulter", { farbe: "akzent", anker: "middle", groesse: 10 });
-    b.text([214, 160], "rechte Hand deckt", { farbe: "text-leise", anker: "start", groesse: 10 });
-    b.text([214, 172], "den linken Daumen", { farbe: "text-leise", anker: "start", groesse: 10 });
-
-    b.text([170, 196], "Skizze · so siehst du deine Hände von oben · Rechtshänder", { farbe: "text-leise", groesse: 10 });
-    return { ausschnitt: { x: 0, y: 0, breite: 340, hoehe: 204 }, elemente: b.elemente };
+    const rund = (punkte) => glatt([...punkte, punkte[0]], 8);
+    const arten = [
+      { x: 56, name: "schwach", knoechel: "0–1 Knöchel", wirkung: ["Fläche bleibt", "eher offen"], sichtbar: 1, farbe: "text-leise" },
+      { x: 160, name: "neutral", knoechel: "2 Knöchel", wirkung: ["der Standard"], sichtbar: 2, farbe: "akzent" },
+      { x: 264, name: "stark", knoechel: "3–4 Knöchel", wirkung: ["Fläche schließt", "leichter"], sichtbar: 4, farbe: "text-leise" },
+    ];
+    arten.forEach((a, n) => {
+      const dreh = (n - 1) * 9; // Hand weiter nach rechts gedreht = mehr Knöchel sichtbar
+      b.rechteck(a.x - 6, 18, 12, 112, "rand", "flaeche-innen", 4); // Griff
+      b.pfad(rund([[a.x - 34 + dreh, 52], [a.x - 10 + dreh, 40], [a.x + 24 + dreh, 42], [a.x + 36 + dreh, 58],
+        [a.x + 34 + dreh, 94], [a.x + 18 + dreh, 108], [a.x - 24 + dreh, 106], [a.x - 36 + dreh, 86]]), "text", 2, false, "flaeche");
+      // vier Knöchel von links (kleiner Finger) nach rechts (Zeigefinger); sichtbar = gefüllt
+      for (let k = 0; k < 4; k++) {
+        const px = a.x - 22 + dreh + k * 15, py = 48 - (k === 1 || k === 2 ? 3 : 0);
+        const zuSehen = k >= 4 - a.sichtbar;
+        b.kreis([px, py], 5, zuSehen ? "akzent" : "text-leise", zuSehen ? 2 : 1, zuSehen ? "akzent" : null);
+      }
+      b.text([a.x, 142], a.name, { fett: true, farbe: a.farbe === "akzent" ? "akzent" : "text" });
+      b.text([a.x, 156], a.knoechel, { groesse: 10 });
+      a.wirkung.forEach((zeile, z) => b.text([a.x, 170 + z * 12], zeile, { groesse: 10, farbe: "text-leise" }));
+    });
+    b.text([160, 8], "Linke Hand von oben gesehen · Rechtshänder", { farbe: "text-leise", groesse: 10 });
+    return { ausschnitt: { x: 0, y: -4, breite: 320, hoehe: 198 }, elemente: b.elemente };
   },
 
   // Lektion „Ausrichtung“: Eisenbahnschienen von oben
