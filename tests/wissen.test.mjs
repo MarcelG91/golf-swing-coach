@@ -72,10 +72,11 @@ test("Jede Lektion hat alle Felder, eindeutige ID, bekannten Pfad und Level", ()
   }
 });
 
-test("Texte bleiben kurz: Kernsatz ≤ 15, Karte ≤ 35, Erklärung ≤ 25 Wörter", () => {
+test("Texte bleiben kurz: Kernsatz ≤ 15, 2–7 Karten mit je ≤ 35, Erklärung ≤ 25 Wörter", () => {
   for (const l of LEKTIONEN) {
     assert.ok(woerter(l.kern).length <= 15, `${l.id}: Kernsatz hat ${woerter(l.kern).length} Wörter`);
-    assert.ok(l.karten.length >= 2 && l.karten.length <= 4, `${l.id}: 2–4 Inhaltskarten`);
+    // Seit 14.10. bis zu 7 Karten (Entscheidung „mehr Karten je Lektion“ statt Aufklappen); jede bleibt kurz
+    assert.ok(l.karten.length >= 2 && l.karten.length <= 7, `${l.id}: 2–7 Inhaltskarten`);
     for (const k of l.karten) {
       assert.ok(woerter(k.text).length <= 35, `${l.id}: Karte mit ${woerter(k.text).length} Wörtern: ${k.text}`);
     }
