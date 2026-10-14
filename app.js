@@ -3233,8 +3233,9 @@ async function zeigeFortschritt(ersterAufruf = false) {
   const teile = [];
 
   if (sichere.length === 0) {
+    // „sicher erkannt“: Unsichere Schwünge zählen hier nicht mit – gespeichert sein können sie trotzdem
     fortschrittInhalt.replaceChildren(neu("p", "hinweis",
-      `Für „${filter.ansicht === "hinten" ? "Hinten" : "Vorne"} · ${GRUPPEN_NAME[filter.gruppe]}“ gibt es noch keine gespeicherten Schwünge.`));
+      `Für „${filter.ansicht === "hinten" ? "Hinten" : "Vorne"} · ${GRUPPEN_NAME[filter.gruppe]}“ gibt es noch keine sicher erkannten Schwünge.`));
     return;
   }
 

@@ -3,7 +3,7 @@
 Alle Fotos stammen von [Wikimedia Commons](https://commons.wikimedia.org) und stehen unter einer
 freien Lizenz (Entscheidung 13.10.2026). Sie liegen hier als Datei, damit die App sie offline zeigt
 und nichts von fremden Servern lädt. Die App nennt unter jedem Foto Fotograf, Lizenz und Herkunft
-(`fotos.js`).
+(`fotos.js`), bei CC BY zusätzlich die Lizenzadresse und den Hinweis „bearbeitet“, wie die Lizenz es verlangt.
 
 **Änderungen:** Alle Fotos wurden verkleinert (längste Seite höchstens 800 Pixel) und neu als JPEG
 gespeichert. `top.jpg`, `finish.jpg` und `gruen-lesen.jpg` wurden zusätzlich seitlich beschnitten.
@@ -29,4 +29,5 @@ Die App nennt den Namen nicht und erweckt keinen Eindruck, er empfehle die App.
 1. Nur freie Lizenzen: CC0, CC BY 4.0, CC BY-SA 4.0 oder gemeinfrei (Liste `LIZENZEN` in `fotos.js`).
 2. Fachlich prüfen: zeigt das Foto korrekte Technik und genau das, was die Lektion sagt?
 3. Verkleinern (z. B. `sips -Z 720 -s format jpeg -s formatOptions 62 …`), Datei hierher.
-4. Eintrag in `fotos.js`, in dieser Tabelle und in `sw.js` (`APP_DATEIEN`). `tests/wissen.test.mjs` prüft das.
+4. Eintrag in `fotos.js`, in dieser Tabelle und in `sw.js` **und** `pwa.js` (`APP_DATEIEN`). `tests/wissen.test.mjs`
+   und `tests/fotos.test.mjs` prüfen das (auch: keine GPS-Daten in der Datei, Nachweis passend zur Lizenz).

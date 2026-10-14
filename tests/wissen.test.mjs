@@ -326,7 +326,8 @@ test("Fotos: freie Lizenz, Nachweis, Datei vorhanden und klein, offline gespeich
     assert.ok(groesse < 200 * 1024, `${name}: ${Math.round(groesse / 1024)} KB – bitte verkleinern`);
     assert.ok(sw.includes(`"./${f.datei}"`), `${name}: fehlt in sw.js (offline)`);
     assert.ok(nachweis.includes(`\`${f.datei.slice(6)}\``), `${name}: fehlt in fotos/README.md`);
-    assert.match(fotoNachweis(f), new RegExp(`^Foto: .+ · ${f.lizenz.replace(/[.]/g, "\\.")} · Wikimedia Commons$`));
+    // CC BY/BY-SA zusätzlich mit Lizenzadresse und „bearbeitet“ (genauer: tests/fotos.test.mjs)
+    assert.match(fotoNachweis(f), new RegExp(`^Foto: .+ · ${f.lizenz.replace(/[.]/g, "\\.")}( \\(.+\\))? · Wikimedia Commons( · bearbeitet)?$`));
   }
   // Keine verwaiste Datei: jedes Foto im Ordner steht in fotos.js
   const dateien = fs.readdirSync(new URL("../fotos/", import.meta.url)).filter((d) => d.endsWith(".jpg"));
