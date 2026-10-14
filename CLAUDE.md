@@ -206,7 +206,14 @@ Reihenfolge (je eigener Branch):
     Karte (`messwerte` geteilt in `messwerteTop` und `messwerteTreff`), Übung im Abschwung „Finish 3 Sekunden“ statt Führungsarm.
     Zahlen gegen TrackMan geprüft (Eintreffwinkel 6er −3,2°, PW −3,9° – stimmt). Bewusst weggelassen: „Shoulder Bend“ im
     Finish (Messrichtung bei GOLFTEC unklar) und unbelegte Tipps (z. B. Abstände zwischen Eisen).
-  - **D3** Rund ums Grün + Ballflug · **D4** Clever spielen + Üben (gleiches Vorgehen).
+  - ~~**Griff-Fotos**~~ – **erledigt mit 0.45.2** (Branch `griff-fotos`, Feedback 14.10.: eigene Skizze „wenig aussagekräftig“):
+    zwei gemeinfreie Fotos aus Vardon, *How to Play Golf* (1912) – überlappender Griff, „eindeutig falscher“ Griff –, Titelbild
+    jetzt Vergleich schwach/neutral/stark. Verworfen: Zeichnung „GolfGripC“ (Lizenz unstimmig). Eigene Griff-Fotos wären noch besser.
+  - ~~**D3 Rund ums Grün + Ballflug**~~ – **erledigt mit 0.46.0** (Branch `wissen-tiefer-gruen-ballflug`): 13 Lektionen mit
+    je 4–6 Karten (Beispiele Pull-Slice/Push-Draw, Bulge, Bocksprung, Tor, AimPoint-Idee, Lob, Bunker-Schwunglänge …).
+    Korrigiert: Foto vom sauberen Treffer stand auf der Karte „Fett“ – jetzt eigene Karte „Richtig: erst Ball, dann Boden“.
+    Weggelassen (nur eine Quelle): Landepunkt bergauf/bergab beim Chip.
+  - **D4** Clever spielen + Üben (gleiches Vorgehen).
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 

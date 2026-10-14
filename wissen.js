@@ -60,6 +60,8 @@ export const QUELLEN = {
   "grundlagen:WG1": "Women's Golf: Railroad Tracks",
   "grundlagen:PGN1": "Pro Golf Now: Intermediate targets",
   "grundlagen:GT1": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "putten:HM1": "HackMotion: Gate putting drill",
+  "ballflug-und-fehler:GOLF1": "GOLF.com: How fast golfers swing driver by handicap",
   "grundlagen:VAR1": "Harry Vardon: How to Play Golf (1912)",
   "grundlagen:SC1": "Swing Catalyst: Body mass and pressure",
   "putten:LR1": "The Left Rough: How to hit solid putts",
@@ -723,6 +725,8 @@ export const LEKTIONEN = [
       { text: "Anteil der Schlagfläche an der Startrichtung: beim Driver ca. 85 %, beim Eisen ca. 75 %. Den Rest steuert die Schwungbahn." },
       { text: "Die Kurve entsteht aus dem Unterschied zwischen Fläche und Bahn. Fläche offen zur Bahn: Kurve nach rechts. Fläche geschlossen zur Bahn: Kurve nach links." },
       { text: "Merkhilfe: Startet der Ball schon falsch, zuerst die Schlagfläche prüfen (Griff, Handgelenk). Kurvt er zu stark, die Bahn prüfen. Passt die Kurve nicht zur Bahn, den Treffpunkt." },
+      { text: "Weitere Größen: Das Schlägerkopftempo bestimmt die Länge – als Faustregel bringt 1 mph mehr ca. 2,5 Yards. Der Loft im Treffmoment bestimmt Abflughöhe und Spin." },
+      { text: "So nutzt du es: Achte nach jedem Schlag zuerst auf die Startrichtung, dann auf die Kurve. Startet der Ball gerade und kurvt nach rechts, war die Fläche offen zur Bahn." },
     ],
     quiz: {
       frage: "Was bestimmt vor allem, in welche Richtung der Ball startet?",
@@ -731,7 +735,7 @@ export const LEKTIONEN = [
       erklaerung: "Beim Driver zu ca. 85 % laut Radar-Messungen. Die Bahn im Verhältnis zur Fläche bestimmt dann die Kurve.",
     },
     kennzahlen: [],
-    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:GT1"],
+    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:GT1", "ballflug-und-fehler:GOLF1", "ballflug-und-fehler:TM4"],
     beleg: "messung",
   },
   {
@@ -745,6 +749,8 @@ export const LEKTIONEN = [
       { text: "Startet der Ball gerade und kurvt leicht nach links, ist es ein Draw, nach rechts ein Fade. Beides sind gewollte, leichte Kurven. Zu starke Kurven heißen Hook und Slice." },
       { text: "Startet der Ball links, heißt er Pull, startet er rechts, Push. Mit Kurve: Pull-Hook, Pull-Slice, Push-Draw, Push-Slice." },
       { text: "Draw und Hook: Die Fläche ist zur Bahn geschlossen, die Bahn kommt meist von innen. Fade und Slice: Die Fläche ist zur Bahn offen, die Bahn kommt meist von außen." },
+      { text: "Beispiel Pull-Slice: Er startet links, weil die Fläche nach links zeigt. Er kurvt nach rechts, weil die Bahn noch weiter von außen kommt – die Fläche ist zur Bahn offen." },
+      { text: "Beispiel Push-Draw: Er startet rechts, weil die Fläche nach rechts zeigt. Er kurvt nach links, weil die Bahn noch weiter von innen kommt – die Fläche ist zur Bahn geschlossen." },
     ],
     quiz: {
       frage: "Der Ball startet gerade und kurvt leicht nach rechts. Wie heißt das?",
@@ -768,6 +774,8 @@ export const LEKTIONEN = [
       { text: "Gear Effect beim Driver: Ein Treffer an der Spitze dreht den Kopf auf – der Ball bekommt Draw-Spin. Ein Treffer an der Ferse gibt Fade-Spin. Ein Robotertest bestätigt das." },
       { text: "Hoch auf der Fläche getroffen, fliegt der Ball höher und mit weniger Spin. Tief getroffen, fliegt er flacher und mit mehr Spin (Robotertest von GOLF.com)." },
       { text: "Ein Fersentreffer bekommt Fade-Spin und kann wie ein Slice aussehen. Deshalb zuerst den Treffpunkt prüfen, dann erst am Schwung arbeiten." },
+      { text: "Deshalb ist die Fläche des Drivers leicht gewölbt: Ein Treffer an der Spitze startet etwas rechts und dreht dann zurück zur Mitte." },
+      { text: "Beim Eisen ist der Effekt kleiner, weil der Kopf flacher ist. Dort kostet ein Treffer neben der Mitte vor allem Länge." },
     ],
     quiz: {
       frage: "Du triffst mit dem Driver an der Spitze. Welchen Spin bekommt der Ball?",
@@ -801,6 +809,8 @@ export const LEKTIONEN = [
       { text: "Zweiter Faktor: Die Bahn kommt von außen, weil Schultern und Arme den Abschwung starten. Mittlere Handicaps kommen ca. 3–6° von außen, Tourspieler im Schnitt 1–3° von innen." },
       { text: "Dritter Faktor: Early Extension – die Hüfte schiebt zum Ball, die Arme müssen ausweichen. Hilfe: Der Po bleibt hinten, wie bei der App-Übung „Golftasche hinter dem Po“." },
       { text: "Gegen die Bahn von außen hilft ein Hindernis außen neben dem Ball, etwas vom Ziel weg. Der Schläger läuft innen daran vorbei zum Ball." },
+      { text: "Erkennen: Der Ball startet links und kurvt nach rechts (Pull-Slice) – oder er startet gerade bis rechts und kurvt weiter nach rechts." },
+      { text: "Viele Slices mit dem Driver sind eigentlich Fersentreffer, denn die Ferse gibt Fade-Spin. Prüfe deshalb zuerst den Treffpunkt – wie in der Lektion „Treffpunkt und Gear Effect“.", bild: "treffpunktFlaeche" },
     ],
     quiz: {
       frage: "Was ist laut GOLFTEC der größte Einzelfaktor beim Slice?",
@@ -818,7 +828,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: ["hueftBall", "vorneigungHalten"],
-    quellen: ["ballflug-und-fehler:GT1", "ballflug-und-fehler:GT2", "ballflug-und-fehler:HM5"],
+    quellen: ["ballflug-und-fehler:GT1", "ballflug-und-fehler:GT2", "ballflug-und-fehler:HM5", "ballflug-und-fehler:AY1"],
     beleg: "messung",
   },
   {
@@ -829,9 +839,11 @@ export const LEKTIONEN = [
     kern: "Beim Eisen liegt der tiefste Punkt des Schwungs knapp nach dem Ball.",
     bild: "tiefsterPunkt",
     karten: [
-      { text: "Fett: Der Schläger trifft zuerst den Boden, der tiefste Punkt liegt zu früh – auf der Seite weg vom Ziel. Häufige Gründe: Das Gewicht bleibt rechts oder die Hände schaufeln.", bild: "foto:nach-dem-treffen" },
+      { text: "Richtig mit dem Eisen: erst Ball, dann Boden – der Divot beginnt nach dem Ball. TrackMan-Richtwerte für den Eintreffwinkel: 6er-Eisen ca. −3°, Pitching Wedge ca. −4°.", bild: "foto:nach-dem-treffen" },
+      { text: "Fett: Der Schläger trifft zuerst den Boden, der tiefste Punkt liegt zu früh – auf der Seite weg vom Ziel. Häufige Gründe: Das Gewicht bleibt rechts oder die Hände schaufeln." },
       { text: "Getoppt: Der Schläger trifft den Ball oben. Der Bogen ist zu hoch, weil du dich aufrichtest oder die Arme kurz werden – oder der Schläger steigt schon wieder." },
       { text: "Wechseln sich fett und getoppt ab, liegt es oft an der Höhe des Bogens: Aufrichten oder Absacken. Hilfe: Größe und Vorneigung halten." },
+      { text: "Der Tipp „Kopf unten lassen“ hilft gegen Toppen kaum und macht steif. Besser: Größe und Vorneigung bis zum Treffen halten." },
     ],
     quiz: {
       frage: "Wo liegt beim Eisen der tiefste Punkt des Schwungs?",
@@ -864,6 +876,8 @@ export const LEKTIONEN = [
       { text: "Der Ball schießt fast rechtwinklig nach rechts. Häufige Gründe: zu nah am Ball stehen, die Hüfte schiebt zum Ball (Early Extension) oder das Gewicht rutscht auf die Zehen." },
       { text: "Schiebt die Hüfte zum Ball, werden die Hände nach außen gedrückt – der Hosel kommt zuerst an den Ball. Hilfe: Der Po bleibt hinten, das Gewicht auf der Fußmitte." },
       { text: "Check beim Ansprechen: Zwischen Griffende und linkem Oberschenkel passt eine Faust (App-Übung „Faust-Check“). So stimmt der Abstand zum Ball." },
+      { text: "Auch eine sehr offene Schlagfläche bringt den Hosel nach vorn an den Ball. Ein Grund mehr für einen neutralen Griff." },
+      { text: "Hilfe gegen Early Extension: ein Stuhl oder Stab knapp hinter dem Po. Der Po bleibt im ganzen Schwung daran." },
     ],
     quiz: {
       frage: "Welcher Teil des Schlägers trifft beim Shank den Ball?",
@@ -896,6 +910,8 @@ export const LEKTIONEN = [
       { text: "Hook: das Spiegelbild des Slice. Die Fläche ist zur Bahn geschlossen – oft durch einen zu starken Griff oder eine Bahn weit von innen. Hilfe: ein Griff mit 2 sichtbaren Knöcheln." },
       { text: "Push und Pull: gerader Flug in die falsche Richtung, Fläche und Bahn zeigen beide nach rechts oder links. Zeigen die Schultern nach links, fördert das laut GOLFTEC eine Bahn von außen." },
       { text: "Sky mit dem Driver: Der Ball steigt fast senkrecht, weil der Schläger zu steil kommt und mit der Oberkante trifft. Hilfe: Ball an die linke Ferse, halber Ball über dem Schlägerkopf." },
+      { text: "Gerader Flug, aber daneben? Oft liegt es an der Ausrichtung oder der Ballposition: Ball zu weit vorn eher Pull, zu weit hinten eher Push.", bild: "ballposition" },
+      { text: "Gegen Sky hilft auch: das Tee kurzzeitig niedriger stecken, den Kopf hinter dem Ball lassen und den Ball „vom Tee fegen“." },
     ],
     quiz: {
       frage: "Der Ball fliegt gerade, aber deutlich rechts am Ziel vorbei. Wie heißt das?",
@@ -920,6 +936,7 @@ export const LEKTIONEN = [
       { text: "Putten, wenn es geht – chippen, wenn man muss – pitchen nur, wenn es sein muss. Mehrere Kurzspiel-Lehrer empfehlen genau diese Reihenfolge." },
       { text: "Warum flach zuerst? Der schlechteste Putt ist meist besser als der schlechteste Chip. Beim Rollen kann weniger schiefgehen als in der Luft." },
       { text: "Putt vom Vorgrün: kurzes, festes Gras bis zum Grün. Chip: knapp neben dem Grün, genug Grün bis zur Fahne. Pitch: Bunker oder Rough dazwischen oder wenig Grün." },
+      { text: "Wie wichtig ist das kurze Spiel? Laut Mark Broadie entsteht der größte Unterschied zu Profis im langen Spiel. Für Einsteiger bleibt das kurze Spiel trotzdem der schnellste Hebel." },
     ],
     quiz: {
       frage: "Zwischen Ball und Grün liegt nur kurzes, festes Gras. Was ist meist die sicherste Wahl?",
@@ -928,7 +945,7 @@ export const LEKTIONEN = [
       erklaerung: "Der schlechteste Putt ist meist besser als der schlechteste Chip. Deshalb: so flach wie möglich.",
     },
     kennzahlen: [],
-    quellen: ["kurzes-spiel:LR1", "kurzes-spiel:FOY1", "kurzes-spiel:PIG1"],
+    quellen: ["kurzes-spiel:LR1", "kurzes-spiel:FOY1", "kurzes-spiel:PIG1", "kurzes-spiel:BRO1", "kurzes-spiel:PG1"],
     beleg: "zwei-quellen",
   },
   {
@@ -943,6 +960,7 @@ export const LEKTIONEN = [
       { text: "Laut James Sieckmann läuft der Schläger frei durch den Ball. So gleitet die Sohle über den Boden und verzeiht einen etwas zu frühen Bodenkontakt." },
       { text: "Welcher Schläger? Trainer sind uneins: Manche nutzen die „Regel der 12“, doch ihre Fassungen widersprechen sich. Andere raten, das Rollen der eigenen Schläger auf dem Übungsgrün zu lernen." },
       { text: "Dein Ziel beim Chip ist der Landepunkt: eine Stelle auf dem Grün, von der der Ball zur Fahne rollt. Genau das übt die Landezone." },
+      { text: "Größter Fehler im kurzen Spiel laut Dave Pelz: abbremsen. Schwinge deshalb gleich weit vor wie zurück, mit gleichmäßigem Tempo durch den Ball." },
     ],
     quiz: {
       frage: "Was passiert beim Chip mit mehr Loft?",
@@ -967,6 +985,7 @@ export const LEKTIONEN = [
       { text: "Uhren-System nach Dave Pelz: Der linke Arm ist der Stundenzeiger. Ausholen bis 7:30, 9:00 (Arm waagerecht) oder 10:30 – das ergibt drei feste Längen." },
       { text: "Rhythmus und Durchschwung bleiben gleich, nur der Rückschwung ändert sich. Mit drei Längen und drei bis vier Wedges hast du neun bis zwölf feste Entfernungen." },
       { text: "Die genauen Uhrzeiten sind nicht heilig – manche Trainer nutzen 8, 9 und 10 Uhr. Wichtig ist, deine Längen auf der Range zu messen und aufzuschreiben." },
+      { text: "Lob-Schlag nur, wenn nötig: Stand deutlich links ausgerichtet, Schlagfläche weit offen, Ball mittig – und ohne Abbremsen. Das Risiko ist hoch." },
     ],
     quiz: {
       frage: "Was änderst du beim Uhren-System von Schlag zu Schlag?",
@@ -1000,6 +1019,8 @@ export const LEKTIONEN = [
       { text: "Breiter Stand, die Füße leicht in den Sand drehen. Ball links der Mitte, Gewicht links – und dort lassen." },
       { text: "Der Schläger tritt ca. 2–5 cm hinter dem Ball in den Sand ein. Eine Linie im Sand hilft beim Üben, genau diese Stelle zu treffen.", bild: "foto:bunker" },
       { text: "Regel 12.2: Im Bunker berührst du den Sand vor dem Schlag nicht mit dem Schläger – weder beim Probeschwung noch beim Aufsetzen oder im Rückschwung. Im Zählspiel kostet das zwei Strafschläge." },
+      { text: "Schwinge länger, als du denkst: auch für 10–15 m etwa ein Dreiviertelschwung. Bis ins Finish durchschwingen – die Schlagfläche zeigt danach zum Himmel." },
+      { text: "Häufige Fehler: Ball zu weit rechts, Gewicht nach rechts, Abbremsen im Sand. Steuere die Länge über die Schwunglänge." },
     ],
     quiz: {
       frage: "Wo tritt der Schläger beim Bunkerschlag in den Sand ein?",
@@ -1033,6 +1054,8 @@ export const LEKTIONEN = [
       { text: "Rückschwung zu Durchschwung ca. 60 : 40, gemessen mit dem SAM PuttLab. Der Putter schwingt gleichmäßig durch den Ball, der Rhythmus bleibt immer gleich." },
       { text: "Erwartungen: Aus 1,5 m lochen Tourspieler ca. 77 %, Spieler mit Handicap 20 ca. 55 %. Aus 3 m sind es ca. 40 % und ca. 18 %.", bild: "puttQuoten" },
       { text: "Ein Putt aus 3 m, der knapp neben dem Loch liegen bleibt, ist also ein guter Putt. Übe vor allem die Länge – zum Beispiel mit der Leiter." },
+      { text: "Übung Bocksprung: Ab 1,5 m rollt jeder Putt etwas weiter als der vorige, ohne eine Grenze bei ca. 6 m zu überschreiten. Wie viele passen dazwischen?" },
+      { text: "Übung Tor für die Startrichtung: zwei Tees knapp breiter als der Putterkopf, der Putter schwingt dazwischen durch. Stell sie so eng, dass 3–4 von 10 Versuchen misslingen." },
     ],
     quiz: {
       frage: "Wo bliebe ein verfehlter Putt nach Dave Pelz idealerweise liegen?",
@@ -1042,7 +1065,7 @@ export const LEKTIONEN = [
     },
     uebung: LEITER,
     kennzahlen: [],
-    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:GL1", "putten:GM1", "putten:GOLF3", "putten:MGS1", "putten:HM2", "putten:HM3"],
+    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:GL1", "putten:GM1", "putten:GOLF3", "putten:MGS1", "putten:HM2", "putten:HM3", "putten:HM1"],
     beleg: "messung",
   },
   {
@@ -1057,6 +1080,7 @@ export const LEKTIONEN = [
       { text: "Bergab bricht ein Putt mehr als bergauf: Er rollt langsamer, und die Neigung wirkt länger auf ihn." },
       { text: "Am meisten bricht ein Putt am Ende, wo er am langsamsten ist. Lies bei langen Putts deshalb vor allem das letzte Drittel." },
       { text: "Mit den Füßen fühlen (Idee aus AimPoint): Auf halber Strecke breitbeinig über die Puttlinie stellen und spüren, wohin das Grün fällt." },
+      { text: "AimPoint Express als Idee: Neigung von 1 bis 3 schätzen, so viele Finger mit ausgestrecktem Arm vors Loch halten und an der Außenkante zielen. Für die genaue Anwendung braucht es einen Kurs." },
     ],
     quiz: {
       frage: "Wo bricht ein langer Putt am meisten?",
