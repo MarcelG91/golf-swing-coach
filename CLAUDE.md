@@ -186,9 +186,11 @@ Reihenfolge (je eigener Branch):
   Ansprechen und im Treffmoment keine Kennzahl mit Linie (von hinten nur beim Ansprechen). Entscheidung 13.10.: Dann
   zeigt das Bild die Kennzahlen der höheren Level als „Für später“ (keine Baustellen); ganz ohne Messung ein Schild
   „hier keine Messung“ (`app.js` `technikImBild`).
-- **C Fortschritt:** weniger Kästchen; Meilensteine deutlich kürzer, ohne Ansicht/Schläger-Filter und Texte darunter;
-  Diagramme mit Skala und Zielband (was ist im Bereich, was außerhalb?) – prüfen, ob die Werte richtig ankommen;
-  Antippen → passende Lektion (mehr KPI-Wissen).
+- ~~**C Fortschritt**~~ – **erledigt mit 0.42.0** (Branch `fortschritt-uebersichtlich`): Ansicht/Schläger als kleine
+  Knöpfe (Entscheidung 13.10., Auswahl bleibt nötig, App stellt die letzte Sitzung ein), Erklärtexte raus, Meilensteine als
+  Abzeichen, Vorher/Nachher ohne Videos nur eine Zeile. Diagramme zeigen jetzt den **echten Messwert** über grünem Zielbereich
+  mit Skala (Grenzen aus `tipps.js` `SKALEN`, `wertDiagramm` in `fortschritt.js`); vorher nur die Bewertung in 3 Stufen.
+  Ohne Skala (z. B. Armschwung am Top) bleibt das einfache Diagramm. „📖 Lektion“ unter jedem Diagramm.
 - ~~**E Coach genauer**~~ – **erledigt mit 0.43.0** (Branch `coach-praeziser`, Entscheidung 13.10. „kurz, aber präziser“):
   neues Feld `befund`, Phase je Kennzahl im Systemtext, Anweisungen mit Körperteil, Richtung und Moment. Gesendete Daten
   unverändert. Offen: echter Test (Nr. 2 oben).

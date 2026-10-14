@@ -5,6 +5,7 @@
 // ===============================================================
 
 import { AB_LEVEL, fuerLevel } from "./level.js";
+import { skala } from "./tipps.js";
 
 // Nur diese Bewertungen sind echte Messungen ("unsicher" zählt nicht mit).
 const GEMESSEN = ["gut", "achtung", "verbessern"];
@@ -216,6 +217,53 @@ export function diagramm(punkte, { breite = 300, hoehe = 120, rand = 14 } = {}) 
     punkte: punkte.map((p, i) => ({ x: x(i), y: y(werte[i]), bewertung: p.bewertung })),
     linie: mittel5.map((m, i) => [x(i), y(m)]),
     baender: [0, 1, 2].map((wert) => ({ bewertung: ["verbessern", "achtung", "gut"][wert], y: y(wert) })),
+  };
+}
+
+// ---------------------------------------------------------------
+// 6b. Diagramm mit echten Messwerten (Feedback 13.10.: "Man sieht nicht, was im Bereich ist")
+// ---------------------------------------------------------------
+// Senkrecht: dein Messwert in derselben Einheit wie der Balken in den Karten (tipps.js, skala).
+// Dahinter der grüne Zielbereich und die gelben Achtung-Bereiche, links eine Skala mit den
+// Grenzen des Zielbereichs. Werte außerhalb des Balkens stehen am Rand (randwert: true).
+// Gibt null zurück, wenn es für die Kennzahl keine Skala gibt oder zu wenige Werte –
+// dann zeichnet app.js das einfache Diagramm von oben (diagramm).
+export function wertDiagramm(id, punkte, { breite = 300, hoehe = 130, links = 36, rand = 10 } = {}) {
+  const werte = punkte.map((p) => skala({ id, messwert: p.messwert, bewertung: p.bewertung }));
+  const mitWert = punkte.map((p, i) => ({ ...p, s: werte[i] })).filter((p) => p.s);
+  if (mitWert.length < 2) return null;
+  const { von, bis, gut, achtung, ziel } = mitWert[0].s;
+
+  const x = (i) => links + (i * (breite - links - rand)) / (mitWert.length - 1);
+  const begrenzt = (w) => Math.min(Math.max(w, von), bis);
+  const y = (w) => rand + ((bis - begrenzt(w)) * (hoehe - 2 * rand)) / (bis - von); // groß = oben
+  // Ein Bereich [a, b] als Streifen, auf den sichtbaren Teil gekürzt (Ziel "ab 80°" reicht bis 180°)
+  const streifen = ([a, b], klasse) => {
+    const oben = Math.min(Math.max(a, b), bis), unten = Math.max(Math.min(a, b), von);
+    return oben > unten ? { y: y(oben), hoehe: y(unten) - y(oben), klasse } : null;
+  };
+  const zonen = [streifen(gut, "gut"), ...achtung.map((a) => streifen(a, "achtung"))].filter(Boolean);
+
+  // Skala: Anfang, Ende und die Grenzen des grünen Bereichs (nur die, die im Bild liegen).
+  // Liegen zwei Beschriftungen zu dicht beieinander, bleibt die Grenze des Zielbereichs stehen.
+  const marken = [];
+  const zahl = (w) => String(Math.round(w * 10) / 10).replace(".", ",");
+  for (const [w, wichtig] of [[gut[0], true], [gut[1], true], [von, false], [bis, false]]) {
+    if (w < von || w > bis) continue;
+    const zuDicht = marken.some((m) => Math.abs(m.y - y(w)) < 11);
+    if (!zuDicht || wichtig) marken.push({ y: y(w), text: zahl(w), grenze: wichtig });
+  }
+  const sauber = marken.filter((m, i) => m.grenze || !marken.some((n, j) => j !== i && n.grenze && Math.abs(n.y - m.y) < 11));
+
+  const mittel5 = gleitenderMittelwert(mitWert.map((p) => begrenzt(p.s.wert)), 5);
+  return {
+    ziel,
+    zonen,
+    marken: sauber,
+    punkte: mitWert.map((p, i) => ({ x: x(i), y: y(p.s.wert), bewertung: p.bewertung, randwert: p.s.wert < von || p.s.wert > bis })),
+    linie: mittel5.map((m, i) => [x(i), y(m)]),
+    ersterTag: mitWert[0].datum,
+    letzterTag: mitWert.at(-1).datum,
   };
 }
 

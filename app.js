@@ -58,7 +58,7 @@ import {
 import { baueSicherung, pruefeSicherung, planeEinspielen, einstellungenFuerSicherung, vereinigeLernfortschritt } from "./sicherung.js";
 import { kannKuerzen, schneideClip } from "./videokuerzen.js";
 import {
-  sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, vorherNachher, schlaegerGruppe, GRUPPEN_NAME,
+  sichereSchwuenge, verlauf, trend, fokus, meilensteine, wochenRueckblick, diagramm, wertDiagramm, vorherNachher, schlaegerGruppe, GRUPPEN_NAME,
 } from "./fortschritt.js";
 import { LEVEL, LEVEL_OPTIONEN, anzahlBaustellen, fuerLevel, levelVorschlag } from "./level.js";
 // Kurze Tipps (Kurzzeile, Warum, Schwunggedanke, Übung) und die Skala auf den Karten
@@ -132,8 +132,12 @@ const zuSitzungenBtn = $("zuSitzungen");
 const zuFortschrittBtn = $("zuFortschritt");
 const sitzungenTeil = $("sitzungenTeil");
 const fortschrittTeil = $("fortschrittTeil");
-const fortschrittAnsicht = $("fortschrittAnsicht");
-const fortschrittGruppe = $("fortschrittGruppe");
+// Ansicht und Schlägergruppe: je eine Knopfgruppe (Radio-Knöpfe) – gewählt ist der mit Häkchen
+const fortschrittWahl = (name) => document.querySelector(`input[name="${name}"]:checked`).value;
+const setzeFortschrittWahl = (name, wert) => {
+  const knopf = document.querySelector(`input[name="${name}"][value="${wert}"]`);
+  if (knopf) knopf.checked = true;
+};
 const fortschrittInhalt = $("fortschrittInhalt");
 const einstellungenBereich = $("einstellungenBereich");
 // Wissen: Übersicht der Lernpfade, Nachschlagen (Suche, Listen) und Wisch-Karten
@@ -2849,13 +2853,14 @@ function zeigeBereich(welcher) {
 // Fortschritt (Meine Schwünge → 📈 Fortschritt). Gerechnet wird in fortschritt.js,
 // hier wird nur gezeichnet. Alle Texte per textContent.
 // ---------------------------------------------------------------
-function zeigeGespeichertTeil(teil) {
+// neuAufbauen = false: nur umschalten (z. B. zurück aus einer Lektion – Auswahl und Stelle bleiben)
+function zeigeGespeichertTeil(teil, { neuAufbauen = true } = {}) {
   const fortschritt = teil === "fortschritt";
   sitzungenTeil.hidden = fortschritt;
   fortschrittTeil.hidden = !fortschritt;
   zuSitzungenBtn.setAttribute("aria-pressed", String(!fortschritt));
   zuFortschrittBtn.setAttribute("aria-pressed", String(fortschritt));
-  if (fortschritt) {
+  if (fortschritt && neuAufbauen) {
     zeigeFortschritt(true).catch((fehler) => {
       console.error(fehler);
       fortschrittInhalt.replaceChildren(neu("p", "hinweis", `Der Fortschritt ließ sich nicht laden (${fehler.message || fehler.name}).`));
@@ -2875,10 +2880,12 @@ function fortschrittKasten(titel) {
   return kasten;
 }
 
-// Ein kleines Diagramm: Punkte je Schwung (Farbe = Bewertung) und gleitender Mittelwert
-function verlaufSvg(punkte) {
-  const breite = 300, hoehe = 90;
-  const d = diagramm(punkte, { breite, hoehe, rand: 12 });
+// Ein kleines Diagramm je Kennzahl. Mit Skala (wertDiagramm): dein Messwert über dem grünen
+// Zielbereich, links die Grenzen. Ohne Skala (z. B. Kennzahl ohne Balken): nur die Bewertung.
+function verlaufSvg(id, punkte) {
+  const breite = 300;
+  const mitWerten = wertDiagramm(id, punkte, { breite, hoehe: 130 });
+  const hoehe = mitWerten ? 130 : 90;
   const huelle = document.createElement("div");
   huelle.innerHTML = "<svg></svg>"; // fester Text – den Namensraum liefert der Browser
   const svg = huelle.firstChild;
@@ -2886,27 +2893,50 @@ function verlaufSvg(punkte) {
   svg.setAttribute("viewBox", `0 0 ${breite} ${hoehe}`);
   svg.setAttribute("class", "verlauf-bild");
   svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", `Verlauf über ${punkte.length} Schwünge`);
   const setze = (element, werte) => { for (const [name, wert] of Object.entries(werte)) element.setAttribute(name, wert); };
-  // Drei Streifen: oben gut, Mitte achtung, unten verbessern
-  const streifen = (hoehe - 24) / 2;
-  for (const band of d.baender) {
-    const rechteck = document.createElementNS(SVG, "rect");
-    setze(rechteck, { x: 0, y: band.y - streifen / 2, width: breite, height: streifen, class: `band-${band.bewertung}` });
-    svg.append(rechteck);
+  const zeichne = (art, werte, text) => {
+    const element = document.createElementNS(SVG, art);
+    setze(element, werte);
+    if (text !== undefined) element.textContent = text; // Zahlen der Skala, nie Nutzerdaten
+    svg.append(element);
+    return element;
+  };
+  const linieUndPunkte = (d) => {
+    if (d.linie.length > 1) {
+      zeichne("polyline", { points: d.linie.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" "), class: "mittellinie" });
+    }
+    for (const p of d.punkte) {
+      zeichne("circle", { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: 3.5, class: `punkt-${p.bewertung}${p.randwert ? " randwert" : ""}` });
+    }
+  };
+
+  if (!mitWerten) {
+    const d = diagramm(punkte, { breite, hoehe, rand: 12 });
+    svg.setAttribute("aria-label", `Verlauf über ${punkte.length} Schwünge: oben im Zielbereich, unten zum Verbessern`);
+    // Drei Streifen: oben gut, Mitte achtung, unten verbessern
+    const streifen = (hoehe - 24) / 2;
+    for (const band of d.baender) zeichne("rect", { x: 0, y: band.y - streifen / 2, width: breite, height: streifen, class: `band-${band.bewertung}` });
+    linieUndPunkte(d);
+    return svg;
   }
-  if (d.linie.length > 1) {
-    const linie = document.createElementNS(SVG, "polyline");
-    setze(linie, { points: d.linie.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" "), class: "mittellinie" });
-    svg.append(linie);
+
+  const d = mitWerten;
+  svg.setAttribute("aria-label", `Verlauf über ${d.punkte.length} Schwünge. ${d.ziel}`);
+  const links = 36;
+  // Hintergrund rot (außerhalb), darauf gelb (Achtung) und grün (Zielbereich)
+  zeichne("rect", { x: links, y: 10, width: breite - links - 10, height: hoehe - 20, class: "band-verbessern" });
+  for (const z of d.zonen) zeichne("rect", { x: links, y: z.y, width: breite - links - 10, height: z.hoehe, class: `band-${z.klasse}` });
+  // Skala links mit dünnen Hilfslinien
+  for (const m of d.marken) {
+    zeichne("line", { x1: links, x2: breite - 10, y1: m.y, y2: m.y, class: m.grenze ? "hilfslinie grenze" : "hilfslinie" });
+    zeichne("text", { x: links - 4, y: m.y + 3.5, class: "skala-zahl", "text-anchor": "end" }, m.text);
   }
-  for (const p of d.punkte) {
-    const kreis = document.createElementNS(SVG, "circle");
-    setze(kreis, { cx: p.x.toFixed(1), cy: p.y.toFixed(1), r: 3.5, class: `punkt-${p.bewertung}` });
-    svg.append(kreis);
-  }
+  linieUndPunkte(d);
   return svg;
 }
+
+// Datum "2026-09-23" → "23.09."
+const kurzDatum = (datum) => (datum ? `${datum.slice(8, 10)}.${datum.slice(5, 7)}.` : "");
 
 // ---------------------------------------------------------------
 // Vorher/Nachher: je Phase ein Bild aus dem gespeicherten Clip, mit Skelett.
@@ -3149,11 +3179,14 @@ async function baueVergleich(kasten, { vorher, nachher }, namen) {
 
   const paarBilder = neu("div", "vergleich-paar");
   paarBilder.append(links.teil, rechts.teil);
-  hinweis.replaceWith(knoepfe, abspielZeile, abspielMeldung, paarBilder);
   if (!bilderVorher && !bilderNachher) {
-    kasten.append(neu("p", "hinweis", "Die Videos dieser Schwünge wurden gelöscht – ein Bildvergleich ist nicht möglich. Die Kennzahlen siehst du unten."));
+    // Beide Videos gelöscht: keine Phasen-Knöpfe und leeren Bilder, nur Datum und Kennzahlen
+    hinweis.replaceWith(neu("p", "hinweis",
+      `${deutschesDatum(vorher.datum)} → ${deutschesDatum(nachher.datum)} · ohne Videos, nur Kennzahlen`));
+  } else {
+    hinweis.replaceWith(knoepfe, abspielZeile, abspielMeldung, paarBilder);
+    zeigePhase("top");
   }
-  zeigePhase("top");
 
   // Kennzahlen deines Levels nebeneinander
   const liste = neu("ul", "vergleich-zahlen");
@@ -3175,18 +3208,17 @@ async function zeigeFortschritt(ersterAufruf = false) {
   // Beim Öffnen die Auswahl auf den zuletzt gespeicherten Schwung stellen
   if (ersterAufruf) {
     const letzter = sichereSchwuenge(alle).at(-1);
-    if (letzter?.ansicht) fortschrittAnsicht.value = letzter.ansicht;
+    if (letzter?.ansicht) setzeFortschrittWahl("fortschrittAnsicht", letzter.ansicht);
     const gruppe = letzter ? schlaegerGruppe(letzter.schlaeger) : null;
-    if (gruppe) fortschrittGruppe.value = gruppe;
+    if (gruppe) setzeFortschrittWahl("fortschrittGruppe", gruppe);
   }
-  const filter = { ansicht: fortschrittAnsicht.value, gruppe: fortschrittGruppe.value };
+  const filter = { ansicht: fortschrittWahl("fortschrittAnsicht"), gruppe: fortschrittWahl("fortschrittGruppe") };
   const sichere = sichereSchwuenge(alle, filter);
   const teile = [];
 
   if (sichere.length === 0) {
     fortschrittInhalt.replaceChildren(neu("p", "hinweis",
-      `Für „${fortschrittAnsicht.selectedOptions[0].text} · ${GRUPPEN_NAME[filter.gruppe]}“ sind noch keine sicheren Schwünge gespeichert. ` +
-      "Analysiere einen Schwung und speichere ihn unter „Analyse“."));
+      `Für „${filter.ansicht === "hinten" ? "Hinten" : "Vorne"} · ${GRUPPEN_NAME[filter.gruppe]}“ gibt es noch keine gespeicherten Schwünge.`));
     return;
   }
 
@@ -3235,19 +3267,19 @@ async function zeigeFortschritt(ersterAufruf = false) {
   // Meilensteine
   const meilen = meilensteine(alle, filter);
   if (meilen.length) {
+    // Kurz: je Kennzahl ein Abzeichen "Kopfhöhe 9× ✓" (längste Serie im Zielbereich in Folge)
     const kasten = fortschrittKasten("Meilensteine 🏆");
-    const liste = neu("ul");
-    for (const m of meilen) {
-      liste.append(neu("li", "", `${nameVon(m.id)}: ${m.laengste} Schwünge in Folge im Zielbereich` + (m.aktuell > 0 ? ` (aktuell ${m.aktuell})` : "")));
-    }
-    kasten.append(liste);
+    const liste = neu("div", "abzeichen");
+    for (const m of meilen) liste.append(neu("span", "", `${nameVon(m.id)} ${m.laengste}× ✓`));
+    kasten.append(liste, neu("p", "hinweis klein", "Schwünge in Folge im Zielbereich"));
     teile.push(kasten);
   }
 
   // Verläufe je Kennzahl deines Levels
   const idsDesLevels = fuerLevel(Object.keys(namen).map((id) => ({ id })), aktuellesLevel).sichtbar.map((k) => k.id);
   const verlaufTitel = neu("h3", "", "Verlauf je Kennzahl");
-  const verlaufHinweis = neu("p", "hinweis", "Jeder Punkt ist ein Schwung (links alt, rechts neu). Oben = im Zielbereich, unten = zum Verbessern. Die Linie ist der Durchschnitt über 5 Schwünge.");
+  // Einmal kurz erklärt, statt unter jedem Diagramm
+  const verlaufHinweis = neu("p", "hinweis legende-verlauf", "Grün = Zielbereich · Punkt = ein Schwung · Linie = Schnitt aus 5");
   teile.push(verlaufTitel, verlaufHinweis);
   for (const id of idsDesLevels) {
     const punkte = verlauf(alle, id, filter);
@@ -3255,10 +3287,29 @@ async function zeigeFortschritt(ersterAufruf = false) {
     const kasten = fortschrittKasten(nameVon(id));
     const t = trend(punkte);
     const stand = TREND_TEXT[t.urteil];
-    kasten.append(stand
-      ? neu("p", stand[1], `${stand[0]} (letzte ${t.anzahlNeu} gegen ${t.anzahlAlt} davor)`)
-      : neu("p", "hinweis", `Trend noch offen – dafür braucht es je mindestens 5 Schwünge (bisher ${punkte.length}).`));
-    kasten.append(verlaufSvg(punkte));
+    const ziel = wertDiagramm(id, punkte)?.ziel;
+    // Eine Zeile unter dem Titel: Trend (falls schon genug Schwünge) und Ziel
+    // Trend braucht 15 Schwünge: die letzten 10 gegen mindestens 5 davor (trend in fortschritt.js)
+    kasten.append(neu("p", `verlauf-zeile ${stand?.[1] || ""}`, [ziel, stand?.[0] ?? `Trend ab 15 Schwüngen (${punkte.length})`].filter(Boolean).join(" · ")));
+    kasten.append(verlaufSvg(id, punkte));
+    const tage = neu("p", "verlauf-tage");
+    tage.append(neu("span", "", kurzDatum(punkte[0].datum)), neu("span", "", kurzDatum(punkte.at(-1).datum)));
+    kasten.append(tage);
+    // Antippen → passende Lektion (mehr Wissen zur Kennzahl, Feedback 13.10.)
+    const dazu = lektionZurKennzahl(id);
+    if (dazu) {
+      const knopf = neu("button", "zeigen zur-lektion", `📖 ${dazu.titel} ›`);
+      knopf.addEventListener("click", () => {
+        const zurueck = zurueckZu("‹ Zurück zum Fortschritt", () => {
+          zeigeBereich("gespeichert");
+          zeigeGespeichertTeil("fortschritt", { neuAufbauen: false });
+          knopf.focus({ preventScroll: true });
+        });
+        zeigeBereich("wissen");
+        oeffneLektion(dazu.id, zurueck);
+      });
+      kasten.append(knopf);
+    }
     teile.push(kasten);
   }
   fortschrittInhalt.replaceChildren(...teile);
@@ -4344,8 +4395,8 @@ zuAnalyseBtn.addEventListener("click", () => zeigeBereich("analyse"));
 zuGespeichertBtn.addEventListener("click", () => zeigeBereich("gespeichert"));
 zuSitzungenBtn.addEventListener("click", () => zeigeGespeichertTeil("sitzungen"));
 zuFortschrittBtn.addEventListener("click", () => zeigeGespeichertTeil("fortschritt"));
-for (const auswahl of [fortschrittAnsicht, fortschrittGruppe]) {
-  auswahl.addEventListener("change", () => zeigeFortschritt().catch((fehler) => console.error(fehler)));
+for (const knopf of document.querySelectorAll('input[name="fortschrittAnsicht"], input[name="fortschrittGruppe"]')) {
+  knopf.addEventListener("change", () => zeigeFortschritt().catch((fehler) => console.error(fehler)));
 }
 zuEinstellungenBtn.addEventListener("click", () => zeigeBereich("einstellungen"));
 zuWissenBtn.addEventListener("click", () => zeigeBereich("wissen"));
