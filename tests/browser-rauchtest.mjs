@@ -8,6 +8,7 @@
 //   5. Sicherung (Etappe 9): erstellen → alles löschen → einspielen → alles wieder da;
 //      kaputte Datei ändert nichts, der Coach-Schlüssel steht nie in der Datei.
 //   6. Gespeicherte Coach-Antworten (kurz, ausführlich, ganz alt) werden nur als Text angezeigt.
+//   7. Fortschritt mit Skala → „📖 Lektion“ → Foto mit Nachweis → zurück; alle Fotos offline gespeichert.
 //
 // Aufruf:  node tests/browser-rauchtest.mjs
 // Chrome wird automatisch gesucht; sonst Pfad in der Umgebungsvariable CHROME_PFAD angeben.
@@ -26,7 +27,7 @@ const WURZEL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const MIME = {
   ".js": "text/javascript", ".mjs": "text/javascript", ".html": "text/html", ".css": "text/css",
   ".wasm": "application/wasm", ".json": "application/json", ".webmanifest": "application/manifest+json",
-  ".png": "image/png", ".svg": "image/svg+xml", ".task": "application/octet-stream",
+  ".png": "image/png", ".jpg": "image/jpeg", ".svg": "image/svg+xml", ".task": "application/octet-stream",
 };
 
 function findeChrome() {
@@ -239,6 +240,46 @@ try {
   await auswerten(`document.querySelector("#fortschrittInhalt .vergleich-phasen button").click()`);
   pruefe(await auswerten(`document.querySelectorAll("#fortschrittInhalt .abspiel-rahmen").length === 0 && document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas").length === 2`), "Phase wählen zeigt wieder die Standbilder");
   pruefe(await auswerten(`/Dein Fokus/.test(document.getElementById("fortschrittInhalt").innerText)`), "Fortschritt zeigt „Dein Fokus“");
+
+  // Diagramm mit Skala (wertDiagramm) und Knopf zur passenden Lektion; die Tempo-Lektion hat ein Foto
+  // (Check 14.10.: Fotos, Skala und Lektion aus dem Diagramm waren im Browser noch nicht geprüft)
+  pruefe(await auswerten(`document.querySelectorAll("#fortschrittInhalt svg.verlauf-bild .skala-zahl").length >= 2`), "Verlauf zeigt eine Skala mit Zahlen");
+  const lektionsKnopf = `document.querySelector("#fortschrittInhalt .zur-lektion")`;
+  pruefe(await auswerten(`!!${lektionsKnopf}`), `Verlauf hat einen Knopf zur Lektion (${await auswerten(`${lektionsKnopf}?.textContent`)})`);
+  await auswerten(`${lektionsKnopf}.click()`);
+  const fotoInfo = await (async () => {
+    await wartenBis(`!document.getElementById("wissenBereich").hidden && !!document.querySelector("#wissenBereich figure.foto img")`, 10);
+    return auswerten(`(() => {
+      const fotos = [...document.querySelectorAll("#wissenBereich figure.foto")];
+      return { anzahl: fotos.length, src: fotos.map((f) => f.querySelector("img").getAttribute("src")), nachweis: fotos.map((f) => f.querySelector("figcaption small")?.textContent) };
+    })()`);
+  })();
+  pruefe(fotoInfo.anzahl >= 1 && fotoInfo.src.every((s) => /^fotos\/[a-z-]+\.jpg$/.test(s)), `Lektion zeigt ein Foto aus dem eigenen Ordner (${JSON.stringify(fotoInfo.src)})`);
+  pruefe(fotoInfo.nachweis.every((t) => /^Foto: .+ · Wikimedia Commons/.test(t || "")), `Unter dem Foto steht der Nachweis (${fotoInfo.nachweis[0]})`);
+  // Jedes Foto lässt sich laden und anzeigen (CSP img-src 'self')
+  const fotoLaden = await auswerten(`(async () => {
+    const { FOTOS } = await import("./fotos.js");
+    const ergebnis = [];
+    for (const f of Object.values(FOTOS)) {
+      const bild = new Image();
+      bild.src = f.datei;
+      try { await bild.decode(); ergebnis.push(bild.naturalWidth > 100 ? "ok" : f.datei + " zu klein"); } catch (e) { ergebnis.push(f.datei + " nicht ladbar"); }
+    }
+    return ergebnis;
+  })()`);
+  pruefe(fotoLaden.length >= 6 && fotoLaden.every((e) => e === "ok"), `Alle Fotos lassen sich anzeigen (${fotoLaden.filter((e) => e !== "ok").join(", ") || fotoLaden.length + " Stück"})`);
+  await auswerten(`document.getElementById("wissenZurueck").click()`);
+  pruefe(await wartenBis(`!document.getElementById("fortschrittTeil").hidden && document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas").length === 2 && document.activeElement?.classList.contains("zur-lektion")`, 10),
+    "Zurück aus der Lektion: Fortschritt steht unverändert da, Knopf hat wieder den Fokus");
+  // Offline: Die App meldet „Offline bereit ✓“ erst, wenn auch alle Fotos gespeichert sind
+  pruefe(await wartenBis(`/Offline bereit/.test(document.getElementById("offlineStatus")?.textContent || "")`, 60), `Offline-Prüfung meldet bereit (steht: „${await auswerten(`document.getElementById("offlineStatus")?.textContent`)}“)`);
+  const fotosImSpeicher = await auswerten(`(async () => {
+    const { FOTOS } = await import("./fotos.js");
+    const fehlen = [];
+    for (const f of Object.values(FOTOS)) if (!(await caches.match(new URL(f.datei, location.href).href, { ignoreVary: true, ignoreSearch: true }))) fehlen.push(f.datei);
+    return fehlen;
+  })()`);
+  pruefe(fotosImSpeicher.length === 0, `Alle Fotos sind offline gespeichert${fotosImSpeicher.length ? " – fehlt: " + fotosImSpeicher.join(", ") : ""}`);
 
   // Live-Kamera mit der Testkamera: starten, Skelett-Schleife läuft, beenden. Es gibt keinen
   // Schwung zu sehen, also darf nichts gespeichert werden.

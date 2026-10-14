@@ -325,7 +325,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 
 | Datei | Aufgabe |
 |---|---|
-| `tests/browser-rauchtest.mjs` | Startet die App in Chrome ohne Fenster: „Bereit“, Fortschritt zeigt Diagramme, Live-Kamera, Sicherung erstellen → alles löschen → einspielen (kaputte Datei ändert nichts, kein Coach-Schlüssel in der Datei), keine Konsolenfehler, keine Fremdanfragen (`node tests/browser-rauchtest.mjs`, läuft auch in der CI) |
+| `tests/browser-rauchtest.mjs` | Startet die App in Chrome ohne Fenster: „Bereit“, Fortschritt zeigt Diagramme, Skala und Lektion aus dem Diagramm, Fotos mit Nachweis und offline gespeichert, Live-Kamera, Sicherung erstellen → alles löschen → einspielen (kaputte Datei ändert nichts, kein Coach-Schlüssel in der Datei), keine Konsolenfehler, keine Fremdanfragen (`node tests/browser-rauchtest.mjs`, läuft auch in der CI) |
 | `tests/phasen.test.mjs` | Prüft `phasen.js` mit künstlich erzeugten Schwüngen |
 | `tests/echte-schwuenge.test.mjs` | Prüft Phasen und Bewertung an 4 echten Schwüngen |
 | `tests/technik.test.mjs` | Prüft `technik.js`: echte Schwünge, Linkshänder, gezielt eingebaute Fehler |
@@ -338,6 +338,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `tests/coach.test.mjs` | Prüft den Coach ohne echte Anfrage: nur Kennzahlen werden gesendet (feste Felder der Anfrage), Kopfzeilen, Claude kann keinen Fokus erfinden, der Datenstrom wird auch in kleinen Stücken und nach einem Rückfall auf ein anderes Modell vollständig gelesen, Fehlerarten aus HTTP-Status und Datenstrom |
 | `tests/uebungsbilder.test.mjs` | Prüft die Übungsfiguren mit den Grenzwerten der App, den Schlägerweg, den Stab und den 3 : 1-Takt |
 | `tests/wissen.test.mjs` | Prüft die Lektionen: feste IDs, Textlängen, Quiz mit genau einer richtigen Antwort, Quellen mit Link in `docs/wissen/`, Bilder vorhanden, Farben aus `style.css`, Figuren nur aus Profi-Posen, Beschriftung der P1–P10-Animation, alle 9 Ballflüge im Helfer, Fortschritt robust |
+| `tests/fotos.test.mjs` | Prüft die Fotos der Wissensseite: Nachweis passend zur Lizenz (CC BY mit Lizenzadresse und „bearbeitet“), jedes Foto in beiden Offline-Listen (`sw.js`, `pwa.js`), keine Ortsdaten (GPS) in den Dateien |
 | `tests/nachschlagen.test.mjs` | Prüft Nachschlagen: Textlängen, jede Aussage mit bekannter Quelle, Glossar mit Lektion oder zwei Quellen, „Trainer sind uneins“ beim Fitting, Suche (Umlaute, Englisch, seltsame Eingaben) und welche Lektion zu welcher Kennzahl gehört |
 | `tests/tipps.test.mjs` | Prüft, dass die Tipps kurz bleiben, für Linkshänder spiegeln, die Skala zur Bewertung passt und die Strichfigur vollständig ist |
 | `tests/speicher-browser.html` | Browser-Test der Datenbank (speichern, laden, löschen, Videos löschen, alles löschen) – über den lokalen Server öffnen: http://127.0.0.1:8000/tests/speicher-browser.html |

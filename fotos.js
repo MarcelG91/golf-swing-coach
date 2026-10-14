@@ -72,7 +72,19 @@ export function foto(name) {
   return FOTOS[name.slice(5)] ?? null;
 }
 
-// Zeile unter dem Foto, z. B. "Foto: Bobjgalindo · CC BY 4.0 · Wikimedia Commons"
+// CC BY und CC BY-SA verlangen im Nachweis außerdem die Adresse der Lizenz und den Hinweis,
+// dass das Bild verändert wurde (alle Fotos sind verkleinert, manche beschnitten – fotos/README.md).
+// Die Adresse steht nur als Text da: Die App hat keine Links und lädt nichts nach (Check 14.10.).
+// Bei CC0 und gemeinfreien Fotos ist beides nicht nötig.
+const LIZENZ_ADRESSE = {
+  "CC BY 4.0": "creativecommons.org/licenses/by/4.0",
+  "CC BY-SA 4.0": "creativecommons.org/licenses/by-sa/4.0",
+};
+
+// Zeile unter dem Foto, z. B. "Foto: Shot Clock Masters · CC0 · Wikimedia Commons" oder
+// "Foto: Bobjgalindo · CC BY 4.0 (creativecommons.org/licenses/by/4.0) · Wikimedia Commons · bearbeitet"
 export function fotoNachweis(f) {
-  return `Foto: ${f.urheber} · ${f.lizenz} · Wikimedia Commons`;
+  const adresse = LIZENZ_ADRESSE[f.lizenz];
+  if (!adresse) return `Foto: ${f.urheber} · ${f.lizenz} · Wikimedia Commons`;
+  return `Foto: ${f.urheber} · ${f.lizenz} (${adresse}) · Wikimedia Commons · bearbeitet`;
 }
