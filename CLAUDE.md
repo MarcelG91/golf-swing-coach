@@ -200,8 +200,13 @@ Reihenfolge (je eigener Branch):
     Commons (CC0/CC BY 4.0) in `fotos/` mit Nachweis: Griff linke Hand, Top, nach dem Treffen, Finish, Bunker, Grün lesen.
     Verworfen: Ansprech-Foto (Haltung falsch), Griff-Foto 1921 (Griffart nicht belegt). Ein gutes Foto der
     **Ansprechhaltung** fehlt noch (eigenes Foto von Marcel?).
-  - **D2** Inhalte vertiefen: Grundlagen + Vollschwung · **D3** Rund ums Grün + Ballflug · **D4** Clever spielen + Üben
-    (jeweils mehr Karten, Quellenregeln aus „Dauerhafte Regeln“).
+  - ~~**D2 Grundlagen + Vollschwung**~~ – **erledigt mit 0.45.0** (Branch `wissen-tiefer-grundlagen`, Entscheidung 14.10.:
+    **mehr Karten je Lektion** (jetzt 2–7, je ≤ 35 Wörter) statt Aufklappen oder neuer Lektionen). 15 Lektionen mit je 5–6
+    Karten: konkreter („was tun, woran merken“), Anwendung/App-Bezug, nur Aussagen aus `docs/wissen/`. Bild passt jetzt zur
+    Karte (`messwerte` geteilt in `messwerteTop` und `messwerteTreff`), Übung im Abschwung „Finish 3 Sekunden“ statt Führungsarm.
+    Zahlen gegen TrackMan geprüft (Eintreffwinkel 6er −3,2°, PW −3,9° – stimmt). Bewusst weggelassen: „Shoulder Bend“ im
+    Finish (Messrichtung bei GOLFTEC unklar) und unbelegte Tipps (z. B. Abstände zwischen Eisen).
+  - **D3** Rund ums Grün + Ballflug · **D4** Clever spielen + Üben (gleiches Vorgehen).
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 

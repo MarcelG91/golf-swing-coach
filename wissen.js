@@ -60,6 +60,9 @@ export const QUELLEN = {
   "grundlagen:WG1": "Women's Golf: Railroad Tracks",
   "grundlagen:PGN1": "Pro Golf Now: Intermediate targets",
   "grundlagen:GT1": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
+  "grundlagen:SC1": "Swing Catalyst: Body mass and pressure",
+  "putten:LR1": "The Left Rough: How to hit solid putts",
+  "vollschwung:HM4": "HackMotion: 6 golf shank drills (Anti-Casting)",
   "grundlagen:VES1": "Vessel: Proper golf stance",
   "grundlagen:PP1": "Perfect Practice: Perfect golf posture",
   "grundlagen:DRV1": "DRVN Golf: Golf posture – setup fundamentals",
@@ -317,6 +320,7 @@ export const LEKTIONEN = [
       { text: "Nach Dave Pelz passieren rund 60–65 % aller Schläge innerhalb von ca. 90 m zur Fahne. Für Einsteiger ist das kurze Spiel der schnellste Hebel." },
       { text: "Zwei Einsteiger-Leitfäden raten: zuerst viel Putten und Chippen, dann Schwünge mit dem Eisen. Einer nennt rund 70 % der Übungszeit fürs kurze Spiel." },
       { text: "Realistisch bleiben: Selbst ein männlicher Amateur mit Handicap ca. 15 fliegt den Driver laut TrackMan nur ca. 190 m weit. Die App ersetzt keinen Golflehrer – sie hilft beim Üben dazwischen." },
+      { text: "So nutzt du die App zwischen den Stunden: filmen, eine Baustelle wählen, mit der passenden Übung trainieren und nach 1–2 Wochen neu filmen. Dazwischen ohne Video üben.", bild: "appAblauf" },
     ],
     quiz: {
       frage: "Wo passieren laut Dave Pelz rund 60 % aller Schläge?",
@@ -338,8 +342,10 @@ export const LEKTIONEN = [
     karten: [
       { text: "Loft ist der Neigungswinkel der Schlagfläche. Ungefähr: Driver 10°, 7er-Eisen 34°, Sand Wedge 56°, Putter 2–4°. Je nach Hersteller weicht das etwas ab." },
       { text: "Wofür welcher? Driver für den Abschlag auf langen Löchern, Eisen für Schläge aufs Grün, Wedges für kurze, hohe Schläge und den Bunker, Putter auf dem Grün." },
-      { text: "Erlaubt sind höchstens 14 Schläger in der Tasche (Regel 4.1). Für den Anfang reicht ein halber Satz mit ca. 7 Schlägern." },
+      { text: "Erlaubt sind höchstens 14 Schläger (Regel 4.1). Für den Anfang reicht ein halber Satz mit ca. 7 Schlägern, zum Beispiel Hybrid, 7er, 9er, Pitching Wedge, Sand Wedge und Putter." },
+      { text: "Was der Loft bewirkt: Laut TrackMan bestimmt er im Treffmoment Abflughöhe und Spin. Mehr Loft heißt höherer Start, mehr Rückwärtsdrall, steilere Landung und weniger Rollen.", bild: "flugRollenSchlaeger" },
       { text: "Hybrid statt langer Eisen: Er startet höher und verzeiht Fehltreffer eher. Laut Arccos-Daten treffen Spieler bis Handicap 25 damit öfter das Grün." },
+      { text: "Ein Test von Plugged In Golf mit 5 Spielern: Der Hybrid flog am höchsten, landete am steilsten und streute weniger in der Länge. Das Eisen war etwas genauer in der Richtung." },
     ],
     quiz: {
       frage: "Was bewirkt mehr Loft?",
@@ -361,8 +367,10 @@ export const LEKTIONEN = [
     karten: [
       { text: "Linke Hand: Den Griff schräg durch die Finger legen, vom kleinen Finger bis zum Zeigefinger – nicht in die Handfläche. Der Daumen liegt leicht rechts der Mitte.", bild: "foto:griff-linke-hand" },
       { text: "Rechte Hand: Griff vor allem in den Fingern. Die Lebenslinie liegt auf dem linken Daumen, das V zwischen Daumen und Zeigefinger zeigt zur rechten Schulter." },
-      { text: "Überlappend, verzahnt oder mit zehn Fingern: Keine Variante ist „richtig“. Wichtig ist, dass beide Hände als Einheit arbeiten." },
+      { text: "Neutral, stark, schwach: Siehst du 3 oder mehr Knöchel, ist der Griff stark – die Fläche schließt leichter, das hilft Slicern. Bei 0–1 Knöcheln bleibt sie eher offen.", bild: "griff" },
+      { text: "Verbindung der Hände: überlappend (kleiner Finger rechts auf dem Zeigefinger links), verzahnt (beide greifen ineinander) oder mit zehn Fingern. Keine Variante ist „richtig“ – die Hände sollen als Einheit arbeiten." },
       { text: "Griffdruck etwa 4–5 von 10: fest genug für Kontrolle, locker genug für lockere Unterarme. Laut HackMotion greifen 57 % der Tourspieler neutral." },
+      { text: "Liegt der Griff in der Handfläche statt in den Fingern, sind die Handgelenke blockiert. Prüfe deshalb beim Aufbauen zuerst die linke Hand, dann die rechte." },
     ],
     quiz: {
       frage: "Wie viele Knöchel der linken Hand siehst du beim neutralen Griff?",
@@ -381,7 +389,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["grundlagen:HM1", "grundlagen:MGS1", "grundlagen:HM2"],
+    quellen: ["grundlagen:HM1", "grundlagen:MGS1", "grundlagen:HM2", "grundlagen:GT1"],
     beleg: "zwei-quellen",
   },
   {
@@ -395,6 +403,8 @@ export const LEKTIONEN = [
       { text: "Dein Körper zielt deshalb parallel links vom Ziel, nicht genau aufs Ziel. Füße, Knie, Hüfte und Schultern liegen alle auf der inneren Schiene." },
       { text: "Zwischenziel: Hinter dem Ball einen Punkt 1–2 m vor dem Ball auf der Ziellinie suchen. Erst die Schlagfläche darauf ausrichten, dann den Körper." },
       { text: "Häufiger Fehler laut GOLFTEC: Die Füße stimmen, aber die Schultern zeigen nach links. Das fördert eine Schwungbahn von außen – Slice oder Pull." },
+      { text: "Routine: hinter dem Ball das Zwischenziel wählen, Schlagfläche ausrichten, Füße stellen, 1–2 Blicke zum Ziel. Bei über 22.000 Schlägen der European Tour spielten Spieler mit gleich langer Routine konstanter.", bild: "zonen" },
+      { text: "Die App misst die Ausrichtung nicht. Filme von hinten entlang der Ziellinie – dann siehst du im Video, ob Füße und Schultern parallel zur Ziellinie stehen." },
     ],
     quiz: {
       frage: "Wohin zeigen deine Schultern bei guter Ausrichtung?",
@@ -413,7 +423,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["grundlagen:WG1", "grundlagen:MGS2", "grundlagen:PGN1", "grundlagen:GT1"],
+    quellen: ["grundlagen:WG1", "grundlagen:MGS2", "grundlagen:PGN1", "grundlagen:GT1", "grundlagen:GM2", "grundlagen:GPC1"],
     beleg: "zwei-quellen",
   },
   {
@@ -428,6 +438,8 @@ export const LEKTIONEN = [
       { text: "Die Knie nur leicht beugen – die Beugung kommt vor allem aus der Hüfte. So stehst du sportlich und im Gleichgewicht." },
       { text: "Die Arme hängen locker senkrecht unter den Schultern. Zwischen Griffende und linkem Oberschenkel passt etwa eine Faust." },
       { text: "Das Gewicht liegt etwa auf der Fußmitte, eher Richtung Ballen. Die App misst deine Vorneigung und den Armabstand, wenn du von hinten filmst." },
+      { text: "Weil die rechte Hand tiefer greift, steht die rechte Schulter etwas tiefer. Beim Driver neigt sich der Oberkörper mehr vom Ziel weg, beim Eisen weniger. Die App misst das von vorne." },
+      { text: "Gewicht links und rechts: Mit dem Eisen etwa ausgeglichen. Druckmessplatten zeigen bei Tourspielern sogar leicht mehr Druck links, ca. 55 zu 45." },
     ],
     quiz: {
       frage: "Woher kommt die Vorneigung beim Ansprechen?",
@@ -438,7 +450,7 @@ export const LEKTIONEN = [
     // Vorhandene Übung mit Figuren (tipps.js, Kennzahl "zu aufrecht")
     uebung: { tipp: { id: "vorneigungAnsprechen", messwert: 15 } },
     kennzahlen: ["vorneigungAnsprechen", "armeAnsprechen"],
-    quellen: ["grundlagen:VES1", "grundlagen:PP1", "grundlagen:DRV1", "grundlagen:GDC1", "ballflug-und-fehler:HM3"],
+    quellen: ["grundlagen:VES1", "grundlagen:PP1", "grundlagen:DRV1", "grundlagen:GDC1", "ballflug-und-fehler:HM3", "grundlagen:SC1"],
     beleg: "zwei-quellen",
   },
   {
@@ -450,8 +462,10 @@ export const LEKTIONEN = [
     bild: "pendel",
     karten: [
       { text: "Die Schultern bewegen den Putter wie ein Pendel, die Handgelenke bleiben ruhig. Der Rhythmus bleibt gleich – längere Putts brauchen einen längeren Rückschwung." },
+      { text: "Aufbau: Augen über dem Ball oder knapp innerhalb der Ziellinie. Aus der Hüfte beugen, die Arme hängen locker – wie beim Vollschwung, nur näher am Ball." },
       { text: "Laut Dave Pelz bestimmt die Schlagfläche rund 83 % der Startrichtung. Eckig treffen ist also wichtiger als eine perfekte Bahn." },
       { text: "Ideal nach Pelz: Ein verfehlter Putt bliebe ca. 40 cm hinter dem Loch liegen. Ein Putt, der zu kurz bleibt, fällt nie." },
+      { text: "Lange Putts über ca. 10 m: Ziel ist ein Kreis von ca. 2 m Durchmesser ums Loch. So vermeidest du Drei-Putts." },
       { text: "Erwartungen: Tourspieler lochen aus 3 m nur ca. 40 % der Putts. Ein Putt, der knapp neben dem Loch liegen bleibt, ist ein guter Putt." },
     ],
     quiz: {
@@ -462,7 +476,7 @@ export const LEKTIONEN = [
     },
     uebung: LEITER,
     kennzahlen: [],
-    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3"],
+    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3", "putten:LR1"],
     beleg: "messung",
   },
   {
@@ -474,6 +488,7 @@ export const LEKTIONEN = [
     bild: "flugRollen",
     karten: [
       { text: "Chip: Der Ball liegt knapp neben dem Grün, bis zur Fahne ist viel Grün. Pitch: viel Flug, wenig Rollen – wenn ein Hindernis dazwischen liegt." },
+      { text: "Warum flach zuerst? Der schlechteste Putt ist meist besser als der schlechteste Chip – weniger kann schiefgehen. Also putten, wo es geht, sonst chippen, erst dann pitchen.", bild: "entscheidung" },
       { text: "Aufbau: enger Stand, Ball mittig bis leicht rechts, Gewicht deutlich links, Hände leicht vor dem Ball. Den Griff etwas kürzer fassen." },
       { text: "Schultern und Arme schwingen als Einheit, die Handgelenke bleiben ruhig. Laut Dave Pelz ist Handgelenkeinsatz die häufigste Ursache für fette oder dünne Chips." },
       { text: "Gleichmäßiges Tempo durch den Ball. Die Sohle des Schlägers darf über den Boden gleiten – der Schläger läuft frei durch." },
@@ -486,7 +501,7 @@ export const LEKTIONEN = [
     },
     uebung: LANDEZONE,
     kennzahlen: [],
-    quellen: ["kurzes-spiel:LR1", "kurzes-spiel:FOY1", "kurzes-spiel:SIE1", "kurzes-spiel:AGD1", "kurzes-spiel:PELZ1", "kurzes-spiel:GTS1", "kurzes-spiel:BB1"],
+    quellen: ["kurzes-spiel:LR1", "kurzes-spiel:FOY1", "kurzes-spiel:SIE1", "kurzes-spiel:AGD1", "kurzes-spiel:PELZ1", "kurzes-spiel:GTS1", "kurzes-spiel:BB1", "kurzes-spiel:PIG1"],
     beleg: "zwei-quellen",
   },
   {
@@ -499,7 +514,9 @@ export const LEKTIONEN = [
     karten: [
       { text: "Weiße Pfähle: Aus – zurück zur Stelle des letzten Schlags, 1 Strafschlag (Regel 18.2). Gelbe und rote Pfähle: Penalty Area, Erleichterung kostet 1 Strafschlag (Regel 17)." },
       { text: "Ball nach 3 Minuten Suche nicht gefunden: Er gilt als verloren. Wer das ahnt, sagt vorher an: „Ich spiele einen provisorischen Ball“ (Regel 18.3)." },
+      { text: "Auf dem Grün darfst du den Ball markieren, aufnehmen und reinigen. Pitchmarken und Spikespuren darfst du ausbessern, die Fahne darf im Loch bleiben (Regel 13)." },
       { text: "Etikette: Divots zurücklegen, Pitchmarken ausbessern, Bunker harken. Ruhig stehen, wenn jemand schlägt. Fliegt ein Ball auf Menschen zu: laut „Fore!“ rufen." },
+      { text: "Tempo: Wer an der Reihe ist, soll in höchstens 40 Sekunden schlagen – Empfehlung der R&A. In Privatrunden gilt oft „Ready Golf“: Wer bereit ist, spielt." },
       { text: "Platzreife-Prüfung: Verhalten auf dem Platz, 9 Löcher Spiel und Theorie mit 30 Fragen. Hier nur kurz und ohne Gewähr – es gilt das offizielle Regelbuch." },
     ],
     quiz: {
@@ -526,6 +543,7 @@ export const LEKTIONEN = [
       { text: "Rückschwung: P1 Ansprechen, P2 Schaft waagerecht, P3 linker Arm waagerecht, P4 Top – der höchste Punkt, an dem die Richtung wechselt." },
       { text: "Abschwung und Durchschwung: P5 linker Arm waagerecht, P6 Schaft waagerecht, P7 Treffmoment, P8 Schaft waagerecht, P9 rechter Arm waagerecht, P10 Finish." },
       { text: "Die Figur zeigt sieben dieser Positionen: Körper aus einem echten Profi-Schwung, Schläger nach Lehrbuch. Die Zeitleiste der App nutzt vier: Ansprechen (P1), Top (P4), Treffmoment (P7) und Finish (P10)." },
+      { text: "So nutzt du das in der App: Nach der Analyse springst du mit den Pfeilen unter dem Video von Phase zu Phase und siehst dort deine Linien." },
     ],
     quiz: {
       frage: "Woran erkennst du P2 im Rückschwung?",
@@ -546,8 +564,10 @@ export const LEKTIONEN = [
     bild: "ballposition",
     karten: [
       { text: "Standbreite: Mit mittleren Eisen etwa schulterbreit, mit kurzen Eisen und Wedges etwas schmaler. Mit dem Driver etwas breiter als die Schultern – das gibt Stabilität." },
+      { text: "Füße: Den linken Fuß ca. 20–30° zum Ziel ausdrehen, den rechten gerade oder leicht ausgedreht. Das erleichtert die Drehung – besonders, wenn du wenig beweglich bist." },
       { text: "Ballposition: Wedges in der Standmitte, das 7er-Eisen 1–2 Ballbreiten links davon, Hybrid und Holz 2–3 Ballbreiten. Der Driver liegt an der Innenseite der linken Ferse." },
       { text: "Warum? Beim Eisen liegt der tiefste Punkt des Schwungs nach dem Ball: erst Ball, dann Boden. Den Driver triffst du vom Tee leicht aufwärts – dafür liegt der Ball weiter vorn." },
+      { text: "Folgen einer falschen Ballposition: zu weit vorn eher getoppt oder Pull, zu weit hinten eher Push und flacher Flug. Check: Schläger quer in die Standmitte legen." },
       { text: "Trainer sind uneins: Manche lassen den Ball bei allen Schlägern an derselben Stelle und ändern nur die Standbreite – so spielten Hogan und Nicklaus. Wähle ein System und bleib dabei." },
     ],
     quiz: {
@@ -568,10 +588,11 @@ export const LEKTIONEN = [
     kern: "Am Top sind die Schultern etwa 90° gedreht – der Rücken zeigt zum Ziel.",
     bild: "topProfi",
     karten: [
-      { text: "3D-Messungen (GOLFTEC): Tourspieler drehen die Schultern am Top etwa 90°, bei P2 schon ca. 60°. Die Hüfte dreht bei P2 ca. 25–30°, bei vielen Freizeitspielern höchstens 15°.", bild: "messwerte" },
+      { text: "3D-Messungen (GOLFTEC): Tourspieler drehen die Schultern am Top etwa 90°, bei P2 schon ca. 60°. Die Hüfte dreht bei P2 ca. 25–30°, bei vielen Freizeitspielern höchstens 15°.", bild: "messwerteTop" },
       { text: "Die Hüfte dreht auf der Stelle. Wenig seitliches Schieben (Sway) am Top gehört laut GOLFTEC zu sechs Merkmalen, die mit gutem Spiel zusammenhängen. Die App misst das als Verschiebung.", bild: "foto:top" },
       { text: "Am Top liegen bei Tourspielern ca. 70–80 % des Drucks auf dem rechten Fuß. Das linke Handgelenk ist flach – Amateure strecken es im Schnitt ca. 10° mehr, das öffnet die Schlagfläche." },
       { text: "Die linke Schulter steht am Top tiefer: Tourspieler haben ca. 36° Schulterneigung, hohe Handicaps ca. 30°. Mehr Neigung hilft, den Ball von oben zu treffen." },
+      { text: "Die App misst am Top auch, wie hoch die Hände über der Schulter stehen. Zu hoch heißt oft: Die Arme heben den Schläger, statt dass der Oberkörper dreht." },
     ],
     quiz: {
       frage: "Wie weit drehen Tourspieler die Schultern am Top etwa?",
@@ -596,6 +617,8 @@ export const LEKTIONEN = [
       { text: "3D-Messungen (TPI) zeigen: Becken, Brustkorb, Arme und Schläger erreichen ihr Höchsttempo nacheinander. Jedes Glied bremst dann ab und gibt Energie weiter. Der Schläger ist im Treffmoment am schnellsten." },
       { text: "Druck zuerst nach links: Gute Spieler verlagern ihn gleich zu Beginn des Abschwungs. Bei einem gemessenen Tourspieler sank der Druck rechts im ersten Moment von ca. 80 % auf ca. 50 %." },
       { text: "Häufiger Fehler laut GOLFTEC: Schultern und Arme starten den Abschwung. Dann kommt der Schläger von außen – Slice oder Pull. Ein Bild dafür: Die Hüfte startet, die Arme fallen nach unten." },
+      { text: "Winkel halten (Lag): Der Winkel zwischen linkem Arm und Schaft bleibt im Abschwung lange erhalten. Frühes Auflösen kostet Länge und führt zu fetten oder dünnen Treffern." },
+      { text: "Aber: Lag entsteht durch die richtige Reihenfolge, nicht durch bewusstes Festhalten. Übe deshalb die Abfolge – und dass das Gewicht am Ende links ist, wie in der Übung unten." },
     ],
     quiz: {
       frage: "Welches Glied erreicht im Abschwung zuerst sein Höchsttempo?",
@@ -603,9 +626,9 @@ export const LEKTIONEN = [
       richtig: 0,
       erklaerung: "Die Kette läuft vom Becken über Brust und Arme zum Schläger. Der Schläger ist erst im Treffmoment am schnellsten.",
     },
-    uebung: { tipp: { id: "fuehrungsarmTreff", messwert: 140 } },
+    uebung: { tipp: { id: "gewicht", messwert: 0.5 } },
     kennzahlen: ["gewicht"],
-    quellen: ["vollschwung:TPI1", "vollschwung:TPI2", "vollschwung:RS1", "vollschwung:SC1", "vollschwung:GT3"],
+    quellen: ["vollschwung:TPI1", "vollschwung:TPI2", "vollschwung:RS1", "vollschwung:SC1", "vollschwung:GT3", "vollschwung:HM4"],
     beleg: "messung",
   },
   {
@@ -616,9 +639,12 @@ export const LEKTIONEN = [
     kern: "Im Treffmoment: Hüfte zum Ziel geöffnet, beim Eisen die Hände vor dem Ball.",
     bild: "treffProfi",
     karten: [
-      { text: "Die Hüfte ist im Treffmoment bei Tourspielern ca. 36° zum Ziel geöffnet, bei hohen Handicaps nur ca. 20°. Das sind 3D-Messungen von GOLFTEC.", bild: "messwerte" },
+      { text: "Die Hüfte ist im Treffmoment bei Tourspielern ca. 36° zum Ziel geöffnet, bei hohen Handicaps nur ca. 20°. Das sind 3D-Messungen von GOLFTEC.", bild: "messwerteTreff" },
       { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher.", bild: "foto:nach-dem-treffen" },
       { text: "Die Vorneigung bleibt bis zum Treffen, der Po bleibt hinten. Richtet sich der Körper auf (Early Extension), bleibt die Fläche laut GOLFTEC oft offen – ein häufiger Grund für Slices." },
+      { text: "Linker Arm lang: Knickt er, wird der Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge sind dünne oder getoppte Bälle." },
+      { text: "Kopf hinter dem Ball, vor allem beim Driver. Wandert er vor den Ball, kommt der Schläger steil von oben. Die App misst Kopfhöhe und Kopf seitlich." },
+      { text: "So übst du: langsam vom Top in die Treffposition schwingen und anhalten. Im Spiegel prüfen: Hüfte offen, Hände vor dem Ball, Po hinten. Danach dasselbe mit Ball." },
     ],
     quiz: {
       frage: "Wie weit ist die Hüfte bei Tourspielern im Treffmoment zum Ziel geöffnet?",
@@ -643,6 +669,7 @@ export const LEKTIONEN = [
       { text: "Ein ruhiges Finish ist die Folge eines guten Ablaufs. Test: Kannst du es halten, bis der Ball landet? Die App-Übung „Finish 3 Sekunden“ trainiert genau das." },
       { text: "Rhythmus 3 : 1: Der Rückschwung dauert etwa dreimal so lang wie der Abschwung. John Novosel maß bei Tourspielern zum Beispiel ca. 0,8 zu 0,27 Sekunden.", bild: "zeitbalken" },
       { text: "Eine Yale-Messung bestätigt: Tourspieler liegen bei ca. 2,5 bis 3,5 : 1 und schwingen sehr gleichmäßig. Wichtig ist also ein gleichmäßiger Rhythmus, nicht besonders langsames Schwingen." },
+      { text: "Übung Mitzählen: „und – eins – zwei – drei“ bis zum Top, „vier“ im Treffen. Laut der Yale-Messung streuen Freizeitspieler im Rhythmus viel stärker als Tourspieler." },
     ],
     quiz: {
       frage: "Wie lange dauert der Rückschwung bei guten Spielern im Vergleich zum Abschwung?",
@@ -665,7 +692,9 @@ export const LEKTIONEN = [
     karten: [
       { text: "Eisen: Der tiefste Punkt liegt nach dem Ball – erst Ball, dann Boden. TrackMan-Richtwerte für den Eintreffwinkel: 6er-Eisen ca. −3°, Pitching Wedge ca. −4°." },
       { text: "Driver: Der Ball liegt auf dem Tee, du triffst ihn leicht aufwärts. Laut TPI bringen bei ca. 160 km/h Schlägerkopftempo +5° statt −5° rund 23 m mehr Flugweite." },
-      { text: "Beim Driver liegt der Ball an der Innenseite der linken Ferse, der Stand ist breiter. Tee-Höhe: Die halbe Ballhöhe schaut über die Oberkante des Schlägerkopfs." },
+      { text: "Beim Driver liegt der Ball an der Innenseite der linken Ferse. Tee-Höhe: Die halbe Ballhöhe schaut über die Oberkante des Schlägerkopfs." },
+      { text: "Stand und Neigung: Mit dem Driver etwas breiter als schulterbreit und mehr Neigung vom Ziel weg. Mit dem Eisen etwa schulterbreit und weniger Neigung." },
+      { text: "Gefühl: Mit dem Eisen „durch den Ball nach unten“, mit dem Driver „den Ball vom Tee fegen“. Beim Driver bleibt der Kopf im Treffen deutlich hinter dem Ball." },
       { text: "Der männliche Durchschnittsamateur trifft den Driver laut TrackMan mit ca. −1,6° und fliegt ca. 187 m. Mit optimalem Abflug wären bei gleichem Tempo ca. 208 m möglich." },
     ],
     quiz: {
