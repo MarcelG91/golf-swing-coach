@@ -1167,8 +1167,10 @@ pre.vorschau {
 
 /* Fortschritt (Meine Schwünge → 📈 Fortschritt): Filter, Kästen, Diagramme.
    Farben nur über die Variablen oben, damit Hell und Dunkel stimmen. */
-.fortschritt-filter { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
-.fortschritt-filter label { display: grid; gap: 4px; font-size: 0.85rem; color: var(--text-leise); }
+/* Ansicht und Schläger: zwei schmale Knopfzeilen (Segmente wie bei Hell/Dunkel) */
+.fortschritt-filter { display: grid; grid-template-columns: 2fr 3fr; gap: 8px; margin-bottom: 12px; }
+.fortschritt-filter .segmente { margin: 0; }
+.fortschritt-filter .segmente label { padding: 8px 2px; font-size: 0.85rem; }
 .fortschritt-kasten {
   margin: 0 0 12px; padding: 12px; background: var(--flaeche);
   border: 1px solid var(--rand); border-radius: var(--r); box-shadow: var(--schatten);
@@ -1176,15 +1178,29 @@ pre.vorschau {
 .fortschritt-kasten h3 { margin: 0 0 6px; font-size: 1rem; }
 .fortschritt-kasten p { margin: 0 0 6px; }
 .fortschritt-kasten ul { margin: 0; padding-left: 20px; }
+.fortschritt-kasten .klein { font-size: 0.8rem; margin: 6px 0 0; }
+/* Meilensteine als kleine Abzeichen nebeneinander */
+.abzeichen { display: flex; flex-wrap: wrap; gap: 6px; }
+.abzeichen span { padding: 4px 10px; border-radius: 999px; background: var(--skala-gut); font-size: 0.85rem; font-weight: 600; }
 .trend-besser { color: var(--gut); font-weight: 700; }
 .trend-schlechter { color: var(--verbessern); font-weight: 700; }
+.verlauf-zeile { font-size: 0.85rem; color: var(--text-leise); }
+.verlauf-tage { display: flex; justify-content: space-between; margin: 2px 0 0 36px !important; font-size: 0.75rem; color: var(--text-leise); }
 .verlauf-bild { width: 100%; height: auto; display: block; margin-top: 4px; }
-.verlauf-bild .band-gut { fill: var(--gut); fill-opacity: 0.15; }
-.verlauf-bild .band-achtung { fill: var(--achtung); fill-opacity: 0.15; }
-.verlauf-bild .band-verbessern { fill: var(--verbessern); fill-opacity: 0.15; }
+.verlauf-bild .band-gut { fill: var(--gut); fill-opacity: 0.28; }
+.verlauf-bild .band-achtung { fill: var(--achtung); fill-opacity: 0.2; }
+.verlauf-bild .band-verbessern { fill: var(--verbessern); fill-opacity: 0.1; }
+.verlauf-bild .hilfslinie { stroke: var(--rand); stroke-width: 1; }
+.verlauf-bild .hilfslinie.grenze { stroke: var(--gut); stroke-dasharray: 3 3; }
+.verlauf-bild .skala-zahl { fill: var(--text-leise); font-size: 10px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
 .verlauf-bild .punkt-gut { fill: var(--gut); }
 .verlauf-bild .punkt-achtung { fill: var(--achtung); }
 .verlauf-bild .punkt-verbessern { fill: var(--verbessern); }
+/* Wert liegt außerhalb der Skala: als Ring am Rand */
+.verlauf-bild .randwert { fill: var(--flaeche); stroke-width: 2; }
+.verlauf-bild .punkt-verbessern.randwert { stroke: var(--verbessern); }
+.verlauf-bild .punkt-achtung.randwert { stroke: var(--achtung); }
+.verlauf-bild .punkt-gut.randwert { stroke: var(--gut); }
 .verlauf-bild .mittellinie { fill: none; stroke: var(--text); stroke-width: 2; stroke-linejoin: round; }
 
 /* Vorher/Nachher: zwei Bilder nebeneinander (auf dem iPhone je ca. 160 px breit) */
