@@ -90,6 +90,28 @@ function baukasten() {
   };
 }
 
+// Balken je Messgröße: oben Tourspieler, darunter Freizeitspieler. Der Maßstab passt sich dem
+// größten Wert an, damit auch 90° Schulterdrehung ins Bild passen.
+function messwerteBild(zeilen) {
+  const b = baukasten();
+  const massstab = 200 / Math.max(...zeilen.map((z) => z.tour));
+  b.rechteck(12, 14, 14, 8, "akzent", "akzent", 2);
+  b.text([30, 22], "Tourspieler", { anker: "start", groesse: 10 });
+  b.rechteck(122, 14, 14, 8, "text-leise", "text-leise", 2);
+  b.text([140, 22], "hohes Handicap / Freizeit", { anker: "start", groesse: 10 });
+  zeilen.forEach((z, i) => {
+    const y = 46 + i * 44;
+    b.text([12, y], z.name, { anker: "start", fett: true });
+    b.rechteck(12, y + 6, z.tour * massstab, 10, "akzent", "akzent", 3);
+    b.text([18 + z.tour * massstab, y + 15], z.tourText, { anker: "start", groesse: 10 });
+    b.rechteck(12, y + 20, z.frei * massstab, 10, "text-leise", "text-leise", 3);
+    b.text([18 + z.frei * massstab, y + 29], z.freiText, { anker: "start", groesse: 10, farbe: "text-leise" });
+  });
+  const unten = 46 + zeilen.length * 44;
+  b.text([160, unten + 4], "3D-Messungen von GOLFTEC, gerundet", { farbe: "text-leise", groesse: 10 });
+  return { ausschnitt: { x: 0, y: 6, breite: 320, hoehe: unten + 6 }, elemente: b.elemente };
+}
+
 // Pfeilspitze am Ende der Strecke von → bis (zwei kurze Linien)
 function pfeilspitze(b, von, bis, farbe, laenge = 8) {
   const w = Math.atan2(bis[1] - von[1], bis[0] - von[0]);
@@ -365,28 +387,19 @@ const SCHAUBILDER = {
   },
 
   // Lektionen „Rückschwung“ und „Treffmoment“: 3D-Messwerte Tourspieler vs. hohe Handicaps
-  messwerte() {
-    const b = baukasten();
-    const massstab = 5; // 1° = 5 Bildpunkte
-    b.rechteck(12, 14, 14, 8, "akzent", "akzent", 2);
-    b.text([30, 22], "Tourspieler", { anker: "start", groesse: 10 });
-    b.rechteck(122, 14, 14, 8, "text-leise", "text-leise", 2);
-    b.text([140, 22], "hohes Handicap / Freizeit", { anker: "start", groesse: 10 });
-    const zeilen = [
-      { name: "Hüftdrehung bei P2", tour: 27.5, tourText: "25–30°", frei: 15, freiText: "höchstens 15°" },
+  // Messwerte Tourspieler gegen Freizeitspieler (3D, GOLFTEC) – je Lektion nur die Zahlen, um die
+  // es auf der Karte geht (Feedback 14.10.: ein Bild mit drei Werten passte nie ganz zum Text)
+  messwerteTop() {
+    return messwerteBild([
+      { name: "Schulterdrehung am Top", tour: 90, tourText: "ca. 90°", frei: 70, freiText: "10–30° weniger" },
+      { name: "Hüftdrehung bei P2 (Schaft waagerecht)", tour: 27.5, tourText: "25–30°", frei: 15, freiText: "höchstens 15°" },
       { name: "Schulterneigung am Top", tour: 36, tourText: "ca. 36°", frei: 30, freiText: "ca. 30°" },
-      { name: "Hüfte offen im Treffmoment", tour: 36, tourText: "ca. 36°", frei: 20, freiText: "ca. 20°" },
-    ];
-    zeilen.forEach((z, i) => {
-      const y = 46 + i * 44;
-      b.text([12, y], z.name, { anker: "start", fett: true });
-      b.rechteck(12, y + 6, z.tour * massstab, 10, "akzent", "akzent", 3);
-      b.text([18 + z.tour * massstab, y + 15], z.tourText, { anker: "start", groesse: 10 });
-      b.rechteck(12, y + 20, z.frei * massstab, 10, "text-leise", "text-leise", 3);
-      b.text([18 + z.frei * massstab, y + 29], z.freiText, { anker: "start", groesse: 10, farbe: "text-leise" });
-    });
-    b.text([160, 190], "3D-Messungen von GOLFTEC, gerundet", { farbe: "text-leise", groesse: 10 });
-    return { ausschnitt: { x: 0, y: 6, breite: 320, hoehe: 190 }, elemente: b.elemente };
+    ]);
+  },
+  messwerteTreff() {
+    return messwerteBild([
+      { name: "Hüfte zum Ziel geöffnet im Treffmoment", tour: 36, tourText: "ca. 36°", frei: 20, freiText: "ca. 20°" },
+    ]);
   },
 
   // Lektion „Abschwung“: kinematische Kette – vier Glieder erreichen nacheinander ihr Höchsttempo
