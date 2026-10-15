@@ -293,7 +293,8 @@ const LANDEZONE = {
   name: "Landezone",
   wiederholungen: 10,
   schritte: [
-    "Handtuch ein paar Schritte weit aufs Grün legen.",
+    "Du brauchst ein Handtuch oder eine Schlägerhülle als Ziel.",
+    "Lege es ein paar Schritte vor dich auf den Boden.",
     "Chippen: Wie viele Bälle landen auf dem Handtuch?",
     "Rollen sie bis zum Loch? Sonst Handtuch verschieben.",
   ],
@@ -302,9 +303,9 @@ const LEITER = {
   name: "Leiter",
   wiederholungen: 10,
   schritte: [
-    "Zielzone abstecken: ca. 3 m entfernt, 1,5 m tief.",
-    "Jeder Ball bleibt hinter dem vorigen liegen.",
-    "Alle Bälle bleiben in der Zone.",
+    "Zwei Schläger als Zone: 3 m und 4,5 m entfernt.",
+    "Jeder Ball soll weiter rollen als der vorige.",
+    "Zähle, wie viele nacheinander in der Zone bleiben.",
   ],
 };
 
@@ -429,10 +430,10 @@ export const LEKTIONEN = [
       name: "Zwei Stäbe",
       wiederholungen: 10,
       schritte: [
-        "Einen Stab auf die Ziellinie hinter den Ball legen.",
-        "Zweiten Stab parallel an die Fußspitzen legen.",
-        "Schläger quer vor die Schultern: parallel zu den Stäben?",
-        "Schläge machen, die Stäbe bleiben liegen.",
+        "Du brauchst zwei Schläger oder Stäbe als Schienen.",
+        "Einer liegt neben dem Ball und zeigt zum Ziel.",
+        "Der zweite liegt parallel dazu an deinen Fußspitzen.",
+        "Schultern und Hüfte zeigen wie die Schienen.",
       ],
     },
     kennzahlen: [],

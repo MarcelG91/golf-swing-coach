@@ -46,8 +46,8 @@ Beim **Ansprechen** (stillstehende Haltung) sind Körperhinweise in Ordnung.
 | `oberkoerperTreff` | Rechte Schulter runter, nicht raus | innen + Verneinung | „Schlägerkopf kommt von innen“ (fachlich prüfen) |
 | `hueftSway` | Drehen statt schieben | innen | „Hüfte dreht wie auf einem Drehteller“ (Bild steht schon im Gefühl-Text) |
 | `tempo` schnell (Rückschwung unter ca. 0,7 s) | Drei zurück, eins runter | Rhythmus | bleibt ✓ |
-| `tempo` zögerlich (Abschwung über ca. 0,35 s oder Rückschwung ab 0,7 s bei Verhältnis unter 2,4) | Ruhig zurück, zügig durch | Rhythmus | neu (F6) |
-| `tempo` langsam | Schwingen wie ein Pendel | Bild | bleibt ✓ |
+| `tempo` zögerlich (Abschwung über ca. 0,35 s oder Rückschwung ab 0,7 s bei Verhältnis unter 2,4) | Ruhig zurück, frei durch | Rhythmus | neu (F6) |
+| `tempo` langsam | Lang zurück, kurz durch (vorher „Pendel“: 1 : 1 widerspricht dem Ziel 3 : 1) | Bild | geändert 0.48.2 |
 | `kopfhoehe` hoch | Rechtes Knie bleibt gebeugt | innen | „Unter der Decke bleiben“ (Bild) – prüfen |
 | `kopfhoehe` tief | **Nicht** in die Knie gehen | Verneinung | „Größe halten“ oder „Höhe halten wie ein Aufzug, der stehen bleibt“ |
 | `kopfSeitlich` vorBall | Kopf hinter dem Ball | außen (Ball) | bleibt ✓ |
