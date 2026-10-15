@@ -105,8 +105,12 @@ Schläger soll **auf** der Linie eintreten. Dann einen Ball knapp **vor** die Li
   rund **zwei Drittel** des Unterschieds aus, Putten nur ca. 15 % [PG1].
   (Korrigiert 01.10.: Hier stand „90er-Spieler verliert ca. 6 Schläge bei Annäherung/kurzem Spiel, ca. 2 beim
   Putten“ – das steht weder in [BRO1] noch in [ARC1].)
-- Für Einsteiger bleibt das kurze Spiel trotzdem der **schnellste Hebel**: Hier gibt es viele leichte
-  Schläge rund ums Grün, die man mit wenig Übung sicherer macht („Quick Wins“) [PG1].
+- Auch bei Spielern über 97 Schlägen kommen gut die Hälfte (ca. **56 %**) der verlorenen Schläge aus dem
+  langen Spiel, ca. **44 %** aus Putten, kurzem Spiel und Bunker (eigene Rechnung aus der Tabelle in
+  [BRO2008], Vergleich mit einem Scratch-Spieler).
+- Trotzdem raten Einsteiger-Leitfäden und Trainer, mit dem kurzen Spiel zu beginnen: Hier gibt es viele
+  leichte Schläge rund ums Grün, die man mit wenig Übung sicherer macht („Quick Wins“) [PG1]. Das ist
+  **Trainermeinung**, nicht durch Strokes-Gained-Daten belegt (Korrektur 15.10.: stand als „schnellster Hebel“).
 
 ## Quellen
 
@@ -122,6 +126,7 @@ Schläger soll **auf** der Linie eintreten. Dann einen Ball knapp **vor** die Li
 - [HM1] HackMotion: How to hit a bunker shot – https://hackmotion.com/tips-for-bunker-shots/
 - [MGS1] MyGolfSpy: Bunker shots explained – https://mygolfspy.com/news-opinion/bunker-shots-explained/
 - [GOLF2] GOLF.com: 10 ways to simplify greenside bunker shots – https://golf.com/instruction/bunker-shots/10-ways-simplify-greenside-bunker-shots/
+- [BRO2008] Broadie (2008), Science and Golf V: Assessing golfer performance using Golfmetrics, ca. 40.000 Schläge von über 130 Golfern (Volltext gelesen; **Stufe A**) – https://business.columbia.edu/sites/default/files-efs/pubfiles/2851/broadie_wscg_v_200802.pdf
 - [BRO1] Mark Broadie: Every Shot Counts (2014); Zusammenfassung The DIY Golfer – https://www.thediygolfer.com/reviews/every-shot-counts-book-review
 - [ARC1] Arccos: Strokes Gained – https://www.arccosgolf.com/blogs/community/strokes-gained-future-improvement-golf
 - [PG1] Practical Golf: Pros vs. Joes – https://practical-golf.com/pros-vs-joes

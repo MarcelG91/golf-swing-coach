@@ -339,7 +339,7 @@ export const AUSRUESTUNG = [
   {
     id: "schaft",
     titel: "Schaft: der richtige Flex",
-    text: "Die Härte des Schafts richtet sich nach deinem Schlägerkopftempo mit dem Driver. Die Grenzen sind nicht genormt. Ist der Schaft zu steif, fliegt der Ball oft zu flach und nach rechts.",
+    text: "Die Härte des Schafts richtet sich nach deinem Schlägerkopftempo mit dem Driver. Die Grenzen sind nicht genormt. In Studien wirkt der Flex nur wenig, je Spieler verschieden: am ehesten auf Tempo und Loft, nicht auf die Richtung.",
     tabelle: {
       kopf: ["Flex", "Tempo mit dem Driver"],
       zeilen: [
@@ -351,7 +351,7 @@ export const AUSRUESTUNG = [
       ],
     },
     lektion: null,
-    quellen: ["ausruestung:MGS1", "ausruestung:GOLF1", "ausruestung:LR1", "ausruestung:FJ1"],
+    quellen: ["ausruestung:MGS1", "ausruestung:GOLF1", "ausruestung:WOR2012", "ausruestung:BET2012"],
     beleg: "zwei-quellen",
   },
   {

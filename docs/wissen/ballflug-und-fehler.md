@@ -110,8 +110,10 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 
 - **Ursache**: Tiefster Punkt **vor** (hinter) dem Ball – oft Gewicht bleibt rechts, „Schaufeln“ mit den
   Händen, oder der Bogen ist zu tief [AY2].
-- Wichtig: Wer **fett und getoppt** abwechselnd schlägt, hat oft kein Problem mit dem tiefsten Punkt,
-  sondern mit der **Bogenhöhe** (Aufrichten/Absacken) [AY2][HM1].
+- Wichtig: Wechseln sich **fett und getoppt** ab, liegt der tiefste Punkt meist **hinter dem Ball**: Mal trifft
+  der Schläger zuerst den Boden, mal steigt er schon wieder. Erste Hilfe laut Adam Young (Trainer): den
+  tiefsten Punkt nach vorn bringen (Linien-Übung unten). Seltener fehlt die Kontrolle der **Bogenhöhe**
+  (Aufrichten/Absacken) [AY2].
 - **Übungen** [HM1][HM2]:
   1. **Linien-Übung**: Linie auf den Boden (Spray, Kreide, Handtuchkante). Ohne Ball schwingen – der
      Schläger soll den Boden **auf oder vor** der Linie berühren. Dann Ball auf die Linie legen

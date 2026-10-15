@@ -12,8 +12,12 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 - **Streuung akzeptieren**: Jeder Spieler hat ein Muster, wo seine Bälle landen (eine Ellipse). Selbst
   Tourspieler treffen nicht „auf den Punkt“. Das Ziel so wählen, dass **möglichst viel der Ellipse** in
   sicherem Gelände liegt [MGS1][PG2].
-- **Erwartungen**: Durchschnittliche Amateure landen aus **150–175 Yards (137–160 m)** im Schnitt ca.
-  **8,5 m** von der Fahne, aus 100–125 Yards ca. 6 m [PG1]. Ein Grün zu treffen ist schon ein Erfolg.
+- **Erwartungen**: **Tourspieler** landen aus **150–175 Yards (137–160 m)** im Schnitt ca. **8,5 m** von der
+  Fahne [PG1] – das ist kein Maßstab für Freizeitspieler. Mit Handicap 10 trifft man laut Arccos-Daten
+  (Firmenmessung, Stichprobe nicht genannt) aus 125–149 Yards (ca. 115–135 m) ca. **43 %** der Grüns und liegt im
+  Schnitt ca. **19 m** von der Fahne [ARC2023]. Ein Grün zu treffen ist schon ein Erfolg.
+  (Korrektur 15.10.: Hier stand „durchschnittliche Amateure“ – [PG1] nennt die Werte für einen typischen
+  PGA-Tour-Spieler.)
 - **„Kleines Ziel, kleiner Fehler“ stimmt beim Driver nicht**: In einer Studie (Christina & Alpenfels,
   32 Golfer, Hcp 1–30) trafen Spieler mit dem **ganzen Fairway als Ziel** öfter das Fairway (67 % statt
   50 %) und schlugen weiter als mit einem kleinen Zielpunkt [LS1].
@@ -85,7 +89,8 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 ## Quellen
 
 - [MGS1] MyGolfSpy: Cracking the course-management code with DECADE – https://mygolfspy.com/news-opinion/cracking-the-course-management-code-with-decade/
-- [PG1] Practical Golf: Approach shot strategy – https://practical-golf.com/approach-shot-strategy
+- [PG1] Practical Golf: Approach shot strategy (**Stufe C**, Blog; Tour-Werte ohne Quellenangabe) – https://practical-golf.com/approach-shot-strategy
+- [ARC2023] Arccos: Top 3 approach stats to know about your golf game (16.11.2023; **Stufe C**, Firmendaten, Volltext gelesen) – https://ca.arccosgolf.com/blogs/community/top-3-approach-stats-to-know-about-your-golf-game
 - [PG2] Practical Golf: DECADE – Scott Fawcett – https://practical-golf.com/decade-scott-fawcett/
 - [PG3] Practical Golf: Iron vs. driver off the tee – https://practical-golf.com/iron-vs-driver-off-tee
 - [LS1] Lou Stagner Newsletter #77: Does „aim small, miss small“ really work? – https://newsletter.loustagnergolf.com/p/does-aim-small-miss-small-really-work

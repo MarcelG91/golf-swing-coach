@@ -222,7 +222,7 @@ Reihenfolge (je eigener Branch):
 
 Bericht: `docs/wissen/recherche/reports/Golfwissen auf Forschungsniveau.md` (Kernliteratur, Mängelliste mit Nummern,
 Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
-1. **F1–F4, F7, F8** falsche Aussagen in `docs/wissen/` und `wissen.js` korrigieren (inkl. Quiz).
+1. ~~**F1–F4, F7, F8** falsche Aussagen in `docs/wissen/` und `wissen.js` korrigieren (inkl. Quiz).~~ – **erledigt mit 0.47.2** (Branch `wissen-korrekturen-falsch`; neue Quellen WOR2012, BET2012, ARC2023, BRO2008, CHU2010 mit Stufe; INJ1–INJ3 richtig beschriftet).
 2. **F5** `gewicht` heißt, was es misst (Hüfte im Finish), **F6** Tempo-Tipp nach absoluten Zeiten statt nur Verhältnis.
 3. **Schwellen S1–S4** (`hueftSway`, `seitneigungAnsprechen`, `kopfSeitlich`; `oberkoerperTreff` und `kopfhoehe` erst an
    `tests/daten/` kalibrieren). Ändert die Bewertung gespeicherter Schwünge.

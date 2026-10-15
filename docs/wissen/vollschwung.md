@@ -33,8 +33,13 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 - **Drehen statt schieben**: Tourspieler drehen die Schultern am Top **etwa 90°**. Schon bei P2 (Schaft
   waagerecht) haben sie ca. **60°** Schulter- und **25–30°** Hüftdrehung; viele Freizeitspieler drehen die
   Hüfte dort höchstens 15° und die Schultern 10–30° weniger [GT1][PGA1].
-- **Schulterneigung am Top**: Tourspieler ca. **36°** (linke Schulter tiefer), hohe Handicaps ca. 29–30°
-  [GOLF1][PGA1]. Mehr Neigung hilft, den Ball von oben zu treffen. (App: `oberkoerperTop`.)
+- **Schulterlinie am Top**: GOLFTEC misst die Neigung der **Schulterlinie** (linke Schulter tiefer): Tourspieler
+  ca. **36°**, hohe Handicaps ca. 29–30° (Firmenangabe, **Stufe C**) [GOLF1][PGA1]. Das ist **nicht** die Größe,
+  die die App misst.
+- **Rumpf am Top** (App: `oberkoerperTop`): Die App misst die **Rumpfachse** (Hüftmitte → Schultermitte).
+  In einer 3D-Studie mit 308 Golfern war sie am Top im Mittel **3,9 ± 7,4°** vom Ziel weg geneigt [CHU2010].
+  Die App-Grenze (gut ab −3°) liegt etwa eine Standardabweichung unter diesem Mittel – eine eigene Festlegung.
+  (Korrektur 15.10.: Hier stand der GOLFTEC-Wert der Schulterlinie als Vergleich für `oberkoerperTop`.)
 - **Kein seitliches Ausweichen (Sway)**: Die Hüfte dreht, rutscht aber nicht nach rechts über den Fuß
   hinaus. „Hip sway at top“ ist einer der sechs GOLFTEC-Faktoren, die mit gutem Spiel zusammenhängen [GT2].
   (App: `hueftSway`.)
@@ -118,7 +123,7 @@ halbe Ballhöhe über der Oberkante des Schlägerkopfs [GOLF2][VC1].
 |---|---|---|---|
 | Schulterdrehung am Top | ca. 90° | 10–30° weniger | [GT1][PGA1] |
 | Hüftdrehung bei P2 | 25–30° | ≤ 15° | [GT1] |
-| Schulterneigung am Top | 36° | 29–30° | [GOLF1] |
+| Schulterlinie geneigt am Top | 36° | 29–30° | [GOLF1] |
 | Hüfte offen im Treffen | ca. 36° | ca. 20° | [GOLF1][PGA1] |
 | „Shoulder Bend“ im Finish | 32° | ca. 3° | [GOLF1] |
 | Druck rechts am Top | 70–80 % | – | [RS1][RG1] |
@@ -141,6 +146,7 @@ einem Video – Werte sind nicht 1 : 1 übertragbar (siehe offene Punkte in `doc
 - [GT2] GOLFTEC SwingTRU (Pressemitteilung, 13.440 Schwünge) – https://www.prnewswire.com/news-releases/golftec-unveils-big-data-insight-via-swingtru-motion-study-300250390.html
 - [GT3] GOLFTEC: How to stop slicing your driver – https://www.golftec.com/blog-posts/how-to-stop-slicing-your-driver-the-3-biomechanical-causes-backed-by-14-million-swings
 - [PGA1] = [GT1]
+- [CHU2010] Chu, Sell & Lephart (2010), J Sports Sciences 28: The relationship between biomechanical variables and driving performance, 308 Golfer, 3D (Volltext gelesen; **Stufe A**) – https://people.stfx.ca/smackenz/Courses/HK396/Handouts/Chu%202010%20The%20relationship%20between%20biomechanical%20variables%20and%20driving%20performance.pdf
 - [GOLF1] GOLF.com: GOLFTEC swing formula tilt – turn – bend – https://golf.com/instruction/golftec-golf-swing-formula-tilt-turn-bend/
 - [RS1] RotarySwing: The 4 pressure shifts – https://rotaryswing.com/c4/112537-the-4-pressure-shifts-of-the-modern-golfer
 - [RG1] Ground Reaction Force Analysis of Golf Swings (Studie) – https://www.researchgate.net/publication/237050331_Ground_Reaction_Force_Analysis_of_Golf_Swings_using_Force_Plate_Data

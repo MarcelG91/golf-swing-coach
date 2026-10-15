@@ -383,7 +383,7 @@ const SCHAUBILDER = {
     return messwerteBild([
       { name: "Schulterdrehung am Top", tour: 90, tourText: "ca. 90°", frei: 70, freiText: "10–30° weniger" },
       { name: "Hüftdrehung bei P2 (Schaft waagerecht)", tour: 27.5, tourText: "25–30°", frei: 15, freiText: "höchstens 15°" },
-      { name: "Schulterneigung am Top", tour: 36, tourText: "ca. 36°", frei: 30, freiText: "ca. 30°" },
+      { name: "Schulterlinie geneigt am Top", tour: 36, tourText: "ca. 36°", frei: 30, freiText: "ca. 30°" },
     ]);
   },
   messwerteTreff() {

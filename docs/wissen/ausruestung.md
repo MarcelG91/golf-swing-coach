@@ -4,8 +4,8 @@ Kapitel 11 der Wissensseite. **Keine Markenwerbung in der App** – hier nur Gru
 
 ## Kernsatz für die App
 
-> **Der Schwung zuerst, dann die Schläger.** Aber: Ein zu steifer Schaft oder zu lange Schläger machen
-> das Lernen unnötig schwer.
+> **Der Schwung zuerst, dann die Schläger.** Aber: Schläger, die nicht zu Größe und Tempo passen (z. B. zu
+> lang), machen das Lernen unnötig schwer.
 
 ## 1. Welche Schläger am Anfang? (🌱)
 
@@ -30,8 +30,10 @@ Die Schaft-Härte („Flex“) richtet sich nach der **Schlägerkopfgeschwindigk
 | S (Stiff) | 97–104 mph (156–167 km/h) |
 | X (Extra Stiff) | ab ca. 105 mph (169 km/h) |
 
-- **Zu steifer** Schaft → Ball fliegt zu flach, oft nach rechts (Fade), kostet Länge [LR1][FJ1].
-  (Gestrichen 01.10.: „bis 10–15 Yards“ – in den erreichbaren Quellen nicht nachprüfbar.)
+- **Der Flex wirkt in Studien wenig**: In einer Doppelblind-Studie mit 40 Golfern änderte er weder Flächenwinkel
+  noch Bahn, am ehesten Tempo und Loft im Treffmoment – je Spieler verschieden [WOR2012]. Bei 20 Golfern hatte
+  die Schaftsteifigkeit allein „keinen bedeutsamen Effekt“ [BET2012]. Die verbreitete Regel „zu steif → Ball
+  nach rechts“ ist nicht belegt (Korrektur 15.10.). Als Richtwert bleibt das Tempo-Raster oben.
 - Flex ist **nicht genormt** – die Grenzen sind je nach Hersteller unterschiedlich, nur ein Anhaltspunkt [MGS1].
 - In der App gerundet in km/h: L unter ca. 115 · A ca. 115–135 · R ca. 135–155 · S ca. 155–170 · X ab ca. 170.
 
@@ -84,8 +86,8 @@ Die Schaft-Härte („Flex“) richtet sich nach der **Schlägerkopfgeschwindigk
 - [MGS4] MyGolfSpy: Blade versus mallet putters – what the data actually says – https://mygolfspy.com/news-opinion/blade-versus-mallet-putters-what-the-data-actually-says/
 - [GIUK1] Golf Insider UK: What loft driver should I use? – https://golfinsideruk.com/driver-loft/
 - [GOLF2] GOLF.com: 5 reasons why you need to consider a mallet putter – https://golf.com/gear/putters/5-reasons-consider-mallet-putter/
-- [LR1] The Left Rough: Signs you need a stiffer shaft (zu steif / zu weich) – https://theleftrough.com/signs-you-need-a-stiffer-shaft/
-- [FJ1] Fairway Jockey: What happens if a golf shaft is too stiff? – https://fairwayjockey.com/blogs/news/what-happens-if-a-golf-shaft-is-too-stiff-1
+- [WOR2012] Worobets & Stefanyshyn (2012), Sports Biomechanics 11(2): Studie zum Schaftflex mit 40 Golfern, doppelblind (nur Abstract gelesen; **Stufe A**) – https://lida.sport-iat.de/ta/Record/4025713
+- [BET2012] Betzler, Monk, Wallace & Otto (2012), Sports Biomechanics: Effects of golf shaft stiffness on strain, clubhead presentation and wrist kinematics, R&A-Studie mit 20 Golfern (Abstract + Einleitung gelesen; **Stufe A**) – https://people.stfx.ca/smackenz/Courses/DirectedStudy/Articles/Betzler%202012%20Effects%20of%20golf%20shaft%20stiffness%20on%20strain,%20clubhead%20presentation%20and%20wrist%20kinematics.pdf
 - [NCG1] National Club Golfer: Should you always use the same golf ball? – https://www.nationalclubgolfer.com/equipment/balls/golf-ball-lower-scores/
 - [G360A] Golf 360 (Scott Pickett, PGA): Should you use the same golf ball every round? – https://golf360.co.nz/blogs/scotts-corner/should-you-use-the-same-golf-ball
 - [GOLF3] GOLF.com: The biggest misconception about club fitting – https://golf.com/gear/biggest-misconception-about-club-fitting/
