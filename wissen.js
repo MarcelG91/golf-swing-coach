@@ -277,7 +277,7 @@ export const PFADE = [
   {
     id: "start",
     level: "einsteiger",
-    titel: "Start: Vom ersten Schlag zur Platzreife",
+    titel: "Start: Die Grundlagen",
     beschreibung: "Schläger, Griff, Haltung, erster Putt und Chip, die wichtigsten Regeln.",
   },
   {
@@ -548,7 +548,8 @@ export const LEKTIONEN = [
     kern: "Spiel den Ball, wie er liegt, und den Platz, wie du ihn vorfindest.",
     bild: "pfahlfarben",
     karten: [
-      { text: "Weiße Pfähle: Aus – zurück zur Stelle des letzten Schlags, 1 Strafschlag (Regel 18.2). Gelbe und rote Pfähle: Penalty Area, Erleichterung kostet 1 Strafschlag (Regel 17)." },
+      { text: "Weiße Pfähle bedeuten Aus: Du spielst von der Stelle des letzten Schlags noch einmal, dazu 1 Strafschlag (Regel 18.2)." },
+      { text: "Gelbe und rote Pfähle markieren eine Penalty Area (Strafzone, meist Wasser). Mit 1 Strafschlag lässt du den Ball woanders aus Kniehöhe fallen (droppen). Bei Rot auch seitlich daneben (Regel 17)." },
       { text: "Ball nach 3 Minuten Suche nicht gefunden: Er gilt als verloren. Wer das ahnt, sagt vorher an: „Ich spiele einen provisorischen Ball“ (Regel 18.3)." },
       { text: "Auf dem Grün darfst du den Ball markieren, aufnehmen und reinigen. Pitchmarken und Spikespuren darfst du ausbessern, die Fahne darf im Loch bleiben (Regel 13)." },
       { text: "Etikette: Divots zurücklegen, Pitchmarken ausbessern, Bunker harken. Ruhig stehen, wenn jemand schlägt. Fliegt ein Ball auf Menschen zu: laut „Fore!“ rufen." },
