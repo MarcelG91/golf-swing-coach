@@ -152,7 +152,7 @@ gut: Gute Ausgangsposition hinter dem Ball
 ### Oberkörper am Top (frontal)
 
 - **kurz:** Oberkörper kippt am Top zum Ziel
-- **warum:** Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft und belastet den unteren Rücken.
+- **warum:** Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft.
 - **gedanke:** Brustbein bleibt hinter dem Ball
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Brustbein hinter Ball
 - **Übung: Spiegel-Check** · 10×
@@ -191,6 +191,8 @@ gut: Hüfte dreht auf der Stelle
 
 ### Tempo (beide Ansichten)
 
+Welche Spielart erscheint, hängt bei Verhältnis < 2,4 : 1 von den **Zeiten** ab (Bericht F6): Abschwung über ca. 0,35 s → „Abschwung dauert zu lange“; sonst Rückschwung unter ca. 0,7 s → „hastig“; sonst („Rückschwung ab 0,7 s, Verhältnis trotzdem klein“) → „Abschwung dauert zu lange“. Ab 2,4 : 1 gilt „zu zäh“.
+
 **Rückschwung zu schnell**
 
 - **kurz:** Rückschwung zu hastig
@@ -201,6 +203,14 @@ gut: Hüfte dreht auf der Stelle
   1. Starte den Rückschwung auf „und“.
   2. „Eins – zwei – drei“: auf „drei“ bist du oben.
   3. Ohne Pause: auf „vier“ ist der Ball getroffen.
+
+**Abschwung zu lang**
+
+- **kurz:** Abschwung dauert zu lange
+- **warum:** Dein Abschwung dauert im Vergleich zum Rückschwung lange. Gute Spieler brauchen für den Abschwung etwa ein Drittel der Rückschwung-Zeit.
+- **gedanke:** Ruhig zurück, zügig durch
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Zügig durchschwingen
+- **Übung: Mitzählen** · 10× (wie oben)
 
 **Rückschwung zu langsam**
 
@@ -264,18 +274,20 @@ gut: Kopfhöhe bleibt stabil
 
 gut: Kopf bleibt hinter dem Ball
 
-### Gewichtsverlagerung (frontal)
+### Balance im Finish (frontal, Kennung `gewicht`)
 
-- **kurz:** Gewicht bleibt hinten
-- **warum:** Bleibt das Gewicht hinten, fehlt Kraft im Treffmoment. Der Ball fliegt oft zu hoch oder zur Seite weg.
+Gemessen wird nur die Hüftlage im Finish (0 % hinterer, 100 % vorderer Fuß) – kein Druck und nichts über den Treffmoment (Bericht F5).
+
+- **kurz:** Hüfte bleibt im Finish hinten
+- **warum:** Im Finish stehen gute Spieler ruhig auf dem vorderen Fuß, die Hüfte darüber. Bei dir bleibt die Hüfte weiter hinten.
 - **gedanke:** Finish halten
-- **wort (Live-Rahmen, ≤ 3 Wörter):** Gewicht nach vorn
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Balance im Finish
 - **Übung: Finish 3 Sekunden** · 10×
   1. Nach dem Schlag im Finish stehen bleiben.
-  2. Gewicht links, rechter Fuß nur auf der Spitze.
+  2. Hüfte über dem linken Fuß, rechter Fuß nur auf der Spitze.
   3. Gürtelschnalle zum Ziel – 3 Sekunden halten.
 
-gut: Gewicht im Finish vorn
+gut: Hüfte im Finish über dem vorderen Fuß
 
 ### Vorneigung halten (von hinten)
 

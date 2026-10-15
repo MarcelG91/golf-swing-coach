@@ -119,7 +119,7 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
      Schläger soll den Boden **auf oder vor** der Linie berühren. Dann Ball auf die Linie legen
      [HM1][HM2]. Auch GOLF.com: Bälle knapp vor eine Linie, das Divot liegt vor der Linie [GOLF3].
   2. **Handtuch-Übung**: Gefaltetes Handtuch 15–25 cm hinter den Ball. Wer es berührt, trifft zu früh.
-- **App-Bezug**: `gewicht` (Gewichtsverlagerung), `kopfhoehe`.
+- **App-Bezug**: `gewicht` (Balance im Finish; misst nur die Hüftlage, keinen Druck), `kopfhoehe`.
 
 ### Shank (🌿) – Ball schießt fast rechtwinklig nach rechts
 

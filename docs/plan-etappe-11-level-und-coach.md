@@ -59,7 +59,7 @@ Werte deiner alten Schwünge also schon da.
 | 🌱 | Arme beim Ansprechen | hinten | Abstand zum Ball – „nach dem Ball greifen“ ist ein Anfängerklassiker |
 | 🌱 | Tempo | beide | Ruhiger Rhythmus statt Schlagen aus dem Top |
 | 🌱 | Armschwung am Top | vorne | „Drehen statt Arme heben“ – die wichtigste Bewegungsidee |
-| 🌱 | Gewichtsverlagerung | vorne | Im Finish auf dem vorderen Fuß stehen = Gleichgewicht |
+| 🌱 | Balance im Finish (früher „Gewichtsverlagerung“) | vorne | Im Finish auf dem vorderen Fuß stehen = Gleichgewicht |
 | 🌿 | Seitneigung beim Ansprechen | vorne | Feinheit der Ansprechhaltung |
 | 🌿 | Schulterdrehung am Top | vorne | Mehr Drehung, sobald „drehen statt heben“ sitzt |
 | 🌿 | Hüfte im Rückschwung (Sway) | vorne | Drehen ohne seitliches Schieben |

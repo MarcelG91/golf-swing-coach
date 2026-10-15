@@ -18,7 +18,7 @@ Stand 30.09.2026. Grundlage: alle Dateien in `docs/wissen/` und die heutigen Tex
 | `hueftBall`, `vorneigungHalten` – Early Extension | GOLFTEC: messbar bei vielen Slicern; Ursache für Shanks; TPI | `ballflug-und-fehler.md` |
 | `tempo` – 3 : 1 | Tour Tempo (Novosel) | `vollschwung.md` |
 | `kopfhoehe`, `kopfSeitlich` mit Spielraum | Ralph Mann: Kopf wandert ca. 5 cm nach hinten; „Kopf unten“ ist ein Irrtum | `irrtuemer.md` |
-| `gewicht` – Finish vorn | Druck am Top 70–80 % rechts, im Treffmoment links | `vollschwung.md` |
+| `gewicht` – Balance im Finish (Hüfte über dem vorderen Fuß; misst die Hüftlage, keinen Druck) | Druck am Top 70–80 % rechts, im Treffmoment links – gilt nur als Hintergrund, nicht als Beleg für die Kennzahl | `vollschwung.md` |
 | Eine Baustelle pro Karte, ein Schwunggedanke | Motorisches Lernen: ein Fokus zur Zeit | `richtig-ueben.md` |
 
 ## 2. Vorschläge zur Verbesserung der Texte 🟡
@@ -45,7 +45,8 @@ Beim **Ansprechen** (stillstehende Haltung) sind Körperhinweise in Ordnung.
 | `oberkoerperTop` | Brustbein bleibt hinter dem Ball | gemischt (Ball) | bleibt ✓ |
 | `oberkoerperTreff` | Rechte Schulter runter, nicht raus | innen + Verneinung | „Schlägerkopf kommt von innen“ (fachlich prüfen) |
 | `hueftSway` | Drehen statt schieben | innen | „Hüfte dreht wie auf einem Drehteller“ (Bild steht schon im Gefühl-Text) |
-| `tempo` schnell | Drei zurück, eins runter | Rhythmus | bleibt ✓ |
+| `tempo` schnell (Rückschwung unter ca. 0,7 s) | Drei zurück, eins runter | Rhythmus | bleibt ✓ |
+| `tempo` zögerlich (Abschwung über ca. 0,35 s oder Rückschwung ab 0,7 s bei Verhältnis unter 2,4) | Ruhig zurück, zügig durch | Rhythmus | neu (F6) |
 | `tempo` langsam | Schwingen wie ein Pendel | Bild | bleibt ✓ |
 | `kopfhoehe` hoch | Rechtes Knie bleibt gebeugt | innen | „Unter der Decke bleiben“ (Bild) – prüfen |
 | `kopfhoehe` tief | **Nicht** in die Knie gehen | Verneinung | „Größe halten“ oder „Höhe halten wie ein Aufzug, der stehen bleibt“ |

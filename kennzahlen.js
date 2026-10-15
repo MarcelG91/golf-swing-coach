@@ -145,8 +145,9 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     });
 
     // -------------------------------------------------------------
-    // 4a. Gewichtsverlagerung (frontal): Wo steht die Hüfte im Finish?
-    //     0 % = über dem hinteren Fuß, 100 % = über dem vorderen Fuß
+    // 4a. Balance im Finish (frontal): Wo steht die Hüfte im Finish?
+    //     0 % = über dem hinteren Fuß, 100 % = über dem vorderen Fuß.
+    //     Gemessen wird nur die Hüftlage – kein Druck und nichts über den Treffmoment (Kennung bleibt "gewicht").
     // -------------------------------------------------------------
     const kl = punkt(A, KNOECHEL_L), kr = punkt(A, KNOECHEL_R);
     const hintererFuss = (kl.x - kr.x) * ziel > 0 ? kr : kl;
@@ -156,7 +157,7 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
       const anteil = (hueftMitte(F).x - hintererFuss.x) / standbreite;
       const bw = anteil >= 0.85 ? "gut" : anteil >= 0.65 ? "achtung" : "verbessern";
       kennzahlen.push({
-        name: "Gewichtsverlagerung",
+        name: "Balance im Finish",
         wert: `${zahl(Math.max(0, Math.min(1.2, anteil)) * 100, 0)} %`,
         detail: "Hüftposition im Finish: 0 % = hinterer Fuß, 100 % = vorderer Fuß",
         messwert: rund(anteil),

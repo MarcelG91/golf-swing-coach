@@ -15,6 +15,30 @@
 
 import { seiten } from "./technik.js";
 
+// Tempo: Zeiten, ab denen die Ursache eines kleinen Verhältnisses (< 2,4 : 1) klar ist.
+// Eigene Festlegung nach Grober & Cholewicki 2006 (Profis: Rückschwung 0,7–0,8 s) und
+// Grober 2010 (Hcp 25: 0,83 s zurück, 0,43 s runter = 1,9 : 1 durch einen langsamen Abschwung).
+// Bei 30 Bildern pro Sekunde sind die Zeiten auf etwa ±0,03 s genau.
+const HASTIG_RUECKSCHWUNG_S = 0.7;
+const LANGER_ABSCHWUNG_S = 0.35;
+
+// Rückschwung- und Abschwungzeit stehen als Text in "detail" ("Rückschwung 0,83 s · Abschwung 0,43 s").
+// Daraus lesen wir sie wieder aus – das klappt auch bei Schwüngen, die vor dieser Version gespeichert wurden.
+function tempoZeiten(k) {
+  const treffer = /Rückschwung (\d+,\d+) s.*Abschwung (\d+,\d+) s/.exec(k.detail || "");
+  if (!treffer) return null;
+  return { rueckschwung: Number(treffer[1].replace(",", ".")), abschwung: Number(treffer[2].replace(",", ".")) };
+}
+
+// Kleines Verhältnis heißt NICHT immer "Rückschwung zu hastig": Es kann auch an einem langen Abschwung liegen.
+// Hastig ist nur, wer wirklich schnell zurückschwingt und dessen Abschwung nicht auffällig lang ist.
+function tempoKleinesVerhaeltnis(k) {
+  const zeiten = tempoZeiten(k);
+  if (!zeiten) return "schnell"; // ohne Zeiten (z. B. Beispieldaten) bleibt es beim bisherigen Verhalten
+  if (zeiten.abschwung > LANGER_ABSCHWUNG_S) return "zoegerlich";
+  return zeiten.rueckschwung < HASTIG_RUECKSCHWUNG_S ? "schnell" : "zoegerlich";
+}
+
 // ---------------------------------------------------------------
 // Welche Spielart des Fehlers liegt vor? (z. B. zu aufrecht ODER zu weit vorgebeugt)
 // Wird aus Messwert und Bewertung abgeleitet – so klappt es auch mit Schwüngen,
@@ -26,7 +50,7 @@ export function variante(k) {
     case "armeAnsprechen": return w > 0 ? "vorn" : "nah";
     case "vorneigungAnsprechen": return w < 25 ? "aufrecht" : "vorgebeugt";
     case "seitneigungAnsprechen": return w < 0 ? "zumZiel" : "zuWeit";
-    case "tempo": return w < 2.4 ? "schnell" : "langsam";
+    case "tempo": return w < 2.4 ? tempoKleinesVerhaeltnis(k) : "langsam";
     case "kopfhoehe": return w > 0.08 ? "hoch" : "tief";
     case "kopfSeitlich": return w > 0.08 ? "vorBall" : "schieben";
     default: return "";
@@ -38,6 +62,13 @@ export function variante(k) {
 // z. B. s.h = "rechte", s.hen = "rechten", s.f = "linke". Siehe seiten() in technik.js.
 // ---------------------------------------------------------------
 const gross = (text) => text[0].toUpperCase() + text.slice(1);
+
+// Übung für beide Tempo-Fehler mit kleinem Verhältnis (Takt nach Tour Tempo, 3 : 1)
+const MITZAEHLEN = { name: "Mitzählen", wiederholungen: 10, schritte: [
+  "Starte den Rückschwung auf „und“.",
+  "„Eins – zwei – drei“: auf „drei“ bist du oben.",
+  "Ohne Pause: auf „vier“ ist der Ball getroffen.",
+] };
 
 const TIPPS = {
   armeAnsprechen: {
@@ -155,7 +186,7 @@ const TIPPS = {
   oberkoerperTop: {
     "": () => ({
       kurz: "Oberkörper kippt am Top zum Ziel",
-      warum: "Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft und belastet den unteren Rücken.",
+      warum: "Kippt der Oberkörper zum Ziel, bleibt dein Gewicht vorne und du fällst im Abschwung nach hinten. Das kostet Kraft.",
       gedanke: "Brustbein bleibt hinter dem Ball",
       wort: "Brustbein hinter Ball",
       uebung: { name: "Spiegel-Check", wiederholungen: 10, schritte: [
@@ -204,11 +235,14 @@ const TIPPS = {
       warum: "Ein hastiger Rückschwung bringt Arme und Körper aus dem Takt. Gute Spieler brauchen zurück etwa dreimal so lange wie nach vorne.",
       gedanke: "Drei zurück, eins runter",
       wort: "Langsamer zurückschwingen",
-      uebung: { name: "Mitzählen", wiederholungen: 10, schritte: [
-        "Starte den Rückschwung auf „und“.",
-        "„Eins – zwei – drei“: auf „drei“ bist du oben.",
-        "Ohne Pause: auf „vier“ ist der Ball getroffen.",
-      ] },
+      uebung: MITZAEHLEN,
+    }),
+    zoegerlich: () => ({
+      kurz: "Abschwung dauert zu lange",
+      warum: "Dein Abschwung dauert im Vergleich zum Rückschwung lange. Gute Spieler brauchen für den Abschwung etwa ein Drittel der Rückschwung-Zeit.",
+      gedanke: "Ruhig zurück, zügig durch",
+      wort: "Zügig durchschwingen",
+      uebung: MITZAEHLEN,
     }),
     langsam: () => ({
       kurz: "Rückschwung zu zäh",
@@ -275,17 +309,17 @@ const TIPPS = {
 
   gewicht: {
     "": (s) => ({
-      kurz: "Gewicht bleibt hinten",
-      warum: "Bleibt das Gewicht hinten, fehlt Kraft im Treffmoment. Der Ball fliegt oft zu hoch oder zur Seite weg.",
+      kurz: "Hüfte bleibt im Finish hinten",
+      warum: "Im Finish stehen gute Spieler ruhig auf dem vorderen Fuß, die Hüfte darüber. Bei dir bleibt die Hüfte weiter hinten.",
       gedanke: "Finish halten",
-      wort: "Gewicht nach vorn",
+      wort: "Balance im Finish",
       uebung: { name: "Finish 3 Sekunden", wiederholungen: 10, schritte: [
         "Nach dem Schlag im Finish stehen bleiben.",
-        `Gewicht ${s.f === "linke" ? "links" : "rechts"}, ${s.her} Fuß nur auf der Spitze.`,
+        `Hüfte über dem ${s.fen} Fuß, ${s.her} Fuß nur auf der Spitze.`,
         "Gürtelschnalle zum Ziel – 3 Sekunden halten.",
       ] },
     }),
-    gut: "Gewicht im Finish vorn",
+    gut: "Hüfte im Finish über dem vorderen Fuß",
   },
 
   vorneigungHalten: {
@@ -375,7 +409,7 @@ const SKALEN = {
   tempo: { von: 1.5, bis: 5.5, gut: [2.4, 4.0], achtung: [[2.0, 2.4], [4.0, 4.6]], einheit: " : 1", name: "Rückschwung : Abschwung" },
   kopfhoehe: { von: -60, bis: 30, gut: [-40, 8], achtung: [[8, 15], [-100, -40]], faktor: 100, einheit: " %", name: "Kopfhöhe" },
   kopfSeitlich: { von: -40, bis: 30, gut: [-100, 8], achtung: [[8, 15]], faktor: 100, einheit: " %", name: "Kopf Richtung Ziel" },
-  gewicht: { von: 0, bis: 120, gut: [85, 200], achtung: [[65, 85]], faktor: 100, einheit: " %", name: "Gewicht vorne" },
+  gewicht: { von: 0, bis: 120, gut: [85, 200], achtung: [[65, 85]], faktor: 100, einheit: " %", name: "Hüfte über vorderem Fuß" },
   vorneigungHalten: { von: -10, bis: 30, gut: [-100, 10], achtung: [[10, 15]], einheit: "°", name: "Aufgerichtet" },
   hueftBall: { von: -10, bis: 40, gut: [-100, 12], achtung: [[12, 22]], faktor: 100, einheit: " %", name: "Hüfte zum Ball" },
 };
