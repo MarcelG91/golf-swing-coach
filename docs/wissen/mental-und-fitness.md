@@ -79,12 +79,16 @@ Physiotherapie verweisen.
 
 ## 4. Rücken schonen (🌱)
 
-- **Häufigste Beschwerden**: Rücken (untere Lendenwirbelsäule) ist bei Golfern insgesamt die
-  häufigste Beschwerde (**15–34 %** der Verletzungen bei Amateuren). Bei Amateuren kommen **Ellbogen**
-  und **Schulter** hinzu [INJ1][INJ2].
-- Rund **83 %** der Golfverletzungen sind **Überlastung**, nicht Unfälle; fast die Hälfte der
-  Rückenverletzungen führten Betroffene auf einen **schlechten Schwung** zurück [INJ2][INJ3].
-- **Was hilft** (allgemein, nach Übersichtsarbeiten) [INJ3][INJ4]:
+- **Häufigste Stelle**: Der untere Rücken (Lendenwirbelsäule) ist bei Golfern die häufigste Beschwerde –
+  je nach Studie ca. **18–54 %** der Golf-Beschwerden [INJ3]. In einer Befragung von 1.634 australischen
+  Amateuren waren es **25 %** aller Verletzungen [INJ2], bei 140 portugiesischen Turnierspielern **27 %** [INJ1].
+- Die Beschwerden beginnen meist **schleichend** durch Wiederholung, nicht durch einen Unfall [INJ2]; in der
+  portugiesischen Studie nannten **67 %** wiederholte Bewegung als Mechanismus [INJ1].
+  (Korrektur 15.10.: Hier standen „15–34 %“ aus einem „Review“ sowie „83 % Überlastung“ und „fast die Hälfte
+  durch schlechten Schwung“. INJ1 ist eine Einzelstudie, und die 83 % und die „Hälfte“ stehen nicht im Abstract
+  von INJ2 – deshalb gestrichen, bis der Volltext geprüft ist. Auch „Ellbogen und Schulter“ ist nicht geprüft.)
+- **Was entlasten kann** (allgemein, nach Übersichtsarbeiten; keine Studie zeigt, dass es Rückenschmerz
+  verhindert) [INJ3][INJ4]:
   - Aufwärmen (siehe oben).
   - Kein übertriebenes **„umgekehrtes C“** im Finish (starkes Hohlkreuz).
   - Hüfte im Rückschwung **mitdrehen lassen** statt Schultern gegen eine blockierte Hüfte zu verdrehen.
@@ -107,7 +111,7 @@ Physiotherapie verweisen.
 - [TPI2] TPI: Sway – https://www.mytpi.com/improve-my-game/swing-characteristics/sway
 - [TPI3] Correlation of TPI Level 1 movement screens and golf swing faults (PubMed 24476744) – https://pubmed.ncbi.nlm.nih.gov/24476744/
 - [TPI4] TPI: The Toe Touch Test – https://www.mytpi.com/articles/screening/the-toe-touch-test
-- [INJ1] Epidemiology of musculoskeletal injuries in golf athletes (Review) – https://pmc.ncbi.nlm.nih.gov/articles/PMC11121686
-- [INJ2] Golf-related lower back injuries: an epidemiological survey – https://www.sciencedirect.com/science/article/abs/pii/S089934670700016X
-- [INJ3] Golf-related low back pain: a review of causative factors and prevention strategies – https://www.researchgate.net/publication/273148672
+- [INJ1] Minghelli et al. (2024), Int J Environ Res Public Health: Epidemiology of musculoskeletal injuries in golf athletes – a championship in Portugal (Einzelstudie, 140 Turnierspieler, Fragebogen; Abstract gelesen; **Stufe A**, kein Review) – https://pmc.ncbi.nlm.nih.gov/articles/PMC11121686
+- [INJ2] McHardy, Pollard & Luo (2007), J Chiropractic Medicine: Golf-related lower back injuries: an epidemiological survey (1.634 australische Amateure, Rückblick-Befragung; Abstract gelesen; **Stufe A**) – https://www.sciencedirect.com/science/article/abs/pii/S089934670700016X
+- [INJ3] Lindsay & Vandervoort (2014), Asian J Sports Medicine: Golf-related low back pain: a review of causative factors and prevention strategies (Review, Abstract gelesen; **Stufe A**) – https://pmc.ncbi.nlm.nih.gov/articles/PMC4335481 (zuvor ResearchGate-Link .../publication/273148672)
 - [INJ4] AAOS OrthoInfo: Golf injury prevention – https://www.orthoinfo.org/staying-healthy/golf-injury-prevention/

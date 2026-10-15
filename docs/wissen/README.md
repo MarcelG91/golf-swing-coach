@@ -41,8 +41,8 @@ Gesammeltes, mit Quellen belegtes Golfwissen für die Tipps der App und die gepl
 4. **„Kopf unten“** ist ein Irrtum – der Kopf wandert bei Profis im Rückschwung ca. 5 cm nach hinten.
 5. **Rhythmus 3 : 1** ist bei guten Spielern sehr gleich, die Geschwindigkeit nicht.
 6. Beim Putten entscheidet die **Länge**; ideal wäre ein Fehlputt ca. 40 cm hinter dem Loch (Pelz).
-7. Unterschiede zwischen Spielern entstehen zu **zwei Dritteln im langen Spiel** (Broadie) – Einsteiger
-   holen trotzdem im kurzen Spiel am schnellsten Schläge.
+7. Unterschiede zwischen Spielern entstehen zu **zwei Dritteln im langen Spiel** (Broadie) –
+   Einsteiger-Leitfäden raten trotzdem, im kurzen Spiel zu beginnen (Trainermeinung).
 8. **Auf die Grünmitte zielen**, Schläger nach dem hinteren Grünrand wählen – fast alle verfehlen zu kurz.
 9. **Äußerer Fokus**, **Bilder** und **positive** Formulierungen lernen sich besser als Körperanweisungen
    und Verbote; **verteilt** üben schlägt Dauerüben.

@@ -13,7 +13,7 @@ Stand 30.09.2026. Grundlage: alle Dateien in `docs/wissen/` und die heutigen Tex
 | `vorneigungAnsprechen` – aus der Hüfte kippen | „hinge from the hips, not your back“ | `grundlagen.md` |
 | `seitneigungAnsprechen` – rechte Schulter etwas tiefer, beim Driver mehr | Set-up nach Schläger | `grundlagen.md`, `vollschwung.md` |
 | `schulterdrehung` – volle Drehung | GOLFTEC: Tour ca. 90°, Amateure 10–30° weniger | `vollschwung.md` |
-| `oberkoerperTop` – Oberkörper nicht zum Ziel kippen | GOLFTEC: Schulterneigung am Top Tour 36° vs. 29° | `vollschwung.md` |
+| `oberkoerperTop` – Oberkörper nicht zum Ziel kippen | Chu 2010 (308 Golfer): rund 4° vom Ziel weg im Mittel, App-Grenze ≈ Mittel − 1 SD. Die GOLFTEC-Schulterlinie (36°) misst etwas anderes | `vollschwung.md` |
 | `hueftSway` – drehen statt schieben | GOLFTEC-Faktor „hip sway at top“; TPI | `vollschwung.md`, `mental-und-fitness.md` |
 | `hueftBall`, `vorneigungHalten` – Early Extension | GOLFTEC: messbar bei vielen Slicern; Ursache für Shanks; TPI | `ballflug-und-fehler.md` |
 | `tempo` – 3 : 1 | Tour Tempo (Novosel) | `vollschwung.md` |

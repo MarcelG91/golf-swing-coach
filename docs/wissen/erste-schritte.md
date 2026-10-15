@@ -5,8 +5,8 @@ Schläger ausführlich in `ausruestung.md`.
 
 ## Kernsatz für die App
 
-> **Erst den Ball treffen lernen, dann weit schlagen.** Kurzes Spiel und Putten bringen am Anfang die
-> schnellsten Erfolge.
+> **Erst den Ball treffen lernen, dann weit schlagen.** Einsteiger-Leitfäden raten, am Anfang viel Putten
+> und Chippen zu üben (Trainermeinung).
 
 ## 1. Der typische Weg (🌱)
 
@@ -25,7 +25,7 @@ Schläger ausführlich in `ausruestung.md`.
 mit Eisen. golf-mag.de rät in den ersten 8 Wochen zu rund **70 % der Übungszeit fürs kurze Spiel**, erst
 danach volle Schwünge an der Range [GM1]; ein Einsteiger-Programm nennt: Griff, Stand und Haltung, dann
 Putten und Chippen, dann Eisen-Schwung [BGL1]. Dazu passt Pelz (viele Schläge nahe am Grün) [PELZ1] und
-Practical Golf (schnellste Erfolge im kurzen Spiel, `kurzes-spiel.md` [PG1]).
+Practical Golf (leichte Schläge rund ums Grün, `kurzes-spiel.md` [PG1]).
 
 Feinere Reihenfolge, wie sie in vielen Platzreifekursen üblich ist (vom Loch weg) – **nur eine Quelle**
 [BGL1], deshalb in der App nicht als feste Regel:
@@ -67,8 +67,8 @@ Unterschied (stark abhängig vom Spieler).
   Spieler mit Handicap 0–25 treffen mit dem Hybrid öfter das Grün als mit dem gleichwertigen Eisen [ARC2].
   Test von Plugged In Golf (5 Spieler, je 27° Loft): Hybrid mit höchstem Scheitelpunkt, steilster Landung
   und kleineren Längen-Streuungen – aber Eisen waren etwas genauer in der Richtung [PIG2].
-- Gebrauchte Schläger sind völlig in Ordnung. Wichtig: **Schaft nicht zu steif**, Länge grob passend
-  (Größe und Armlänge).
+- Gebrauchte Schläger sind völlig in Ordnung. Wichtig: Länge grob passend
+  (Größe und Armlänge). Den Flex nicht überbewerten – in Studien wirkt er wenig (`ausruestung.md`).
 
 ## 5. Erwartungen realistisch halten (🌱)
 
@@ -77,8 +77,9 @@ Unterschied (stark abhängig vom Spieler).
 - Profis lochen aus 3 m nur ca. 40 % der Putts (siehe `putten.md`).
 - Nach Dave Pelz passieren **60–65 % aller Schläge innerhalb von 100 Yards (ca. 90 m)** zur Fahne
   [PELZ1]. Achtung: Das heißt nicht, dass dort die meisten Schläge **verloren** werden – Mark Broadie
-  zeigt, dass Unterschiede zwischen Spielern zu rund zwei Dritteln aus dem langen Spiel kommen (siehe
-  `kurzes-spiel.md`). Für Einsteiger bleibt das kurze Spiel trotzdem der schnellste Hebel.
+  zeigt, dass Unterschiede zwischen Spielern zu rund zwei Dritteln aus dem langen Spiel kommen; selbst
+  bei Spielern über 97 Schlägen sind es ca. 56 % (siehe `kurzes-spiel.md` [BRO2008]). „Schnellster Hebel“
+  fürs kurze Spiel ist eine Trainermeinung, keine Messung.
 
 ## Quellen
 

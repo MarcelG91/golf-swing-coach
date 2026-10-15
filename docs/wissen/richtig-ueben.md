@@ -102,7 +102,7 @@ Beispiel für 60 Minuten / ca. 50 Bälle (angepasst aus den Prinzipien oben):
 - **Range-Runde**: Den Platz im Kopf spielen – Fairway als Zone zwischen zwei Fahnen, Grün als Zone um
   eine Fahne. Punkte zählen.
 - Die Hälfte der Übungszeit darf kurzes Spiel/Putten sein – auch wenn Broadie zeigt, dass Annäherungen
-  mehr Schläge kosten (siehe `kurzes-spiel.md`), sind dort für Einsteiger die schnellsten Erfolge.
+  mehr Schläge kosten (siehe `kurzes-spiel.md`), raten Einsteiger-Leitfäden trotzdem dazu (Trainermeinung).
 
 ## 7. Üben mit der App (🌱)
 
