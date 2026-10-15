@@ -218,6 +218,19 @@ Reihenfolge (je eigener Branch):
     Quiet Eye in Zahlen, weitere Fokus-Beispiele, 3–7 von 10, differenziell üben, Beweglichkeit, Rücken). **Wissensseite D damit
     komplett** – offen nur ein gutes Foto der Ansprechhaltung und eigene Griff-Fotos.
 
+### 🟣 Wissen auf Forschungsniveau (Recherche 15.10., Feedback: „zu oberflächlich, Schärfe und Richtigkeit fehlen“)
+
+Bericht: `docs/wissen/recherche/reports/Golfwissen auf Forschungsniveau.md` (Kernliteratur, Mängelliste mit Nummern,
+Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
+1. **F1–F4, F7, F8** falsche Aussagen in `docs/wissen/` und `wissen.js` korrigieren (inkl. Quiz).
+2. **F5** `gewicht` heißt, was es misst (Hüfte im Finish), **F6** Tempo-Tipp nach absoluten Zeiten statt nur Verhältnis.
+3. **Schwellen S1–S4** (`hueftSway`, `seitneigungAnsprechen`, `kopfSeitlich`; `oberkoerperTreff` und `kopfhoehe` erst an
+   `tests/daten/` kalibrieren). Ändert die Bewertung gespeicherter Schwünge.
+4. S9–S12 als „eigene Festlegung“ kennzeichnen · 5. **U1–U31** präzisieren · 6. **Z1–Z21** als neue Karten.
+7. Eigene Fotos von Marcel (Ansprechen vorne/hinten, Griff ×3, Treffmoment, Putten – Anleitung im Bericht) und
+   `fotos.js` `LIZENZEN` um CC BY-SA 3.0/CC BY 2.0 erweitern (Bunker-Foto, Stroboskop-Bild).
+Ideen für später: Kennzahl „Schulterlinie am Top“, Bewertung je Schläger, Streuung je Kennzahl über mehrere Schwünge.
+
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 
 Frontkamera → Skelett live (26–36 ms pro Bild auf Marcels iPhone) → Schwung nach Schlag + Finish erkannt (ca. 2,2 s) →
@@ -255,7 +268,9 @@ nachjustieren. Front-/Rückkamera wählbar (0.35.0, `localStorage` `liveKamera`)
 - **Golfwissen:** `docs/wissen/` ist die belegte Grundlage für neue Tipps und die Wissensseite (jede Aussage mit
   Quelle). **Es gibt keine Golflehrer-Durchsicht** (Entscheidung 30.09.) – deshalb streng: In die App kommt nur, was
   durch Messdaten, Studie oder Regel belegt ist oder was mindestens zwei unabhängige Quellen gleich sagen;
-  Umstrittenes nur als „Trainer sind uneins“. Neue Schwunggedanken positiv, mit äußerem Fokus (Schläger/Ball/Ziel) oder als Bild formulieren –
+  Umstrittenes nur als „Trainer sind uneins“. **Seit 15.10. Quellen-Stufen:** A = begutachtete Studie, Messdaten, Regeln ·
+  B = Fachbuch, Verbandslehrplan · C = Blog/Magazin (nur Hinweis, nie alleiniger Beleg); Technik-Aussagen brauchen
+  mindestens eine Quelle A oder B; Tour-Werte nie als Amateur-Erwartung (Regeln im Recherche-Bericht). Neue Schwunggedanken positiv, mit äußerem Fokus (Schläger/Ball/Ziel) oder als Bild formulieren –
   keine Verbote („nicht …“), siehe `docs/wissen/richtig-ueben.md`.
 - **Tipps fachlich:** Golf-Technik muss stimmen (Marcels Anforderung: keine falsche Technik). Texte nur in
   `tipps.js` ändern, mit Quelle; danach Liste in `docs/plan-tipps-neu.md` neu erzeugen.

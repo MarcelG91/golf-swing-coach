@@ -362,6 +362,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `docs/sicherheit/` | Sicherheitsbericht mit allen Befunden und ihrem Status, Prüfprotokoll der Checks |
 | `docs/iphone-testliste.md` | Checkliste für den Praxistest auf dem iPhone (Analyse, mehrere Schwünge, Speichern, Aufräumen, Übungsmodus) |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
+| `docs/wissen/recherche/` | Tiefenrecherche 15.10.: Bericht mit Kernliteratur (Stufe A/B/C), Mängelliste der App (falsch, Schwellen, ungenau, fehlend), Schreibregeln und Foto-Empfehlungen; dazu die Notizen der 7 Teilrecherchen |
 | `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (komplett umgesetzt: 6 Lernpfade mit 40 Lektionen, Ballflug-Helfer, Nachschlagen) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
