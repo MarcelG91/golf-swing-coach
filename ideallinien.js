@@ -19,7 +19,7 @@
 // der Bewertung (technik.js / kennzahlen.js).
 export const IDEAL = {
   vorneigungAnsprechen: 35, // Grad nach vorne (gut: 25–45°)
-  seitneigungAnsprechen: 7, // Grad vom Ziel weg (gut: 0–20°)
+  seitneigungAnsprechen: 7, // Grad vom Ziel weg (gut: 0–15°)
   oberkoerperTop: 5, // Grad vom Ziel weg (gut: ab −3°)
   oberkoerperTreff: 13, // Grad vom Ziel weg (gut: ab 8°), Profi-Testschwung: 12–13°
   armschwungTop: 0.5, // Hände über der Schultermitte, in Rumpflängen (Profi: 0,45)

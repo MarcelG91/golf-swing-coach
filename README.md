@@ -488,7 +488,7 @@ Messungen an Profi- und Amateurschwüngen.
 |---|---|---|---|
 | Tempo | beide | Rückschwung : Abschwung | 2,4 – 4,0 : 1 |
 | Kopfhöhe | beide | Kopf beim Treffmoment höher als beim Ansprechen? (Aufrichten) | höchstens +8 % |
-| Kopf seitlich | frontal | Wandert der Kopf bis zum Treffmoment Richtung Ziel? | höchstens +8 % |
+| Kopf seitlich | frontal | Wandert der Kopf bis zum Treffmoment Richtung Ziel? Im Rückschwung zusätzlich: Weicht er am Top weit vom Ziel weg? (nur gelb) | höchstens +8 % · am Top höchstens 25 % vom Ziel weg |
 | Balance im Finish | frontal | Hüfte im Finish zwischen hinterem (0 %) und vorderem Fuß (100 %) – gemessen wird nur die Hüftlage, kein Druck | ab 85 % |
 | Vorneigung halten | von hinten | Verlust an Oberkörper-Vorneigung bis zum Treffmoment | höchstens 10° |
 | Hüfte Richtung Ball | von hinten | Schiebt die Hüfte im Abschwung zum Ball? („Early Extension“) | höchstens 12 % |
@@ -501,11 +501,11 @@ Messungen an Profi- und Amateurschwüngen.
 | Arme | Führungsarm im Treffmoment | frontal | Winkel am Ellbogen des vorderen Arms (180° = gestreckt) | ab 155° |
 | Arme | Armschwung am Top | frontal | Hände sehr hoch **und** wenig Schulterdrehung = „Arme heben statt drehen“ | Hände ≤ 75 % oder volle Drehung |
 | Oberkörper | Vorneigung beim Ansprechen | von hinten | Neigung Hüfte → Schultern nach vorne | 25–45° |
-| Oberkörper | Seitneigung beim Ansprechen | frontal | Oberkörper leicht vom Ziel weg (hintere Schulter tiefer) | 0–20° |
+| Oberkörper | Seitneigung beim Ansprechen | frontal | Oberkörper leicht vom Ziel weg (hintere Schulter tiefer) – eigene Festlegung, keine Studie zum Ansprechen | 0–15° |
 | Oberkörper | Oberkörper am Top | frontal | Neigt sich der Oberkörper zum Ziel? („umgekehrter Wirbelsäulenwinkel“) | höchstens 3° zum Ziel |
 | Oberkörper | Oberkörper im Treffmoment | frontal | Bleibt der Oberkörper hinter dem Ball? | ab 8° vom Ziel weg |
 | Drehung | Schulterdrehung am Top | frontal | Schätzung aus der Schulterbreite (siehe unten) | ab ca. 80° |
-| Drehung | Hüfte im Rückschwung | frontal | Schiebt die Hüfte zur Seite, statt zu drehen? („Sway“) | bis 15 % |
+| Drehung | Hüfte im Rückschwung | frontal | Schiebt die Hüfte zur Seite, statt zu drehen? („Sway“) | bis 10 % |
 
 ### Rot und Gelb im Video
 

@@ -270,7 +270,10 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // Positiv = Oberkörper vom Ziel weg geneigt (hintere Schulter tiefer) – so soll es sein.
     // -------------------------------------------------------------
     const seitAnsprechen = neigung(A, -ziel);
-    const bs = einstufen(seitAnsprechen, [0, 20], [[-6, 0], [20, 30]]);
+    // Eigene Festlegung (Bericht S3, 0.48.0): Für die Seitneigung beim Ansprechen gibt es keine Studie.
+    // Chu et al. 2010 messen sie nur am Top (3,9 ± 7,4° vom Ziel weg); 15° ist die Lehrbuch-Obergrenze
+    // ("nur leicht neigen"). Neigung zum Ziel (negativ) bleibt der klare Fehler; 2D-Messfehler ca. ±6–9°.
+    const bs = einstufen(seitAnsprechen, [0, 15], [[-6, 0], [15, 25]]);
     const sa = {
       id: "seitneigungAnsprechen",
       messwert: rund(seitAnsprechen), // Zahl für spätere Fortschrittskurven
@@ -279,7 +282,7 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       phase: "ansprechen",
       gewicht: 2.5,
       wert: `${seitAnsprechen < 0 ? "−" : ""}${grad(Math.abs(seitAnsprechen))}`,
-      detail: "Neigung des Oberkörpers vom Ziel weg (+) oder zum Ziel (−). Gut: 0 bis 20°",
+      detail: "Neigung des Oberkörpers vom Ziel weg (+) oder zum Ziel (−). Gut: 0 bis 15°",
       bewertung: bs,
     };
     if (bs !== "gut" && seitAnsprechen < 0) {
@@ -330,7 +333,10 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // Die Hüftmitte ist gut messbar, auch wenn die Hüftdrehung es nicht ist.
     // -------------------------------------------------------------
     const sway = ((hueftMitte(T).x - hueftMitte(A).x) * -ziel) / rumpf;
-    const bw = einstufen(sway, [-1, 0.15], [[0.15, 0.25]]);
+    // Gute Spieler stehen am Top fast über der Ansprechposition: im Mittel 2 ± 2 cm vom Ziel weg
+    // (Chu et al. 2010, 308 Golfer, 3D) = ca. 4 ± 4 % der Rumpflänge. 10 % liegt etwa 1,5 Standardabweichungen
+    // darüber. Nicht strenger: Die Hüftpunkte zittern im Bild um einige Prozent. Zum Ziel hin (negativ) ist es gut.
+    const bw = einstufen(sway, [-1, 0.10], [[0.10, 0.20]]);
     const w = {
       id: "hueftSway",
       messwert: rund(sway), // Zahl für spätere Fortschrittskurven
@@ -339,7 +345,7 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
       phase: "top",
       gewicht: 2,
       wert: prozent(Math.max(0, sway)),
-      detail: "Seitliche Verschiebung der Hüfte vom Ziel weg bis zum Top, in % der Rumpflänge. Gut: bis 15 %",
+      detail: "Seitliche Verschiebung der Hüfte vom Ziel weg bis zum Top, in % der Rumpflänge. Gut: bis 10 %",
       bewertung: bw,
     };
     if (bw !== "gut") {

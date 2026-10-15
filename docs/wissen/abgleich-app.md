@@ -11,13 +11,13 @@ Stand 30.09.2026. Grundlage: alle Dateien in `docs/wissen/` und die heutigen Tex
 |---|---|---|
 | `armeAnsprechen` – Arme hängen, eine Faust Platz | Set-up-Grundlagen; Faust-Check auch als Mittel gegen Shanks | `grundlagen.md`, `ballflug-und-fehler.md` |
 | `vorneigungAnsprechen` – aus der Hüfte kippen | „hinge from the hips, not your back“ | `grundlagen.md` |
-| `seitneigungAnsprechen` – rechte Schulter etwas tiefer, beim Driver mehr | Set-up nach Schläger | `grundlagen.md`, `vollschwung.md` |
+| `seitneigungAnsprechen` – rechte Schulter etwas tiefer, beim Driver mehr; App-Grenze gut 0–15° | Set-up nach Schläger (Lehrmeinung); Zahl ist eine **eigene Festlegung**, keine Studie zum Ansprechen (Chu 2010 misst am Top 3,9 ± 7,4°) | `grundlagen.md`, `vollschwung.md` |
 | `schulterdrehung` – volle Drehung | GOLFTEC: Tour ca. 90°, Amateure 10–30° weniger | `vollschwung.md` |
 | `oberkoerperTop` – Oberkörper nicht zum Ziel kippen | Chu 2010 (308 Golfer): rund 4° vom Ziel weg im Mittel, App-Grenze ≈ Mittel − 1 SD. Die GOLFTEC-Schulterlinie (36°) misst etwas anderes | `vollschwung.md` |
-| `hueftSway` – drehen statt schieben | GOLFTEC-Faktor „hip sway at top“; TPI | `vollschwung.md`, `mental-und-fitness.md` |
+| `hueftSway` – drehen statt schieben; App-Grenze gut bis 10 % | Chu 2010 (308 Golfer): Hüfte am Top 2 ± 2 cm vom Ziel weg (≈ 4 ± 4 %), Grenze ≈ Mittel + 1,5 SD; GOLFTEC-Faktor „hip sway at top“; TPI | `vollschwung.md`, `mental-und-fitness.md` |
 | `hueftBall`, `vorneigungHalten` – Early Extension | GOLFTEC: messbar bei vielen Slicern; Ursache für Shanks; TPI | `ballflug-und-fehler.md` |
 | `tempo` – 3 : 1 | Tour Tempo (Novosel) | `vollschwung.md` |
-| `kopfhoehe`, `kopfSeitlich` mit Spielraum | Ralph Mann: Kopf wandert ca. 5 cm nach hinten; „Kopf unten“ ist ein Irrtum | `irrtuemer.md` |
+| `kopfhoehe`, `kopfSeitlich` mit Spielraum | Ralph Mann: Kopf wandert ca. 5 cm nach hinten; „Kopf unten“ ist ein Irrtum. `kopfSeitlich` im Rückschwung: gelb ab 25 % vom Ziel weg, nie rot – Byrne & Kenny 2008 (n = 8): Hcp 4,5 ca. 11 %, Hcp 18 ca. 25 % | `irrtuemer.md`, `vollschwung.md` |
 | `gewicht` – Balance im Finish (Hüfte über dem vorderen Fuß; misst die Hüftlage, keinen Druck) | Druck am Top 70–80 % rechts, im Treffmoment links – gilt nur als Hintergrund, nicht als Beleg für die Kennzahl | `vollschwung.md` |
 | Eine Baustelle pro Karte, ein Schwunggedanke | Motorisches Lernen: ein Fokus zur Zeit | `richtig-ueben.md` |
 
