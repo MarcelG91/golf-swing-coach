@@ -60,7 +60,7 @@ Neuer vierter Knopf in der Leiste: **📖 Wissen**.
 
 Bild-Kürzel: **F** = Strichfigur aus Profi-Posen · **S** = neues Schaubild (Liste unten).
 
-### Pfad 1 · 🌱 Start: Vom ersten Schlag zur Platzreife (8 Lektionen)
+### Pfad 1 · 🌱 Start: Die Grundlagen (8 Lektionen; bis 0.48.3 „Vom ersten Schlag zur Platzreife“)
 | # | Lektion | Bild | Übung | Quelle (Datei) |
 |---|---|---|---|---|
 | 1 | Wie lernt man Golf? (Weg, Reihenfolge vom Loch weg) | S Weg-Grafik | – | `erste-schritte` |

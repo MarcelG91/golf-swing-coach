@@ -1813,7 +1813,9 @@ function zeigeBallflugHelfer() {
 
 // Kleiner Quellen-Block: „Belegt durch: …“ und die Quellen als Text (keine Links)
 function quellenBlock(beleg, kennungen, zusatz = "") {
-  const box = neu("div", "quellen");
+  // Zugeklappt: Die Quellen sind zum Nachprüfen da, nicht zum Lernen (Anfänger-Prüfung 15.10.)
+  const box = neu("details", "quellen");
+  box.append(neu("summary", "", "Quellen ansehen"));
   if (beleg) box.append(neu("p", "", `Belegt durch: ${BELEGE[beleg]}`));
   const liste = neu("ul");
   for (const kennung of kennungen) liste.append(neu("li", "", quelleText(kennung)));

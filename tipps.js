@@ -100,7 +100,7 @@ const TIPPS = {
   vorneigungAnsprechen: {
     aufrecht: () => ({
       kurz: "Du stehst zu aufrecht",
-      warum: "Stehst du aufrecht, dreht sich der Oberkörper eher waagerecht. Der Schwung wird flach, die Treffer oft dünn.",
+      warum: "Stehst du aufrecht, dreht sich der Oberkörper eher waagerecht. Der Schwung wird flach, die Treffer oft dünn (der Ball wird zu weit oben getroffen).",
       gedanke: "Aus der Hüfte kippen",
       wort: "Mehr vorneigen",
       uebung: SCHLAEGER_AM_RUECKEN(),
@@ -310,7 +310,7 @@ const TIPPS = {
   gewicht: {
     "": (s) => ({
       kurz: "Hüfte bleibt im Finish hinten",
-      warum: "Im Finish stehen gute Spieler ruhig auf dem vorderen Fuß, die Hüfte darüber. Bei dir bleibt die Hüfte weiter hinten.",
+      warum: `Im Finish (der Endposition nach dem Schlag) stehen gute Spieler ruhig auf dem ${s.fen} Fuß, die Hüfte darüber. Bei dir bleibt die Hüfte weiter hinten.`,
       gedanke: "Finish halten",
       wort: "Balance im Finish",
       uebung: { name: "Finish 3 Sekunden", wiederholungen: 10, schritte: [
