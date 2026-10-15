@@ -65,9 +65,9 @@ const gross = (text) => text[0].toUpperCase() + text.slice(1);
 
 // Übung für beide Tempo-Fehler mit kleinem Verhältnis (Takt nach Tour Tempo, 3 : 1)
 const MITZAEHLEN = { name: "Mitzählen", wiederholungen: 10, schritte: [
-  "Starte den Rückschwung auf „und“.",
-  "„Eins – zwei – drei“: auf „drei“ bist du oben.",
-  "Ohne Pause: auf „vier“ ist der Ball getroffen.",
+  "Sprich laut mit: „und – eins – zwei – drei – vier“.",
+  "Auf „und“ beginnt der Rückschwung, auf „drei“ bist du oben.",
+  "Fließend weiter: Auf „vier“ triffst du den Ball.",
 ] };
 
 const TIPPS = {
@@ -89,9 +89,9 @@ const TIPPS = {
       gedanke: "Eine Faust Platz",
       wort: "Etwas mehr Abstand",
       uebung: { name: "Faust-Check", wiederholungen: 5, schritte: [
-        "Ansprechhaltung mit Schläger.",
-        `${gross(s.h)} Hand als Faust zwischen Griffende und ${s.fen} Oberschenkel.`,
-        "Passt die Faust knapp hinein, stimmt der Abstand.",
+        "Ansprechhaltung mit einem Eisen.",
+        `${gross(s.h)} Hand lösen: als Faust zwischen Griffende und ${s.fen} Oberschenkel halten.`,
+        "Passt sie knapp, stimmt der Abstand. Hand zurück an den Griff.",
       ] },
     }),
     gut: "Arme hängen locker unter den Schultern",
@@ -240,18 +240,18 @@ const TIPPS = {
     zoegerlich: () => ({
       kurz: "Abschwung dauert zu lange",
       warum: "Dein Abschwung dauert im Vergleich zum Rückschwung lange. Gute Spieler brauchen für den Abschwung etwa ein Drittel der Rückschwung-Zeit.",
-      gedanke: "Ruhig zurück, zügig durch",
-      wort: "Zügig durchschwingen",
+      gedanke: "Ruhig zurück, frei durch",
+      wort: "Frei durchschwingen",
       uebung: MITZAEHLEN,
     }),
     langsam: () => ({
-      kurz: "Rückschwung zu zäh",
-      warum: "Ist der Rückschwung sehr zäh, fehlt der Schwung für den Rückweg. Der Abschwung wird dann hektisch oder zögerlich.",
-      gedanke: "Schwingen wie ein Pendel",
+      kurz: "Rückschwung sehr lang",
+      warum: "Dein Rückschwung dauert mehr als viermal so lange wie dein Abschwung. Als Richtwert gilt etwa dreimal so lange.",
+      gedanke: "Lang zurück, kurz durch",
       wort: "Flüssig schwingen",
-      uebung: { name: "Pendel", wiederholungen: 10, schritte: [
-        "Flüssig zurückschwingen, oben keine Pause.",
-        "Im gleichen Rhythmus durchschwingen.",
+      uebung: { name: "Langer Bogen", wiederholungen: 10, schritte: [
+        "Flüssig und gleichmäßig zurückschwingen bis oben.",
+        "Im selben Takt weiter bis zum Ball: „eins – zwei – drei – vier“.",
       ] },
     }),
     gut: "Rhythmus wie gute Spieler (3\u00a0:\u00a01)", // \u00a0 = Leerzeichen ohne Zeilenumbruch

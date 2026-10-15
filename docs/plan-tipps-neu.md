@@ -54,9 +54,9 @@ Formulierungen für Rechtshänder; die App setzt links/rechts für Linkshänder 
 - **gedanke:** Eine Faust Platz
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Etwas mehr Abstand
 - **Übung: Faust-Check** · 5×
-  1. Ansprechhaltung mit Schläger.
-  2. Rechte Hand als Faust zwischen Griffende und linken Oberschenkel.
-  3. Passt die Faust knapp hinein, stimmt der Abstand.
+  1. Ansprechhaltung mit einem Eisen.
+  2. Rechte Hand lösen: als Faust zwischen Griffende und linken Oberschenkel halten.
+  3. Passt sie knapp, stimmt der Abstand. Hand zurück an den Griff.
 
 gut: Arme hängen locker unter den Schultern
 
@@ -200,27 +200,27 @@ Welche Spielart erscheint, hängt bei Verhältnis < 2,4 : 1 von den **Zeiten** a
 - **gedanke:** Drei zurück, eins runter
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Langsamer zurückschwingen
 - **Übung: Mitzählen** · 10×
-  1. Starte den Rückschwung auf „und“.
-  2. „Eins – zwei – drei“: auf „drei“ bist du oben.
-  3. Ohne Pause: auf „vier“ ist der Ball getroffen.
+  1. Sprich laut mit: „und – eins – zwei – drei – vier“.
+  2. Auf „und“ beginnt der Rückschwung, auf „drei“ bist du oben.
+  3. Fließend weiter: Auf „vier“ triffst du den Ball.
 
 **Abschwung zu lang**
 
 - **kurz:** Abschwung dauert zu lange
 - **warum:** Dein Abschwung dauert im Vergleich zum Rückschwung lange. Gute Spieler brauchen für den Abschwung etwa ein Drittel der Rückschwung-Zeit.
-- **gedanke:** Ruhig zurück, zügig durch
-- **wort (Live-Rahmen, ≤ 3 Wörter):** Zügig durchschwingen
+- **gedanke:** Ruhig zurück, frei durch
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Frei durchschwingen
 - **Übung: Mitzählen** · 10× (wie oben)
 
 **Rückschwung zu langsam**
 
-- **kurz:** Rückschwung zu zäh
-- **warum:** Ist der Rückschwung sehr zäh, fehlt der Schwung für den Rückweg. Der Abschwung wird dann hektisch oder zögerlich.
-- **gedanke:** Schwingen wie ein Pendel
+- **kurz:** Rückschwung sehr lang
+- **warum:** Dein Rückschwung dauert mehr als viermal so lange wie dein Abschwung. Als Richtwert gilt etwa dreimal so lange.
+- **gedanke:** Lang zurück, kurz durch
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Flüssig schwingen
-- **Übung: Pendel** · 10×
-  1. Flüssig zurückschwingen, oben keine Pause.
-  2. Im gleichen Rhythmus durchschwingen.
+- **Übung: Langer Bogen** · 10×
+  1. Flüssig und gleichmäßig zurückschwingen bis oben.
+  2. Im selben Takt weiter bis zum Ball: „eins – zwei – drei – vier“.
 
 gut: Rhythmus wie gute Spieler (3 : 1)
 

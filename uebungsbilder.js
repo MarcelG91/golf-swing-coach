@@ -146,7 +146,7 @@ const BILDER = {
     { ...vorne(zaehlSchwung()), takt: true },
     { ...vorne(zaehlSchwung(), { ball: true }), takt: true },
   ],
-  "Pendel": [
+  "Langer Bogen": [
     vorne([{ pose: "ansprechen", dauer: 0, halten: 500 }, { pose: "halbRueck", dauer: 550 }, { pose: "top", dauer: 550 },
            { pose: "abschwung", dauer: 230 }, { pose: "treff", dauer: 110 }, { pose: "halbDurch", dauer: 160 }, { pose: "finish", dauer: 450, halten: 1200 }]),
     vorne(ganzerSchwung, { ball: true }),
