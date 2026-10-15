@@ -100,7 +100,8 @@ Blick auf die 2 Knöchel und das V. Geht auch vor dem Fernseher.
   (Manche Quellen sagen „auf den Ballen“ – gemeint ist dasselbe: nicht zurück auf die Fersen.)
 - **Seitneigung**: Weil die rechte Hand tiefer greift, steht die rechte Schulter etwas tiefer. Beim
   **Driver** mehr Neigung vom Ziel weg (Aufwärtsschlag), beim **Eisen** weniger [VES1]
-  (App: `seitneigungAnsprechen`).
+  (App: `seitneigungAnsprechen`: gut 0–15° vom Ziel weg. **Eigene Festlegung** – für die Seitneigung beim
+  Ansprechen gibt es keine Studie; Chu et al. 2010 [CHU2010] messen sie nur am Top.)
 - **Gewichtsverteilung links/rechts**: Mit Eisen etwa ausgeglichen – Druckmessplatten zeigen bei
   Tourspielern sogar leicht mehr Druck links (ca. 55/45) [SC1]. Beim Driver etwas mehr rechts, passend
   zur Seitneigung und zum Aufwärtsschlag [HM3]. Genaue Prozentwerte für den Driver sind nicht einheitlich

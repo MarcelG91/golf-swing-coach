@@ -57,9 +57,11 @@ test("Profi-Posen erfüllen die Grenzwerte der App (keine falsche Technik)", () 
   // Oberkörper im Treffmoment vom Ziel weg (gut 8–30°), am Top nicht zum Ziel (gut ab −3°)
   assert.ok(neigung(I) >= 8 && neigung(I) <= 30, `Neigung Treffmoment ${neigung(I)}`);
   assert.ok(neigung(T) >= -3, `Neigung Top ${neigung(T)}`);
-  // Hüfte schiebt im Rückschwung nicht zur Seite (gut bis 15 % der Rumpflänge)
+  // Seitneigung beim Ansprechen nicht zum Ziel und höchstens 15° vom Ziel weg (gut 0–15°)
+  assert.ok(neigung(A) >= 0 && neigung(A) <= 15, `Neigung Ansprechen ${neigung(A)}`);
+  // Hüfte schiebt im Rückschwung nicht zur Seite (gut bis 10 % der Rumpflänge)
   const sway = (mitte(A.hv, A.hh)[0] - mitte(T.hv, T.hh)[0]) / rumpf;
-  assert.ok(sway <= 0.15, `Sway ${sway}`);
+  assert.ok(sway <= 0.10, `Sway ${sway}`);
   // Treffmoment: Hände leicht vor dem Ball, Kopf hinter dem Ball, rechte Schulter tiefer
   assert.ok(I.hand[0] >= 100 && I.kopf[0] < 100);
   assert.ok(I.sh[1] > I.sv[1]);

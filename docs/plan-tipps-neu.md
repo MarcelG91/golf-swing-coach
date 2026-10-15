@@ -350,10 +350,14 @@ Für die animierten Übungsfiguren (Branch `uebungsmodus`) wichtig:
 
 Offene fachliche Punkte (nicht in diesem Branch):
 - Seitneigung beim Ansprechen: Beim Driver ist mehr Neigung richtig als beim Eisen – Grenzwerte
-  könnten den gespeicherten Schläger berücksichtigen.
+  könnten den gespeicherten Schläger berücksichtigen. Stand 0.48.0: gut 0–15°, gelb 15–25° und −6 bis 0° –
+  **eigene Festlegung** (keine Studie zum Ansprechen, Bericht S3).
+- Grenzen mit 0.48.0 (Bericht S1/S3/S4): Hüfte im Rückschwung gut bis 10 % (gelb bis 20 %); Kopf seitlich im
+  Rückschwung gelb ab 25 % vom Ziel weg (nie rot). Skala und Bewertung bleiben über `tests/tipps.test.mjs` gekoppelt.
 - Oberkörper im Treffmoment: Quellen nennen Werte für die **Schulterlinie** (GOLFTEC ca. 39°), die App
   misst die **Wirbelsäulenachse** (Profi-Testschwung 12–13°). Einen belegten 2D-Wert für die Achse
-  gibt es nicht – Grenze 8° beobachten.
+  gibt es nicht – Grenze 8° beobachten. Prüfung 15.10. (0.48.0): Profi 11,7° und Amateur 10,4° im Testschwung, beide
+  über 8° – zwei frontale Schwünge reichen nicht zum Kalibrieren, Grenze bleibt.
 - Absacken: Etwas Absinken des Kopfes ist bei Tourspielern normal (GOLFTEC) – die App erlaubt bis −40 %.
 
 ## Genauigkeit der Figuren und Übungen (Anforderung: keine falsche Technik)

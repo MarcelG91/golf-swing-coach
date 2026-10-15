@@ -42,7 +42,9 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
   (Korrektur 15.10.: Hier stand der GOLFTEC-Wert der Schulterlinie als Vergleich für `oberkoerperTop`.)
 - **Kein seitliches Ausweichen (Sway)**: Die Hüfte dreht, rutscht aber nicht nach rechts über den Fuß
   hinaus. „Hip sway at top“ ist einer der sechs GOLFTEC-Faktoren, die mit gutem Spiel zusammenhängen [GT2].
-  (App: `hueftSway`.)
+  In der 3D-Studie mit 308 Golfern lag die Hüfte am Top im Mittel nur **2 ± 2 cm** vom Ziel weg [CHU2010].
+  App-Grenze (gut bis 10 % der Rumpflänge ≈ 5 cm bei 50 cm Rumpf, etwa Mittel + 1,5 Standardabweichungen)
+  – die Umrechnung in Zentimeter ist eine eigene Abschätzung. (App: `hueftSway`.)
 - **Druck im Fuß**: Am Top haben Tourspieler **ca. 70–80 %** des Drucks auf dem rechten Fuß [RS1][RG1].
 - **Linkes Handgelenk am Top**: flach oder leicht gebeugt (gebowt). Amateure haben im Schnitt **ca. 10°
   mehr Streckung** („gecuppt“) – das öffnet die Schlagfläche → Slice [HM2][HM3].
@@ -73,6 +75,9 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 - **Druck links**: Der größte Teil des Drucks auf dem linken Fuß.
 - **Linkes Bein streckt sich**, rechtes Knie bleibt gebeugt (App: Kopfhöhe-Tipp).
 - **Kopf hinter dem Ball** – vor allem beim Driver. (App: `kopfSeitlich`.)
+  Im Rückschwung wandert der Kopf seitlich: bei Hcp ca. 4,5 um 55 ± 30 mm, bei Hcp ca. 18 um 124 mm (8 Männer,
+  Driver) [BYR2008]. Die App markiert erst ab 25 % der Rumpflänge (≈ 12 cm) vom Ziel weg am Top gelb, nie rot –
+  das beste Maß ist unbekannt, etwas Bewegung ist normal. Der Wert ist eine eigene Festlegung auf dünner Datenlage.
 - **Linker Arm gestreckt** im Treffen (App: `fuehrungsarmTreff`).
 - **Vorneigung halten** statt aufrichten (Early Extension) – laut GOLFTEC bei vielen Slicern messbar
   [GT3]. (App: `vorneigungHalten`, `hueftBall`.)
@@ -147,6 +152,8 @@ einem Video – Werte sind nicht 1 : 1 übertragbar (siehe offene Punkte in `doc
 - [GT3] GOLFTEC: How to stop slicing your driver – https://www.golftec.com/blog-posts/how-to-stop-slicing-your-driver-the-3-biomechanical-causes-backed-by-14-million-swings
 - [PGA1] = [GT1]
 - [CHU2010] Chu, Sell & Lephart (2010), J Sports Sciences 28: The relationship between biomechanical variables and driving performance, 308 Golfer, 3D (Volltext gelesen; **Stufe A**) – https://people.stfx.ca/smackenz/Courses/HK396/Handouts/Chu%202010%20The%20relationship%20between%20biomechanical%20variables%20and%20driving%20performance.pdf
+- [BYR2008] Byrne & Kenny (2008), ISBS-Konferenzbeitrag: Head movement in the golf swing, 8 Männer, Driver, 3D (Volltext gelesen; **Stufe A**, kleine Stichprobe) – https://ojs.ub.uni-konstanz.de/cpa/article/view/1991/1859
+- [MEA2016] Mears et al. (2016), J Appl Biomech: 2D-Projektion gegenüber 3D-Segmentwinkeln (nur Abstract gelesen; **Stufe A**) – Rumpfbeugung am Top ca. 6,5°, Seitneigung im Treffmoment ca. 8,7° daneben – https://dspace.lboro.ac.uk/2134/21663
 - [GOLF1] GOLF.com: GOLFTEC swing formula tilt – turn – bend – https://golf.com/instruction/golftec-golf-swing-formula-tilt-turn-bend/
 - [RS1] RotarySwing: The 4 pressure shifts – https://rotaryswing.com/c4/112537-the-4-pressure-shifts-of-the-modern-golfer
 - [RG1] Ground Reaction Force Analysis of Golf Swings (Studie) – https://www.researchgate.net/publication/237050331_Ground_Reaction_Force_Analysis_of_Golf_Swings_using_Force_Plate_Data

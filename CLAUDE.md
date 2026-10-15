@@ -225,8 +225,11 @@ Bericht: `docs/wissen/recherche/reports/Golfwissen auf Forschungsniveau.md` (Ker
 Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
 1. ~~**F1–F4, F7, F8** falsche Aussagen in `docs/wissen/` und `wissen.js` korrigieren (inkl. Quiz).~~ – **erledigt mit 0.47.2** (Branch `wissen-korrekturen-falsch`; neue Quellen WOR2012, BET2012, ARC2023, BRO2008, CHU2010 mit Stufe; INJ1–INJ3 richtig beschriftet).
 2. ~~**F5** `gewicht` heißt, was es misst (Hüfte im Finish), **F6** Tempo-Tipp nach absoluten Zeiten statt nur Verhältnis.~~ – **erledigt mit 0.47.3** (Branch `tipps-gewicht-tempo`; Kennung `gewicht` bleibt, Anzeigename „Balance im Finish“; neue Tempo-Spielart „Abschwung dauert zu lange“; Rücken-Satz bei `oberkoerperTop` entfernt).
-3. **Schwellen S1–S4** (`hueftSway`, `seitneigungAnsprechen`, `kopfSeitlich`; `oberkoerperTreff` und `kopfhoehe` erst an
-   `tests/daten/` kalibrieren). Ändert die Bewertung gespeicherter Schwünge.
+3. ~~**Schwellen S1–S4**~~ – **erledigt mit 0.48.0** (Branch `schwellen-s1-s4`): `hueftSway` gut ≤ 10 % (gelb bis 20 %),
+   `seitneigungAnsprechen` gut 0–15° (gelb bis 25°, eigene Festlegung), `kopfSeitlich` im Rückschwung gelb ab 25 % (nie rot).
+   Gespeicherte Schwünge behalten ihre alte Bewertung (die Stufe wird mitgespeichert), nur der grüne Streifen im Wertdiagramm
+   nutzt die neuen Grenzen. **Offen:** `oberkoerperTreff` (8°) und `kopfhoehe` (+8 %) brauchen mehr Profi-Testschwünge
+   (Driver und Eisen), bevor man sie anfasst; ggf. „Neu auswerten“ für alte Schwünge (Posedaten sind gespeichert).
 4. S9–S12 als „eigene Festlegung“ kennzeichnen · 5. **U1–U31** präzisieren · 6. **Z1–Z21** als neue Karten.
 7. Eigene Fotos von Marcel (Ansprechen vorne/hinten, Griff ×3, Treffmoment, Putten – Anleitung im Bericht) und
    `fotos.js` `LIZENZEN` um CC BY-SA 3.0/CC BY 2.0 erweitern (Bunker-Foto, Stroboskop-Bild).

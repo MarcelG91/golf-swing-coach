@@ -164,6 +164,41 @@ test("Fehler: Hüfte schiebt im Rückschwung zur Seite (Sway)", () => {
   assert.equal(k("hueftSway").bewertung, "verbessern", k("hueftSway").wert);
 });
 
+// Grenzen aus dem Bericht (S1, 0.48.0): Hüfte gut bis 10 %, gelb 10–20 %, darüber rot.
+// Der Profi hat selbst schon ca. 3 % – die Verschiebungen unten kommen dazu.
+test("Sway: Grenzen bei 10 % und 20 %, zum Ziel hin bleibt es gut", () => {
+  const sway = (dx) => analysiere(baueFehlerEin(profi, profiPhasen.top.zeit, (p) =>
+    verschiebe(p, HUEFTE_BEINE, dx * rumpfLaenge(p) * zielRechts))).k("hueftSway");
+  assert.equal(sway(-0.04).bewertung, "gut", "ca. 7 %");
+  assert.equal(sway(-0.10).bewertung, "achtung", "ca. 13 % (früher noch gut)");
+  assert.equal(sway(-0.20).bewertung, "verbessern", "ca. 23 % (früher nur gelb)");
+  assert.equal(sway(0.15).bewertung, "gut", "Hüfte geht zum Ziel – kein Fehler");
+});
+
+// Bericht S3 (eigene Festlegung): Seitneigung beim Ansprechen gut 0–15°, gelb 15–25° und −6 bis 0°.
+test("Seitneigung beim Ansprechen: Grenzen bei 15° und 25°, Neigung zum Ziel ist ein Fehler", () => {
+  const neigungMit = (dx) => analysiere(baueFehlerEin(profi, profiPhasen.ansprechen.zeit, (p) =>
+    verschiebe(p, OBERKOERPER, dx * rumpfLaenge(p) * zielRechts))).k("seitneigungAnsprechen");
+  assert.equal(neigungMit(-0.15).bewertung, "gut", "ca. 9°");
+  assert.equal(neigungMit(-0.30).bewertung, "achtung", "ca. 17° (früher noch gut)");
+  assert.equal(neigungMit(-0.55).bewertung, "verbessern", "ca. 29° (früher nur gelb)");
+  assert.equal(neigungMit(0.30).bewertung, "verbessern", "ca. 16° zum Ziel");
+});
+
+// Bericht S4: Kopf im Rückschwung – gelb ab 25 % vom Ziel weg am Top, nie rot.
+// (Der Profi liegt von sich aus bei ca. −22 %.)
+test("Kopf seitlich im Rückschwung: gelb ab 25 % vom Ziel weg, aber nie rot", () => {
+  const kopfSeitlich = (dx) => {
+    const video = baueFehlerEin(profi, profiPhasen.top.zeit, (p) =>
+      verschiebe(p, [0, 2, 5, 7, 8], dx * rumpfLaenge(p) * zielRechts));
+    const phasen = erkennePhasen(video.bilder, video.seitenverhaeltnis);
+    return bewerteSchwung(video.bilder, phasen, video.seitenverhaeltnis).kennzahlen.find((x) => x.name === "Kopf seitlich");
+  };
+  assert.equal(kopfSeitlich(-0.02).bewertung, "gut", "ca. 24 % – Profi-Wert plus kleine Verschiebung");
+  assert.equal(kopfSeitlich(-0.10).bewertung, "achtung", "ca. 32 % (früher noch gut)");
+  assert.equal(kopfSeitlich(-0.50).bewertung, "achtung", "sehr weit weg: trotzdem nur gelb");
+});
+
 test("Fehler: Schultern drehen am Top kaum", () => {
   const ansprechen = profi.bilder.find((b) => b.zeit === profiPhasen.ansprechen.zeit).punkte;
   const breiteAnsprechen = Math.abs(ansprechen[11].x - ansprechen[12].x) * profi.seitenverhaeltnis;

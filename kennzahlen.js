@@ -133,7 +133,10 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     let bewertung = "gut";
     if (kopfTreff > 0.08) {
       bewertung = kopfTreff > 0.15 ? "verbessern" : "achtung";
-    } else if (kopfTop < -0.35) {
+    } else if (kopfTop < -0.25) {
+      // Rückschwung: nur gelb, nie rot – das beste Maß ist unbekannt, etwas Bewegung ist normal.
+      // Byrne & Kenny 2008 (n = 8, Driver): bis zum Top wandert der Kopf bei Hcp 4,5 um 55 ± 30 mm (ca. 11 ± 6 %
+      // der Rumpflänge), bei Hcp 18 um 124 mm (ca. 25 %). Gelb ab 25 % = gut zwei Standardabweichungen über den Besseren.
       bewertung = "achtung";
     }
     kennzahlen.push({
