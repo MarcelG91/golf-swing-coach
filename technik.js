@@ -380,7 +380,7 @@ const ZUORDNUNG = {
   Tempo: { id: "tempo", kategorie: "rhythmus", phase: "top", gewicht: 1 },
   Kopfhöhe: { id: "kopfhoehe", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
   "Kopf seitlich": { id: "kopfSeitlich", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
-  Gewichtsverlagerung: { id: "gewicht", kategorie: "drehung", phase: "finish", gewicht: 1.5 },
+  "Balance im Finish": { id: "gewicht", kategorie: "drehung", phase: "finish", gewicht: 1.5 },
   "Vorneigung halten": { id: "vorneigungHalten", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2.5 },
   "Hüfte Richtung Ball": { id: "hueftBall", kategorie: "oberkoerper", phase: "treffmoment", gewicht: 2 },
 };

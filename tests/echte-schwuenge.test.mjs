@@ -42,13 +42,13 @@ test("Profi frontal: Phasen stimmen, alles im grünen Bereich", () => {
   for (const k of bewertung.kennzahlen) assert.equal(k.bewertung, "gut", `${k.name}: ${k.wert}`);
 });
 
-test("Amateur frontal: Aufrichten, Kopf Richtung Ziel und Gewicht hinten werden erkannt", () => {
+test("Amateur frontal: Aufrichten, Kopf Richtung Ziel und Hüfte hinten im Finish werden erkannt", () => {
   const { phasen, bewertung } = lade("faceon_amateur");
   pruefePhasen(phasen, { ansprechen: 1.67, top: 2.3, treffmoment: 2.53, finish: 3.0 });
   assert.equal(bewertung.ansicht, "frontal");
   assert.equal(kennzahl(bewertung, "Kopfhöhe").bewertung, "verbessern");
   assert.notEqual(kennzahl(bewertung, "Kopf seitlich").bewertung, "gut");
-  assert.notEqual(kennzahl(bewertung, "Gewichtsverlagerung").bewertung, "gut");
+  assert.notEqual(kennzahl(bewertung, "Balance im Finish").bewertung, "gut");
 });
 
 test("Amateur von hinten (A): verlorene Vorneigung wird erkannt", () => {

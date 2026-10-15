@@ -62,7 +62,7 @@ export const FOTOS = {
   finish: {
     datei: "fotos/finish.jpg",
     alt: "Golfer im Finish, Brust zum Ziel, Schläger über der Schulter",
-    text: "Finish: Brust zum Ziel, Gewicht vorn, ruhig stehen bleiben.",
+    text: "Finish: Brust zum Ziel, ruhig auf dem vorderen Fuß stehen bleiben.",
     urheber: `${TURNIER} · Shot Clock Masters`,
     lizenz: "CC0",
   },

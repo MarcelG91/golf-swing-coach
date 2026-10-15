@@ -489,7 +489,7 @@ Messungen an Profi- und Amateurschwüngen.
 | Tempo | beide | Rückschwung : Abschwung | 2,4 – 4,0 : 1 |
 | Kopfhöhe | beide | Kopf beim Treffmoment höher als beim Ansprechen? (Aufrichten) | höchstens +8 % |
 | Kopf seitlich | frontal | Wandert der Kopf bis zum Treffmoment Richtung Ziel? | höchstens +8 % |
-| Gewichtsverlagerung | frontal | Hüfte im Finish zwischen hinterem (0 %) und vorderem Fuß (100 %) | ab 85 % |
+| Balance im Finish | frontal | Hüfte im Finish zwischen hinterem (0 %) und vorderem Fuß (100 %) – gemessen wird nur die Hüftlage, kein Druck | ab 85 % |
 | Vorneigung halten | von hinten | Verlust an Oberkörper-Vorneigung bis zum Treffmoment | höchstens 10° |
 | Hüfte Richtung Ball | von hinten | Schiebt die Hüfte im Abschwung zum Ball? („Early Extension“) | höchstens 12 % |
 
@@ -525,7 +525,7 @@ zeichnet die App alle Abweichungen dieser Phase ein:
 | Schulterdrehung am Top | Schulterlinie | Schulterlinie so schmal wie bei ca. 90° Drehung |
 | Kopfhöhe / Kopf seitlich | Kopf | Linie durch die Kopfposition beim Ansprechen |
 | Hüfte im Rückschwung / Hüfte Richtung Ball | Hüfte | Hüfte an der Position vom Ansprechen |
-| Gewichtsverlagerung | Hüfte im Finish | Hüfte senkrecht über dem vorderen Fuß |
+| Balance im Finish | Hüfte im Finish | Hüfte senkrecht über dem vorderen Fuß |
 
 Dazu erscheint an jeder roten Linie eine **Sprechblase** mit einem kurzen Hinweis
 (z. B. „Hüfte zurück nach links – drehen statt schieben“ oder „Linken Arm gerade lassen
