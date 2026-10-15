@@ -127,3 +127,5 @@ Beispiel für 60 Minuten / ca. 50 Bälle (angepasst aus den Prinzipien oben):
 - [IR1] Wegner, Ansfield & Pilloff (1998): The putt and the pendulum – https://scholar.harvard.edu/dwegner/publications/putt-and-pendulum-ironic-effects-mental-control-action
 - [FB2] Optimizing feedback frequency in motor learning: self-controlled and moderate frequency – https://www.researchgate.net/publication/353639538_Optimizing_Feedback_Frequency_in_Motor_Learning_Self-Controlled_and_Moderate_Frequency_KR_Enhance_Skill_Acquisition
 - [FB3] McKay, Yantha, Hussien, Carter & Ste-Marie (2022): Meta-analytic findings of the self-controlled motor learning literature. Meta-Psychology 6 – https://open.lnu.se/index.php/metapsychology/article/view/2803
+- [GUA2002] Guadagnoli, Holcomb & Davis (2002), J Sports Sciences: Video-Unterricht, 30 Golfer, 7er-Eisen (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/12190281
+- [SMI1997] Smith, Taylor & Withers (1997), Research Quarterly: Bandbreiten-Rückmeldung beim Chippen (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/9294875

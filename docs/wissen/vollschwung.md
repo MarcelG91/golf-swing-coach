@@ -165,3 +165,7 @@ einem Video – Werte sind nicht 1 : 1 übertragbar (siehe offene Punkte in `doc
 - [BB1] Bruce Bolt: How to follow through in golf – https://brucebolt.us/blogs/news/golf-follow-through
 - [GOLF2] GOLF.com: Are you teeing the ball up at the correct height? (GOLF Top 100 Teachers) – https://golf.com/instruction/driving/tee-ball-up-correct-height/
 - [VC1] Voice Caddie: The truth about golf tee height – https://voicecaddie.com/blogs/news/the-truth-about-tee-height-and-driving-distance
+- [MEI2011] Meister et al. (2011), J Appl Biomech 27:242–251: Rotational biomechanics of the elite golf swing, 10 Profis und 5 Amateure, 5er-Eisen (Volltext gelesen; **Stufe A**) – https://people.stfx.ca/smackenz/Courses/DirectedStudy/Articles/Meister%20-%20Rotational%20Biomechanics%20of%20the%20Elite%20Golf%20Swing.pdf
+- [MCG1] McGhie (unveröffentlicht), vorgestellt von S. Lynn/Swing Catalyst, 25 Golfer, 259 Schwünge (Folien; **Stufe B−**) – https://carolinas.pga.com/wp-content/uploads/sites/3/2019/03/Dr.-Scott-Lynn-PhD-Swing-Catalyst.pdf
+- [BAL2006] Ball (2006), Dissertation Victoria University (aufbauend auf Ball, Best et al. 2002, ISBS): Stile „Front Foot“ und „Reverse“, 62 Golfer vom Profi bis zum hohen Handicap (nur Zusammenfassung; **Stufe A**) – https://vuir.vu.edu.au/9101/
+- [SOM2009] Sommer & Rönnqvist (2009), JSSM 8:648–656: vier Wochen Metronom-Training, 26 Golfer, randomisiert (nur Abstract gelesen; **Stufe A**) – https://www.jssm.org/jssm-08-648.xml-abst

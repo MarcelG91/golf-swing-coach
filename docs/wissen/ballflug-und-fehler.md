@@ -185,4 +185,6 @@ deutlich kürzer, als Fernsehbilder vermuten lassen.
 - [AY3] Adam Young: How to stop shanking (zweiter Ball an der Spitze) – https://www.adamyounggolf.com/how-to-stop-shanking/
 - [TMG1] Tell Me More Golf: Alternatives to impact tape (Fußpuder-Spray) – https://tellmemoregolf.com/equipment/golf-accessories/use-instead-impact-tape/
 - [CAG1] Colorado AvidGolfer: Nail your irons (Dan Sniffin, PGA, Fußpuder-Spray) – https://coloradoavidgolfer.com/iron-drill-2019/
+- [TUT1] Tutelman, Estimating Slice and Hook (2008, ergänzt 2022), Rechenmodell TrajectoWare, Driver (Volltext gelesen; **Stufe B**) – https://www.tutelman.com/golf/ballflight/slice_.html
+- [WOOD2018] Wood, Henrikson & Broadie (2018), Proceedings 2(6):249: Ballfluggesetze mit Robotermessung, Driver, 7er-Eisen und Wedge (**Stufe A**) – https://www.mdpi.com/2504-3900/2/6/249
 - [PGA-DE] PGA of Germany, Lernunterlage Golftechnik (O. Neumann, 2019), Abschnitt Eintreffwinkel/Low Point – https://www.pga.de (Ausbilderseminar-Unterlagen)

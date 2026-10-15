@@ -110,3 +110,9 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 - [BTW1] Blue Tees Golf: How weather affects golf ball distance – https://blueteesgolf.com/blogs/news/how-weather-affects-golf-ball-distance
 - [GTM1] Golf Tips Magazine (Zachary Allen, PGA): Bad lies – Flyer – https://golftipsmag.com/instruction/strategy-troubleshooting/bad-lies/
 - [SR1] SportsRec: What is a flyer lie in golf? – https://www.sportsrec.com/13733070/flyer-lie-golf-20575.html
+- [BRO2012] Broadie (2012), Interfaces 42(2): Assessing golfer performance on the PGA Tour, über 8 Mio. ShotLink-Schläge (**Stufe A**, nur Zusammenfassung gelesen) – https://business.columbia.edu/sites/default/files-efs/pubfiles/4996/assessing_golfer_performance.full.pdf
+- [USGA1] USGA: Calculation of a Handicap Index (Regel 5.2 der Handicap-Regeln; **Stufe A**) – https://usga.org/handicapping/roh/Content/rules/5%202%20Calculation%20of%20a%20Handicap%20Index.htm
+- [GPC1] The Golf Performance Center: Are you playing enough for the wind (Messbeispiel 6er-Eisen, 32 km/h; **Stufe C**) – https://thegolfperformancecenter.com/5-elements-blog/are-you-playing-enough-for-the-wind
+- [RICE1] GOLF.com: How hot weather and elevation change affect golf shots – study (**Stufe C**, nur Zusammenfassung) – https://www.golf.com/instruction/2018/12/14/how-hot-weather-elevation-change-affect-golf-shots-study
+- [GDO1] Golf Digest: Chris O'Connell – sidehill lie (**Stufe C**, nur Zusammenfassung) – https://www.golfdigest.com/story/chris-o-connell-sidehill-lie
+- [WW1] worldwide.golf: How to play the ball above your feet (Alex Day, Dreamland Golf Club; **Stufe C**, nur Zusammenfassung) – https://worldwide.golf/instruction/how-to-play-the-ball-above-your-feet-by-alex-day-dreamland-golf-club-baku/
