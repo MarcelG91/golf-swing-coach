@@ -107,6 +107,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `docs/wissen/` · `docs/plan-wissensseite.md` | Wissensdatenbank Golf mit Quellen (12 Kapitel, Profile, Abgleich mit der App) · Plan für die Wissensseite |
 | `docs/plan-etappe-11-level-und-coach.md` | Plan für Etappe 11: Level-gerechte Tipps (11a) und Coach mit Claude (11b) |
 | `docs/sicherheit/` | Sicherheitsbericht (Befunde, Status) und Prüfprotokoll der Checks |
+| `.claude/agents/` | Zwei Prüfer als Subagenten: `golf-profi` (kritischer Golflehrer: Fachlichkeit, Schärfe, Belege) und `golf-anfaenger` (Verständlichkeit, Länge, Umsetzbarkeit). Nur Lesezugriff, liefern Befunde – Aufruf z. B. „lass den golf-profi die Wissensseite prüfen“ |
 
 ## Bekannte Eigenheiten iPhone / Safari
 
