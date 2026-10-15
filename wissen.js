@@ -242,6 +242,31 @@ export const QUELLEN = {
   "ausruestung:G360B": "Golf 360 (Scott Pickett, PGA): Is club fitting worth it",
   "ausruestung:EXG1": "ExactGolf: Lie comparison (Messung am GCQuad)",
   "ausruestung:GSK1": "Golf Sidekick: Upright vs. flat lie angle",
+  "putten:BRO2008": "Broadie 2008: Assessing golfer performance using Golfmetrics (Studie)",
+  "putten:BRO2012": "Broadie 2012: Assessing golfer performance on the PGA Tour (Studie)",
+  "putten:HAS2021": "Hasegawa, Okada & Fujii 2021: Grünlesen bei Profis und Amateuren (Studie)",
+  "putten:ALP1": "GOLF.com: 96 percent of golfers make this mistake (Break lesen)",
+  "platzstrategie:BRO2012": "Broadie 2012: Assessing golfer performance on the PGA Tour (Studie)",
+  "platzstrategie:USGA1": "USGA: Berechnung des Handicap Index (Regel 5.2)",
+  "platzstrategie:GPC1": "The Golf Performance Center: Are you playing enough for the wind",
+  "platzstrategie:RICE1": "GOLF.com: Wie Hitze und Höhe Schläge verändern (Studie von Rice)",
+  "platzstrategie:GDO1": "Golf Digest: Chris O'Connell über Hanglagen",
+  "platzstrategie:WW1": "worldwide.golf: Ball über den Füßen spielen (Alex Day)",
+  "ballflug-und-fehler:TUT1": "Tutelman: Estimating Slice and Hook (Rechenmodell)",
+  "ballflug-und-fehler:WOOD2018": "Wood, Henrikson & Broadie 2018: Ballfluggesetze, PING-Messung (Studie)",
+  "ausruestung:TUT2": "Tutelman: Design Notes zum Lie-Winkel",
+  "vollschwung:MEI2011": "Meister et al. 2011: Drehbewegungen im Elite-Schwung (Studie)",
+  "vollschwung:MCG1": "McGhie und Lynn: Druckverteilung nach Schläger (Swing Catalyst)",
+  "vollschwung:BAL2006": "Ball 2006: Druckverlagerungs-Stile im Golfschwung (Dissertation)",
+  "vollschwung:SOM2009": "Sommer und Rönnqvist 2009: Metronom-Training im Golf (Studie)",
+  "mental-und-fitness:HAT2011": "Hatzigeorgiadis et al. 2011: Selbstgespräch im Sport (Meta-Analyse)",
+  "mental-und-fitness:BEI2004": "Beilock et al. 2004: Achtung auf die Technik bei Anfängern und Könnern (Studie)",
+  "mental-und-fitness:UTH2021": "Uthoff et al. 2021: Krafttraining und Golfleistung (Übersichtsarbeit)",
+  "mental-und-fitness:BRE2024": "Brennan et al. 2024: Körperliche Merkmale und Schlägerkopftempo (Meta-Analyse)",
+  "mental-und-fitness:KUI2024": "Kuitunen und Ponkilainen 2024: Verletzungsrate im Golf (Meta-Analyse)",
+  "mental-und-fitness:VAD2004": "Vad et al. 2004: Rückenschmerz und Hüftbeweglichkeit bei Profis (Studie)",
+  "richtig-ueben:GUA2002": "Guadagnoli et al. 2002: Video-Unterricht im Golf (Studie)",
+  "richtig-ueben:SMI1997": "Smith et al. 1997: Rückmeldung mit Bandbreite beim Chippen (Studie)",
 };
 
 // ---------------------------------------------------------------
@@ -358,6 +383,7 @@ export const LEKTIONEN = [
       { text: "Wofür welcher? Driver für den Abschlag auf langen Löchern, Eisen für Schläge aufs Grün, Wedges für kurze, hohe Schläge und den Bunker, Putter auf dem Grün." },
       { text: "Erlaubt sind höchstens 14 Schläger (Regel 4.1). Für den Anfang reicht ein halber Satz mit ca. 7 Schlägern, zum Beispiel Hybrid, 7er, 9er, Pitching Wedge, Sand Wedge und Putter." },
       { text: "Was der Loft bewirkt: Laut TrackMan bestimmt er im Treffmoment Abflughöhe und Spin. Mehr Loft heißt höherer Start, mehr Rückwärtsdrall, steilere Landung und weniger Rollen.", bild: "flugRollenSchlaeger" },
+      { text: "Der Lie ist der Winkel zwischen Schaft und Boden. Steht die Schlägerspitze beim Treffen hoch, zeigt die Fläche nach links. Mit Eisen sind das ca. 3 Yards Abweichung je Grad." },
       { text: "Hybrid statt langer Eisen: Er startet höher und verzeiht Fehltreffer eher. Laut Arccos-Daten treffen Spieler bis Handicap 25 damit öfter das Grün." },
       { text: "Ein Test von Plugged In Golf mit 5 Spielern: Der Hybrid flog am höchsten, landete am steilsten und streute weniger in der Länge. Das Eisen war etwas genauer in der Richtung." },
     ],
@@ -368,7 +394,7 @@ export const LEKTIONEN = [
       erklaerung: "Mehr Loft bringt höheren Abflug und mehr Rückwärtsdrall. Deshalb fliegt ein Wedge hoch und kurz, ein Driver flach und weit.",
     },
     kennzahlen: [],
-    quellen: ["erste-schritte:VES2", "erste-schritte:MIT1", "ballflug-und-fehler:TM4", "regeln-etikette:USGA1", "regeln-etikette:SIEK1", "erste-schritte:TMM1", "erste-schritte:LYNX1", "erste-schritte:ARC2", "erste-schritte:PIG2"],
+    quellen: ["erste-schritte:VES2", "erste-schritte:MIT1", "ballflug-und-fehler:TM4", "regeln-etikette:USGA1", "regeln-etikette:SIEK1", "erste-schritte:TMM1", "erste-schritte:LYNX1", "erste-schritte:ARC2", "erste-schritte:PIG2", "ausruestung:TUT2"],
     beleg: "messung",
   },
   {
@@ -481,6 +507,7 @@ export const LEKTIONEN = [
       { text: "Ideal nach Pelz: Ein verfehlter Putt bliebe ca. 40 cm hinter dem Loch liegen. Ein Putt, der zu kurz bleibt, fällt nie." },
       { text: "Lange Putts über ca. 10 m: Ziel ist ein Kreis von ca. 2 m Durchmesser ums Loch. So vermeidest du Drei-Putts." },
       { text: "Erwartungen: Tourspieler lochen aus 3 m nur ca. 40 % der Putts. Ein Putt, der knapp neben dem Loch liegen bleibt, ist ein guter Putt." },
+      { text: "Drei-Putts: Spieler mit durchschnittlich 90 Schlägen haben ca. 2,3 pro Runde, Tourspieler ca. 0,55. Wichtigstes Ziel bei langen Putts ist deshalb ein Ball, der nah am Loch liegen bleibt." },
     ],
     quiz: {
       frage: "Wie steuerst du die Länge eines Putts?",
@@ -490,7 +517,7 @@ export const LEKTIONEN = [
     },
     uebung: LEITER,
     kennzahlen: [],
-    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3", "putten:LR1"],
+    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3", "putten:LR1", "putten:BRO2012"],
     beleg: "messung",
   },
   {
@@ -603,6 +630,7 @@ export const LEKTIONEN = [
     bild: "topProfi",
     karten: [
       { text: "3D-Messungen (GOLFTEC): Tourspieler drehen die Schultern am Top etwa 90°, bei P2 schon ca. 60°. Die Hüfte dreht bei P2 ca. 25–30°, bei vielen Freizeitspielern höchstens 15°.", bild: "messwerteTop" },
+      { text: "Das Becken dreht am Top nur ca. 45–49°, die Schultern etwa doppelt so weit (ca. 98°). So gemessen bei 308 Golfern mit Driver und bei Profis mit dem 5er-Eisen." },
       { text: "Die Hüfte dreht auf der Stelle. Wenig seitliches Schieben (Sway) am Top gehört laut GOLFTEC zu sechs Merkmalen, die mit gutem Spiel zusammenhängen. Die App misst das als Verschiebung.", bild: "foto:top" },
       { text: "Am Top liegen bei Tourspielern ca. 70–80 % des Drucks auf dem rechten Fuß. Das linke Handgelenk ist flach – Amateure strecken es im Schnitt ca. 10° mehr, das öffnet die Schlagfläche." },
       { text: "Die Schulterlinie steht am Top links tiefer: GOLFTEC nennt für Tourspieler ca. 36° Neigung, für hohe Handicaps ca. 30° (Firmenmessung)." },
@@ -618,7 +646,7 @@ export const LEKTIONEN = [
     // Vorhandene Übung mit Figuren (tipps.js, Kennzahl "Schultern drehen nicht voll")
     uebung: { tipp: { id: "schulterdrehung", messwert: 60 } },
     kennzahlen: ["schulterdrehung", "hueftSway", "armschwungTop", "oberkoerperTop"],
-    quellen: ["vollschwung:GT1", "vollschwung:GT2", "vollschwung:GOLF1", "vollschwung:CHU2010", "vollschwung:RS1", "vollschwung:RG1", "vollschwung:HM2"],
+    quellen: ["vollschwung:GT1", "vollschwung:GT2", "vollschwung:GOLF1", "vollschwung:CHU2010", "vollschwung:RS1", "vollschwung:RG1", "vollschwung:HM2", "vollschwung:MEI2011"],
     beleg: "messung",
   },
   {
@@ -631,6 +659,8 @@ export const LEKTIONEN = [
     karten: [
       { text: "3D-Messungen (TPI) zeigen: Becken, Brustkorb, Arme und Schläger erreichen ihr Höchsttempo nacheinander. Jedes Glied bremst dann ab und gibt Energie weiter. Der Schläger ist im Treffmoment am schnellsten." },
       { text: "Druck zuerst nach links: Gute Spieler verlagern ihn gleich zu Beginn des Abschwungs. Bei einem gemessenen Tourspieler sank der Druck rechts im ersten Moment von ca. 80 % auf ca. 50 %." },
+      { text: "Gruppenwerte statt eines Profis (25 Golfer): Am Top ca. 72–78 % des Drucks hinten, im Treffen ca. 76–84 % vorn. Die Streuung ist groß, beim Driver von 4 bis 100 %." },
+      { text: "Es gibt zwei Stile: Der Druck geht im Abschwung nach vorn („Front Foot“) oder wandert zurück nach hinten („Reverse“). Beide kommen vom Profi bis zum hohen Handicap vor." },
       { text: "Häufiger Fehler laut GOLFTEC: Schultern und Arme starten den Abschwung. Dann kommt der Schläger von außen – Slice oder Pull. Ein Bild dafür: Die Hüfte startet, die Arme fallen nach unten." },
       { text: "Winkel halten (Lag): Der Winkel zwischen linkem Arm und Schaft bleibt im Abschwung lange erhalten. Frühes Auflösen kostet Länge und führt zu fetten oder dünnen Treffern." },
       { text: "Aber: Lag entsteht durch die richtige Reihenfolge, nicht durch bewusstes Festhalten. Übe deshalb die Abfolge – und dass das Gewicht am Ende links ist, wie in der Übung unten." },
@@ -643,7 +673,7 @@ export const LEKTIONEN = [
     },
     uebung: { tipp: { id: "gewicht", messwert: 0.5 } },
     kennzahlen: ["gewicht"],
-    quellen: ["vollschwung:TPI1", "vollschwung:TPI2", "vollschwung:RS1", "vollschwung:SC1", "vollschwung:GT3", "vollschwung:HM4"],
+    quellen: ["vollschwung:TPI1", "vollschwung:TPI2", "vollschwung:RS1", "vollschwung:SC1", "vollschwung:GT3", "vollschwung:HM4", "vollschwung:MCG1", "vollschwung:BAL2006"],
     beleg: "messung",
   },
   {
@@ -655,6 +685,7 @@ export const LEKTIONEN = [
     bild: "treffProfi",
     karten: [
       { text: "Die Hüfte ist im Treffmoment bei Tourspielern ca. 36° zum Ziel geöffnet, bei hohen Handicaps nur ca. 20°. Das sind 3D-Messungen von GOLFTEC.", bild: "messwerteTreff" },
+      { text: "Bei 308 Golfern mit Driver stand das Becken im Treffen ca. 35° offen. Die Vorneigung blieb vom Top bis zum Treffen gleich (ca. 22°). Das passt zu den GOLFTEC-Werten." },
       { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher.", bild: "foto:nach-dem-treffen" },
       { text: "Die Vorneigung bleibt bis zum Treffen, der Po bleibt hinten. Richtet sich der Körper auf (Early Extension), bleibt die Fläche laut GOLFTEC oft offen – ein häufiger Grund für Slices." },
       { text: "Linker Arm lang: Knickt er, wird der Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge sind dünne oder getoppte Bälle." },
@@ -669,7 +700,7 @@ export const LEKTIONEN = [
     },
     uebung: { tipp: { id: "vorneigungHalten", messwert: 20 } },
     kennzahlen: ["vorneigungHalten", "hueftBall"],
-    quellen: ["vollschwung:GOLF1", "vollschwung:GT1", "vollschwung:HM2", "vollschwung:GT3"],
+    quellen: ["vollschwung:GOLF1", "vollschwung:GT1", "vollschwung:HM2", "vollschwung:GT3", "vollschwung:CHU2010"],
     beleg: "messung",
   },
   {
@@ -685,6 +716,7 @@ export const LEKTIONEN = [
       { text: "Rhythmus 3 : 1: Der Rückschwung dauert etwa dreimal so lang wie der Abschwung. John Novosel maß bei Tourspielern zum Beispiel ca. 0,8 zu 0,27 Sekunden.", bild: "zeitbalken" },
       { text: "Eine Yale-Messung bestätigt: Tourspieler liegen bei ca. 2,5 bis 3,5 : 1 und schwingen sehr gleichmäßig. Wichtig ist also ein gleichmäßiger Rhythmus, nicht besonders langsames Schwingen." },
       { text: "Übung Mitzählen: „und – eins – zwei – drei“ bis zum Top, „vier“ im Treffen. Laut der Yale-Messung streuen Freizeitspieler im Rhythmus viel stärker als Tourspieler." },
+      { text: "Hörbarer Takt: In einer Studie mit 26 Golfern verbesserten vier Wochen Training mit dem Metronom das Timing und machten die Schläge genauer. Die Kontrollgruppe blieb gleich." },
     ],
     quiz: {
       frage: "Wie lange dauert der Rückschwung bei guten Spielern im Vergleich zum Abschwung?",
@@ -694,7 +726,7 @@ export const LEKTIONEN = [
     },
     uebung: { tipp: { id: "tempo", messwert: 2 } },
     kennzahlen: ["tempo", "gewicht"],
-    quellen: ["vollschwung:HM5", "vollschwung:BB1", "vollschwung:TT1", "vollschwung:GROB1"],
+    quellen: ["vollschwung:HM5", "vollschwung:BB1", "vollschwung:TT1", "vollschwung:GROB1", "vollschwung:SOM2009"],
     beleg: "messung",
   },
   {
@@ -736,6 +768,7 @@ export const LEKTIONEN = [
       { text: "Anteil der Schlagfläche an der Startrichtung: beim Driver ca. 85 %, beim Eisen ca. 75 %. Den Rest steuert die Schwungbahn." },
       { text: "Die Kurve entsteht aus dem Unterschied zwischen Fläche und Bahn. Fläche offen zur Bahn: Kurve nach rechts. Fläche geschlossen zur Bahn: Kurve nach links." },
       { text: "Merkhilfe: Startet der Ball schon falsch, zuerst die Schlagfläche prüfen (Griff, Handgelenk). Kurvt er zu stark, die Bahn prüfen. Passt die Kurve nicht zur Bahn, den Treffpunkt." },
+      { text: "Rechenmodell: Beim Driver kostet 1° Flächenfehler bei 200 Yards Carry ca. 9 Yards, der größte Teil davon ist Kurve. Beim Wedge zählt die Bahn für die Startrichtung merklich mit." },
       { text: "Weitere Größen: Das Schlägerkopftempo bestimmt die Länge – als Faustregel bringt 1 mph mehr ca. 2,5 Yards. Der Loft im Treffmoment bestimmt Abflughöhe und Spin." },
       { text: "So nutzt du es: Achte nach jedem Schlag zuerst auf die Startrichtung, dann auf die Kurve. Startet der Ball gerade und kurvt nach rechts, war die Fläche offen zur Bahn." },
     ],
@@ -746,7 +779,7 @@ export const LEKTIONEN = [
       erklaerung: "Beim Driver zu ca. 85 % laut Radar-Messungen. Die Bahn im Verhältnis zur Fläche bestimmt dann die Kurve.",
     },
     kennzahlen: [],
-    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:GT1", "ballflug-und-fehler:GOLF1", "ballflug-und-fehler:TM4"],
+    quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1", "ballflug-und-fehler:GT1", "ballflug-und-fehler:GOLF1", "ballflug-und-fehler:TM4", "ballflug-und-fehler:TUT1", "ballflug-und-fehler:WOOD2018"],
     beleg: "messung",
   },
   {
@@ -971,6 +1004,7 @@ export const LEKTIONEN = [
       { text: "Laut James Sieckmann läuft der Schläger frei durch den Ball. So gleitet die Sohle über den Boden und verzeiht einen etwas zu frühen Bodenkontakt." },
       { text: "Welcher Schläger? Trainer sind uneins: Manche nutzen die „Regel der 12“, doch ihre Fassungen widersprechen sich. Andere raten, das Rollen der eigenen Schläger auf dem Übungsgrün zu lernen." },
       { text: "Dein Ziel beim Chip ist der Landepunkt: eine Stelle auf dem Grün, von der der Ball zur Fahne rollt. Genau das übt die Landezone." },
+      { text: "Freizeitspieler machen im kurzen Spiel (20–60 Yards) ca. dreimal größere Längen- als Richtungsfehler. Übe deshalb vor allem die Länge, zum Beispiel mit der Landezone." },
       { text: "Größter Fehler im kurzen Spiel laut Dave Pelz: abbremsen. Schwinge deshalb gleich weit vor wie zurück, mit gleichmäßigem Tempo durch den Ball." },
     ],
     quiz: {
@@ -981,7 +1015,7 @@ export const LEKTIONEN = [
     },
     uebung: LANDEZONE,
     kennzahlen: [],
-    quellen: ["kurzes-spiel:SIE1", "kurzes-spiel:GOLF1", "kurzes-spiel:PELZ1", "kurzes-spiel:AGD1", "kurzes-spiel:LR2", "kurzes-spiel:GAU1", "kurzes-spiel:SWS1", "kurzes-spiel:GTS1", "kurzes-spiel:BB1", "ballflug-und-fehler:TM4", "erste-schritte:VES2"],
+    quellen: ["kurzes-spiel:SIE1", "kurzes-spiel:GOLF1", "kurzes-spiel:PELZ1", "kurzes-spiel:AGD1", "kurzes-spiel:LR2", "kurzes-spiel:GAU1", "kurzes-spiel:SWS1", "kurzes-spiel:GTS1", "kurzes-spiel:BB1", "ballflug-und-fehler:TM4", "erste-schritte:VES2", "kurzes-spiel:BRO2008"],
     beleg: "zwei-quellen",
   },
   {
@@ -1029,6 +1063,7 @@ export const LEKTIONEN = [
       { text: "Breiter Stand, die Füße leicht in den Sand drehen. Ball links der Mitte, Gewicht links – und dort lassen." },
       { text: "Der Schläger tritt ca. 2–5 cm hinter dem Ball in den Sand ein. Eine Linie im Sand hilft beim Üben, genau diese Stelle zu treffen.", bild: "foto:bunker" },
       { text: "Regel 12.2: Im Bunker berührst du den Sand vor dem Schlag nicht mit dem Schläger – weder beim Probeschwung noch beim Aufsetzen oder im Rückschwung. Im Zählspiel kostet das zwei Strafschläge." },
+      { text: "Sand Save (Grünbunker, höchstens zwei Schläge ins Loch): Tour 50 %, Runden von 70–83 Schlägen 26 %, von 84–97 Schlägen 17 %, über 97 Schlägen 7 %. Aufs Grün zu kommen ist schon ein Erfolg." },
       { text: "Schwinge länger, als du denkst: auch für 10–15 m etwa ein Dreiviertelschwung. Bis ins Finish durchschwingen – die Schlagfläche zeigt danach zum Himmel." },
       { text: "Häufige Fehler: Ball zu weit rechts, Gewicht nach rechts, Abbremsen im Sand. Steuere die Länge über die Schwunglänge." },
     ],
@@ -1049,7 +1084,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["kurzes-spiel:HM1", "kurzes-spiel:MGS1", "kurzes-spiel:GOLF2", "kurzes-spiel:PELZ1", "regeln-etikette:USGA1", "regeln-etikette:SIEK1"],
+    quellen: ["kurzes-spiel:HM1", "kurzes-spiel:MGS1", "kurzes-spiel:GOLF2", "kurzes-spiel:PELZ1", "regeln-etikette:USGA1", "regeln-etikette:SIEK1", "kurzes-spiel:BRO2008"],
     beleg: "zwei-quellen",
   },
   {
@@ -1064,6 +1099,7 @@ export const LEKTIONEN = [
       { text: "Rückschwung zu Durchschwung ca. 60 : 40, gemessen mit dem SAM PuttLab. Der Putter schwingt gleichmäßig durch den Ball, der Rhythmus bleibt immer gleich." },
       { text: "Erwartungen: Aus 1,5 m lochen Tourspieler ca. 77 %, Spieler mit Handicap 20 ca. 55 %. Aus 3 m sind es ca. 40 % und ca. 18 %.", bild: "puttQuoten" },
       { text: "Ein Putt aus 3 m, der knapp neben dem Loch liegen bleibt, ist also ein guter Putt. Übe vor allem die Länge – zum Beispiel mit der Leiter." },
+      { text: "Spieler über 97 Schläge verlieren pro Runde 5,1 Putts gegenüber Scratch-Spielern, davon 2,4 aus 0,9–1,8 m. Kurze Putts verdienen deshalb mehr Übungszeit." },
       { text: "Übung Bocksprung: Ab 1,5 m rollt jeder Putt etwas weiter als der vorige, ohne eine Grenze bei ca. 6 m zu überschreiten. Wie viele passen dazwischen?" },
       { text: "Übung Tor für die Startrichtung: zwei Tees knapp breiter als der Putterkopf, der Putter schwingt dazwischen durch. Stell sie so eng, dass 3–4 von 10 Versuchen misslingen." },
     ],
@@ -1075,7 +1111,7 @@ export const LEKTIONEN = [
     },
     uebung: LEITER,
     kennzahlen: [],
-    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:GL1", "putten:GM1", "putten:GOLF3", "putten:MGS1", "putten:HM2", "putten:HM3", "putten:HM1"],
+    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:GL1", "putten:GM1", "putten:GOLF3", "putten:MGS1", "putten:HM2", "putten:HM3", "putten:HM1", "putten:BRO2008"],
     beleg: "messung",
   },
   {
@@ -1089,6 +1125,8 @@ export const LEKTIONEN = [
       { text: "Die Falllinie ist die Richtung, in die Wasser vom Loch wegfließen würde. Putts genau auf ihr laufen gerade, bergauf oder bergab – alle anderen brechen.", bild: "foto:gruen-lesen" },
       { text: "Bergab bricht ein Putt mehr als bergauf: Er rollt langsamer, und die Neigung wirkt länger auf ihn." },
       { text: "Am meisten bricht ein Putt am Ende, wo er am langsamsten ist. Lies bei langen Putts deshalb vor allem das letzte Drittel." },
+      { text: "Mehr Break spielen, als du denkst: Fast alle Golfer lesen ihn zu klein. Bei Spielern über 97 Schlägen liegen ca. 60 % der Fehlputts auf der tiefen Seite des Lochs." },
+      { text: "Bei sehr guten Spielern (Handicap ca. 3) kommt die Streuung der Putt-Richtung zu ca. 60 % vom Grünlesen und zu ca. 34 % von Zielen und Schlag. Lesen lohnt sich also." },
       { text: "Mit den Füßen fühlen (Idee aus AimPoint): Auf halber Strecke breitbeinig über die Puttlinie stellen und spüren, wohin das Grün fällt." },
       { text: "AimPoint Express als Idee: Neigung von 1 bis 3 schätzen, so viele Finger mit ausgestrecktem Arm vors Loch halten und an der Außenkante zielen. Für die genaue Anwendung braucht es einen Kurs." },
     ],
@@ -1108,7 +1146,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["putten:BT1", "putten:GSA1", "putten:FOY1", "putten:FG1", "putten:GOLF2", "putten:DIY1"],
+    quellen: ["putten:BT1", "putten:GSA1", "putten:FOY1", "putten:FG1", "putten:GOLF2", "putten:DIY1", "putten:BRO2008", "putten:HAS2021", "putten:ALP1"],
     beleg: "zwei-quellen",
   },
 
@@ -1150,6 +1188,7 @@ export const LEKTIONEN = [
       { text: "Golfer verfehlen ca. 80–90 % der Grüns zu kurz. Wähle den Schläger deshalb nach der Entfernung zum hinteren Grünrand." },
       { text: "Selten ist ein Schlag perfekt getroffen – ein etwas längerer Schläger gleicht das aus. Die Fahne direkt anzuspielen lohnt erst, wenn neben ihr nichts Gefährliches liegt." },
       { text: "Kenne deine Längen: Miss je Schläger die durchschnittliche Carry-Länge, nicht die längste. Schon das verbessert das Ergebnis ohne jede Technikänderung." },
+      { text: "Rough statt Fairway kostet selbst Tourprofis aus ca. 110 m rund 0,23 Schläge. Ein sicherer Abschlag aufs Fairway spart also Schläge, noch bevor der Annäherungsschlag kommt." },
     ],
     quiz: {
       frage: "Wohin verfehlen die meisten Golfer das Grün?",
@@ -1158,7 +1197,7 @@ export const LEKTIONEN = [
       erklaerung: "Ca. 80–90 % der verfehlten Grüns sind zu kurz. Deshalb lieber etwas mehr Schläger nehmen.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:PG1", "platzstrategie:LS2", "platzstrategie:H19", "platzstrategie:TM1", "platzstrategie:TM2"],
+    quellen: ["platzstrategie:PG1", "platzstrategie:LS2", "platzstrategie:H19", "platzstrategie:TM1", "platzstrategie:TM2", "platzstrategie:BRO2012"],
     beleg: "zwei-quellen",
   },
   {
@@ -1173,6 +1212,7 @@ export const LEKTIONEN = [
       { text: "Bogey an jedem Loch ergibt auf einem Par-72-Platz 90 Schläge – ein Ziel, das viele Clubspieler nicht erreichen." },
       { text: "Große Zahlen vermeiden spart die meisten Schläge: Aus Bäumen oder tiefem Rough zuerst sicher zurück aufs Fairway statt durch eine enge Lücke." },
       { text: "Lange Löcher: Vorlage auf deine Lieblingsdistanz, dann ein Pitch zur Grünmitte und zwei Putts. So bleibt jeder Schlag einer, den du sicher kannst." },
+      { text: "Dein Handicap Index zeigt dein Potenzial: Er zählt die 8 besten deiner letzten 20 Runden. Im Schnitt spielst du also etwas schlechter als dein Handicap." },
     ],
     quiz: {
       frage: "Mit wie vielen Schlägen planst du ein Par 4 beim persönlichen Par?",
@@ -1181,7 +1221,7 @@ export const LEKTIONEN = [
       erklaerung: "Fünf: zwei Schläge vor das Grün, ein Chip, zwei Putts. Das ist ein Bogey – ohne großes Risiko.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:STIX1", "platzstrategie:SWM1", "platzstrategie:H19"],
+    quellen: ["platzstrategie:STIX1", "platzstrategie:SWM1", "platzstrategie:H19", "platzstrategie:USGA1"],
     beleg: "zwei-quellen",
   },
   {
@@ -1197,6 +1237,7 @@ export const LEKTIONEN = [
       { text: "Bergauf: Schultern parallel zum Hang, Ball etwas weiter vorn. Der Ball fliegt höher und kürzer – nimm mehr Schläger." },
       { text: "Bergab: Schultern parallel zum Hang, Ball etwas weiter hinten. Der Ball fliegt flacher und weiter – nimm weniger Schläger." },
       { text: "Bergauf fliegt der Ball zusätzlich eher nach links, bergab eher nach rechts. Ziele deshalb bergauf etwas rechts, bergab etwas links." },
+      { text: "Je mehr Loft der Schläger hat, desto stärker wirkt die Schräglage. Ball über den Füßen: Mit einem Wedge fliegt er stärker nach links als mit einem Holz." },
     ],
     quiz: {
       frage: "Der Ball liegt über deinen Füßen. Wohin fliegt er eher?",
@@ -1205,7 +1246,7 @@ export const LEKTIONEN = [
       erklaerung: "Eher nach links. Ziele deshalb etwas rechts und fasse den Griff kürzer.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:HM1", "platzstrategie:GT1", "platzstrategie:LR1"],
+    quellen: ["platzstrategie:HM1", "platzstrategie:GT1", "platzstrategie:LR1", "platzstrategie:GDO1", "platzstrategie:WW1"],
     beleg: "zwei-quellen",
   },
   {
@@ -1218,6 +1259,7 @@ export const LEKTIONEN = [
     karten: [
       { text: "Faustregel: Pro 1,6 km/h Gegenwind ca. 1 % länger spielen, pro 1,6 km/h Rückenwind nur ca. 0,5 % kürzer. Bei starkem Wind wächst der Unterschied." },
       { text: "Der Grund: Gegenwind verstärkt die Wirkung des Rückwärtsdralls, der Ball steigt und verliert Länge. Rückenwind macht den Flug flacher." },
+      { text: "Messbeispiel 6er-Eisen bei 32 km/h Wind: gegen den Wind ca. 36 m kürzer, mit dem Wind nur ca. 21 m länger. Die Luftfeuchte spielt kaum eine Rolle." },
       { text: "Leichtes bis mittleres Rough: Gras zwischen Schlagfläche und Ball nimmt Drall weg. Der Ball fliegt und rollt dann oft weiter als erwartet – ein „Flyer“." },
       { text: "Kälte und Nässe: Ein kalter Ball fliegt kürzer, und auf nassem, weichem Boden rollt er kaum. Plane dann mit der reinen Fluglänge." },
       { text: "Eine zweite Faustregel von Arccos und Blue Tees: pro 16 km/h Gegenwind ca. ein Schläger mehr, bei Rückenwind ein halber weniger." },
@@ -1230,7 +1272,7 @@ export const LEKTIONEN = [
       erklaerung: "Gegenwind: ca. 1 % je 1,6 km/h länger spielen. Rückenwind: nur ca. 0,5 % kürzer.",
     },
     kennzahlen: [],
-    quellen: ["platzstrategie:PF1", "platzstrategie:DA1", "platzstrategie:ARC1", "platzstrategie:BTW1", "platzstrategie:GTM1", "platzstrategie:SR1"],
+    quellen: ["platzstrategie:PF1", "platzstrategie:DA1", "platzstrategie:ARC1", "platzstrategie:BTW1", "platzstrategie:GTM1", "platzstrategie:SR1", "platzstrategie:GPC1", "platzstrategie:RICE1"],
     beleg: "zwei-quellen",
   },
   {
@@ -1245,6 +1287,7 @@ export const LEKTIONEN = [
       { text: "Denk-Zone hinter dem Ball: Ziel, Schläger und Schlagidee festlegen. Dann bewusst einen Schritt nach vorn – in der Spiel-Zone zählen nur noch Gefühl und Ziel." },
       { text: "Auf der European Tour spielten Spieler mit gleich langer Routine über die Saison konstanter. Ausgewertet wurden über 22.000 Schläge." },
       { text: "Quiet Eye beim Putten: Blick ruhig auf die Rückseite des Balls, auch während des Putts. In einer Studie puttete die trainierte Gruppe unter Druck genauer." },
+      { text: "Ein anleitendes Kurzwort („Schläger pendeln“) wirkt laut einer Meta-Analyse am stärksten bei Präzision und neuen Bewegungen. Motivierende Sätze wie „Los geht’s“ helfen dort weniger." },
       { text: "Gewöhnung hilft auch: unter leichtem Druck üben – Wettspiele gegen dich selbst, Strafpunkte oder kleine Wetten mit Freunden." },
       { text: "Quiet Eye in Zahlen: Der ruhige Blick der trainierten Gruppe dauerte ca. 2,8 statt 1,4 Sekunden. Im Wettspiel berichteten die Spieler ca. 2 Putts weniger pro Runde." },
     ],
@@ -1264,7 +1307,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["mental-und-fitness:BG1", "mental-und-fitness:CH1", "grundlagen:V54", "grundlagen:GSC1", "grundlagen:GM2", "grundlagen:GPC1", "mental-und-fitness:QE1", "mental-und-fitness:QE2", "mental-und-fitness:ATM1", "mental-und-fitness:GSM1"],
+    quellen: ["mental-und-fitness:BG1", "mental-und-fitness:CH1", "grundlagen:V54", "grundlagen:GSC1", "grundlagen:GM2", "grundlagen:GPC1", "mental-und-fitness:QE1", "mental-und-fitness:QE2", "mental-und-fitness:ATM1", "mental-und-fitness:GSM1", "mental-und-fitness:HAT2011"],
     beleg: "studie",
   },
 
@@ -1282,6 +1325,7 @@ export const LEKTIONEN = [
       { text: "Eine Übersicht über 52 Golf-Studien bestätigt den Vorteil. Allerdings sind viele Studien klein und untersuchen vor allem Anfänger beim Putten." },
       { text: "So formulierst du um: „Weiter Bogen mit dem Schlägerkopf“ statt „linker Arm gestreckt“. „Divot vor dem Ball“ statt „Gewicht nach links“." },
       { text: "Weitere Beispiele: „Gürtelschnalle zeigt im Finish zum Ziel“ statt „Hüfte zuerst drehen“, „Putterkopf pendelt wie ein Uhrpendel“ statt „Handgelenke ruhig“." },
+      { text: "Beim Putten profitierten Anfänger davon, auf ihre Technik zu achten, Könner putteten damit schlechter. Als Einsteiger darfst du beim Üben auf Körperstellungen achten, auf dem Platz hilft ein Kurzwort." },
       { text: "Nimm nur einen Schwunggedanken gleichzeitig mit auf die Range – einen mit äußerem Fokus. So sind auch die Schwunggedanken der App formuliert." },
     ],
     quiz: {
@@ -1291,7 +1335,7 @@ export const LEKTIONEN = [
       erklaerung: "Der Gedanke richtet sich auf den Schläger, nicht auf den Körper. Das lernt sich laut Studien besser.",
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:WULF1", "richtig-ueben:REV1"],
+    quellen: ["richtig-ueben:WULF1", "richtig-ueben:REV1", "mental-und-fitness:BEI2004"],
     beleg: "studie",
   },
   {
@@ -1390,7 +1434,8 @@ export const LEKTIONEN = [
       { text: "Laut TPI haben viele Schwungfehler körperliche Gründe. Drei einfache Selbsttests: Zehen berühren, tiefe Kniebeuge, Drehung im Sitzen.", bild: "selbsttests" },
       { text: "Die Tests sind nur ein Hinweis, keine Diagnose. Bei Schmerzen frag eine Ärztin, einen Arzt oder die Physiotherapie." },
       { text: "Beweglichkeit zählt: Wer keine tiefe Kniebeuge mit Fersen am Boden schafft, kann die Haltung im Abschwung kaum halten. Eine Studie fand einen Zusammenhang zwischen Zehenberührungs-Test und Early Extension (Hüfte schiebt zum Ball)." },
-      { text: "Rücken schonen: Der untere Rücken ist die häufigste Beschwerdestelle beim Golf. Entlasten kann: Aufwärmen, Pausen statt vieler Bälle am Stück und eine Hüfte, die im Rückschwung mitdreht." },
+      { text: "Für die Weite zählt Kraft: Krafttraining brachte in Studien nach etwa acht Wochen ca. 4 % mehr Schlägertempo. Beweglichkeit hing in einer Meta-Analyse nicht mit dem Tempo zusammen." },
+      { text: "Golf ist verletzungsarm (ca. 2,5 pro 1.000 Runden), der untere Rücken die häufigste Beschwerdestelle. Profis mit Rückenschmerz hatten weniger Innenrotation der vorderen Hüfte. Aufwärmen und Pausen können entlasten." },
     ],
     quiz: {
       frage: "Wie wärmst du dich vor der Runde am besten auf?",
@@ -1409,7 +1454,7 @@ export const LEKTIONEN = [
       ],
     },
     kennzahlen: [],
-    quellen: ["mental-und-fitness:WU1", "mental-und-fitness:WU2", "mental-und-fitness:WU3", "mental-und-fitness:TPI1", "mental-und-fitness:TPI3", "mental-und-fitness:TPI4", "mental-und-fitness:INJ2", "mental-und-fitness:INJ3", "mental-und-fitness:INJ4"],
+    quellen: ["mental-und-fitness:WU1", "mental-und-fitness:WU2", "mental-und-fitness:WU3", "mental-und-fitness:TPI1", "mental-und-fitness:TPI3", "mental-und-fitness:TPI4", "mental-und-fitness:INJ2", "mental-und-fitness:INJ3", "mental-und-fitness:INJ4", "mental-und-fitness:UTH2021", "mental-und-fitness:BRE2024", "mental-und-fitness:KUI2024", "mental-und-fitness:VAD2004"],
     beleg: "studie",
   },
   {
@@ -1423,7 +1468,9 @@ export const LEKTIONEN = [
       { text: "Filmen: frontal oder von hinten, Handy auf Hüfthöhe, der ganze Körper im Bild. Dann eine Baustelle wählen – die erste Karte, nicht alle gleichzeitig." },
       { text: "Üben: die Übung der Karte im Übungsmodus, danach den Schwunggedanken auf der Range. Nach ein bis zwei Wochen neu filmen und vergleichen." },
       { text: "Wie oft Rückmeldung (etwa ein Video) beim Lernen hilft, ist nicht eindeutig: Neuere Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil." },
+      { text: "Video-Unterricht wirkt mit Verzögerung: In einer Studie mit 30 Golfern spielten die Unterrichtsgruppen direkt danach schlechter, nach zwei Wochen besser. Am besten die Video-Gruppe." },
       { text: "Vor dem Blick ins Video selbst schätzen: „Was war wohl der Fehler?“ Dann in der App nachsehen." },
+      { text: "Beim Chippen half Rückmeldung am meisten, wenn sie nur kam, sobald der Fehler außerhalb von 10 % lag, plus ein Hinweis, was zu ändern ist. So arbeiten die Baustellen-Karten." },
       { text: "Ob die Übung wirkt, zeigt Meine Schwünge → Fortschritt: je Kennzahl deine Werte über dem grünen Zielbereich." },
     ],
     quiz: {
@@ -1433,7 +1480,7 @@ export const LEKTIONEN = [
       erklaerung: "Meta-Analysen fanden weder für seltene noch für selbst gewählte Rückmeldung einen klaren Vorteil. Du entscheidest, wann du filmst.",
     },
     kennzahlen: [],
-    quellen: ["richtig-ueben:FB1", "richtig-ueben:FB3"],
+    quellen: ["richtig-ueben:FB1", "richtig-ueben:FB3", "richtig-ueben:GUA2002", "richtig-ueben:SMI1997"],
     beleg: "studie",
   },
 ];

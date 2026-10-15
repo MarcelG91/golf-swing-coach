@@ -230,7 +230,9 @@ Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
    Gespeicherte Schwünge behalten ihre alte Bewertung (die Stufe wird mitgespeichert), nur der grüne Streifen im Wertdiagramm
    nutzt die neuen Grenzen. **Offen:** `oberkoerperTreff` (8°) und `kopfhoehe` (+8 %) brauchen mehr Profi-Testschwünge
    (Driver und Eisen), bevor man sie anfasst; ggf. „Neu auswerten“ für alte Schwünge (Posedaten sind gespeichert).
-4. S9–S12 als „eigene Festlegung“ kennzeichnen · 5. **U1–U31** präzisieren · 6. **Z1–Z21** als neue Karten.
+4. S9–S12 als „eigene Festlegung“ kennzeichnen · 5. **U1–U31** präzisieren ·
+6. ~~**Z1–Z21** als neue Karten~~ – **erledigt mit 0.49.0** (Branch `wissen-neue-karten`): 19 Lektionen um je 1–2 Karten erweitert,
+   neue Quellen mit Stufe. Offen: Z12 (Spitzentreffer Eisen, nur eine B-Quelle), Z16 (Streuung – App-Funktion), Driver-Loft aus Z13.
 7. Eigene Fotos von Marcel (Ansprechen vorne/hinten, Griff ×3, Treffmoment, Putten – Anleitung im Bericht) und
    `fotos.js` `LIZENZEN` um CC BY-SA 3.0/CC BY 2.0 erweitern (Bunker-Foto, Stroboskop-Bild).
 Ideen für später: Kennzahl „Schulterlinie am Top“, Bewertung je Schläger, Streuung je Kennzahl über mehrere Schwünge.

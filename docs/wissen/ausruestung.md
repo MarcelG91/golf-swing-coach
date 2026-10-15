@@ -94,3 +94,4 @@ Die Schaft-Härte („Flex“) richtet sich nach der **Schlägerkopfgeschwindigk
 - [G360B] Golf 360 (Scott Pickett, PGA): Is club fitting worth it? – https://golf360.co.nz/blogs/scotts-corner/is-club-fitting-worth-it
 - [EXG1] ExactGolf: Lie comparison – how does lie influence ball flight (GCQuad-Test) – https://exactgolf.com/club-shaft-tests/lie-comparison-how-does-lie-influence-ball-flight/
 - [GSK1] Golf Sidekick: Upright vs. flat lie angle – https://www.golfsidekick.com/knowledge/upright-vs-flat-lie-angle/
+- [TUT2] Tutelman, Design Notes – Lie Angle (2017), Herleitung Richtungsfehler = Loft × sin(Lie-Fehler) (Volltext gelesen; **Stufe B**) – https://tutelman.com/golf/design/lie1.php

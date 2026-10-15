@@ -94,3 +94,7 @@ ein Viertel für **kurze Putts** (Uhr), ein Viertel **Linie/Startrichtung** (Tor
 - [GSA1] Golf Smart Academy: What is the fall line in putting? – https://www.golfsmartacademy.com/golf-tips/assessing-a-fall-line/
 - [FOY1] Foy Golf Academy: How to putt uphill and downhill – https://foygolfacademy.com/how-to-putt-uphill-and-downhill-control-speed-break-and-three-putts/
 - [FG1] Frankly Golf: Reading greens – uphill and downhill breaking putts – https://franklygolf.com/reading-greens-uphill-and-downhill-breaking-putts/
+- [BRO2008] Broadie (2008), Science and Golf V: Assessing golfer performance using Golfmetrics, ca. 40.000 Schläge von über 130 Golfern (Volltext gelesen; **Stufe A**) – https://business.columbia.edu/sites/default/files-efs/pubfiles/2851/broadie_wscg_v_200802.pdf
+- [BRO2012] Broadie (2012), Interfaces 42(2): Assessing golfer performance on the PGA Tour, über 8 Mio. ShotLink-Schläge (**Stufe A**, nur Zusammenfassung gelesen) – https://business.columbia.edu/sites/default/files-efs/pubfiles/4996/assessing_golfer_performance.full.pdf
+- [HAS2021] Hasegawa, Okada & Fujii (2021), Frontiers in Psychology 12:697914: Grünlesen, 12 Tourprofis gegen 12 Amateure; nennt auch Karlsen & Nilsson (2008) und Pelz (1994) (Volltext gelesen; **Stufe A**) – https://pmc.ncbi.nlm.nih.gov/articles/PMC8517186/
+- [ALP1] GOLF.com: 96 percent of golfers make this mistake (Alpenfels und Christina, ca. 1.300 Putts; nur Zusammenfassung gelesen; **Stufe B**) – https://golf.com/instruction/96-percent-golfers-make-this-mistake/
