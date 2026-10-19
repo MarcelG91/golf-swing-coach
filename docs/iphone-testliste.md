@@ -102,6 +102,25 @@ Getestet 13.10. mit 0.37.1: die ersten vier Punkte ✓.
 - [ ] Auf der Range in der Sonne: Hell besser lesbar? Ergebnis-Karten, Skala und Farben (gelb/rot) gut erkennbar?
 - [ ] Nach dem Laden eines Videos: verschwinden die Filmtipps, bleibt der Knopf „Video auswählen“?
 
+## 8. Wissensseite nach der Prüfer-Runde (Version ≥ 0.51, 19.10.)
+
+Zwei Prüfer (Golf-Profi, Golf-Anfänger) haben den Startpfad gelesen, danach wurde er überarbeitet. Das hier kann nur das iPhone zeigen:
+
+- [ ] 📖 Wissen → „Start: Die Grundlagen“ → „Der Griff“: **Fachwörter** (z. B. „Schlagfläche“) sind gepunktet unterstrichen.
+      Tippen zeigt darunter einen Kasten mit der Erklärung, nochmal Tippen schließt ihn. Gut lesbar in **Hell und Dunkel**?
+- [ ] Lässt sich danach noch normal zur nächsten Karte wischen (auch wenn der Finger auf einem Fachwort startet)?
+- [ ] Letzte Karte einer Lektion: Unten steht nur **„Quellen ansehen“**. Aufklappen zeigt die Liste, wieder zuklappen geht?
+- [ ] Neue Lektion „Rückschwung: drehen statt heben“ (nach „Haltung beim Ansprechen“): 4 Karten, Foto, Quiz verständlich?
+      Übung „Griffende zum Bauchnabel“ im Vollbild: Passen Bild und Text zusammen?
+- [ ] Baustelle „Arme heben statt drehen“ (frontal, Einsteiger) → „📖 Lektion“ führt in diese neue Lektion?
+- [ ] „Der Griff“: Karte „Slice? …“ mit dem Foto der falschen rechten Hand – verständlich? Wüsstest du jetzt, was du auf der Range tun sollst?
+- [ ] „Ausrichtung“ → Übung „Zwei Stäbe“: Verstehst du ohne Rückfrage, wohin die beiden Schläger/Stäbe kommen?
+- [ ] Übung „Faust-Check“ (Baustelle „Hände zu nah am Körper“) und „Aufrichten“ (Baustelle „ziemlich stark vorgebeugt“):
+      Ist klar, dass die rechte Hand losgelassen wird? Passt die Figur? (Nur prüfbar, wenn ein Schwung so eine Baustelle zeigt – sonst überspringen.)
+- [ ] Tempo-Übungen „Mitzählen“ und „Langer Bogen“ (Baustelle „Rückschwung sehr lang“): Passt das Zählen „und – eins – zwei – drei – vier“
+      zur Figur? Auch nur prüfbar, wenn der Schwung diese Baustelle zeigt.
+- [ ] Gefühl insgesamt: Weniger Text als vorher? Kommst du in einer Lektion bis zum Quiz, ohne auszusteigen?
+
 ## Rückmeldung an Claude
 
 Bildschirmfotos aus 1, 2 und 6 plus kurze Stichworte zu 3–5b reichen. Danach werden in
