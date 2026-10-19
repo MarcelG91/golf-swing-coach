@@ -221,7 +221,7 @@ Die App ersetzt trotzdem keine Trainerstunde.
 **📖 Wissen (seit 0.22.0):** Kurze Lektionen in Lernpfaden – wischen wie bei den Baustellen: Bild und
 Kernsatz, 2–4 Karten, eine Quizfrage, zum Schluss „✓ erledigt“, „Übung starten“ und die Quellen als Text.
 Der zum Level passende Pfad steht oben. Der Fortschritt bleibt nur auf dem Gerät (`wissenFortschritt`).
-Sechs Pfade mit 40 Lektionen (seit 0.24.0): „Start“, „Der Vollschwung“ (mit bewegter Profi-Figur P1–P10, die nur
+Sechs Pfade mit 41 Lektionen (40 seit 0.24.0, +1 Einsteiger-Lektion „Rückschwung“ seit 0.51.0): „Start“, „Der Vollschwung“ (mit bewegter Profi-Figur P1–P10, die nur
 läuft, solange ihre Karte zu sehen ist), „Ballflug verstehen & Fehler beheben“ mit dem **Ballflug-Helfer** (Start
 und Kurve antippen → Name des Ballflugs, Bild und Ursache), „Rund ums Grün“, „Clever spielen“ und „Besser üben“.
 **Nachschlagen** (seit 0.25.0, oben umschalten „Lernpfade | Nachschlagen“): Suchfeld über Lektionen, Glossar,
@@ -363,7 +363,7 @@ sprechen. Seit 0.26.0 fallen jsDelivr und Google weg, weil MediaPipe und das Mod
 | `docs/iphone-testliste.md` | Checkliste für den Praxistest auf dem iPhone (Analyse, mehrere Schwünge, Speichern, Aufräumen, Übungsmodus) |
 | `docs/wissen/` | Wissensdatenbank Golf mit Quellen (Technik, Ballflug, kurzes Spiel, Putten, Strategie, Üben, Regeln, Profile) – Grundlage für Tipps und die Wissensseite |
 | `docs/wissen/recherche/` | Tiefenrecherche 15.10.: Bericht mit Kernliteratur (Stufe A/B/C), Mängelliste der App (falsch, Schwellen, ungenau, fehlend), Schreibregeln und Foto-Empfehlungen; dazu die Notizen der 7 Teilrecherchen |
-| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (komplett umgesetzt: 6 Lernpfade mit 40 Lektionen, Ballflug-Helfer, Nachschlagen) |
+| `docs/plan-wissensseite.md` | Plan für die Wissensseite in der App (komplett umgesetzt: 6 Lernpfade mit 41 Lektionen, Ballflug-Helfer, Nachschlagen) |
 | `CLAUDE.md` | Regeln für Claude: Arbeitsweise (1 Chat = 1 Branch), Pflichten, offene Punkte |
 
 ## Arbeitsweise mit Branches
@@ -575,7 +575,7 @@ Ein Bild mehr oder weniger verändert das Tempo-Verhältnis um ca. 15 %.
 - [x] 8. Schwünge speichern (mit gekürztem Video) – und aufräumen (Videos löschen, Kennzahlen behalten)
 - [x] 11. Tipps passend zum Level (🌱 Einsteiger · 🌿 Fortgeschritten · 🌳 Könner) + Coach-Feedback mit Claude
   (seit 0.10.0 bzw. 0.15.0; offen ist nur der Praxistest mit eigenem Schlüssel)
-- [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
+- [x] 12. Wissensseite: 6 Lernpfade mit 40 Lektionen (0.22.0–0.24.0, 41 seit 0.51.0) und Nachschlagen mit Suche, Glossar, Irrtümern,
   Regeln, Ausrüstung und Ballflug-Helfer; Baustellen-Karte → „📖 Lektion“ (0.25.0). Plan: `docs/plan-wissensseite.md`
 - [x] 10. Fortschritt messen: Meine Schwünge → „📈 Fortschritt“ mit Verlauf, Trend, Fokus, Meilensteinen und Wochenrückblick (seit 0.42.0: Diagramme mit echtem Messwert, grünem Zielbereich und Skala; Antippen öffnet die passende Lektion)
   (0.27.0 Rechnen, 0.28.0 Anzeige; Langzeit-Feedback durch den Coach bleibt offen)
