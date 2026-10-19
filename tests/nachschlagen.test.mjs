@@ -134,7 +134,7 @@ test("Baustellen-Karte → Lektion: gewählte Lektionen, keine Lektion für 4 Ke
     vorneigungAnsprechen: "start-haltung",
     armeAnsprechen: "start-haltung", // Entscheidung Marcel 01.10. (sonst auch „Shank“)
     tempo: "voll-finish",
-    armschwungTop: "voll-rueckschwung",
+    armschwungTop: "start-rueckschwung",
     gewicht: "voll-finish", // Entscheidung Marcel 01.10.
     schulterdrehung: "voll-rueckschwung",
     hueftSway: "voll-rueckschwung",

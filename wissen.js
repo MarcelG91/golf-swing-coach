@@ -490,6 +490,31 @@ export const LEKTIONEN = [
     beleg: "zwei-quellen",
   },
   {
+    id: "start-rueckschwung",
+    pfad: "start",
+    level: "einsteiger",
+    titel: "Rückschwung: drehen statt heben",
+    kern: "Im Rückschwung dreht der Oberkörper, die Arme heben den Schläger nicht allein.",
+    bild: "foto:top",
+    karten: [
+      { text: "Beim Rückschwung dreht sich der Oberkörper vom Ziel weg, bis der Rücken ungefähr zum Ziel zeigt. Bei 308 Golfern (Handicap ca. 8) drehten die Schultern am höchsten Punkt, dem Top, im Schnitt etwa 98° (Driver)." },
+      { text: "Die Schultern drehen dabei etwa doppelt so weit wie das Becken: Becken ca. 45–49°, Schultern ca. 98° (308 Golfer, Driver)." },
+      { text: "Die Hüfte dreht auf der Stelle und rutscht kaum zur Seite: bei den 308 Golfern im Mittel nur 2 cm. Wenig Sway (seitliches Schieben) hängt laut GOLFTEC mit gutem Spiel zusammen." },
+      { text: "Die App misst am Top, wie hoch deine Hände über der Schulter stehen. Stehen sie sehr hoch, obwohl sich die Schultern wenig drehen, meldet sie „Arme heben statt drehen“ (Richtwert der App)." },
+    ],
+    quiz: {
+      frage: "Wie weit drehen die Schultern im Vergleich zum Becken?",
+      antworten: ["Etwa gleich weit", "Etwa doppelt so weit", "Nur halb so weit"],
+      richtig: 1,
+      erklaerung: "Im Schnitt etwa doppelt so weit: Schultern ca. 98°, Becken ca. 45–49° (308 Golfer, Driver).",
+    },
+    // Vorhandene Übung mit Figuren (tipps.js, Kennzahl "Arme heben statt drehen")
+    uebung: { tipp: { id: "armschwungTop", messwert: 1 } },
+    kennzahlen: ["armschwungTop"],
+    quellen: ["vollschwung:CHU2010", "vollschwung:GT2"],
+    beleg: "studie",
+  },
+  {
     id: "start-putt",
     pfad: "start",
     level: "einsteiger",
@@ -1545,6 +1570,7 @@ export function lektion(id) {
 // gilt die hier gewählte (Entscheidung Marcel, 01.10.); sonst die eine passende Lektion.
 const LEKTION_FUER_KENNZAHL = {
   armeAnsprechen: "start-haltung",
+  armschwungTop: "start-rueckschwung", // Einsteiger-Lektion; die Tour-Werte stehen in voll-rueckschwung
   gewicht: "voll-finish",
   vorneigungHalten: "voll-treffmoment",
   hueftBall: "voll-treffmoment",
