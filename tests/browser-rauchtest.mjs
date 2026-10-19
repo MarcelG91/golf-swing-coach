@@ -256,6 +256,20 @@ try {
   })();
   pruefe(fotoInfo.anzahl >= 1 && fotoInfo.src.every((s) => /^fotos\/[a-z-]+\.jpg$/.test(s)), `Lektion zeigt ein Foto aus dem eigenen Ordner (${JSON.stringify(fotoInfo.src)})`);
   pruefe(fotoInfo.nachweis.every((t) => /^Foto: .+ · Wikimedia Commons/.test(t || "")), `Unter dem Foto steht der Nachweis (${fotoInfo.nachweis[0]})`);
+  // Fachwörter in den Karten (Anfänger-Prüfung 15.10.): antippbar, Erklärung aus dem Glossar erscheint, nochmal Tippen schließt sie
+  const fachwort = await auswerten(`(() => {
+    const knopf = document.querySelector("#wissenLektion .fachwort");
+    if (!knopf) return { anzahl: 0 };
+    const erklaerung = knopf.closest(".karte").querySelector(".fachwort-erklaerung");
+    const zu = erklaerung.hidden;
+    knopf.click();
+    const offen = { sichtbar: !erklaerung.hidden, text: erklaerung.textContent, aria: knopf.getAttribute("aria-expanded") };
+    knopf.click();
+    return { anzahl: document.querySelectorAll("#wissenLektion .fachwort").length, zu, ...offen, wiederZu: erklaerung.hidden, ariaZu: knopf.getAttribute("aria-expanded") };
+  })()`);
+  pruefe(fachwort.anzahl >= 1, `Lektion hat antippbare Fachwörter (${fachwort.anzahl})`);
+  pruefe(fachwort.zu && fachwort.sichtbar && fachwort.text.length > 15 && fachwort.aria === "true" && fachwort.wiederZu && fachwort.ariaZu === "false",
+    `Tippen zeigt die Erklärung, nochmal Tippen schließt sie („${(fachwort.text || "").slice(0, 50)}…“)`);
   // Jedes Foto lässt sich laden und anzeigen (CSP img-src 'self')
   const fotoLaden = await auswerten(`(async () => {
     const { FOTOS } = await import("./fotos.js");

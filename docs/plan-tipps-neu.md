@@ -93,7 +93,7 @@ gut: Gute Vorneigung beim Ansprechen
 - **gedanke:** Lange Arme durch den Ball
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Arm lang lassen
 - **Übung: Hüfte bis Hüfte** · 20×
-  1. Nur bis Hüfthöhe ausholen.
+  1. Nur bis Hüfthöhe zurückschwingen.
   2. Bis Hüfthöhe durchschwingen.
   3. Nach dem Ball sind beide Arme lang.
 
@@ -121,7 +121,7 @@ gut: Volle Schulterdrehung am Top
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Drehen statt heben
 - **Übung: Griffende zum Bauchnabel** · 10×
   1. Tief am Schaft greifen, Griffende an den Bauchnabel.
-  2. Nur mit der Brust bis Hüfthöhe ausholen.
+  2. Nur mit der Brust bis Hüfthöhe zurückschwingen.
   3. Das Griffende bleibt am Bauchnabel.
 
 gut: Arme und Oberkörper arbeiten zusammen
@@ -157,7 +157,7 @@ gut: Gute Ausgangsposition hinter dem Ball
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Brustbein hinter Ball
 - **Übung: Spiegel-Check** · 10×
   1. Frontal vor einen Spiegel stellen.
-  2. Langsam zum Top ausholen, anhalten.
+  2. Langsam bis zum Top zurückschwingen, anhalten.
   3. Wirbelsäule senkrecht oder leicht vom Ziel weg.
 
 gut: Oberkörper bleibt am Top hinter dem Ball
@@ -179,12 +179,12 @@ gut: Oberkörper im Treffmoment vom Ziel weg
 ### Hüfte im Rückschwung / Sway (frontal)
 
 - **kurz:** Hüfte schiebt zur Seite
-- **warum:** Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.
+- **warum:** Schiebst du die Hüfte im Rückschwung zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.
 - **gedanke:** Drehen statt schieben
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Drehen statt schieben
 - **Übung: Stab-Übung** · 10×
   1. Stab senkrecht direkt außen neben den rechten Fuß stecken.
-  2. Langsam ausholen – die Hüfte berührt ihn nicht.
+  2. Langsam zurückschwingen – die Hüfte berührt ihn nicht.
   3. Danach halbe Schwünge.
 
 gut: Hüfte dreht auf der Stelle
@@ -270,7 +270,7 @@ gut: Kopfhöhe bleibt stabil
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Kopf ruhig halten
 - **Übung: Enges Fass** · 10×
   1. Stell dir ein enges Fass um dich vor.
-  2. Ausholen, ohne die Fasswand zu berühren.
+  2. Zurückschwingen, ohne die Fasswand zu berühren.
 
 gut: Kopf bleibt hinter dem Ball
 
@@ -297,7 +297,7 @@ gut: Hüfte im Finish über dem vorderen Fuß
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Po hinten lassen
 - **Übung: Po an die Wand** · 10×
   1. Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.
-  2. Ausholen: die rechte Po-Seite bleibt an der Wand.
+  2. Zurückschwingen: die rechte Po-Seite bleibt an der Wand.
   3. Durchdrehen: die linke Po-Seite kommt an die Wand.
   4. Nie ganz von der Wand lösen.
 
