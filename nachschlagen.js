@@ -409,3 +409,46 @@ export function suche(eingabe) {
     ausruestung: AUSRUESTUNG.filter((a) => passt(a.titel)),
   };
 }
+
+
+// ---------------------------------------------------------------
+// Antippbare Fachwörter in Lektionskarten (Anfänger-Prüfung 15.10.: „Schlagfläche, Slice, Penalty Area …
+// stehen mitten im Satz, ohne dass ich sie erklärt bekomme“).
+// Jede Zeile: [Wort im Text, Begriff im Glossar]. Groß-/Kleinschreibung zählt; „Slicer“ oder „Chippen“
+// werden nicht markiert (das Wort muss allein stehen).
+// ---------------------------------------------------------------
+export const FACHWOERTER = [
+  ["Penalty Area", "Penalty Area"], ["Early Extension", "Early Extension"],
+  ["Schlagfläche", "Schlagfläche"], ["Schwungbahn", "Schwungbahn"],
+  ["Rückschwung", "Rückschwung"], ["Abschwung", "Abschwung"], ["Treffmoment", "Treffmoment"],
+  ["Vorneigung", "Vorneigung"], ["Finish", "Durchschwung und Finish"],
+  ["Slice", "Hook und Slice"], ["Hook", "Hook und Slice"], ["Pull", "Push und Pull"],
+  ["Loft", "Loft"], ["Hybrid", "Hybrid"], ["Wedge", "Wedge"], ["Bounce", "Bounce"],
+  ["Carry", "Carry"], ["Divot", "Divot"], ["Droppen", "Droppen"], ["droppen", "Droppen"],
+  ["Chip", "Chip und Pitch"], ["Pitch", "Chip und Pitch"], ["Sway", "Sway"],
+  ["Fairway", "Fairway"], ["Rough", "Rough"],
+];
+
+const FACHWORT_MUSTER = new RegExp(
+  `(?<![\\p{L}\\d])(${[...FACHWOERTER].sort((a, b) => b[0].length - a[0].length).map(([w]) => w).join("|")})(?![\\p{L}\\d])`,
+  "gu",
+);
+
+// Zerlegt einen Kartentext in Stücke: { text } oder { text, begriff } (Eintrag aus GLOSSAR).
+// Pro Glossar-Begriff wird nur das erste Vorkommen markiert (sonst wird die Karte unruhig), und
+// Begriffe, die die gerade geöffnete Lektion selbst erklärt (lektionId), bleiben normaler Text.
+export function teileFachwoerter(text, lektionId = null) {
+  const stuecke = [];
+  const schonMarkiert = new Set();
+  let ab = 0;
+  for (const treffer of text.matchAll(FACHWORT_MUSTER)) {
+    const eintrag = GLOSSAR.find((g) => g.begriff === FACHWOERTER.find(([w]) => w === treffer[1])[1]);
+    if (!eintrag || eintrag.lektion === lektionId || schonMarkiert.has(eintrag.begriff)) continue;
+    schonMarkiert.add(eintrag.begriff);
+    if (treffer.index > ab) stuecke.push({ text: text.slice(ab, treffer.index) });
+    stuecke.push({ text: treffer[1], begriff: eintrag });
+    ab = treffer.index + treffer[1].length;
+  }
+  if (ab < text.length) stuecke.push({ text: text.slice(ab) });
+  return stuecke;
+}

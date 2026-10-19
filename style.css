@@ -974,6 +974,16 @@ button.text-gefahr { padding: 0; background: none; border: none; color: var(--ve
 /* Lektionskarten: gleiche Karten wie die Baustellen (Klasse "baustelle"), Farbe = Akzent */
 .karte.lektion { --farbe: var(--akzent-marke); }
 .karte.lektion .inhalt { margin-top: 14px; font-size: 1.08rem; line-height: 1.5; }
+/* Antippbares Fachwort: wie ein Link gestaltet (gepunktet unterstrichen), Erklärung als kleiner Kasten darunter */
+.karte.lektion .fachwort {
+  background: none; border: 0; padding: 0; margin: 0; font: inherit; line-height: inherit;
+  color: var(--akzent); text-decoration: underline dotted; text-underline-offset: 3px; cursor: pointer;
+}
+.karte.lektion .fachwort[aria-expanded="true"] { text-decoration-style: solid; }
+.karte.lektion .fachwort-erklaerung {
+  margin-top: 10px; padding: 10px 12px; font-size: 0.95rem; line-height: 1.45;
+  background: var(--flaeche-innen); border: 1px solid var(--rand); border-radius: 10px;
+}
 .karte.lektion button.breit { width: 100%; margin-top: 10px; }
 .schaubild { background: var(--flaeche-innen); border-radius: var(--r-klein); margin-top: 10px; padding: 6px 4px; }
 .schaubild svg { display: block; width: 100%; height: 170px; font-family: inherit; }

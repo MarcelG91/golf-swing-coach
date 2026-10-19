@@ -122,7 +122,7 @@ const TIPPS = {
       gedanke: "Lange Arme durch den Ball",
       wort: "Arm lang lassen",
       uebung: { name: "Hüfte bis Hüfte", wiederholungen: 20, schritte: [
-        "Nur bis Hüfthöhe ausholen.",
+        "Nur bis Hüfthöhe zurückschwingen.",
         "Bis Hüfthöhe durchschwingen.",
         "Nach dem Ball sind beide Arme lang.",
       ] },
@@ -154,7 +154,7 @@ const TIPPS = {
       wort: "Drehen statt heben",
       uebung: { name: "Griffende zum Bauchnabel", wiederholungen: 10, schritte: [
         "Tief am Schaft greifen, Griffende an den Bauchnabel.",
-        "Nur mit der Brust bis Hüfthöhe ausholen.",
+        "Nur mit der Brust bis Hüfthöhe zurückschwingen.",
         "Das Griffende bleibt am Bauchnabel.",
       ] },
     }),
@@ -191,7 +191,7 @@ const TIPPS = {
       wort: "Brustbein hinter Ball",
       uebung: { name: "Spiegel-Check", wiederholungen: 10, schritte: [
         "Frontal vor einen Spiegel stellen.",
-        "Langsam zum Top ausholen, anhalten.",
+        "Langsam bis zum Top zurückschwingen, anhalten.",
         "Wirbelsäule senkrecht oder leicht vom Ziel weg.",
       ] },
     }),
@@ -217,12 +217,12 @@ const TIPPS = {
   hueftSway: {
     "": (s) => ({
       kurz: "Hüfte schiebt zur Seite",
-      warum: "Schiebst du die Hüfte beim Ausholen zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.",
+      warum: "Schiebst du die Hüfte im Rückschwung zur Seite, musst du sie im Abschwung genau zurückbringen. Das gelingt selten gleich – dein Treffpunkt wandert.",
       gedanke: "Drehen statt schieben",
       wort: "Drehen statt schieben",
       uebung: { name: "Stab-Übung", wiederholungen: 10, schritte: [
         `Stab senkrecht direkt außen neben den ${s.hen} Fuß stecken.`,
-        "Langsam ausholen – die Hüfte berührt ihn nicht.",
+        "Langsam zurückschwingen – die Hüfte berührt ihn nicht.",
         "Danach halbe Schwünge.",
       ] },
     }),
@@ -301,7 +301,7 @@ const TIPPS = {
       wort: "Kopf ruhig halten",
       uebung: { name: "Enges Fass", wiederholungen: 10, schritte: [
         "Stell dir ein enges Fass um dich vor.",
-        "Ausholen, ohne die Fasswand zu berühren.",
+        "Zurückschwingen, ohne die Fasswand zu berühren.",
       ] },
     }),
     gut: "Kopf bleibt hinter dem Ball",
@@ -330,7 +330,7 @@ const TIPPS = {
       wort: "Po hinten lassen",
       uebung: { name: "Po an die Wand", wiederholungen: 10, schritte: [
         "Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.",
-        `Ausholen: die ${s.h} Po-Seite bleibt an der Wand.`,
+        `Zurückschwingen: die ${s.h} Po-Seite bleibt an der Wand.`,
         `Durchdrehen: die ${s.f} Po-Seite kommt an die Wand.`,
         "Nie ganz von der Wand lösen.",
       ] },

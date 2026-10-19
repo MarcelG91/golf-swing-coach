@@ -413,7 +413,7 @@ export const LEKTIONEN = [
       frage: "Wie viele Knöchel der linken Hand siehst du beim neutralen Griff?",
       antworten: ["Zwei", "Keinen", "Vier"],
       richtig: 0,
-      erklaerung: "Zwei Knöchel gelten als neutral. Mehr heißt stark (die Fläche schließt leichter), weniger heißt schwach (sie bleibt eher offen).",
+      erklaerung: "Zwei Knöchel gelten als neutral. Mehr heißt stark (die Schlagfläche schließt leichter), weniger heißt schwach (sie bleibt eher offen).",
     },
     uebung: {
       name: "Griff aufbauen",
@@ -1024,7 +1024,7 @@ export const LEKTIONEN = [
     bild: "uhr",
     karten: [
       { text: "Ein Pitch fliegt hoch und rollt wenig. Dafür ist der Schwung länger als beim Chip, Körper und Handgelenke arbeiten mit – ein kleiner Vollschwung." },
-      { text: "Uhren-System nach Dave Pelz: Der linke Arm ist der Stundenzeiger. Ausholen bis 7:30, 9:00 (Arm waagerecht) oder 10:30 – das ergibt drei feste Längen." },
+      { text: "Uhren-System nach Dave Pelz: Der linke Arm ist der Stundenzeiger. Zurückschwingen bis 7:30, 9:00 (Arm waagerecht) oder 10:30 – das ergibt drei feste Längen." },
       { text: "Rhythmus und Durchschwung bleiben gleich, nur der Rückschwung ändert sich. Mit drei Längen und drei bis vier Wedges hast du neun bis zwölf feste Entfernungen." },
       { text: "Die genauen Uhrzeiten sind nicht heilig – manche Trainer nutzen 8, 9 und 10 Uhr. Wichtig ist, deine Längen auf der Range zu messen und aufzuschreiben." },
     ],

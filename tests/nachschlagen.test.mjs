@@ -161,3 +161,36 @@ test("Baustellen-Karte → Lektion: gewählte Lektionen, keine Lektion für 4 Ke
   assert.equal(lektionZurKennzahl("toString"), null);
   assert.equal(lektionZurKennzahl("gibtEsNicht"), null);
 });
+
+// ---------------------------------------------------------------
+// Antippbare Fachwörter in Lektionskarten
+// ---------------------------------------------------------------
+import { FACHWOERTER, teileFachwoerter } from "../nachschlagen.js";
+
+test("Fachwörter: Jedes Wort zeigt auf einen Glossar-Begriff mit Erklärung", () => {
+  for (const [wort, begriff] of FACHWOERTER) {
+    const g = GLOSSAR.find((x) => x.begriff === begriff);
+    assert.ok(g, `${wort}: Begriff „${begriff}“ fehlt im Glossar`);
+    assert.ok(g.text.length > 10, `${wort}: Erklärung fehlt`);
+  }
+});
+
+test("Fachwörter: Stücke ergeben wieder den Originaltext, nur ganze Wörter, nur das erste Vorkommen", () => {
+  const text = "Ein Slice, ein Slicer, Chippen, danach wieder Slice und Hook: die Schlagfläche zeigt, Top-Spieler, Penalty Area.";
+  const stuecke = teileFachwoerter(text);
+  assert.equal(stuecke.map((s) => s.text).join(""), text);
+  const markiert = stuecke.filter((s) => s.begriff).map((s) => s.text);
+  assert.deepEqual(markiert, ["Slice", "Schlagfläche", "Penalty Area"]); // Slicer/Chippen nicht, Hook = gleicher Begriff wie Slice
+});
+
+test("Fachwörter: Was die Lektion selbst erklärt, bleibt normaler Text", () => {
+  const g = GLOSSAR.find((x) => x.begriff === "Schlagfläche");
+  const stuecke = teileFachwoerter("Die Schlagfläche zeigt zum Ziel.", g.lektion);
+  assert.ok(stuecke.every((s) => !s.begriff));
+});
+
+test("Fachwörter: In den Einsteiger-Lektionen sind Fachwörter markierbar (Anfänger-Prüfung)", () => {
+  const start = LEKTIONEN.filter((l) => l.pfad === "start");
+  const anzahl = start.flatMap((l) => l.karten.flatMap((k) => teileFachwoerter(k.text, l.id).filter((s) => s.begriff))).length;
+  assert.ok(anzahl >= 8, `Nur ${anzahl} markierbare Fachwörter im Startpfad`);
+});
