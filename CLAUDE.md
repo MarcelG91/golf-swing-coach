@@ -235,6 +235,12 @@ Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
    neue Quellen mit Stufe. Offen: Z4 (Drei-Putts, Einsteiger-Lektionen bleiben ohne Tour-Zahlen), Z12 (Spitzentreffer Eisen, nur eine B-Quelle), Z16 (Streuung – App-Funktion), Driver-Loft aus Z13.
 7. Eigene Fotos von Marcel (Ansprechen vorne/hinten, Griff ×3, Treffmoment, Putten – Anleitung im Bericht) und
    `fotos.js` `LIZENZEN` um CC BY-SA 3.0/CC BY 2.0 erweitern (Bunker-Foto, Stroboskop-Bild).
+8. ~~**Prüfer-Runde Startpfad**~~ (19.10., golf-profi + golf-anfaenger lasen Pfad „Start“ und die Einsteiger-Tipps) – **erledigt mit 0.48.1–0.51.0**:
+   Griff klarer, Übungen mit Material und ohne Verbote, Karten entschlackt (Tour-/Studienzahlen raus), Fachwörter antippbar
+   (`FACHWOERTER` in `nachschlagen.js`), Quellen zugeklappt, neue Einsteiger-Lektion „Rückschwung“, Übung „Aufrichten“ (die Schwelle
+   `vorneigungAnsprechen` blieb: Kim 2018 misst nur das 5er-Eisen). Offen: iPhone-Test (`docs/iphone-testliste.md` Abschnitt 8),
+   Griff-Fingerlage beim überlappenden Griff (Quelle sagt „auf dem Zeigefinger“, Profi „Mulde zwischen Zeige- und Mittelfinger“ – an
+   Lehrbuch prüfen), Stufe-A/B-Belege für die Technik der Grundlagen-Lektionen (Verbandslehrplan), Tipp-„warum“-Sätze als Trainer-Erfahrung kennzeichnen.
 Ideen für später: Kennzahl „Schulterlinie am Top“, Bewertung je Schläger, Streuung je Kennzahl über mehrere Schwünge.
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
