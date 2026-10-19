@@ -23,10 +23,10 @@ import { FOTOS, LIZENZEN, foto, fotoNachweis } from "../fotos.js";
 const PROJEKT = fileURLToPath(new URL("..", import.meta.url));
 const woerter = (text) => text.match(/[A-Za-zÄÖÜäöüß0-9]+/g) || [];
 
-test("Pfad 1 „Start“ hat alle 8 Lektionen – mit festen IDs (daran hängt der gespeicherte Fortschritt)", () => {
+test("Pfad 1 „Start“ hat alle 9 Lektionen – mit festen IDs (daran hängt der gespeicherte Fortschritt)", () => {
   assert.deepEqual(lektionenImPfad("start").map((l) => l.id), [
     "start-weg", "start-schlaeger", "start-griff", "start-ausrichtung",
-    "start-haltung", "start-putt", "start-chip", "start-regeln",
+    "start-haltung", "start-rueckschwung", "start-putt", "start-chip", "start-regeln",
   ]);
 });
 
@@ -41,7 +41,7 @@ test("Pfad 2 „Vollschwung“ und Pfad 3 „Ballflug“ haben je 7 Lektionen �
   ]);
 });
 
-test("Pfade 4–6 haben je 6 Lektionen – mit festen IDs; insgesamt 40 Lektionen wie im Plan", () => {
+test("Pfade 4–6 haben je 6 Lektionen – mit festen IDs; insgesamt 41 Lektionen (40 im Plan + Einsteiger-Rückschwung)", () => {
   assert.deepEqual(lektionenImPfad("gruen").map((l) => l.id), [
     "gruen-auswahl", "gruen-chip", "gruen-pitch", "gruen-bunker", "gruen-putt-laenge", "gruen-lesen",
   ]);
@@ -52,7 +52,7 @@ test("Pfade 4–6 haben je 6 Lektionen – mit festen IDs; insgesamt 40 Lektione
     "ueben-fokus", "ueben-bilder", "ueben-verteilt", "ueben-range", "ueben-aufwaermen", "ueben-app",
   ]);
   assert.equal(PFADE.length, 6);
-  assert.equal(LEKTIONEN.length, 40);
+  assert.equal(LEKTIONEN.length, 41);
 });
 
 test("Jede Lektion hat alle Felder, eindeutige ID, bekannten Pfad und Level", () => {
@@ -295,7 +295,7 @@ test("Pfade: passender Pfad oben, Fortschritt „x von y“, nächste Lektion", 
   assert.equal(pfadeFuerLevel("koenner").length, PFADE.length);
   assert.deepEqual(fortschritt("ballflug", ["ball-neun", "start-weg"]), { erledigt: 1, gesamt: 7 });
   assert.equal(naechsteLektion("voll-driver-eisen"), null, "Pfadende – kein Sprung in den nächsten Pfad");
-  assert.deepEqual(fortschritt("start", ["start-weg", "start-griff", "fremd"]), { erledigt: 2, gesamt: 8 });
+  assert.deepEqual(fortschritt("start", ["start-weg", "start-griff", "fremd"]), { erledigt: 2, gesamt: 9 });
   assert.equal(naechsteLektion("start-weg").id, "start-schlaeger");
   assert.equal(naechsteLektion("start-regeln"), null);
   assert.equal(naechsteLektion("gibtEsNicht"), null);
