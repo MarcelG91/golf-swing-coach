@@ -106,11 +106,11 @@ const TIPPS = {
       uebung: SCHLAEGER_AM_RUECKEN(),
     }),
     vorgebeugt: () => ({
-      kurz: "Du beugst dich zu weit vor",
-      warum: "Weit vorgebeugt fehlen dir Gleichgewicht und Drehfreiheit. Oft kippst du im Schwung nach vorne oder richtest dich auf.",
+      kurz: "Du beugst dich ziemlich stark vor",
+      warum: "Bist du sehr weit vorgebeugt, fällt das Drehen schwerer. Dann kippst du im Schwung leicht nach vorne oder richtest dich auf.",
       gedanke: "Gewicht auf die Fußmitte",
       wort: "Etwas aufrichten",
-      uebung: SCHLAEGER_AM_RUECKEN(),
+      uebung: AUFRICHTEN(),
     }),
     gut: "Gute Vorneigung beim Ansprechen",
   },
@@ -355,13 +355,20 @@ const TIPPS = {
   },
 };
 
-// Gleiche Übung für "zu aufrecht" und "zu weit vorgebeugt" – als Funktion,
-// weil sie oben schon gebraucht wird, bevor diese Zeile gelesen ist.
+// Übungen für "zu aufrecht" und "zu weit vorgebeugt" (entgegengesetzte Richtungen, deshalb zwei Übungen).
+// Als Funktionen, weil sie oben schon gebraucht werden, bevor diese Zeilen gelesen sind.
 function SCHLAEGER_AM_RUECKEN() {
   return { name: "Schläger am Rücken", wiederholungen: 5, schritte: [
-    "Schläger längs an den Rücken: Kopf, Schulterblätter, Steißbein.",
-    "Aus der Hüfte kippen, bis du auf den Ball schaust.",
+    "Schläger mit einer Hand längs an den Rücken: Kopf, Schulterblätter, Steißbein.",
+    "Aus der Hüfte kippen: Der Po geht nach hinten.",
     "Der Schläger bleibt an allen drei Punkten.",
+  ] };
+}
+function AUFRICHTEN() {
+  return { name: "Aufrichten", wiederholungen: 5, schritte: [
+    "Stell dich ohne Schläger in die Ansprechhaltung.",
+    "Richte den Oberkörper ein Stück auf, bis die Arme locker hängen.",
+    "Gewicht auf der Fußmitte spüren, dann den Schläger greifen.",
   ] };
 }
 

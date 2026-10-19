@@ -69,20 +69,20 @@ gut: Arme hängen locker unter den Schultern
 - **gedanke:** Aus der Hüfte kippen
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Mehr vorneigen
 - **Übung: Schläger am Rücken** · 5×
-  1. Schläger längs an den Rücken: Kopf, Schulterblätter, Steißbein.
-  2. Aus der Hüfte kippen, bis du auf den Ball schaust.
+  1. Schläger mit einer Hand längs an den Rücken: Kopf, Schulterblätter, Steißbein.
+  2. Aus der Hüfte kippen: Der Po geht nach hinten.
   3. Der Schläger bleibt an allen drei Punkten.
 
 **Zu weit vorgebeugt**
 
-- **kurz:** Du beugst dich zu weit vor
-- **warum:** Weit vorgebeugt fehlen dir Gleichgewicht und Drehfreiheit. Oft kippst du im Schwung nach vorne oder richtest dich auf.
+- **kurz:** Du beugst dich ziemlich stark vor
+- **warum:** Bist du sehr weit vorgebeugt, fällt das Drehen schwerer. Dann kippst du im Schwung leicht nach vorne oder richtest dich auf.
 - **gedanke:** Gewicht auf die Fußmitte
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Etwas aufrichten
-- **Übung: Schläger am Rücken** · 5×
-  1. Schläger längs an den Rücken: Kopf, Schulterblätter, Steißbein.
-  2. Aus der Hüfte kippen, bis du auf den Ball schaust.
-  3. Der Schläger bleibt an allen drei Punkten.
+- **Übung: Aufrichten** · 5×
+  1. Stell dich ohne Schläger in die Ansprechhaltung.
+  2. Richte den Oberkörper ein Stück auf, bis die Arme locker hängen.
+  3. Gewicht auf der Fußmitte spüren, dann den Schläger greifen.
 
 gut: Gute Vorneigung beim Ansprechen
 

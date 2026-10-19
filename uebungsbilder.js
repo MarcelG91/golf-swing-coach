@@ -91,6 +91,12 @@ const BILDER = {
     hinten("ansprechen", { ohneSchlaeger: true, lot: true }),
     hinten("ansprechen", { lot: true }),
   ],
+  // Ziel ist die gute Ansprechhaltung (Pose "ansprechen"); eine eigene "zu tief"-Pose gibt es nicht
+  "Aufrichten": [
+    hinten("ansprechen", { ohneSchlaeger: true, lot: true }),
+    hinten("ansprechen", { ohneSchlaeger: true, lot: true }),
+    hinten("ansprechen", { lot: true }),
+  ],
   "Faust-Check": [
     hinten("ansprechen"),
     hinten("ansprechen", { faust: true }),
