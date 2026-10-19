@@ -60,7 +60,7 @@ Neuer vierter Knopf in der Leiste: **📖 Wissen**.
 
 Bild-Kürzel: **F** = Strichfigur aus Profi-Posen · **S** = neues Schaubild (Liste unten).
 
-### Pfad 1 · 🌱 Start: Die Grundlagen (8 Lektionen; bis 0.48.3 „Vom ersten Schlag zur Platzreife“)
+### Pfad 1 · 🌱 Start: Die Grundlagen (9 Lektionen seit 0.51.0; bis 0.48.3 „Vom ersten Schlag zur Platzreife“)
 | # | Lektion | Bild | Übung | Quelle (Datei) |
 |---|---|---|---|---|
 | 1 | Wie lernt man Golf? (Weg, Reihenfolge vom Loch weg) | S Weg-Grafik | – | `erste-schritte` |
@@ -68,6 +68,7 @@ Bild-Kürzel: **F** = Strichfigur aus Profi-Posen · **S** = neues Schaubild (Li
 | 3 | Der Griff | S Griff-Skizze (2 Knöchel, V) | Griff 10× | `grundlagen` |
 | 4 | Ausrichtung: die Eisenbahnschienen | S Schienen | Zwei Stäbe | `grundlagen` |
 | 5 | Haltung beim Ansprechen | F hinten Ansprechen | Schläger am Rücken, Faust-Check | `grundlagen` |
+| 5b | Rückschwung: drehen statt heben (seit 0.51.0, Prüfer-Runde 15.10.; nur Studienwerte, keine Tour-Zahlen; Baustelle „Arme heben statt drehen“ führt hierher) | F Top | Griffende zum Bauchnabel | `vollschwung` (CHU2010, GT2) |
 | 6 | Erster Putt: Pendel und Länge | S Pendel | Leiter | `putten` |
 | 7 | Erster Chip | S Flug : Rollen | Landezone | `kurzes-spiel` |
 | 8 | Platzreife: Regeln & Etikette in 5 Minuten | S Pfahlfarben | – | `regeln-etikette` |
