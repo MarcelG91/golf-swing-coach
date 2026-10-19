@@ -194,7 +194,7 @@ export const IRRTUEMER = [
   {
     id: "startrichtung",
     irrtum: "„Der Ball startet in Richtung der Schwungbahn.“",
-    stimmt: "Er startet vor allem in Richtung der Schlagfläche, beim Driver zu ca. 85 %. Die Bahn bestimmt zusammen mit der Fläche, wie der Ball kurvt.",
+    stimmt: "Er startet vor allem in Richtung der Schlagfläche, beim Driver zu etwa drei Vierteln (beim Wedge nur gut zur Hälfte). Die Bahn bestimmt zusammen mit der Fläche, wie der Ball kurvt.",
     lektion: "ball-gesetze",
     quellen: ["ballflug-und-fehler:TM1", "ballflug-und-fehler:TM2", "ballflug-und-fehler:SAND", "ballflug-und-fehler:WRX1"],
     beleg: "messung",
