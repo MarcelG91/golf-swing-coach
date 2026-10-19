@@ -71,7 +71,7 @@ import { bildZuSchritt, zeichnung, gesamtDauer } from "./uebungsbilder.js";
 // Wissen: Lernpfade, Lektionen, Quellen (reine Daten) und die Schaubilder dazu
 import { BELEGE, pfadeFuerLevel, lektionenImPfad, fortschritt, naechsteLektion, leseFortschritt, setzeErledigt, quelleText, uebungFuer, lektion, lektionZurKennzahl, BALLFLUG_AUSWAHL, ballflugErgebnis } from "./wissen.js";
 // Nachschlagen: Glossar, Irrtümer, Regeln, Ausrüstung und die Suche (reine Daten)
-import { GLOSSAR, GLOSSAR_GRUPPEN, IRRTUEMER, REGELN, REGEL_QUELLEN, AUSRUESTUNG, suche } from "./nachschlagen.js";
+import { GLOSSAR, GLOSSAR_GRUPPEN, IRRTUEMER, REGELN, REGEL_QUELLEN, AUSRUESTUNG, suche, teileFachwoerter } from "./nachschlagen.js";
 import { schaubild, ballflugBild, FIGUREN } from "./schaubilder.js";
 // Coach mit Claude: was gesendet wird, Antwort prüfen (reine Rechenlogik, Etappe 11b)
 import { coachDaten, baueKopierText, baueCoachAnfrage, coachKopfzeilen, neuerDatenstrom, coachFehlerArt, pruefeCoachAntwort, leseAntwort, verlaufKurz, kostenCent, COACH_FEHLER } from "./coach.js";
@@ -1599,7 +1599,7 @@ function oeffneLektion(id, zurueck = ZURUECK_PFADE) {
   l.karten.forEach((k, i) => {
     const karte = lektionsKarte(`${i + 1} von ${l.karten.length}`);
     if (k.bild) karte.append(wissensBild(k.bild));
-    karte.append(neu("p", "inhalt", k.text));
+    karte.append(...inhaltMitFachwoertern(k.text, l.id));
     karten.push(karte);
   });
   // 3. Quiz, danach (falls vorhanden) ein Werkzeug zum Ausprobieren, 4. Abschluss
@@ -1607,6 +1607,38 @@ function oeffneLektion(id, zurueck = ZURUECK_PFADE) {
   if (l.werkzeug === "ballflugHelfer") karten.push(ballflugHelferKarte(zurueck));
   karten.push(abschlussKarte(l, zurueck));
   zeigeKarten(l.titel, karten, zurueck);
+}
+
+// Kartentext mit antippbaren Fachwörtern: Tippen zeigt darunter die kurze Erklärung aus dem Glossar,
+// nochmal Tippen (oder ein anderes Fachwort) schließt sie wieder. Alles per textContent, nie als HTML.
+function inhaltMitFachwoertern(text, lektionId) {
+  const absatz = neu("p", "inhalt");
+  const erklaerung = neu("p", "fachwort-erklaerung");
+  erklaerung.hidden = true;
+  let offen = null; // das Fachwort, dessen Erklärung gerade steht
+  for (const stueck of teileFachwoerter(text, lektionId)) {
+    if (!stueck.begriff) {
+      absatz.append(document.createTextNode(stueck.text));
+      continue;
+    }
+    const knopf = neu("button", "fachwort", stueck.text);
+    knopf.type = "button";
+    knopf.setAttribute("aria-expanded", "false");
+    knopf.addEventListener("click", () => {
+      if (offen) offen.setAttribute("aria-expanded", "false");
+      if (offen === knopf) {
+        erklaerung.hidden = true;
+        offen = null;
+        return;
+      }
+      erklaerung.replaceChildren(neu("strong", "", `${stueck.begriff.begriff}: `), document.createTextNode(stueck.begriff.text));
+      erklaerung.hidden = false;
+      knopf.setAttribute("aria-expanded", "true");
+      offen = knopf;
+    });
+    absatz.append(knopf);
+  }
+  return [absatz, erklaerung];
 }
 
 // Wisch-Karten zeigen: eine Lektion oder einen Stapel aus Nachschlagen.
