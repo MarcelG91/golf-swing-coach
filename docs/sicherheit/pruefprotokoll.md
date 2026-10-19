@@ -13,6 +13,7 @@ Der aktuelle Stand aller Befunde steht in [`bericht.md`](bericht.md).
 - Neu: – · Erledigt: Recherche S1, S3, S4, Z1–Z21 (außer Z4, Z12, Z16) · Offen P1: iPhone-Test, echter Coach-Test · Offen sonst: C4, C6, C7, C9, S10, S15, S16, S17, Z3
 - Nicht geprüft: iPhone/Safari, Zeit bis „Bereit“ live, Zwei-Faktor, VS-Code-Erweiterungen, Richtigkeit der Quellen selbst.
 - Fix-Branch: `check-2026-10-19` (nur Protokoll und Bericht-Stand)
+- Nachtrag 19.10.: Der Check-Commit `1dd2e7e` enthält versehentlich auch ungespeicherte Änderungen eines parallelen Chats (neue Übung „Aufrichten“ für `vorneigungAnsprechen` in `tipps.js`/`uebungsbilder.js`, Version 0.49.2, Text in `plan-tipps-neu.md`), weil im gemeinsamen Ordner mit `git add -A` committet wurde. Tests und CI waren grün, nichts zurückgenommen; die Aussage „Check betrifft nur Protokoll“ oben stimmt dafür nicht. Künftig im Check gezielt Dateien hinzufügen und vorher `git status` prüfen.
 
 ## Golf-App-Check 2026-10-15 (3) · Branch schwellen-s1-s4 (PR #84, 0.48.0) auf main @ 0b9cc00 · Urteil 🟢
 - Geprüft (lokal, von der bauenden Sitzung selbst, kein eigener Prüf-Subagent – daher weniger unabhängig): `main` (0.47.3) und Branch `schwellen-s1-s4` (0.48.0, Schwellen S1/S3/S4, nur Bewertungsgrenzen, Texte, Tests, Doku). `node --test` 231/231 grün (vorher 228; 3 neue Grenz-Tests, scheitern mit den alten Grenzen), JavaScript-Syntax grün, Browser-Rauchtest bestanden. CI „Prüfen“ auf `main` und für PR #84 grün, `main` geschützt, keine Konflikte mit `main`.
