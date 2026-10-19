@@ -996,8 +996,8 @@ export const LEKTIONEN = [
     kern: "Mehr Loft: Der Chip fliegt mehr und rollt weniger. Weniger Loft: umgekehrt.",
     bild: "flugRollenSchlaeger",
     karten: [
-      { text: "Aufbau: enger Stand, Ball mittig bis leicht rechts, Gewicht deutlich links. Die Hände sind leicht vor dem Ball, der Griff ist etwas kürzer gefasst." },
-      { text: "Laut James Sieckmann läuft der Schläger frei durch den Ball. So gleitet die Sohle über den Boden und verzeiht einen etwas zu frühen Bodenkontakt." },
+      { text: "Aufbau – erst zwei Dinge: Gewicht etwas mehr links, Ball mittig. Sitzt das, dazu: enger Stand, Hände leicht vor dem Ball, Griff etwas kürzer fassen." },
+      { text: "Laut James Sieckmann läuft der Schläger frei durch den Ball. So gleitet die Unterseite des Schlägers über den Boden und verzeiht einen etwas zu frühen Bodenkontakt." },
       { text: "Welcher Schläger? Trainer sind uneins: Manche nutzen die „Regel der 12“, doch ihre Fassungen widersprechen sich. Andere raten, das Rollen der eigenen Schläger auf dem Übungsgrün zu lernen." },
       { text: "Dein Ziel beim Chip ist der Landepunkt: eine Stelle auf dem Grün, von der der Ball zur Fahne rollt. Genau das übt die Landezone." },
       { text: "Freizeitspieler machen im kurzen Spiel (20–60 Yards) ca. dreimal größere Längen- als Richtungsfehler. Übe deshalb vor allem die Länge, zum Beispiel mit der Landezone." },
