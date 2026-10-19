@@ -118,9 +118,9 @@ const TIPPS = {
   fuehrungsarmTreff: {
     "": (s) => ({
       kurz: `${s.Fer} Arm knickt im Treffmoment`,
-      warum: "Knickt der Arm, wird dein Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge: dünne oder getoppte Bälle und weniger Weite.",
-      gedanke: "Lange Arme durch den Ball",
-      wort: "Arm lang lassen",
+      warum: "Knickt der Arm im Treffmoment, wird dein Schwungkreis kleiner. Laut TPI kostet das Kraft und bringt mehr Loft und Spin.",
+      gedanke: "Weiter Bogen durch den Ball",
+      wort: "Weiter Bogen",
       uebung: { name: "Hüfte bis Hüfte", wiederholungen: 20, schritte: [
         "Nur bis Hüfthöhe zurückschwingen.",
         "Bis Hüfthöhe durchschwingen.",
@@ -201,7 +201,7 @@ const TIPPS = {
   oberkoerperTreff: {
     "": (s) => ({
       kurz: "Oberkörper im Treffmoment zu gerade",
-      warum: `Nur wenn die ${s.h} Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.`,
+      warum: `Gute Spieler neigen den Oberkörper im Treffmoment leicht vom Ziel weg, die ${s.h} Schulter ist tiefer. Das hängt mit mehr Schlägertempo zusammen.`,
       gedanke: `${gross(s.h)} Schulter geht nach unten`,
       wort: `${gross(s.h)} Schulter runter`,
       uebung: { name: "Treffposition in Zeitlupe", wiederholungen: 10, schritte: [
@@ -222,7 +222,7 @@ const TIPPS = {
       wort: "Drehen statt schieben",
       uebung: { name: "Stab-Übung", wiederholungen: 10, schritte: [
         `Stab senkrecht direkt außen neben den ${s.hen} Fuß stecken.`,
-        "Langsam zurückschwingen – die Hüfte berührt ihn nicht.",
+        "Langsam zurückschwingen – zwischen Hüfte und Stab bleibt Luft.",
         "Danach halbe Schwünge.",
       ] },
     }),
@@ -261,8 +261,8 @@ const TIPPS = {
     hoch: (s) => ({
       kurz: "Du richtest dich auf",
       warum: "Richtest du dich auf, ändert sich der Abstand zum Ball. Der Schläger kommt zu hoch an – getoppte oder dünne Schläge.",
-      gedanke: `${gross(s.hes)} Knie bleibt gebeugt`,
-      wort: "Knie gebeugt lassen",
+      gedanke: "Größe halten",
+      wort: "Größe halten",
       uebung: { name: "Später hochschauen", wiederholungen: 10, schritte: [
         "Halbe Schwünge.",
         `${gross(s.hes)} Knie bleibt bis nach dem Treffen gebeugt.`,
@@ -301,7 +301,7 @@ const TIPPS = {
       wort: "Kopf ruhig halten",
       uebung: { name: "Enges Fass", wiederholungen: 10, schritte: [
         "Stell dir ein enges Fass um dich vor.",
-        "Zurückschwingen, ohne die Fasswand zu berühren.",
+        "Zurückschwingen, der Körper bleibt im Fass.",
       ] },
     }),
     gut: "Kopf bleibt hinter dem Ball",
@@ -325,14 +325,14 @@ const TIPPS = {
   vorneigungHalten: {
     "": (s) => ({
       kurz: "Oberkörper richtet sich auf",
-      warum: "Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Typische Folgen sind Toppen oder Shanks.",
+      warum: "Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Mögliche Folgen sind Toppen, Shanks, Push oder Block.",
       gedanke: "Po bleibt hinten",
       wort: "Po hinten lassen",
       uebung: { name: "Po an die Wand", wiederholungen: 10, schritte: [
         "Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.",
         `Zurückschwingen: die ${s.h} Po-Seite bleibt an der Wand.`,
         `Durchdrehen: die ${s.f} Po-Seite kommt an die Wand.`,
-        "Nie ganz von der Wand lösen.",
+        "Der Po bleibt dabei in Kontakt mit der Wand.",
       ] },
     }),
     gut: "Vorneigung bleibt bis zum Treffmoment",
@@ -348,7 +348,7 @@ const TIPPS = {
         "Golftasche direkt hinter den Po stellen.",
         `Rückschwung: die ${s.h} Po-Seite berührt die Tasche.`,
         `Abschwung: die ${s.f} Po-Seite berührt die Tasche.`,
-        "Langsame halbe Schwünge, der Schläger trifft die Tasche nicht.",
+        "Langsame halbe Schwünge, der Schläger schwingt frei an der Tasche vorbei.",
       ] },
     }),
     gut: "Hüfte bleibt auf Abstand zum Ball",

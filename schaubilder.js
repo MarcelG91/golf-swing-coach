@@ -461,7 +461,7 @@ const SCHAUBILDER = {
     };
     b.linie([160, 24], [160, 158], "rand", 1, true); // Trennlinie zwischen den Bildern
     const bilder = [
-      { x0: 0, titel: "Eisen", art: "leicht abwärts", grad: "ca. −3 bis −4°", tiefX: 96, tiefY: 123, ballY: 115, tee: false,
+      { x0: 0, titel: "Eisen", art: "leicht abwärts", grad: "Tour 6er: ca. −2 bis −4°", tiefX: 96, tiefY: 123, ballY: 115, tee: false,
         unten: ["tiefster Punkt nach dem Ball", "erst Ball, dann Boden"] },
       { x0: 162, titel: "Driver", art: "leicht aufwärts", grad: "ca. 0 bis +5°", tiefX: 56, tiefY: 117, ballY: 111, tee: true,
         unten: ["tiefster Punkt vor dem Ball", "Ball auf dem Tee"] },
@@ -482,7 +482,7 @@ const SCHAUBILDER = {
       b.text([x(80), 138], s.unten[0], { groesse: 10 });
       b.text([x(80), 152], s.unten[1], { farbe: "text-leise", groesse: 10 });
     }
-    b.text([160, 172], "Seitenansicht · Ziel rechts · TrackMan-Richtwerte", { farbe: "text-leise", groesse: 10 });
+    b.text([160, 172], "Seitenansicht · Ziel rechts · Richtwerte", { farbe: "text-leise", groesse: 10 });
     return { ausschnitt: { x: 0, y: 20, breite: 320, hoehe: 160 }, elemente: b.elemente };
   },
 

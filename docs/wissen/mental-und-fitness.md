@@ -8,8 +8,9 @@ Physiotherapie verweisen.
 ## Kernsatz für die App
 
 > **Aufwärmen mit Bewegung, nicht mit Dehnen im Stehen.** Und: Nervosität ist normal – eine feste
-> Routine hilft nachweislich – laut Übersichtsarbeit eine von vier wirksamen Hilfen (Routine, Quiet Eye,
-> Druck der linken Hand, Üben unter Druck). [WU1][CH1]
+> Routine hilft nachweislich – laut Übersichtsarbeit eine von drei wirksamen Arten von Hilfen (Ablenkung vom
+> Grübeln, z. B. Routine; weniger Selbstbeobachtung, z. B. Druck der linken Hand; Üben unter Druck). Quiet Eye
+> stammt aus eigener Literatur. [WU1][CH1]
 
 ## 1. Nervosität und Druck (🌿)
 
@@ -18,7 +19,7 @@ Physiotherapie verweisen.
 - **Was hilft nachweislich?** Eine Übersichtsarbeit (Gröpel & Mesagno, 2019) fand drei Arten wirksamer
   Maßnahmen gegen „Choking“ (Versagen unter Druck) [CH1]:
   1. **Ablenkung vom Grübeln** – vor allem eine feste **Routine vor dem Schlag** (Atmung, Stichwort,
-     immer gleiche Dauer). In einer Studie mit Australian Football wirkte die umfassende Routine am
+     immer derselbe **Ablauf**; belegt ist der feste Ablauf, die gleiche Dauer ist umstritten [RUP1]). In einer Studie mit Australian Football wirkte die umfassende Routine am
      stärksten.
   2. **Gegen zu viel Selbstbeobachtung** – z. B. kurzes kräftiges Drücken der linken Hand vor dem Schlag
      (bei Rechtshändern; untersucht u. a. im Fußball und Taekwondo – für Golf nur übertragbar vermutet).
@@ -32,7 +33,8 @@ Physiotherapie verweisen.
 - **„Quiet Eye“ beim Putten**: Vor dem Putt den Blick ruhig auf die Rückseite des Balls richten und
   während des Putts dort lassen. In einer Studie mit 22 guten Golfern (Vine, Moore & Wilson 2011) puttete
   die trainierte Gruppe unter Druck genauer; ihr ruhiger Blick dauerte ca. 2,8 s statt 1,4 s, und sie
-  berichteten ca. **2 Putts weniger pro Runde** im Wettspiel [QE1][QE2].
+  gaben selbst ca. **2 Putts weniger pro Runde** im Wettspiel an (Selbstbericht). In der Meta-Analyse zeigten
+  Trainingsstudien große Effekte, aber es waren nur 9 [QE1][QE2][LEB2016].
 - Einsteiger-Tipp: Am ersten Abschlag den Schläger nehmen, mit dem man sich am sichersten fühlt – es
   zählt, den Ball ins Spiel zu bringen.
 
@@ -43,7 +45,8 @@ Physiotherapie verweisen.
   **verschlechtert** (in einer Studie: −4 % Tempo, −6 % Länge, deutlich schlechtere Genauigkeit).
   **Dynamisches Aufwärmen** (Bewegungen, Schwünge) erhöhte dagegen die Geschwindigkeit [WU1][WU2][WU3].
 - Ein golfspezifisches Aufwärmprogramm steigerte in einer Studie (Fradkin) auch über 7 Wochen die
-  Schlägerkopfgeschwindigkeit [WU2].
+  Schlägerkopfgeschwindigkeit [WU2] (die berichtete Steigerung von +24 % bei 20 Personen mit 2D-Video ist zu
+  unsicher, um sie zu nennen). Das statische Dehnen in der Gergley-Studie dauerte **20 Minuten** im Halten [WU1].
 - **10-Minuten-Beispiel** (dynamisch):
   1. 1 Min. lockeres Gehen/auf der Stelle treten.
   2. Arme kreisen, Schulterkreisen (je 10×).
@@ -60,9 +63,9 @@ Physiotherapie verweisen.
   hilft kein Technik-Tipp, sondern ein Beweglichkeits- oder Kraftübung [TPI1][TPI2].
 - Beispiele (nach TPI):
   - **Early Extension** (Hüfte zum Ball, App: `hueftBall`): oft fehlende Beweglichkeit in Hüfte oder
-    Sprunggelenk – wer keine **tiefe Kniebeuge mit Fersen am Boden** schafft, kann die Haltung im
-    Abschwung kaum halten. Eine Studie fand einen Zusammenhang zwischen dem **Zehenberührungs-Test**
-    und Early Extension [TPI1][TPI3].
+    Sprunggelenk – wer keine **tiefe Kniebeuge mit Fersen am Boden** schafft, zeigte in einer Studie
+    (n = 36) **2- bis 3-mal häufiger** Early Extension oder Haltungsverlust [GUL2014]. Dieselbe Studie fand einen
+    Zusammenhang zwischen dem **Zehenberührungs-Test** und Early Extension [TPI1][TPI3].
   - **Sway** (seitliches Ausweichen, App: `hueftSway`): oft zu wenig **Innenrotation der rechten Hüfte**
     oder eingeschränkte Sprunggelenke [TPI2].
   - **Wenig Schulterdrehung** (App: `schulterdrehung`): oft eingeschränkte Drehung der Brustwirbelsäule
@@ -73,7 +76,7 @@ Physiotherapie verweisen.
   - **Tiefe Kniebeuge**: Arme mit Stab über dem Kopf, Fersen am Boden – geht es tief, ohne dass der
     Oberkörper nach vorn kippt? [TPI1]
   - **Drehung im Sitzen**: Auf einem Stuhl sitzen, Stab vor der Brust, Oberkörper drehen, ohne dass
-    die Hüfte mitdreht. Gut sind **ca. 45° pro Seite** (TPI-Richtwert; vor der App-Nutzung prüfen).
+    die Hüfte mitdreht. Gut sind **ca. 45° pro Seite** (TPI-Richtwert, **nicht validiert** – keine Studie dazu gefunden).
 - Idee für die App: Bei `hueftBall`/`hueftSway`/`schulterdrehung` einen Satz „Kann auch an der
   Beweglichkeit liegen – Selbsttest“ ergänzen.
 
@@ -121,3 +124,6 @@ Physiotherapie verweisen.
 - [BRE2024] Brennan et al. (2024), Sports Medicine: körperliche Merkmale und Schlägerkopftempo mit dem Driver, Meta-Analyse, 20 Studien (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/38424374
 - [KUI2024] Kuitunen & Ponkilainen (2024), Irish J Medical Science: Verletzungen im Golf, Meta-Analyse, 7 Studien, 269.754 Runden (nur Abstract gelesen; **Stufe A**) – https://pmc.ncbi.nlm.nih.gov/articles/PMC11666794/
 - [VAD2004] Vad et al. (2004), Am J Sports Med: Rückenschmerz bei 42 Profis, weniger Innenrotation der vorderen Hüfte, Querschnittsstudie (nur Abstract gelesen; **Stufe A**) – https://pubmed.ncbi.nlm.nih.gov/14977679/
+- [RUP1] Rupprecht u. a.: Routine vor dem Schlag, Meta-Analyse (g ≈ 0,64 ohne, 0,70 unter Druck; nur Eintrag in der Fachdatenbank gelesen; **Stufe A**) – https://lida.sport-iat.de/ta/Record/4088526?lng=en
+- [LEB2016] Lebeau u. a. (2016), Meta-Analyse zum Quiet-Eye-Training: große Effekte, aber nur 9 Trainingsstudien (nur Eintrag in der Fachdatenbank gelesen; **Stufe A**) – https://lida.sport-iat.de/ta/Record/4045573?lng=en
+- [GUL2014] Gulgin u. a. (2014), 36 Golfer: Überkopf-Kniebeuge und Einbeinstand hingen mit Early Extension und Haltungsverlust zusammen (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/24476744

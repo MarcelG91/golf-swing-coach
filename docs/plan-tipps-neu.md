@@ -89,9 +89,9 @@ gut: Gute Vorneigung beim Ansprechen
 ### Linker Arm im Treffmoment (frontal)
 
 - **kurz:** Linker Arm knickt im Treffmoment
-- **warum:** Knickt der Arm, wird dein Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge: dünne oder getoppte Bälle und weniger Weite.
-- **gedanke:** Lange Arme durch den Ball
-- **wort (Live-Rahmen, ≤ 3 Wörter):** Arm lang lassen
+- **warum:** Knickt der Arm im Treffmoment, wird dein Schwungkreis kleiner. Laut TPI kostet das Kraft und bringt mehr Loft und Spin.
+- **gedanke:** Weiter Bogen durch den Ball
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Weiter Bogen
 - **Übung: Hüfte bis Hüfte** · 20×
   1. Nur bis Hüfthöhe zurückschwingen.
   2. Bis Hüfthöhe durchschwingen.
@@ -165,7 +165,7 @@ gut: Oberkörper bleibt am Top hinter dem Ball
 ### Oberkörper im Treffmoment (frontal)
 
 - **kurz:** Oberkörper im Treffmoment zu gerade
-- **warum:** Nur wenn die rechte Schulter tiefer ist, kommt der Schläger flach von innen an den Ball. Stehst du gerade, kommt er steil von oben – typisch sind Slice und tiefe Divots.
+- **warum:** Gute Spieler neigen den Oberkörper im Treffmoment leicht vom Ziel weg, die rechte Schulter ist tiefer. Das hängt mit mehr Schlägertempo zusammen.
 - **gedanke:** Rechte Schulter geht nach unten
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Rechte Schulter runter
 - **Übung: Treffposition in Zeitlupe** · 10×
@@ -184,7 +184,7 @@ gut: Oberkörper im Treffmoment vom Ziel weg
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Drehen statt schieben
 - **Übung: Stab-Übung** · 10×
   1. Stab senkrecht direkt außen neben den rechten Fuß stecken.
-  2. Langsam zurückschwingen – die Hüfte berührt ihn nicht.
+  2. Langsam zurückschwingen – zwischen Hüfte und Stab bleibt Luft.
   3. Danach halbe Schwünge.
 
 gut: Hüfte dreht auf der Stelle
@@ -230,8 +230,8 @@ gut: Rhythmus wie gute Spieler (3 : 1)
 
 - **kurz:** Du richtest dich auf
 - **warum:** Richtest du dich auf, ändert sich der Abstand zum Ball. Der Schläger kommt zu hoch an – getoppte oder dünne Schläge.
-- **gedanke:** Rechtes Knie bleibt gebeugt
-- **wort (Live-Rahmen, ≤ 3 Wörter):** Knie gebeugt lassen
+- **gedanke:** Größe halten
+- **wort (Live-Rahmen, ≤ 3 Wörter):** Größe halten
 - **Übung: Später hochschauen** · 10×
   1. Halbe Schwünge.
   2. Rechtes Knie bleibt bis nach dem Treffen gebeugt.
@@ -270,7 +270,7 @@ gut: Kopfhöhe bleibt stabil
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Kopf ruhig halten
 - **Übung: Enges Fass** · 10×
   1. Stell dir ein enges Fass um dich vor.
-  2. Zurückschwingen, ohne die Fasswand zu berühren.
+  2. Zurückschwingen, der Körper bleibt im Fass.
 
 gut: Kopf bleibt hinter dem Ball
 
@@ -292,14 +292,14 @@ gut: Hüfte im Finish über dem vorderen Fuß
 ### Vorneigung halten (von hinten)
 
 - **kurz:** Oberkörper richtet sich auf
-- **warum:** Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Typische Folgen sind Toppen oder Shanks.
+- **warum:** Richtest du dich im Abschwung auf, ändert sich der Abstand zum Ball. Mögliche Folgen sind Toppen, Shanks, Push oder Block.
 - **gedanke:** Po bleibt hinten
 - **wort (Live-Rahmen, ≤ 3 Wörter):** Po hinten lassen
 - **Übung: Po an die Wand** · 10×
   1. Ohne Schläger: Po berührt leicht die Wand, Arme vor der Brust kreuzen.
   2. Zurückschwingen: die rechte Po-Seite bleibt an der Wand.
   3. Durchdrehen: die linke Po-Seite kommt an die Wand.
-  4. Nie ganz von der Wand lösen.
+  4. Der Po bleibt dabei in Kontakt mit der Wand.
 
 gut: Vorneigung bleibt bis zum Treffmoment
 
@@ -313,9 +313,24 @@ gut: Vorneigung bleibt bis zum Treffmoment
   1. Golftasche direkt hinter den Po stellen.
   2. Rückschwung: die rechte Po-Seite berührt die Tasche.
   3. Abschwung: die linke Po-Seite berührt die Tasche.
-  4. Langsame halbe Schwünge, der Schläger trifft die Tasche nicht.
+  4. Langsame halbe Schwünge, der Schläger schwingt frei an der Tasche vorbei.
 
 gut: Hüfte bleibt auf Abstand zum Ball
+
+## Wiederholungszahlen und Formulierungen (Stand 0.51.4, Bericht U19–U21, U29–U31)
+
+- **Wiederholungen (5/10/20) sind eine Orientierung**, keine Forschungszahl: Zu der „richtigen“ Zahl gibt es keine Studie.
+  Die App zeigt deshalb „ca. 10×“. Belegt ist: kurze Einheiten, über mehrere Tage verteilt (Dail & Christina 2004), und
+  erst langsam und halb, dann mit Ball (Porter & Magill 2010).
+- **Positiv formuliert** (keine versteckten Verbote): „Po bleibt in Kontakt mit der Wand“, „Schläger schwingt frei an
+  der Tasche vorbei“, „zwischen Hüfte und Stab bleibt Luft“, „der Körper bleibt im Fass“. Den Abstand beim Stab nennen wir
+  nicht in Zentimetern (nicht belegt).
+- **Äußere Gedanken:** „Weiter Bogen durch den Ball“ statt „Lange Arme durch den Ball“, „Größe halten“ statt „Rechtes
+  Knie bleibt gebeugt“ (Kopfhöhe).
+- **Abgeschwächt, weil ohne Quelle:** `oberkoerperTreff` (kein Slice/Divot-Bezug mehr, stattdessen Tempo nach Chu 2010),
+  `fuehrungsarmTreff` (nicht mehr „dünn/getoppt“, sondern Kraftverlust, Loft und Spin nach TPI), `vorneigungHalten`
+  (Toppen, Shanks, Push oder Block; die Trainer sind sich nicht einig).
+- **Nicht übernommen:** das Bild „aus dem Becken“ (Joyce 2016) bei `oberkoerperTreff`; es ist noch nicht in `docs/wissen/` belegt.
 
 ## Herkunft der Grenzwerte (Stand 0.49.3, Bericht S1–S12)
 

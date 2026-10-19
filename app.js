@@ -1317,7 +1317,7 @@ function baueGutKarte(gute, { rechtshaender, keineBaustelle }) {
 function baueUebung(uebung, { offen = false, gedanke = "", warum = "" } = {}) {
   const block = neu("details", "uebung");
   block.open = offen;
-  block.append(neu("summary", "", `Übung: ${uebung.name} · ${uebung.wiederholungen}×`));
+  block.append(neu("summary", "", `Übung: ${uebung.name} · ca. ${uebung.wiederholungen}×`));
   if (warum) block.append(neu("p", "warum", warum));
   const schritte = neu("ol");
   for (const schritt of uebung.schritte) schritte.append(neu("li", "", schritt));
@@ -2003,7 +2003,7 @@ function abschlussKarte(l, zurueck) {
 
   const uebung = uebungFuer(l, true); // Texte der Wissensseite gelten für Rechtshänder
   if (uebung) {
-    const starten = neu("button", "klein breit", `Übung starten: ${uebung.name} · ${uebung.wiederholungen}×`);
+    const starten = neu("button", "klein breit", `Übung starten: ${uebung.name} · ca. ${uebung.wiederholungen}×`);
     starten.addEventListener("click", () => oeffneUebung(uebung, ""));
     karte.append(starten);
   }

@@ -113,7 +113,7 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 | | Eisen | Driver |
 |---|---|---|
 | Ball | Mitte bis leicht links | Innenseite linke Ferse, auf dem Tee |
-| Treffen | leicht **abwärts** (erst Ball, dann Boden, −3 bis −4°) | leicht **aufwärts** (0 bis +5°) |
+| Treffen | leicht **abwärts** (erst Ball, dann Boden; Tour 6er-Eisen im Schnitt ca. −2 bis −4°) | leicht **aufwärts** (0 bis +5°) |
 | Stand | ca. schulterbreit | etwas breiter |
 | Seitneigung | wenig | mehr vom Ziel weg |
 | Kopf im Treffen | über/knapp hinter dem Ball | deutlich hinter dem Ball |

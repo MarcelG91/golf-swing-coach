@@ -19,24 +19,28 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
   (Korrektur 15.10.: Hier stand „durchschnittliche Amateure“ – [PG1] nennt die Werte für einen typischen
   PGA-Tour-Spieler.)
 - **„Kleines Ziel, kleiner Fehler“ stimmt beim Driver nicht**: In einer Studie (Christina & Alpenfels,
-  32 Golfer, Hcp 1–30) trafen Spieler mit dem **ganzen Fairway als Ziel** öfter das Fairway (67 % statt
-  50 %) und schlugen weiter als mit einem kleinen Zielpunkt [LS1].
+  32 Golfer, Hcp 1–30) trafen Spieler mit dem **ganzen Fairway als Ziel** öfter das Fairway (60 % laut GOLF Magazine,
+  67 % laut Stagner, statt 50 %) und schlugen weiter als mit einem kleinen Zielpunkt [LS1][GOLFMAG1]. Bei Eisen und
+  kurzem Spiel gab es keinen Unterschied.
 - **Doppel-Bogeys vermeiden** ist wichtiger als Birdies jagen [PG1].
 
 ## 2. Annäherung: Grünmitte und genug Schläger (🌱)
 
 - **Auf die Grünmitte zielen** und den Schläger nach der Entfernung zum **hinteren Grünrand** wählen
   (für Einsteiger und mittlere Handicaps) [PG1].
-- **Warum?** Fast alle Golfer verfehlen **80–90 % der Grüns zu kurz**. Selten ist ein Schlag „perfekt
-  getroffen“ – ein etwas längerer Schläger gleicht das aus [PG1][LS2].
+- **Warum?** Amateure bleiben viel öfter zu kurz als zu lang: Mit Handicap 10 enden aus 137 m ca. **41 %** der Schläge
+  mehr als 9 m zu kurz, nur ca. **11 %** mehr als 9 m zu lang (gut viermal so oft) [ARC2023]. Selten ist ein Schlag
+  „perfekt getroffen“ – ein etwas längerer Schläger gleicht das aus [PG1][LS2]. (Korrektur 19.10.: Die Zahl „80–90 % der
+  verfehlten Grüns“ ist in den Quellen nicht belegt.)
 - Nur wenn nichts Gefährliches neben der Fahne ist, direkt die Fahne anspielen (🌳).
 
 ## 3. Abschlag: meist Driver (🌿)
 
-- Mark Broadie: Beim Abschlag ist **Länge wichtiger als Genauigkeit** – bei Freizeitspielern sogar noch
-  mehr als bei Profis [SS1][PG3].
+- **Forscher sind uneins**: Mark Broadie nennt beim Abschlag die **Länge** wichtiger als die Genauigkeit [PG3]; eine
+  Simulation von Broadie & Ko (2009) findet für die Streuung in Grad die **Richtung** wichtiger [BKO1].
 - Shot-Scope-Daten: Amateure treffen mit Driver und Holz 3 **gleich oft das Fairway (ca. 47 %)**, das
-  Holz 3 fliegt aber 20–30 Yards kürzer – rund ⅓ Schlag Nachteil pro Loch [SS1].
+  Holz 3 fliegt aber ca. 20 m (22 Yards) kürzer; Fairway-Quote 46,6 % (Driver) gegen 47,4 % (Holz 3) [SS1]. (Korrektur
+  19.10.: Die Angabe „⅓ Schlag Nachteil pro Loch“ steht nicht in der Quelle.)
 - **Ausnahmen**: Wenn Aus, Wasser oder Bäume genau im Bereich der Driver-Landezone liegen, lieber kürzer.
   Und: Wer den Driver (noch) nicht sicher trifft, nimmt den Schläger, mit dem er am sichersten ist.
 
@@ -67,7 +71,7 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 | **Ball über den Füßen** | Griff kürzer fassen, aufrechter stehen | nach **links** (Draw/Hook) | etwas **rechts** zielen |
 | **Ball unter den Füßen** | Breiter stehen, tiefer in die Knie, Gewicht zu den Fersen | nach **rechts** (Fade/Slice) | etwas **links** zielen |
 | **Bergauf** | Schultern parallel zum Hang, Ball etwas weiter vorn | **höher und kürzer**, eher links | **mehr Schläger**, etwas rechts zielen |
-| **Bergab** | Schultern parallel zum Hang, Ball etwas weiter hinten | **flacher und länger**, eher rechts | **weniger Schläger**, etwas links zielen |
+| **Bergab** | Schultern parallel zum Hang, Ball etwas weiter hinten | **flacher**, rollt weiter, eher rechts | mit **mehr Rollen** planen (Einzeltest: Carry kürzer [GWRX1]), etwas links zielen |
 
 - Allgemein: **Stand stabil**, ca. **80 % Tempo**, Gleichgewicht vor Kraft [HM1][GT1][LR1].
 - Probeschwung **am Hang** machen – wo berührt der Schläger den Boden? Dort den Ball hinlegen (gedanklich).
@@ -82,8 +86,8 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
   und steigen. (Nur Lehrmeinung, nicht in der App.)
 - **Leichtes bis mittleres Rough („Flyer“)**: Gras zwischen Schlagfläche und Ball → weniger Rückwärtsdrall, der Ball fliegt und
   rollt oft weiter als erwartet [GTM1][SR1]; aus tiefem Rough mehr Loft nehmen und nur rausspielen.
-- **Kälte**: Der Ball fliegt kürzer (Blue Tees: ca. 1–2 Yards weniger Carry pro Eisen je 10 °F unter 70 °F,
-  also je ca. 5–6 °C unter 21 °C) [BTW1][ARC1]. **Nässe**: Wasser zwischen Fläche und Ball, weicher Boden –
+- **Kälte**: Der Ball fliegt kürzer (Blue Tees: ca. 1–2 m (1–2 Yards) weniger Carry pro Eisen je 5–6 °C unter 21 °C,
+  im Original 10 °F unter 70 °F) [BTW1][ARC1]. **Nässe**: Wasser zwischen Fläche und Ball, weicher Boden –
   kürzer und kaum Rollen [ARC1][BTW1].
 
 ## Quellen
@@ -116,3 +120,6 @@ Kapitel 7 der Wissensseite. Formulierungen für Rechtshänder.
 - [RICE1] GOLF.com: How hot weather and elevation change affect golf shots – study (**Stufe C**, nur Zusammenfassung) – https://www.golf.com/instruction/2018/12/14/how-hot-weather-elevation-change-affect-golf-shots-study
 - [GDO1] Golf Digest: Chris O'Connell – sidehill lie (**Stufe C**, nur Zusammenfassung) – https://www.golfdigest.com/story/chris-o-connell-sidehill-lie
 - [WW1] worldwide.golf: How to play the ball above your feet (Alex Day, Dreamland Golf Club; **Stufe C**, nur Zusammenfassung) – https://worldwide.golf/instruction/how-to-play-the-ball-above-your-feet-by-alex-day-dreamland-golf-club-baku/
+- [GOLFMAG1] GOLF Magazine (16.10.2017): It's time to change your aim – Studie von Christina & Alpenfels, 32 Golfer, Ø Hcp 12,8 (Volltext gelesen; **Stufe C**) – https://golf.com/instruction/its-time-to-change-your-aim-a-golf-magazine-study/
+- [BKO1] Broadie & Ko (2009), Konferenzbeitrag: Simulationsmodell zu Länge und Richtung beim langen Abschlag (nur Abstract gelesen; **Stufe A**) – https://business.columbia.edu/faculty/research/simulation-model-analyze-impact-distance-and-direction-golf-scores
+- [GWRX1] GolfWRX: How a downhill slope affects ball flight (Einzeltest, Carry 150 → 137 m; **Stufe C**) – https://golfwrx.com/290455/how-a-downhill-slope-affects-ball-flight/

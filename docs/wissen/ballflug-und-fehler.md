@@ -10,12 +10,12 @@ Quellen stehen in eckigen Klammern und sind unten verlinkt.
 
 ## 1. Die Ballfluggesetze (🌿)
 
-Früher lehrte man: „Der Ball startet in Richtung der Schwungbahn.“ Seit Radar-Messgeräten (TrackMan,
-ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
+Früher lehrte man: „Der Ball startet in Richtung der Schwungbahn.“ Physiker beschrieben schon 1968 (Cochran & Stobbs),
+dass das nicht stimmt; Radar-Messgeräte (TrackMan, ab etwa 2006) haben es für alle sichtbar gemacht [TM1][SAND][WOOD2018].
 
 | Einflussgröße (deutsch / englisch) | Was sie bewirkt |
 |---|---|
-| **Schlagflächenstellung** / Face Angle | Startrichtung. Beim Driver ca. **85 %**, beim Eisen ca. **75 %** Anteil an der Startrichtung [WRX1][GT1] |
+| **Schlagflächenstellung** / Face Angle | Startrichtung. Gemessen (157 Golfer, PING-Studie): Driver **76 %**, 7er-Eisen **69 %**, Wedge **61 %** Anteil an der Startrichtung [WOOD2018]. Herstellerangaben nennen mehr (Driver ca. 85 %) [WRX1][GT1]; Faustformel: etwa drei Viertel, zwei Drittel, gut die Hälfte – je mehr Loft, desto mehr zählt die Bahn |
 | **Schwungbahn** / Club Path | Kurve: Die Kurve entsteht aus dem Unterschied Schlagfläche ↔ Bahn („Face to Path“) [TM1] |
 | **Treffpunkt** auf der Schlagfläche / Impact Location | Außermittig verändert Kurve, Länge und Spin (Gear Effect, s. u.) [AY1][TM1] |
 | **Eintreffwinkel** / Attack Angle | Ob der Schläger den Ball von oben oder unten trifft; beeinflusst Höhe, Spin, Treffpunkt oben/unten [TM3][PGA-DE] |
@@ -48,13 +48,13 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
   dreht zurück [AY1].
 - Bei **Eisen** ist der Effekt kleiner (flacher Kopf) – dort kostet ein außermittiger Treffer vor allem Länge.
 - **Hoch** auf der Fläche getroffen: höher, weniger Spin. **Tief** getroffen: flacher, mehr Spin [GOLF2].
-- Praxis: Viele Slices mit dem Driver sind eigentlich **Fersentreffer**. Erst den Treffpunkt prüfen,
-  dann den Schwung umbauen [AY1].
+- Praxis: Ein **Fersentreffer** mit dem Driver kann wie ein Slice aussehen (Mechanismus belegt, Häufigkeit nicht gemessen).
+  Erst den Treffpunkt prüfen, dann den Schwung umbauen [AY1].
 
 ## 3. Eintreffwinkel und tiefster Punkt (🌿)
 
 - **Eisen**: Der tiefste Punkt des Schwungbogens (Low Point) liegt **nach dem Ball** → erst Ball, dann
-  Boden (Divot vor dem Ball). TrackMan-Richtwerte: 6er-Eisen ca. −3°, Pitching Wedge ca. −4° [TM3].
+  Boden (Divot vor dem Ball). Tourspieler (TrackMan-Mittel): 6er-Eisen PGA ca. −3,7°, LPGA ca. −2,3° [TM3]. (Die Zahlen −3,2° und −3,9° für 6er und Pitching Wedge sind Annahmen des TrackMan-Optimizers, keine Messwerte.)
 - **Driver**: Ball liegt auf dem Tee, der tiefste Punkt darf **vor** dem Ball liegen → leicht aufwärts
   treffen ist für Amateure länger. PGA-Tour-Schnitt −0,9°, LPGA-Tour +2,8° [TM3]. Bei 100 mph bringt +5°
   statt −5° rund **25 Yards** mehr Carry [TPI1].
@@ -72,7 +72,7 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 - **Ursache 2: Bahn von außen nach innen** („über den Ball kommen“, Over the Top): Schultern/Arme
   starten den Abschwung statt der Hüfte. Mittlere Handicaps 3–6° außen-nach-innen, Tourspieler im Schnitt
   1–3° innen-nach-außen [GT1].
-- **Ursache 3: Early Extension** – Hüfte schiebt zum Ball, Arme müssen ausweichen, Fläche bleibt offen [GT1].
+- **Ursache 3: Early Extension** – Hüfte schiebt zum Ball, Arme müssen ausweichen. GOLFTEC: Fläche bleibt offen, Slice [GT1]. TPI ordnet sie eher Push, Block, Hook und Shank zu [TPI5]: Trainer sind uneins, welcher Fehlschlag folgt.
 - **Erkennen**: Ball startet links und kurvt nach rechts (Pull-Slice) oder startet gerade/rechts und
   kurvt weiter.
 - **Übungen** [GT1][GT2]:
@@ -108,7 +108,7 @@ ab etwa 2006) ist klar: Das stimmt nicht [TM1][SAND].
 
 ### Fett (🌱) – Schläger trifft zuerst den Boden
 
-- **Ursache**: Tiefster Punkt **vor** (hinter) dem Ball – oft Gewicht bleibt rechts, „Schaufeln“ mit den
+- **Ursache**: Erster Bodenkontakt **hinter** dem Ball (der tiefste Punkt liegt zu früh) – oft Gewicht bleibt rechts, „Schaufeln“ mit den
   Händen, oder der Bogen ist zu tief [AY2].
 - Wichtig: Wechseln sich **fett und getoppt** ab, liegt der tiefste Punkt meist **hinter dem Ball**: Mal trifft
   der Schläger zuerst den Boden, mal steigt er schon wieder. Erste Hilfe laut Adam Young (Trainer): den
@@ -162,6 +162,7 @@ deutlich kürzer, als Fernsehbilder vermuten lassen.
 - [TM1] TrackMan: 6 numbers every amateur should know – https://www.trackman.com/blog/golf/6-trackman-numbers-all-amateur-golfers-should-know
 - [TM2] TrackMan: Ultimate Guide to Understanding TrackMan – https://www.trackman.com/blog/the-ultimate-guide-to-understanding-trackman
 - [TM3] TrackMan: Attack Angle – https://www.trackman.com/blog/attack-angle
+- [TPI5] TPI: Early Extension als Schwungmerkmal (67 % von über 90.000 gescreenten Golfern, 99 % von über 100 Tourspielern nicht; Folgen: Push, Block, Hook, Shank; **Stufe B**, nur Zusammenfassung) – https://www.mytpi.com/articles/swing/early-extension-swing-characteristic
 - [TM4] TrackMan: Dynamic Loft – https://www.trackman.com/blog/golf/dynamic-loft
 - [TM5] TrackMan: Performance of the average male amateur – https://blog.trackmangolf.jp/performance-of-the-average-male-amateur/
 - [TPI1] TPI: Increase distance by changing your angle of attack – https://www.mytpi.com/articles/swing/increase-distance-by-changing-your-angle-of-attack
