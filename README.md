@@ -141,6 +141,9 @@ nach „Alles löschen“.
 
 ### Speicher aufräumen
 
+Unter **⚙️ Einstellungen → „🔄 Alte Schwünge neu bewerten“** bewertest du früher gespeicherte Schwünge mit den heutigen Grenzwerten neu
+(aus den gespeicherten Körperpunkten; Videos, Phasen, Notizen und Coach-Antworten bleiben, vorher kommt eine Rückfrage).
+
 Unter **⚙️ Einstellungen → „💾 Daten auf diesem Gerät“** steht, wie viele Sitzungen, Schwünge
 und Videos gespeichert sind. Vor jedem Löschen zeigt die App, **was gelöscht wird und was
 bleibt**; „Abbrechen“ ist vorausgewählt. Alles passiert nur auf dem Gerät.
