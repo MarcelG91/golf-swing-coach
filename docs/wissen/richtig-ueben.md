@@ -18,8 +18,9 @@ Schwunggedanken und Rückmeldungen formuliert und getaktet sein sollten (siehe `
   Arme achten) und als eine Gruppe ohne Anweisung – bei **Anfängern und** bei **erfahrenen Golfern**.
   Ohne Anweisung verhielten sich die Spieler ähnlich wie mit innerem Fokus [WULF1].
 - Eine **systematische Übersicht** über 52 randomisierte Golf-Studien bestätigt den Vorteil des äußeren
-  Fokus als eine der stärksten Methoden – mit dem Hinweis, dass viele Studien klein sind und vor allem
-  Anfänger beim Putten untersuchen [REV1].
+  Fokus: In den meisten Golfstudien war er gleich gut oder besser, der Vorteil ist wahrscheinlich klein (nach
+  Korrektur für Veröffentlichungsverzerrung g ≈ 0,01–0,15 [MCK2024]). Viele Studien sind klein und untersuchen vor
+  allem Anfänger beim Putten [REV1]. (Korrektur 19.10.: Hier stand „eine der stärksten Methoden“.)
 - **Beispiele zum Umformulieren**:
 
 | innerer Fokus (eher meiden) | äußerer Fokus (besser) |
@@ -33,8 +34,9 @@ Schwunggedanken und Rückmeldungen formuliert und getaktet sein sollten (siehe `
 ## 1b. Bilder statt Anweisungen, positiv statt Verbot (🌿)
 
 - **Bilder (Analogien)**: Ein Vergleich wie „schwing wie ein Pendel“ ersetzt viele Einzelanweisungen.
-  Wer mit einem Bild lernt, bleibt laut Studien **unter Druck stabiler** als wer viele technische Regeln
-  im Kopf hat (Liao & Masters 2001; auch in einer Putt-Studie) [AN1][AN2].
+  Bilder sind mindestens so gut wie technische Regeln und könnten **unter Druck stabiler** sein (Liao & Masters 2001,
+  Basketball) [AN1]. Im Golf sind die Ergebnisse gemischt: In einer Putt-Studie war die Analogie-Gruppe nicht besser
+  als die Regel-Gruppe, Quiet Eye schon [AN2][REV1].
 - **Keine Verbote**: In der Studie „The putt and the pendulum“ (Wegner et al. 1998) sollten Spieler
   einen Putt **nicht** zu lang spielen. Unter Ablenkung passierte genau das **häufiger** [IR1]. Deshalb:
   „Ball knapp hinter das Loch rollen lassen“ statt „nicht zu lang“; „Größe halten“ statt „nicht in die Knie“.
@@ -53,11 +55,13 @@ Schwunggedanken und Rückmeldungen formuliert und getaktet sein sollten (siehe `
 
 - **Block-Üben** (20× derselbe Schlag, dasselbe Ziel) fühlt sich auf der Range gut an.
   **Zufallsüben** (jeder Schlag anders: Schläger, Ziel, Flugkurve) fühlt sich schlechter an, bleibt aber
-  oft **besser haften** und überträgt sich besser auf den Platz (Kontext-Interferenz) [REV1][CI1].
+  oft **besser haften** (Kontext-Interferenz) [REV1][CI1]. „Transfer“ heißt in den Studien meist eine andere
+  Distanz im Labor, nicht ein besserer Score auf dem Platz; in Sportaufgaben sind die Effekte klein und unsicher [CZY2024].
 - Wichtig: Die Forschung ist **nicht eindeutig** – eine neuere Meta-Analyse fand insgesamt keinen klaren
   Unterschied [CI2], und für **Anfänger** kann Block-Üben sogar besser sein; für **Erfahrene** eher
   Zufallsüben [CI1].
-- **Faustregel für die App**: Neue Bewegung (🌱) → erst im Block üben. Sitzt sie etwas (🌿/🌳) → mischen.
+- **Faustregel für die App**: Neue Bewegung (🌱) → erst im Block üben. Sitzt sie etwas (🌿/🌳) → mischen. Belegt ist
+  die steigende Mischung beim Putten (erst Block, dann zunehmend mischen) [PM2010].
 - **Adam Young**: Aufgaben so schwer wählen, dass **3–7 von 10** klappen. Mehr → schwerer machen,
   weniger → leichter [AY1].
 
@@ -68,8 +72,9 @@ Adam Young („The Practice Manual“) empfiehlt, **dasselbe Ziel auf verschiede
 - **Variabel**: hoch, tief, Draw, Fade auf dasselbe Ziel; Ball etwas weiter vorn/hinten.
 - **Differenziell** („absichtlich falsch“): bewusst an der Spitze, an der Ferse treffen, bewusst
   hooken/slicen. Klingt verrückt, verbessert aber die Fähigkeit, die Mitte zu finden. In Youngs
-  eigener kleiner Untersuchung waren Spieler mit differenziellem Üben nach 5 Tagen besser im mittigen
-  Treffen als Spieler, die nur „Mitte“ geübt hatten [AY1][AY3].
+  eigener kleiner Untersuchung (nicht begutachtet) waren Spieler mit differenziellem Üben nach 5 Tagen besser im
+  mittigen Treffen als Spieler, die nur „Mitte“ geübt hatten [AY1][AY3]. Eine Meta-Analyse nennt Schlüsse zum
+  differenziellen Lernen noch verfrüht [TAS2021].
 - **Treffpunkt sichtbar machen**: Fußpuder-Spray oder Folie auf die Schlagfläche.
 
 ## 5. Weniger Rückmeldung kann mehr sein (🌿)
@@ -81,7 +86,7 @@ Adam Young („The Practice Manual“) empfiehlt, **dasselbe Ziel auf verschiede
   von 2022 (52 Studien) fand jedoch: Nach Korrektur für Veröffentlichungsverzerrung ist der Nutzen klein und
   „derzeit nicht von null zu unterscheiden“ (g = 0,44 → ca. 0,11) [FB3]. **Für die App**: nicht als
   bewiesenen Vorteil darstellen, nur als „nicht eindeutig“ (Korrektur 01.10.2026 nach dem Golf-App-Check).
-- **Für die App**: Nicht jeden Schlag filmen. Vorschlag: 3–5 Schwünge filmen, eine Baustelle wählen,
+- **Für die App**: Eher nicht jeden Schlag filmen (Vorsicht, kein Befund: 100 % Rückmeldung zeigte keinen klaren Nachteil). Vorschlag: 3–5 Schwünge filmen, eine Baustelle wählen,
   dann **ohne** Video üben und erst später wieder prüfen. Der Nutzer entscheidet, wann er filmt.
 - **Vor der Rückmeldung selbst schätzen**: „Was glaube ich, war der Fehler?“ – dann in der App
   nachsehen. Das schult das Gefühl.
@@ -129,3 +134,7 @@ Beispiel für 60 Minuten / ca. 50 Bälle (angepasst aus den Prinzipien oben):
 - [FB3] McKay, Yantha, Hussien, Carter & Ste-Marie (2022): Meta-analytic findings of the self-controlled motor learning literature. Meta-Psychology 6 – https://open.lnu.se/index.php/metapsychology/article/view/2803
 - [GUA2002] Guadagnoli, Holcomb & Davis (2002), J Sports Sciences: Video-Unterricht, 30 Golfer, 7er-Eisen (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/12190281
 - [SMI1997] Smith, Taylor & Withers (1997), Research Quarterly: Bandbreiten-Rückmeldung beim Chippen (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/9294875
+- [MCK2024] McKay u. a. (2024), Vorabdruck (nicht begutachtet): Äußerer Fokus nach Korrektur für Veröffentlichungsverzerrung, g ≈ 0,01–0,15 (**Stufe A−**) – https://sportrxiv.org/index.php/server/preprint/view/304
+- [PM2010] Porter & Magill (2010), Putten: steigende Kontext-Interferenz (Block → Mischung) war am besten (nur Abstract gelesen; **Stufe A**) – https://europepmc.org/article/MED/20845219
+- [CZY2024] Czyż u. a. (2024), Übersichtsarbeit: Kontext-Interferenz, Transfer in Sportaufgaben klein und unsicher (nur Abstract gelesen; **Stufe A**) – https://pmc.ncbi.nlm.nih.gov/articles/PMC11349744
+- [TAS2021] Tassignon u. a. (2021), Meta-Analyse zum differenziellen Lernen: Schlüsse verfrüht (nur Abstract gelesen; **Stufe A**) – https://pmc.ncbi.nlm.nih.gov/articles/PMC8138164
