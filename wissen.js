@@ -501,6 +501,7 @@ export const LEKTIONEN = [
       { text: "Aufbau: Augen über dem Ball oder knapp innerhalb der Ziellinie. Aus der Hüfte beugen, die Arme hängen locker – wie beim Vollschwung, nur näher am Ball." },
       { text: "Die Schlagfläche bestimmt den Großteil der Startrichtung. Halte sie beim Treffen im rechten Winkel zur Ziellinie." },
       { text: "Lieber etwas zu weit als zu kurz: Ein Putt, der kurz bleibt, fällt nie." },
+      { text: "Kurze Putts zählen: Bei Spielern mit über 97 Schlägen pro Runde kommt fast die Hälfte der Putt-Verluste von Putts zwischen 0,9 und 1,8 m. Übe diese kurzen Putts oft." },
       { text: "Lange Putts über ca. 10 m: Ziel ist ein Kreis von ca. 2 m Durchmesser ums Loch. So vermeidest du Drei-Putts." },
       { text: "Erwartungen: Tourspieler lochen aus 3 m nur ca. 40 % der Putts. Du darfst deutlich weniger erwarten – ein Putt, der knapp neben dem Loch liegen bleibt, ist ein guter Putt." },
     ],
@@ -512,7 +513,7 @@ export const LEKTIONEN = [
     },
     uebung: LEITER,
     kennzahlen: [],
-    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3", "putten:LR1"],
+    quellen: ["putten:PELZ1", "putten:GOLF1", "putten:RS1", "putten:GL1", "putten:GOLF3", "putten:GM1", "putten:HM2", "putten:HM3", "putten:LR1", "putten:BRO2008"],
     beleg: "messung",
   },
   {
