@@ -403,6 +403,12 @@ export function gutText(k, rechtshaender = true) {
 //   von/bis   – Anfang und Ende des Balkens (in Anzeige-Einheiten)
 //   gut       – grüner Bereich, achtung – gelbe Bereiche
 //   faktor    – Messwert × faktor = Anzeige (100 bei Prozent)
+//
+// Herkunft der Grenzen: Wo es keine Studie gibt, ist die Grenze eine EIGENE FESTLEGUNG
+// (Bericht S9–S12, 15.10.). Das sind `vorneigungHalten`, `hueftBall`, `fuehrungsarmTreff`,
+// `armeAnsprechen`, `armschwungTop` und `seitneigungAnsprechen`. Die Tabelle mit Quelle und
+// Stufe steht in docs/plan-tipps-neu.md ("Herkunft der Grenzwerte"). Gelb heißt: knapp daneben,
+// denn der Messfehler von 2D-Video liegt bei Winkeln in derselben Größe wie viele Grenzen.
 // ---------------------------------------------------------------
 const SKALEN = {
   armeAnsprechen: { von: -60, bis: 50, gut: [-25, 15], achtung: [[15, 30], [-40, -25]], faktor: 100, einheit: " %", name: "Hände vor der Schulter" },

@@ -171,6 +171,9 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     // -------------------------------------------------------------
     // 3b. Vorneigung halten (von hinten): Verlierst du den Wirbelsäulenwinkel?
     // -------------------------------------------------------------
+    // Eigene Festlegung (Bericht S9): gut bis 10°, gelb bis 15°. Gute Spieler verlieren im Mittel
+    // keine Vorneigung (Chu 2010: 22,0° am Top → 22,6° im Treffen, 3D, Stufe A); die Grenzen
+    // berücksichtigen den Messfehler des 2D-Winkels von hinten.
     const verlust = vorneigung(A) - vorneigung(I); // positiv = aufgerichtet
     const bewertung = stufe(verlust, { gutBis: 10, achtungBis: 15 });
     kennzahlen.push({
@@ -186,6 +189,9 @@ export function bewerteSchwung(bilder, phasen, seitenverhaeltnis = 1) {
     // -------------------------------------------------------------
     const richtungBall = Math.sign(haende(A).x - hueftMitte(A).x) || 1;
     const hueftVor = ((hueftMitte(I).x - hueftMitte(A).x) * richtungBall) / rumpf;
+    // Eigene Festlegung (Bericht S10): gut bis 12 %, gelb bis 22 %. Es gibt nur TPI (Stufe B) und
+    // Firmenaussagen (Stufe C), keine Studie. Die Hüftmitte wandert durch die Beckendrehung auch ohne
+    // Schub ein Stück zum Ball: Werte unter ca. 5 % bedeuten nichts.
     const bw = stufe(hueftVor, { gutBis: 0.12, achtungBis: 0.22 });
     kennzahlen.push({
       name: "Hüfte Richtung Ball",

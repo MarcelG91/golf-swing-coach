@@ -147,6 +147,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // + = Hände vor der Schulterlinie (Richtung Ball), − = dichter am Körper
     // -------------------------------------------------------------
     const armAbstand = ((haende(A).x - schulterMitte(A).x) * richtungBall) / rumpf;
+    // Eigene Festlegung (Bericht S12): Für den Abstand der Hände gibt es keine Studie, nur das Lehrbild
+    // "Arme hängen senkrecht, eine Faust Platz". Die Grenzen sind ein Richtwert.
     const bw = einstufen(armAbstand, [-0.25, 0.15], [[0.15, 0.3], [-0.4, -0.25]]);
     const k = {
       id: "armeAnsprechen",
@@ -170,6 +172,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // OBERKÖRPER: Vorneigung beim Ansprechen (von hinten)
     // -------------------------------------------------------------
     const vorneigung = Math.abs(neigung(A, 1));
+    // Belegt (Bericht S12): Tourprofis mit dem Eisen ca. 41,5° (Kim 2018, 3D, Stufe A); die Grenzen 25–45°
+    // sind darum eine eigene Festlegung um diesen Wert, die den 2D-Messfehler von hinten mitrechnet.
     const bv = einstufen(vorneigung, [25, 45], [[18, 25], [45, 52]]);
     const v = {
       id: "vorneigungAnsprechen",
@@ -200,6 +204,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // Im Treffmoment ist der Arm gut zu sehen – anders als am Top.
     // -------------------------------------------------------------
     const armWinkel = winkel(punkt(I, fuehrung.schulter), punkt(I, fuehrung.ellbogen), punkt(I, fuehrung.handgelenk));
+    // Eigene Festlegung (Bericht S11): Es gibt keinen Normwert (Stufe A) für den Ellbogenwinkel im
+    // Treffmoment. "Lange Linie aus Arm und Schläger" ist ein Lehrbild, die 155° ein Richtwert.
     const ba = einstufen(armWinkel, [155, 180], [[140, 155]]);
     const a = {
       id: "fuehrungsarmTreff",
@@ -247,6 +253,8 @@ export function bewerteTechnik(bilder, phasen, seitenverhaeltnis = 1, ansicht = 
     // -------------------------------------------------------------
     const handHoehe = (schulterMitte(T).y - haende(T).y) / rumpf;
     const volleDrehung = drehung !== null && drehung >= 80;
+    // Lehrbild, keine Studie (Bericht S12): "Drehen statt heben" – die Grenzen 75 % und 90 % sind eigene
+    // Festlegungen. Der Profi-Testschwung liegt bei 45 %.
     let bh = "gut";
     if (handHoehe > 0.75 && !volleDrehung) bh = handHoehe > 0.9 ? "verbessern" : "achtung";
     const h = {

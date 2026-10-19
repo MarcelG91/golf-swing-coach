@@ -482,7 +482,8 @@ Nach der Analyse steht in der Statuszeile z. B.
 
 Alle Strecken werden in **Rumpflängen** gemessen (Schultermitte bis Hüftmitte),
 damit es egal ist, wie groß du im Bild bist. Die Grenzwerte sind Richtwerte aus
-Messungen an Profi- und Amateurschwüngen.
+Messungen an Profi- und Amateurschwüngen. Wo es keine Studie gibt, ist die Grenze als „eigene Festlegung“ gekennzeichnet
+(Tabelle „Herkunft der Grenzwerte“ in `docs/plan-tipps-neu.md`).
 
 | Kennzahl | Ansicht | Was gemessen wird | Gut |
 |---|---|---|---|

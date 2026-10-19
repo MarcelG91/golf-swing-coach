@@ -317,6 +317,30 @@ gut: Vorneigung bleibt bis zum Treffmoment
 
 gut: Hüfte bleibt auf Abstand zum Ball
 
+## Herkunft der Grenzwerte (Stand 0.49.3, Bericht S1–S12)
+
+Eine Zeile je Kennzahl: Woher die Grenze kommt und wie gut sie belegt ist. **Eigene Festlegung** heißt: Es gibt keine Studie,
+die genau diese Zahl trägt; sie ist ein Richtwert, der den Messfehler von 2D-Video (frontal oft ±8–10°) mitrechnet. Gelb
+bedeutet deshalb „knapp daneben“, nicht „falsch“. Stufen: A = Studie/Messdaten · B = Fachbuch/Verband · C = Blog/Magazin.
+
+| Kennzahl | Grenze (gut · gelb) | Herkunft | Status |
+|---|---|---|---|
+| `tempo` | 2,4–4,0 : 1 · 2,0–2,4 / 4,0–4,6 | Profis 2,5–3,5 : 1 (Grober & Cholewicki 2006, A); Band breiter wegen ±1 Bild bei 30 Bildern/s | belegt, Band eigene Abwägung |
+| `schulterdrehung` | ≥ 80° · 65–80° | ≈ Mittel − 1 SD bei 308 Golfern (Chu 2010, A); 2D-Fehler ±10–15° | belegt |
+| `oberkoerperTop` | ≥ −3° · −10 bis −3° | ≈ Mittel − 1 SD (Chu 2010, A) | eigene Festlegung |
+| `oberkoerperTreff` | ≥ 8° · 2–8° | 3D-Mittel Driver 14,4 ± 6,5° (Chu 2010, A); frontal vermutlich kleiner | nicht kalibriert, mehr Profi-Testschwünge nötig (S2) |
+| `kopfhoehe` | −40 bis +8 % · +8–15 % | Beim Driver steigt das Becken bis zum Treffen (Chu 2010, A) | nicht kalibriert, evtl. schlägerabhängig (S8) |
+| `kopfSeitlich` | Treffmoment ≤ +8 %; Rückschwung gelb ab 25 % vom Ziel weg | Byrne & Kenny 2008 (A, n = 8) | dünne Datenlage (S4) |
+| `hueftSway` | ≤ 10 % · 10–20 % | Chu 2010 (A): 2 ± 2 cm vom Ziel weg ≈ 4 ± 4 % | belegt (S1) |
+| `seitneigungAnsprechen` | 0–15° · −6–0° / 15–25° | keine Studie zum Ansprechen (Chu misst nur am Top) | **eigene Festlegung** (S3) |
+| `vorneigungHalten` | ≤ 10° · 10–15° | Gute Spieler verlieren im Mittel nichts: 22,0° → 22,6° (Chu 2010, A, 3D) | **eigene Festlegung** (S9), 2D-Mischwinkel |
+| `hueftBall` | ≤ 12 % · 12–22 % | Nur TPI (B) und Firmenaussagen (C); Hüftmitte wandert durch die Drehung auch ohne Schub | **eigene Festlegung** (S10); Werte unter ca. 5 % nicht deuten |
+| `fuehrungsarmTreff` | ≥ 155° · 140–155° | Kein Normwert (Stufe A) gefunden; „lange Linie“ ist ein Lehrbild | **eigene Festlegung** (S11) |
+| `vorneigungAnsprechen` | 25–45° · 18–25° / 45–52° | Tourprofis mit dem Eisen ca. 41,5° (Kim 2018, A) | Wert belegt, Grenzen Richtwert (S12) |
+| `armeAnsprechen` | −25 bis +15 % · +15–30 % / −40 bis −25 % | Keine Studie; Lehrbild „Arme hängen, eine Faust Platz“ | **eigene Festlegung** (S12) |
+| `armschwungTop` | Hände ≤ 75 % oder volle Drehung · 75–90 % | Keine Studie; Lehrbild „Drehen statt heben“ | **eigene Festlegung** (S12) |
+| `gewicht` (Balance im Finish) | ≥ 85 % · 65–85 % | Im Recherchebericht nicht einzeln geprüft | Richtwert |
+
 ## Web-Recherche (28.09.): was geprüft und korrigiert wurde
 
 Geprüft gegen PGA.com, GOLFTEC, TPI (Titleist Performance Institute), Golf.com, HackMotion u. a.
