@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 15.10.2026 · geprüft auf `origin/main` @ `0b9cc00` (Version 0.47.3, live) und Branch `schwellen-s1-s4` (0.48.0, PR #84: Schwellen S1/S3/S4)
+Stand: 19.10.2026 · geprüft auf `origin/main` @ `01d1fa0` (Version 0.49.1, live; seit 0.47.3: Schwellen S1/S3/S4, Übungen, Start-Lektionen, 23 neue Wissenskarten)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
