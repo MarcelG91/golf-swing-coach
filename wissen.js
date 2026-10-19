@@ -721,7 +721,7 @@ export const LEKTIONEN = [
       { text: "Bei 308 Golfern mit Driver stand das Becken im Treffen ca. 35° offen. Die Vorneigung blieb vom Top bis zum Treffen gleich (ca. 22°). Das passt zu den GOLFTEC-Werten." },
       { text: "Beim Eisen sind die Hände vor dem Ball, der Schaft neigt sich nach vorn. Laut HackMotion-Messungen strecken Amateure das linke Handgelenk viel früher – ca. 0,07 statt 0,02 Sekunden vorher.", bild: "foto:nach-dem-treffen" },
       { text: "Die Vorneigung bleibt bis zum Treffen, der Po bleibt hinten. Richtet sich der Körper auf (Early Extension), leiden Treffpunkt und Richtung. Trainer sind uneins, welcher Fehlschlag folgt." },
-      { text: "Linker Arm lang: Knickt er, wird der Schwungkreis kleiner und der Schläger kommt zu hoch an den Ball. Die Folge sind dünne oder getoppte Bälle." },
+      { text: "Linker Arm lang: Knickt er, wird der Schwungkreis kleiner. Laut TPI kostet das Kraft und bringt mehr Loft und Spin." },
       { text: "Kopf hinter dem Ball, vor allem beim Driver. Wandert er vor den Ball, kommt der Schläger steil von oben. Die App misst Kopfhöhe und Kopf seitlich." },
       { text: "So übst du: langsam vom Top in die Treffposition schwingen und anhalten. Im Spiegel prüfen: Hüfte offen, Hände vor dem Ball, Po hinten. Danach dasselbe mit Ball." },
     ],
