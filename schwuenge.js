@@ -68,6 +68,51 @@ export function findeSchwuenge(bilder, seitenverhaeltnis = 1) {
   });
 }
 
+// ---------------------------------------------------------------
+// Grenzen-Version: Welche Fassung der Grenzwerte (technik.js, kennzahlen.js, tipps.js SKALEN)
+// hat einen gespeicherten Schwung bewertet? Jeder gespeicherte Schwung trägt diese Zahl
+// ("grenzenVersion"); fehlt sie, stammt er aus der Zeit davor (Version 1).
+// WICHTIG: Ändert sich irgendeine Grenze, diese Zahl um 1 erhöhen – dann zeigt die App unter
+// Einstellungen → "Alte Schwünge neu bewerten" wieder an, dass es Schwünge mit alten Grenzen gibt.
+//   1 = bis 0.47.x    2 = ab 0.48.0 (Hüfte 10 %, Seitneigung 15°, Kopf im Rückschwung 25 %)
+// ---------------------------------------------------------------
+export const GRENZEN_VERSION = 2;
+
+// Einen GESPEICHERTEN Schwung mit den heutigen Grenzen neu bewerten (Etappe 10, S18).
+// Die Phasen werden NICHT neu erkannt, sondern so übernommen, wie sie gespeichert sind –
+// so verschieben sich weder die Bilder im Vorher/Nachher noch der Gleichlauf mit dem Clip.
+//   schwung   – der gespeicherte Eintrag (mit phasen und seitenverhaeltnis)
+//   posedaten – die gespeicherten Körperpunkte { zeit, punkte }
+// Liefert nur die neu berechneten Felder; sie werden in der Datenbank über die alten gelegt.
+export function bewerteNeu(schwung, posedaten) {
+  if (!schwung?.phasen || !Array.isArray(posedaten) || posedaten.length === 0) {
+    throw new Error("Phasen oder Posedaten fehlen");
+  }
+  const sv = schwung.seitenverhaeltnis;
+  const bewertung = bewerteSchwung(posedaten, schwung.phasen, sv);
+  const technik = bewerteTechnik(posedaten, schwung.phasen, sv, bewertung.ansicht);
+  return {
+    ansicht: bewertung.ansicht,
+    bewertung,
+    technik,
+    kennzahlen: [...bewertung.kennzahlen, ...technik.kennzahlen].map(ordneEin),
+    grenzenVersion: GRENZEN_VERSION,
+  };
+}
+
+// Was würde sich an den Ampeln ändern? Liefert je Kennzahl mit anderer Stufe
+// { name, vorher, nachher } (Stufen: gut / achtung / verbessern / unsicher).
+export function geaenderteStufen(alteKennzahlen, neueKennzahlen) {
+  const schluessel = (k) => k.id || k.name;
+  const alt = new Map((alteKennzahlen || []).map((k) => [schluessel(k), k]));
+  const liste = [];
+  for (const k of neueKennzahlen) {
+    const vorher = alt.get(schluessel(k));
+    if (vorher && vorher.bewertung !== k.bewertung) liste.push({ name: k.name, vorher: vorher.bewertung, nachher: k.bewertung });
+  }
+  return liste;
+}
+
 // Einen Schwung auswerten: Phasen, Kennzahlen, Technik (wie bisher bei einem Video)
 export function werteAus(bilder, seitenverhaeltnis, nummer) {
   const phasen = erkennePhasen(bilder, seitenverhaeltnis);

@@ -36,6 +36,9 @@ Marcel lernt Programmieren und Git (Anfänger) und gerade auch Golf.
   Dazu `CACHE_VENDOR` in `sw.js` und `pwa.js` hochzählen (`vendor-v2` …), sonst bleiben die alten ~19 MB auf jedem Gerät.
 - **Jede Änderung an der App:** `APP_VERSION` in `pwa.js` erhöhen (steht unten in der App –
   so sieht Marcel auf dem iPhone, ob das Update angekommen ist).
+- **Ändert sich eine Grenze** (`technik.js`, `kennzahlen.js`, `tipps.js` `SKALEN`): `GRENZEN_VERSION` in `schwuenge.js` um 1 erhöhen.
+  Jeder gespeicherte Schwung trägt die Version, mit der er bewertet wurde; Einstellungen → „Alte Schwünge neu bewerten“
+  (S18, `bewerteNeu`) rechnet ältere aus den gespeicherten Posedaten und Phasen neu (Phasen bleiben, nichts wird gelöscht).
 - Das gewählte Level liegt lokal unter `localStorage`-Schlüssel `level`; jede gespeicherte
   Sitzung hält zusätzlich fest, welches Level beim Speichern gewählt war.
 - Der Lernfortschritt der Wissensseite liegt unter `localStorage`-Schlüssel `wissenFortschritt`
@@ -91,7 +94,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `phasen.js` · `kennzahlen.js` · `technik.js` · `ideallinien.js` | Rechenlogik |
 | `speicher.js` · `videokuerzen.js` | Schwünge speichern (IndexedDB), aufräumen (Videos löschen, alles löschen) und als Clip ausschneiden |
 | `sicherung.js` | Sicherung als JSON-Datei: bauen (Prüfsumme), prüfen, Zusammenführen planen, Erlaubt-Liste der Einstellungen (reine Rechenlogik; Teilen/Einspielen in `app.js`) |
-| `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung |
+| `schwuenge.js` · `gesamtauswertung.js` | Mehrere Schläge pro Video, mehrere Videos, Gesamtauswertung · `bewerteNeu` und `GRENZEN_VERSION`: gespeicherte Schwünge mit heutigen Grenzen neu bewerten |
 | `livekamera.js` · `liveschwung.js` · `ampel.js` · `aufnahme.js` · `liveclip.js` | Live-Kamera (Etappe 12): Kamera + Zeitmessung · Schwung live erkennen · Ampelrahmen + Kurzwort · versetzte 16-s-Aufnahmestücke im Arbeitsspeicher · Schwung ↔ Stück zuordnen und aufs Raster umrechnen (alles außer Kamera/Aufnahme reine Rechenlogik) |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `phasenabspieler.js` | Phasen-Abspieler im Fortschritt (Vorher/Nachher): Abspielgeschwindigkeit je Abschnitt, damit die Phasen bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik; Abspielen in `app.js`) |
@@ -229,7 +232,7 @@ Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
    `seitneigungAnsprechen` gut 0–15° (gelb bis 25°, eigene Festlegung), `kopfSeitlich` im Rückschwung gelb ab 25 % (nie rot).
    Gespeicherte Schwünge behalten ihre alte Bewertung (die Stufe wird mitgespeichert), nur der grüne Streifen im Wertdiagramm
    nutzt die neuen Grenzen. **Offen:** `oberkoerperTreff` (8°) und `kopfhoehe` (+8 %) brauchen mehr Profi-Testschwünge
-   (Driver und Eisen), bevor man sie anfasst; ggf. „Neu auswerten“ für alte Schwünge (Posedaten sind gespeichert).
+   (Driver und Eisen), bevor man sie anfasst. „Neu bewerten“ für alte Schwünge: **erledigt mit 0.52.0** (S18, Branch `neu-bewerten`).
 4. ~~S9–S12 als „eigene Festlegung“ kennzeichnen~~ – **erledigt mit 0.49.3** (Branch `festlegungen-s9-s12`: Kommentare im Code und Tabelle „Herkunft der Grenzwerte“ in `docs/plan-tipps-neu.md`) · 5. ~~**U1–U31** präzisieren~~ – **erledigt** (U18 in `vollschwung.md`, Branch `wissen-genauer-vollschwung`; alle anderen Blöcke s. u.) (**U1–U6 Ballflug erledigt mit 0.51.1** (`wissen-genauer-ballflug`), **U12–U17 Platz mit 0.51.2** (`wissen-genauer-platz`), **U22–U28 Üben/Fitness mit 0.51.3** (`wissen-genauer-ueben`), **U19–U21 + U29–U31 Tipps mit 0.51.4** (`tipps-praezisiert`); Rest: Vollschwung U18; U7–U11 Grün/Putten: anderer Chat) ·
 6. ~~**Z1–Z21** als neue Karten~~ – **erledigt mit 0.49.0** (Branch `wissen-neue-karten`): 18 Lektionen um je 1–2 Karten erweitert,
    neue Quellen mit Stufe. Offen: Z4 (Drei-Putts, Einsteiger-Lektionen bleiben ohne Tour-Zahlen), Z12 (Spitzentreffer Eisen, nur eine B-Quelle), Z16 (Streuung – App-Funktion), Driver-Loft aus Z13.

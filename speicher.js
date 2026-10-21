@@ -11,6 +11,7 @@
 // ===============================================================
 
 import { gueltigeBilder } from "./phasen.js";
+import { GRENZEN_VERSION } from "./schwuenge.js";
 
 const BILD_DAUER = 1 / 30; // Raster der Posedaten (wie in app.js)
 const RAND = 1; // So viel Video vor dem Ansprechen und nach dem Finish kommt in den Clip (Sekunden)
@@ -79,6 +80,7 @@ export function schwungZumSpeichern(schwung, { start, ende, versatz = 0 }) {
       bewertung: schwung.bewertung,
       technik: schwung.technik,
       seitenverhaeltnis: schwung.bewertung.seitenverhaeltnis,
+      grenzenVersion: GRENZEN_VERSION, // mit welchen Grenzwerten bewertet (siehe schwuenge.js)
       videoName: schwung.datei?.name ?? "",
       coach: schwung.coach ?? null, // Antwort des Coachs (Etappe 11b), falls schon geholt
     },

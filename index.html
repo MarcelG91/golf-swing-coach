@@ -450,6 +450,22 @@
         <p id="sicherungMeldung" class="status" aria-live="polite"></p>
       </details>
 
+      <!-- Alte Schwünge mit den heutigen Grenzwerten neu bewerten (S18, schwuenge.js bewerteNeu).
+           Rechnet nur auf dem Gerät aus den gespeicherten Posedaten; Videos, Notizen, Phasen und Coach-Antworten bleiben. -->
+      <details class="aufklapp">
+        <summary>🔄 Alte Schwünge neu bewerten</summary>
+        <p class="hinweis">
+          Wenn die App ihre Grenzwerte verbessert, behalten früher gespeicherte Schwünge ihre alte Bewertung.
+          Hier bewertest du sie mit den heutigen Grenzen neu. Videos, Notizen, Phasen und Coach-Antworten bleiben.
+          Tipp: Vorher unter „Sicherung als Datei“ eine Sicherung erstellen.
+        </p>
+        <p id="neuBewertenInfo" class="hinweis"></p>
+        <div class="daten-zeile">
+          <button id="neuBewerten" class="text-aktion">Neu bewerten ›</button>
+        </div>
+        <p id="neuBewertenMeldung" class="status" aria-live="polite"></p>
+      </details>
+
       <details class="aufklapp">
         <summary>🗑 Platz schaffen und löschen</summary>
         <h4>Nur Videos und Bilder löschen</h4>
@@ -549,11 +565,11 @@
   <dialog id="loeschDialog" class="loesch-dialog">
     <form method="dialog">
       <h2 id="loeschTitel"></h2>
-      <p><strong>Wird gelöscht:</strong></p>
+      <p><strong id="loeschWegTitel">Wird gelöscht:</strong></p>
       <ul id="loeschWeg"></ul>
       <p><strong>Bleibt erhalten:</strong></p>
       <ul id="loeschBleibt"></ul>
-      <p class="warnung">Das lässt sich nicht rückgängig machen. Eine Sicherung (Einstellungen) bringt Kennzahlen zurück, aber keine Videos und Bilder.</p>
+      <p class="warnung" id="loeschWarnung">Das lässt sich nicht rückgängig machen. Eine Sicherung (Einstellungen) bringt Kennzahlen zurück, aber keine Videos und Bilder.</p>
       <label id="loeschHakenZeile" class="haken">
         <input type="checkbox" id="loeschHaken">
         <span>Ich weiß, dass damit alle gespeicherten Schwünge endgültig weg sind.</span>

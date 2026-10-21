@@ -17,7 +17,7 @@ import {
 
 // Alle Schwünge in einem Video finden und einzeln auswerten – Phasen, Kennzahlen,
 // Technik (siehe schwuenge.js, nutzt phasen.js, kennzahlen.js und technik.js)
-import { findeSchwuenge } from "./schwuenge.js";
+import { findeSchwuenge, bewerteNeu, geaenderteStufen, GRENZEN_VERSION } from "./schwuenge.js";
 // Zusammenfassung über mehrere Schwünge (siehe gesamtauswertung.js)
 import { gesamtauswertung } from "./gesamtauswertung.js";
 // Kategorien + wichtigste Baustellen (siehe technik.js)
@@ -218,6 +218,10 @@ const videosAuswahl = $("videosAuswahl");
 const videosLoeschenBtn = $("videosLoeschen");
 const allesLoeschenBtn = $("allesLoeschen");
 const datenMeldung = $("datenMeldung");
+// Alte Schwünge neu bewerten (S18)
+const neuBewertenBtn = $("neuBewerten");
+const neuBewertenInfo = $("neuBewertenInfo");
+const neuBewertenMeldung = $("neuBewertenMeldung");
 // Sicherung (Etappe 9)
 const sicherungErstellenBtn = $("sicherungErstellen");
 const sicherungEinspielenBtn = $("sicherungEinspielen");
@@ -232,6 +236,10 @@ const sicherungAbbrechenBtn = $("sicherungAbbrechen");
 const sicherungMeldung = $("sicherungMeldung");
 const loeschDialog = $("loeschDialog");
 const loeschTitel = $("loeschTitel");
+const loeschWegTitel = $("loeschWegTitel");
+const loeschWarnung = $("loeschWarnung");
+const LOESCH_WEG_TITEL = loeschWegTitel.textContent; // Standardtexte merken (der Dialog dient auch dem Neu-Bewerten)
+const LOESCH_WARNUNG = loeschWarnung.textContent;
 const loeschWeg = $("loeschWeg");
 const loeschBleibt = $("loeschBleibt");
 const loeschHakenZeile = $("loeschHakenZeile");
@@ -3548,8 +3556,11 @@ async function loescheMitSperre(aktion, melde = setStatus) {
 // Liefert true nur, wenn "Löschen" angetippt wurde. Abbrechen, Esc oder Wegwischen
 // des Fensters liefern false – dann passiert nichts.
 // mitHaken: Der Löschen-Knopf wird erst nach dem Häkchen antippbar (für "Alles löschen").
-function frageLoeschen({ titel, weg, bleibt, knopf, mitHaken = false }) {
+function frageLoeschen({ titel, weg, bleibt, knopf, mitHaken = false, wegTitel = LOESCH_WEG_TITEL, warnung = LOESCH_WARNUNG, gefahr = true }) {
   loeschTitel.textContent = titel;
+  loeschWegTitel.textContent = wegTitel;
+  loeschWarnung.textContent = warnung;
+  loeschBestaetigen.classList.toggle("gefahr", gefahr);
   for (const [liste, zeilen] of [[loeschWeg, weg], [loeschBleibt, bleibt]]) {
     liste.replaceChildren(
       ...zeilen.map((text) => {
@@ -3733,6 +3744,121 @@ async function zeigeDatenUebersicht() {
   } catch (fehler) {
     console.error(fehler);
     datenUebersicht.textContent = `Die gespeicherten Daten ließen sich nicht lesen (${fehler.message || fehler.name}).`;
+  }
+  await zeigeNeuBewertenInfo();
+}
+
+// ---------------------------------------------------------------
+// 5b2. Alte Schwünge neu bewerten (S18) – Rechnen in schwuenge.js (bewerteNeu)
+// Jeder gespeicherte Schwung trägt die "grenzenVersion", mit der er bewertet wurde.
+// Neu berechnet werden nur Kennzahlen und Bewertung aus den gespeicherten Posedaten;
+// die Phasen bleiben, wie sie sind. Alles passiert auf dem Gerät, nichts wird gesendet.
+// ---------------------------------------------------------------
+const hatAlteGrenzen = (eintrag) => (eintrag.grenzenVersion || 1) < GRENZEN_VERSION;
+
+// Wie viele gespeicherte Schwünge sind mit älteren Grenzen bewertet? (nur die kleinen Einträge, keine Posedaten)
+async function zeigeNeuBewertenInfo() {
+  try {
+    let gesamt = 0;
+    let alt = 0;
+    for (const sitzung of await ladeSitzungen()) {
+      for (const eintrag of await ladeSchwuengeDerSitzung(sitzung)) {
+        gesamt++;
+        if (hatAlteGrenzen(eintrag)) alt++;
+      }
+    }
+    neuBewertenInfo.textContent = !gesamt
+      ? "Noch keine Schwünge gespeichert."
+      : alt
+        ? `${stueck(alt, "Schwung ist", "Schwünge sind")} von ${gesamt} noch mit älteren Grenzen bewertet.`
+        : "Alle gespeicherten Schwünge sind mit den aktuellen Grenzen bewertet.";
+    neuBewertenBtn.disabled = alt === 0;
+  } catch (fehler) {
+    console.error(fehler);
+    neuBewertenInfo.textContent = `Die gespeicherten Daten ließen sich nicht lesen (${fehler.message || fehler.name}).`;
+    neuBewertenBtn.disabled = true;
+  }
+}
+
+// Alle Schwünge mit alten Grenzen durchrechnen – gespeichert wird noch nichts.
+// Schwünge, die sich nicht rechnen lassen (z. B. Posedaten fehlen), landen in "probleme".
+async function planeNeuBewerten() {
+  const plan = [];
+  const probleme = [];
+  for (const sitzung of await ladeSitzungen()) {
+    for (const eintrag of await ladeSchwuengeDerSitzung(sitzung)) {
+      if (!hatAlteGrenzen(eintrag)) continue;
+      try {
+        const neu = bewerteNeu(eintrag, await ladeMedium(`${eintrag.id}/posedaten`));
+        plan.push({ id: eintrag.id, neu, aenderungen: geaenderteStufen(eintrag.kennzahlen, neu.kennzahlen) });
+      } catch (fehler) {
+        console.warn("Neu bewerten übersprungen:", eintrag.id, fehler.message || fehler.name); // erwartet, z. B. bei fehlenden Posedaten
+        probleme.push(eintrag.id);
+      }
+    }
+  }
+  return { plan, probleme };
+}
+
+async function bewerteAlteSchwuenge() {
+  neuBewertenMeldung.textContent = "Rechne …";
+  sperreLoeschKnoepfe(true);
+  neuBewertenBtn.disabled = true;
+  try {
+    const { plan, probleme } = await planeNeuBewerten();
+    if (!plan.length) {
+      neuBewertenMeldung.textContent = probleme.length
+        ? `Nichts zu tun: ${stueck(probleme.length, "Schwung ließ", "Schwünge ließen")} sich nicht neu rechnen (Posedaten fehlen).`
+        : "Nichts zu tun: Alle Schwünge sind aktuell.";
+      return;
+    }
+    const geaendert = plan.filter((p) => p.aenderungen.length);
+    const ampeln = geaendert.reduce((summe, p) => summe + p.aenderungen.length, 0);
+    const ja = await frageLoeschen({
+      titel: "Alte Schwünge neu bewerten?",
+      wegTitel: "Wird neu berechnet:",
+      weg: [
+        `Kennzahlen und Bewertung von ${stueck(plan.length, "Schwung", "Schwüngen")}`,
+        geaendert.length
+          ? `Bei ${stueck(geaendert.length, "Schwung", "Schwüngen")} ändert sich mindestens eine Ampel (insgesamt ${stueck(ampeln, "Kennzahl", "Kennzahlen")})`
+          : "Keine Ampel ändert sich – nur die Markierung „aktuelle Grenzen“ wird gesetzt",
+        "Verlauf, Trend, Meilensteine, Level-Vorschlag und Diagramme richten sich danach neu aus",
+      ],
+      bleibt: [
+        "Videos, Vorschaubilder und Posedaten",
+        "die Phasen (Ansprechen, Top, Treffmoment, Finish) und die Bilder dazu",
+        "Datum, Schläger, Notizen und Coach-Antworten",
+        "dein Level, dein Lernfortschritt und dein Coach-Schlüssel",
+      ],
+      knopf: "Neu bewerten",
+      warnung: "Die alten Bewertungen werden überschrieben. Tipp: Vorher unter „Sicherung als Datei“ eine Sicherung erstellen.",
+      gefahr: false,
+    });
+    if (!ja) {
+      neuBewertenMeldung.textContent = "Abgebrochen. Es wurde nichts geändert.";
+      return;
+    }
+    let gespeichert = 0;
+    let gescheitert = probleme.length;
+    for (const p of plan) {
+      try {
+        if (!(await aktualisiereSchwung(p.id, p.neu))) throw new Error("Schwung nicht gefunden");
+        gespeichert++;
+      } catch (fehler) {
+        console.error(fehler);
+        gescheitert++;
+      }
+    }
+    if (gespeicherteSitzung) leereSitzungsAnsicht(); // sonst bliebe die alte Bewertung auf dem Bildschirm stehen
+    neuBewertenMeldung.textContent =
+      `✓ ${stueck(gespeichert, "Schwung", "Schwünge")} neu bewertet.` +
+      (gescheitert ? ` ${stueck(gescheitert, "Schwung", "Schwünge")}${gescheitert === 1 ? " ließ" : " ließen"} sich nicht neu bewerten und ${gescheitert === 1 ? "blieb" : "blieben"} unverändert.` : "");
+  } catch (fehler) {
+    console.error(fehler);
+    neuBewertenMeldung.textContent = `Neu bewerten hat nicht geklappt (${fehler.message || fehler.name}). Gespeicherte Schwünge sind unverändert oder nur teilweise aktualisiert – du kannst es einfach noch einmal versuchen.`;
+  } finally {
+    sperreLoeschKnoepfe(false);
+    await zeigeNeuBewertenInfo(); // setzt den Knopf passend zurück
   }
 }
 
@@ -4479,6 +4605,7 @@ sitzungLoeschenBtn.addEventListener("click", loescheGanzeSitzung);
 videosSitzungLoeschenBtn.addEventListener("click", loescheVideosDerSitzung);
 videosLoeschenBtn.addEventListener("click", loescheVideosAusEinstellungen);
 allesLoeschenBtn.addEventListener("click", loescheAllesAusEinstellungen);
+neuBewertenBtn.addEventListener("click", bewerteAlteSchwuenge);
 sicherungErstellenBtn.addEventListener("click", erstelleSicherung);
 sicherungSichernBtn.addEventListener("click", legeSicherungAb);
 // Die versteckte Dateiauswahl öffnen (iPhone: Dateien-App). value leeren, damit dieselbe

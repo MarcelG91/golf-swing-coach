@@ -88,6 +88,13 @@ Getestet 13.10. mit 0.37.1: die ersten vier Punkte ✓.
 - [ ] Nach „Alles löschen“ (Punkt 6) wieder einspielen: Sind alle Sitzungen mit Kennzahlen, Notizen und
       Fortschritt-Verlauf wieder da (ohne Videos)?
 
+## 5d. Alte Schwünge neu bewerten (Version ≥ 0.52) – nach 5c (Sicherung) machen!
+
+- [ ] Einstellungen → „🔄 Alte Schwünge neu bewerten“: Steht dort, wie viele Schwünge noch mit älteren Grenzen bewertet sind?
+- [ ] „Neu bewerten“ → Der Dialog nennt, was neu berechnet wird und was bleibt (kein roter Knopf). Antippen.
+- [ ] Meldung „✓ … neu bewertet“. Danach Meine Schwünge → Fortschritt: Verlauf und Diagramme noch plausibel? Phasen, Notizen, Coach-Antworten noch da?
+- [ ] Der Knopf ist danach ausgegraut („Alle … mit den aktuellen Grenzen bewertet“).
+
 ## 6. Aufräumen (Version ≥ 0.11) – ganz zum Schluss, löscht Daten!
 
 - [ ] Speicheranzeige notieren (vorher): ___

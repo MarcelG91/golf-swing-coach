@@ -455,6 +455,38 @@ try {
   await waehle(sicherung);
   pruefe(await wartenBis(`/schon auf diesem Gerät/.test(${meldung})`, 10), "Zweites Einspielen erkennt: alles schon da");
   pruefe((await auswerten(zaehle)).sitzungen === vorSicherung.sitzungen, "…und legt keine Doppelten an");
+
+  // Alte Schwünge neu bewerten (S18): Alle Schwünge künstlich "alt" machen (Grenzen-Version 1, falsche Ampeln),
+  // dann über den echten Dialog neu bewerten. Die echten Schwünge (mit Phasen und Posedaten) bekommen ihre Ampeln
+  // und die aktuelle Version zurück; die Platzhalter-Schwünge dieses Tests (ohne Posedaten) werden übersprungen,
+  // gemeldet und bleiben unverändert. Phasen und Coach-Antworten bleiben in jedem Fall unberührt.
+  const ampeln = `(async () => {
+    const speicher = await import("./speicher.js");
+    const { schwuenge } = await speicher.ladeAllesFuerSicherung();
+    return JSON.stringify(schwuenge.map((s) => [s.id, s.grenzenVersion || 1, s.kennzahlen.map((k) => k.bewertung).join(","), JSON.stringify(s.phasen), s.coach ? 1 : 0]).sort());
+  })()`;
+  const vorNeu = JSON.parse(await auswerten(ampeln));
+  pruefe(vorNeu.some((z) => z[1] >= 2), "Mindestens ein frisch gespeicherter Schwung trägt die aktuelle Grenzen-Version");
+  await auswerten(`(async () => {
+    const speicher = await import("./speicher.js");
+    const { schwuenge } = await speicher.ladeAllesFuerSicherung();
+    for (const s of schwuenge) await speicher.aktualisiereSchwung(s.id, { grenzenVersion: 1, kennzahlen: s.kennzahlen.map((k) => ({ ...k, bewertung: "unsicher" })) });
+  })()`);
+  await auswerten(`document.getElementById("zuEinstellungen").click()`);
+  pruefe(await wartenBis(`/^(\\d+) Schwünge sind von \\1 noch mit älteren Grenzen bewertet/.test(document.getElementById("neuBewertenInfo").textContent) && !document.getElementById("neuBewerten").disabled`, 10),
+    `Einstellungen zeigen, dass Schwünge mit alten Grenzen bewertet sind (steht: „${await auswerten(`document.getElementById("neuBewertenInfo").textContent`)}“)`);
+  await auswerten(`document.getElementById("neuBewerten").click()`);
+  pruefe(await wartenBis(`document.getElementById("loeschDialog").open`, 20), "Neu bewerten fragt vorher nach");
+  pruefe(await auswerten(`document.getElementById("loeschTitel").textContent === "Alte Schwünge neu bewerten?" && /Wird neu berechnet/.test(document.getElementById("loeschWegTitel").textContent) && !document.getElementById("loeschBestaetigen").classList.contains("gefahr")`),
+    "Der Dialog nennt, was neu berechnet wird, und hat keinen roten Löschen-Knopf");
+  await auswerten(`document.getElementById("loeschBestaetigen").click()`);
+  pruefe(await wartenBis(`/✓.*neu bewertet/.test(document.getElementById("neuBewertenMeldung").textContent)`, 30), `Neu bewerten meldet Erfolg (steht: „${await auswerten(`document.getElementById("neuBewertenMeldung").textContent`)}“)`);
+  const nachNeu = JSON.parse(await auswerten(ampeln));
+  const neuBewertet = nachNeu.filter((z) => z[1] >= 2);
+  pruefe(neuBewertet.length >= 1 && neuBewertet.every((z) => vorNeu.find((v) => v[0] === z[0])[2] === z[2]), `Neu bewertete Schwünge haben ihre Ampeln wieder wie vorher (${neuBewertet.length} Stück)`);
+  pruefe(nachNeu.every((z) => { const v = vorNeu.find((x) => x[0] === z[0]); return v[3] === z[3] && v[4] === z[4]; }), "Phasen und Coach-Antworten sind in allen Schwüngen unverändert");
+  pruefe(nachNeu.filter((z) => z[1] < 2).every((z) => /^(unsicher,?)+$/.test(z[2])), "Nicht berechenbare Platzhalter-Schwünge bleiben unverändert (nichts halb überschrieben)");
+  pruefe(/ließen sich nicht neu bewerten und blieben unverändert/.test(await auswerten(`document.getElementById("neuBewertenMeldung").textContent`)), "…und die Meldung nennt sie");
   // Meine Schwünge zeigt die eingespielten Sitzungen
   await auswerten(`document.getElementById("zuGespeichert").click()`);
   await auswerten(`document.getElementById("zuSitzungen").click()`);
