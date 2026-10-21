@@ -32,7 +32,11 @@ App-Bezug: Die Phasen-Zeitleiste der App zeigt Ansprechen, Top, Treffmoment, Fin
 
 - **Drehen statt schieben**: Tourspieler drehen die Schultern am Top **etwa 90°**. Schon bei P2 (Schaft
   waagerecht) haben sie ca. **60°** Schulter- und **25–30°** Hüftdrehung; viele Freizeitspieler drehen die
-  Hüfte dort höchstens 15° und die Schultern 10–30° weniger [GT1][PGA1].
+  Hüfte dort höchstens 15° [GT1][PGA1]. GOLFTEC nennt für Freizeitspieler am Top 10–30° weniger Schulterdrehung
+  (Firmenangabe, Stufe C). 3D-Messungen widersprechen dem teilweise: Die Amateure bei Meister 2011 (je 1 Person)
+  drehten die Schultern **nicht** durchweg weniger (Hcp 15: 104°, Hcp 30: 107° gegen ca. 98° bei Profis), sondern das
+  **Becken mehr** (Hcp 30: 59° gegen ca. 46°) und hatten einen kleineren X-Faktor [MEI2011]. Viel Drehung allein ist
+  also kein Qualitätsmerkmal. (Korrektur 19.10.: Hier stand „Schultern 10–30° weniger“ als allgemeine Aussage.)
 - **Schulterlinie am Top**: GOLFTEC misst die Neigung der **Schulterlinie** (linke Schulter tiefer): Tourspieler
   ca. **36°**, hohe Handicaps ca. 29–30° (Firmenangabe, **Stufe C**) [GOLF1][PGA1]. Das ist **nicht** die Größe,
   die die App misst.
@@ -126,7 +130,7 @@ halbe Ballhöhe über der Oberkante des Schlägerkopfs [GOLF2][VC1].
 
 | Messgröße | Tourspieler | Freizeitspieler / hohes Hcp | Quelle |
 |---|---|---|---|
-| Schulterdrehung am Top | ca. 90° | 10–30° weniger | [GT1][PGA1] |
+| Schulterdrehung am Top | ca. 90° | GOLFTEC (C): 10–30° weniger; 3D (Meister 2011, Einzelwerte): oft nicht weniger, dafür mehr Becken | [GT1][PGA1][MEI2011] |
 | Hüftdrehung bei P2 | 25–30° | ≤ 15° | [GT1] |
 | Schulterlinie geneigt am Top | 36° | 29–30° | [GOLF1] |
 | Hüfte offen im Treffen | ca. 36° | ca. 20° | [GOLF1][PGA1] |
