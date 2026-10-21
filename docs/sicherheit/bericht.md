@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 19.10.2026 · geprüft auf `origin/main` @ `6860ec0` (Version 0.51.4, live; seit 0.49.3: Fachwörter antippbar, Einsteiger-Lektion Rückschwung, Wissens-Präzisierung U1–U31)
+Stand: 21.10.2026 · geprüft auf `origin/main` @ `ac0f237` (Version 0.52.0, live; seit 0.51.4: Vollschwung U18 und „Alte Schwünge neu bewerten“, S18 erledigt)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
