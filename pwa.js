@@ -4,14 +4,14 @@
 // funktionieren Hinweise und Statusanzeige trotzdem.
 // ===============================================================
 
-export const APP_VERSION = "0.52.0";
+export const APP_VERSION = "0.53.0";
 
 // Muss zu den Namen in sw.js passen (prüft tests/vendor.test.mjs)
 const CACHE_APP = "app-v2";
 const CACHE_VENDOR = "vendor-v1";
 
 // Eigene Dateien, die für den Offline-Betrieb gespeichert sein müssen
-const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./sicherung.js", "./phasenabspieler.js", "./livekamera.js", "./liveschwung.js", "./ampel.js", "./aufnahme.js", "./liveclip.js", "./level.js", "./fortschritt.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./wissen.js", "./nachschlagen.js", "./schaubilder.js", "./fotos.js", "./coach.js", "./pwa.js",
+const APP_DATEIEN = ["./", "./style.css", "./darstellung.js", "./app.js", "./phasen.js", "./kennzahlen.js", "./technik.js", "./ideallinien.js", "./videoanalyse.js", "./schwuenge.js", "./gesamtauswertung.js", "./speicher.js", "./videokuerzen.js", "./sicherung.js", "./phasenabspieler.js", "./livekamera.js", "./liveschwung.js", "./ampel.js", "./aufnahme.js", "./liveclip.js", "./level.js", "./fortschritt.js", "./streuung.js", "./tipps.js", "./strichfigur.js", "./uebungsbilder.js", "./wissen.js", "./nachschlagen.js", "./schaubilder.js", "./fotos.js", "./coach.js", "./pwa.js",
   // Fotos der Wissensseite (wie in sw.js) – sonst meldete die App „Offline bereit ✓“, obwohl ein Foto fehlt (Check 14.10.)
   "./fotos/griff-linke-hand.jpg", "./fotos/griff-ueberlappend.jpg", "./fotos/griff-falsch.jpg", "./fotos/top.jpg", "./fotos/nach-dem-treffen.jpg", "./fotos/finish.jpg", "./fotos/bunker.jpg", "./fotos/gruen-lesen.jpg"];
 

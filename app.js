@@ -18,6 +18,8 @@ import {
 // Alle Schwünge in einem Video finden und einzeln auswerten – Phasen, Kennzahlen,
 // Technik (siehe schwuenge.js, nutzt phasen.js, kennzahlen.js und technik.js)
 import { findeSchwuenge, bewerteNeu, geaenderteStufen, GRENZEN_VERSION } from "./schwuenge.js";
+// Gleichmäßigkeit von Schwung zu Schwung (siehe streuung.js)
+import { streuungJeSitzung, streuungTrend, STREUUNG_TEXT } from "./streuung.js";
 // Zusammenfassung über mehrere Schwünge (siehe gesamtauswertung.js)
 import { gesamtauswertung } from "./gesamtauswertung.js";
 // Kategorien + wichtigste Baustellen (siehe technik.js)
@@ -1233,6 +1235,8 @@ function baueKarte(k, { nummer = null, offen = false } = {}) {
   if (hilfe) karte.append(neu("p", "kurz", hilfe.kurz));
   else if (k.bewertung === "gut") karte.append(neu("p", "kurz", gutText(k, rechtshaender)));
   else karte.append(neu("p", "text", k.text || k.detail)); // nicht bewertbar: der Grund steht im Text (nur Tempo)
+  // Gesamtauswertung: wie gleichmäßig waren die Schwünge? (ab 4 Schwüngen, eigene Festlegung, siehe streuung.js)
+  if (k.streuung) karte.append(neu("p", `streuung ${k.streuung.stufe}`, `Schwankt ${k.streuung.text} · ${STREUUNG_TEXT[k.streuung.stufe]}`));
 
   const mehr = neu("details");
   mehr.open = offen;
@@ -2932,6 +2936,8 @@ const TREND_TEXT = {
   verschlechtert: ["↘ schwächer geworden", "trend-schlechter"],
 };
 
+const GLEICH_TREND_TEXT = { gleichmaessiger: "↗ gleichmäßiger als vorher", unruhiger: "↘ unruhiger als vorher", gleich: "→ wie vorher" };
+
 function fortschrittKasten(titel) {
   const kasten = neu("section", "fortschritt-kasten");
   kasten.append(neu("h3", "", titel));
@@ -3333,6 +3339,22 @@ async function zeigeFortschritt(ersterAufruf = false) {
     kasten.append(liste, neu("p", "hinweis klein", "Schwünge in Folge im Zielbereich"));
     teile.push(kasten);
   }
+
+  // Gleichmäßigkeit (Z16): Wie stark schwanken die Werte von Schwung zu Schwung? Je Sitzung gerechnet (streuung.js)
+  const gleichZeilen = [];
+  for (const { id } of fuerLevel(Object.keys(namen).map((id) => ({ id })), aktuellesLevel).sichtbar) {
+    const je = streuungJeSitzung(sichere, id);
+    if (!je.length) continue;
+    const jetzt = je.at(-1);
+    const stand = GLEICH_TREND_TEXT[streuungTrend(je)];
+    gleichZeilen.push(neu("p", `streuung-zeile streuung ${jetzt.stufe}`, `${nameVon(id)}: ${jetzt.text} · ${STREUUNG_TEXT[jetzt.stufe]}${stand ? ` · ${stand}` : ""}`));
+  }
+  const gleichKasten = fortschrittKasten("Gleichmäßigkeit");
+  gleichKasten.append(...(gleichZeilen.length
+    ? gleichZeilen
+    : [neu("p", "hinweis", "Noch zu wenig Daten – ab 4 Schwüngen in einer Sitzung.")]));
+  gleichKasten.append(neu("p", "hinweis klein", "Schwankung von Schwung zu Schwung in deiner letzten Sitzung. Die Ampel ist eine eigene Festlegung."));
+  teile.push(gleichKasten);
 
   // Verläufe je Kennzahl deines Levels
   const idsDesLevels = fuerLevel(Object.keys(namen).map((id) => ({ id })), aktuellesLevel).sichtbar.map((k) => k.id);

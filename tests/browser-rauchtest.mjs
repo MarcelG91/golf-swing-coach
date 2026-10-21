@@ -225,6 +225,9 @@ try {
   await auswerten(`document.getElementById("zuFortschritt").click()`);
   const diagramme = await wartenBis(`document.querySelectorAll("#fortschrittInhalt svg.verlauf-bild").length >= 1`, 10);
   pruefe(diagramme, "Fortschritt zeigt ein Verlaufsdiagramm");
+  // Gleichmäßigkeit (Z16): Die Testsitzungen haben je 4 Schwünge mit gleichem Tempo → "gleichmäßig" (grün)
+  pruefe(await wartenBis(`[...document.querySelectorAll("#fortschrittInhalt .streuung-zeile.gut")].some((z) => /^Tempo: ±0 : 1 · gleichmäßig/.test(z.textContent))`, 10),
+    `Fortschritt zeigt die Gleichmäßigkeit mit grünem Punkt (steht: „${await auswerten(`document.querySelector("#fortschrittInhalt .streuung-zeile")?.textContent`)}“)`);
   // Eisen 6 ist der zuletzt gespeicherte Schläger → die Auswahl steht schon richtig
   const bilder = await wartenBis(`document.querySelectorAll("#fortschrittInhalt .vergleich-bild canvas").length === 2`, 20);
   pruefe(bilder, "Vorher/Nachher zeigt zwei Bilder aus den Clips");

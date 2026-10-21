@@ -101,6 +101,7 @@ export const QUELLEN = {
   "vollschwung:GT2": "GOLFTEC SwingTRU: 13.440 Schwünge (Pressemitteilung)",
   "vollschwung:GT3": "GOLFTEC: Slice-Ursachen aus 14 Mio. Schwüngen",
   "vollschwung:GOLF1": "GOLF.com: GOLFTEC-Schwungformel Neigung, Drehung, Beugung",
+  "vollschwung:YAM2023": "Yamamoto u. a. 2023: Schwankung der Vorneigung und Score (Studie)",
   "vollschwung:CHU2010": "Chu et al. 2010: Biomechanik und Driver-Leistung bei 308 Golfern (Studie)",
   "vollschwung:RS1": "RotarySwing: The 4 pressure shifts",
   "vollschwung:RG1": "Studie: Bodenreaktionskräfte im Golfschwung (Kraftmessplatten)",
@@ -750,6 +751,7 @@ export const LEKTIONEN = [
       { text: "Eine Yale-Messung bestätigt: Tourspieler liegen bei ca. 2,5 bis 3,5 : 1 und schwingen sehr gleichmäßig. Wichtig ist also ein gleichmäßiger Rhythmus, nicht besonders langsames Schwingen." },
       { text: "Übung Mitzählen: „und – eins – zwei – drei“ bis zum Top, „vier“ im Treffen. Laut der Yale-Messung streuen Freizeitspieler im Rhythmus viel stärker als Tourspieler." },
       { text: "Hörbarer Takt: In einer Studie mit 26 Golfern verbesserten vier Wochen Training mit dem Metronom das Timing und machten die Schläge genauer. Die Kontrollgruppe blieb gleich." },
+      { text: "Gleichmäßigkeit zählt: In einer Studie mit 27 Golfern hing nicht die mittlere Vorneigung mit dem Score zusammen, sondern ihre Schwankung von Schwung zu Schwung. Das ist ein Zusammenhang, kein Beweis." },
     ],
     quiz: {
       frage: "Wie lange dauert der Rückschwung bei guten Spielern im Vergleich zum Abschwung?",
@@ -759,7 +761,7 @@ export const LEKTIONEN = [
     },
     uebung: { tipp: { id: "tempo", messwert: 2 } },
     kennzahlen: ["tempo", "gewicht"],
-    quellen: ["vollschwung:HM5", "vollschwung:BB1", "vollschwung:TT1", "vollschwung:GROB1", "vollschwung:SOM2009"],
+    quellen: ["vollschwung:HM5", "vollschwung:BB1", "vollschwung:TT1", "vollschwung:GROB1", "vollschwung:SOM2009", "vollschwung:YAM2023"],
     beleg: "messung",
   },
   {

@@ -596,6 +596,12 @@ body:has(#analyseBereich:not([hidden]) #buehne[hidden]):not(:has(#liveBox:not([h
 .karte.gut { --farbe: var(--gut); }
 .karte.achtung { --farbe: var(--achtung); }
 .karte.verbessern { --farbe: var(--verbessern); }
+/* Gleichmäßigkeit (streuung.js): Ampelpunkt vor der Zeile, Farbe aus den Design-Variablen */
+.streuung { font-size: 0.85rem; margin: 4px 0; }
+.streuung::before { content: "● "; }
+.streuung.gut::before { color: var(--gut); }
+.streuung.achtung::before { color: var(--achtung); }
+.streuung.verbessern::before { color: var(--verbessern); }
 .karte.unsicher { --farbe: var(--unsicher); }
 .karte-kopf { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .karte-kopf strong { font-size: 1.05rem; }

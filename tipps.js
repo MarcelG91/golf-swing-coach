@@ -428,6 +428,13 @@ const SKALEN = {
 };
 export const SKALA_IDS = Object.keys(SKALEN);
 
+// Breite und Einheit des Balkens einer Kennzahl (für die Gleichmäßigkeit in streuung.js).
+// breite und Einheit gelten in Anzeige-Einheiten; faktor rechnet den Messwert dorthin um.
+export function skalenInfo(id) {
+  const s = SKALEN[id];
+  return s ? { breite: s.bis - s.von, faktor: s.faktor || 1, einheit: s.einheit } : null;
+}
+
 // Liefert { von, bis, gut, achtung, wert } in Anzeige-Einheiten plus ein Ziel-Text,
 // oder null, wenn es für diese Kennzahl keinen sinnvollen Balken gibt.
 export function skala(k) {

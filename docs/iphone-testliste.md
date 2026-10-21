@@ -95,6 +95,12 @@ Getestet 13.10. mit 0.37.1: die ersten vier Punkte ✓.
 - [ ] Meldung „✓ … neu bewertet“. Danach Meine Schwünge → Fortschritt: Verlauf und Diagramme noch plausibel? Phasen, Notizen, Coach-Antworten noch da?
 - [ ] Der Knopf ist danach ausgegraut („Alle … mit den aktuellen Grenzen bewertet“).
 
+## 5e. Gleichmäßigkeit (Version ≥ 0.53)
+
+- [ ] Fortschritt → Karte „Gleichmäßigkeit“: Steht für die Kennzahlen deines Levels eine Zeile mit ± Wert, Ampelpunkt und Wort (gleichmäßig / etwas unruhig / unruhig)? Erst ab 4 Schwüngen in einer Sitzung.
+- [ ] Wirken die Ampelfarben bei einer ruhigen Sitzung plausibel? (Tempo kann wegen 30 Bildern/s eher gelb ausfallen – bitte Rückmeldung: zu streng oder zu mild?)
+- [ ] Gesamtauswertung (ein Video, mehrere Schläge): Steht auf den Karten „Schwankt ± … · gleichmäßig“?
+
 ## 6. Aufräumen (Version ≥ 0.11) – ganz zum Schluss, löscht Daten!
 
 - [ ] Speicheranzeige notieren (vorher): ___
