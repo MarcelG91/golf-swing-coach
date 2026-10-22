@@ -1,6 +1,6 @@
 # Sicherheits- und Betriebsbericht
 
-Stand: 21.10.2026 · geprüft auf `origin/main` @ `ac0f237` (Version 0.52.0, live; seit 0.51.4: Vollschwung U18 und „Alte Schwünge neu bewerten“, S18 erledigt)
+Stand: 22.10.2026 · geprüft auf `origin/main` @ `6fcbbeb` (Version 0.53.0, live; seit 0.52.0: Gleichmäßigkeit von Schwung zu Schwung, neue Datei `streuung.js`)
 Fortgeschrieben von `/golf-app-check`. Verlauf der Prüfungen: [`pruefprotokoll.md`](pruefprotokoll.md)
 
 **Kurz:** Die App ist im Kern sicher gebaut. Videos, Bilder und Posedaten verlassen das Handy nie,
