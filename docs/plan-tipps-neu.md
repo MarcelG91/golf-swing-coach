@@ -355,6 +355,7 @@ bedeutet deshalb „knapp daneben“, nicht „falsch“. Stufen: A = Studie/Mes
 | `armeAnsprechen` | −25 bis +15 % · +15–30 % / −40 bis −25 % | Keine Studie; Lehrbild „Arme hängen, eine Faust Platz“ | **eigene Festlegung** (S12) |
 | `armschwungTop` | Hände ≤ 75 % oder volle Drehung · 75–90 % | Keine Studie; Lehrbild „Drehen statt heben“ | **eigene Festlegung** (S12) |
 | `gewicht` (Balance im Finish) | ≥ 85 % · 65–85 % | Im Recherchebericht nicht einzeln geprüft | Richtwert |
+| Gleichmäßigkeit (Streuung je Sitzung, alle Kennzahlen mit Skala) | Streuung ≤ 8 % der Balkenbreite · ≤ 20 % · darüber rot | Belegt ist nur der Zusammenhang für Vorneigung (Yamamoto 2023, A) und Tempo (Grober, A−); die Zahlen sind ein Vorschlag | **eigene Festlegung**, vorläufig (`streuung.js`) |
 
 ## Web-Recherche (28.09.): was geprüft und korrigiert wurde
 

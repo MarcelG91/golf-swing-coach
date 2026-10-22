@@ -10,6 +10,8 @@
 // Reine Rechnerei ohne Browser → testbar mit node --test.
 // ===============================================================
 
+import { streuung } from "./streuung.js";
+
 export function gesamtauswertung(schwuenge, anzahl = 3) {
   const gezaehlt = schwuenge.filter((s) => s.sicher);
   const ergebnis = [];
@@ -63,6 +65,8 @@ function fasseZusammen(liste) {
   const passende = sortiert.filter((k) => k.bewertung === bewertung);
   const typisch = passende[Math.floor((passende.length - 1) / 2)] || sortiert[0] || liste[0];
   const probleme = zaehler.achtung + zaehler.verbessern;
+  // Gleichmäßigkeit: wie stark schwankt der Wert von Schwung zu Schwung? (ab 4 Schwüngen, siehe streuung.js)
+  const gleichmaessig = streuung(typisch.id, sortiert.map((k) => k.messwert));
 
   return {
     ...typisch,
@@ -74,6 +78,7 @@ function fasseZusammen(liste) {
         : `${probleme === 0 ? "In allen" : `In ${anzahl - probleme} von`} ${anzahl} Schwüngen im Zielbereich${spanne}`,
     zaehler,
     anzahl,
+    streuung: gleichmaessig, // null, wenn zu wenige Messwerte oder keine Skala
     phase: null, // kein "Im Video zeigen" – es gibt ja mehrere Videomomente
   };
 }

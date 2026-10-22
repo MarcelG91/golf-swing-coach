@@ -98,6 +98,7 @@ nachgeladenem Fremdcode diesen Bericht lesen** und betroffene Befunde gleich mit
 | `livekamera.js` · `liveschwung.js` · `ampel.js` · `aufnahme.js` · `liveclip.js` | Live-Kamera (Etappe 12): Kamera + Zeitmessung · Schwung live erkennen · Ampelrahmen + Kurzwort · versetzte 16-s-Aufnahmestücke im Arbeitsspeicher · Schwung ↔ Stück zuordnen und aufs Raster umrechnen (alles außer Kamera/Aufnahme reine Rechenlogik) |
 | `coach.js` | Coach mit Claude: gesendete Daten (nur Kennzahlen), Systemtext, Antwort prüfen (reine Rechenlogik; Senden in `app.js`) |
 | `phasenabspieler.js` | Phasen-Abspieler im Fortschritt (Vorher/Nachher): Abspielgeschwindigkeit je Abschnitt, damit die Phasen bei beiden Schwüngen gleichzeitig kommen (reine Rechenlogik; Abspielen in `app.js`) |
+| `streuung.js` | Gleichmäßigkeit (Z16): Streuung je Sitzung und Kennzahl, Ampel als eigene Festlegung (Anteil der Balkenbreite aus `tipps.js` `SKALEN`), Trend; angezeigt im Fortschritt und in der Gesamtauswertung (reine Rechenlogik) |
 | `fortschritt.js` | Verläufe, Trend, Fokus, Meilensteine, Wochenrückblick aus gespeicherten Schwüngen (reine Rechenlogik, Etappe 10) |
 | `level.js` | Level-Zuordnung, gefilterte Kennzahlen und Level-Vorschläge (reine Rechenlogik) |
 | `wissen.js` · `nachschlagen.js` · `schaubilder.js` · `fotos.js` | Wissensseite: Lernpfade, Lektionen, Quiz, Quellen (Kennung `datei:KÜRZEL`, nur als Text), Kennzahl → Lektion · Nachschlagen (Glossar, Irrtümer, Regeln, Ausrüstung, Suche) · beschriftete Schaubilder (Farben = Variablen aus `style.css`) · echte Fotos (`fotos/`, freie Lizenz, Nachweis in `fotos/README.md`) |
@@ -244,7 +245,7 @@ Schreibregeln, Fotos). Abarbeiten je eigener Branch, in dieser Reihenfolge:
    `vorneigungAnsprechen` blieb: Kim 2018 misst nur das 5er-Eisen). Offen: iPhone-Test (`docs/iphone-testliste.md` Abschnitt 8),
    Griff-Fingerlage beim überlappenden Griff (Quelle sagt „auf dem Zeigefinger“, Profi „Mulde zwischen Zeige- und Mittelfinger“ – an
    Lehrbuch prüfen), Stufe-A/B-Belege für die Technik der Grundlagen-Lektionen (Verbandslehrplan), Tipp-„warum“-Sätze als Trainer-Erfahrung kennzeichnen.
-Ideen für später: Kennzahl „Schulterlinie am Top“, Bewertung je Schläger, Streuung je Kennzahl über mehrere Schwünge.
+Ideen für später: Kennzahl „Schulterlinie am Top“, Bewertung je Schläger. **Gleichmäßigkeit (Streuung je Sitzung) erledigt mit 0.53.0** (Branch `streuung`, Z16; Entscheidung 21.10.: alle Kennzahlen mit Skala, Ampel, auch in der Gesamtauswertung): Ampel-Grenzen (8 %/20 % der Balkenbreite) sind vorläufig und mit echten Sitzungen nachzujustieren.
 
 ### 🔵 Etappe 12: Live-Kamera (0.31.0–0.34.0, 12.10.)
 
